@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 import '../css/App.css';
 
 function NotFound() {
@@ -7,16 +7,17 @@ function NotFound() {
             <div>
                 <span className="notfound_404">404</span>
                 <span className="notfound_state">OPPS! PAGE NOT FOUND</span>
-                <span className="notfound_text">Sorry. the page you're looking for doesn't exist. <br /> If you think something is broken. report a problem.
+                <span className="notfound_text">
+                    Sorry. the page you're looking for doesn't exist. <br /> If you think something is broken. report a
+                    problem.
                 </span>
-                <button> HOME </button>
+                <Button> HOME </Button>
             </div>
         </NotfoundSection>
     );
 }
 
 export default NotFound;
-
 
 const NotfoundSection = styled.div`
     display: flex;
@@ -38,12 +39,12 @@ const NotfoundSection = styled.div`
         animation: opacity 2s ease forwards;
     }
     @keyframes opacity {
-        100%{
+        100% {
             opacity: 1;
             margin-top: 0px;
         }
     }
-    .notfound_404{
+    .notfound_404 {
         font-family: 'Monoton';
         font-size: 8em;
         font-weight: 00;
@@ -57,33 +58,40 @@ const NotfoundSection = styled.div`
     }
 
     @keyframes textcolor {
-    0% {background-position:0% 50%}
-    50%{background-position:100% 50%}
-    100%{background-position:0% 50%}
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
     }
 
-    .notfound_state{
+    .notfound_state {
         margin: 20px;
         font-size: 1.4em;
         color: #d9e3ec;
     }
-    .notfound_text{
+    .notfound_text {
         font-size: 1em;
         color: #666;
         line-height: 150%;
         /* letter-spacing: 1px; */
     }
-    div > button {
-        margin-top: 50px;
-        padding: 8px 30px;
-        border-radius: 20px;
-        font-weight: 700;
-        color: #666;
-        border: 2px solid #666;
-        background: none;
-        transition: 0.2s ease-in-out;
-    }
-    div > button:hover {
+`;
+
+const Button = styled.Button`
+    margin-top: 50px;
+    padding: 8px 30px;
+    border-radius: 20px;
+    font-weight: 700;
+    color: #666;
+    border: 2px solid #666;
+    background: none;
+    transition: 0.2s ease-in-out;
+    :hover {
         border-color: #d9e3ec;
         background: #666;
         color: #d9e3ec;
