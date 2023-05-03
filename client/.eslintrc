@@ -1,0 +1,41 @@
+{
+    // 전역변수 환경 설정
+    "env": {
+        "browser": true,
+        "es2021": true,
+        "node": true
+    },
+
+    // npm을 통해 설치한 외부 ESLint 설정 등록 (eslint-config-{name}으로 설치)
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended"
+    ],
+
+    // ESLint에 지원할 JavaScript 옵션 설정
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 12,
+        "sourceType": "module"
+    },
+
+    // parser 등록
+    "parser": "@typescript-eslint/parser",
+
+    // 사용자 규칙 추가할 플러그인 (eslint-plugin-{name}으로 설치)
+    "plugins": [
+        "@typescript-eslint",
+        "prettier"
+    ],
+
+    // 플러그인을 통해 설치한 것 외에 규칙 설정
+    "rules": {
+        "prettier/prettier": [
+            "error", {
+                "endOfLine": "auto"
+            }
+        ]
+    }
+}
