@@ -24,7 +24,7 @@ function Signup({ setShowSignUp }: { setShowSignUp: React.Dispatch<React.SetStat
                 {/**/}
                 {/*여기에 인풋창 하고 이것저것 넣어주시면 될듯용*/}
                 {/**/}
-                <ButtonStyle onClick={haldleClose}>SIGNUP</ButtonStyle>
+                <ButtonStyle onClick={haldleClose}>JOIN</ButtonStyle>
             </SignInBox>
         </BlurBackground>
     );
