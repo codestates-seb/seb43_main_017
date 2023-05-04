@@ -4,6 +4,8 @@
     font-family: 'Noto Sans KR', sans-serif;
 }
 
-.App {
-    text-align: center;
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-content: center;
 }
