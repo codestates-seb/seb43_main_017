@@ -17,7 +17,11 @@ function App() {
                     <Signin setShowSignIn={setShowSignIn} />
                 </Signview>
             ) : null}
-            {showSignUp ? <Signview>{/* <Signup setShowSignUp={setShowSignUp} /> */}</Signview> : null}
+            {showSignUp ? (
+                <Signview>
+                    <Signup setShowSignUp={setShowSignUp} />
+                </Signview>
+            ) : null}
             <SignBtnSection>
                 <ButtonStyle
                     onClick={() => {

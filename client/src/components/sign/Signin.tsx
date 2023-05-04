@@ -10,11 +10,16 @@ function Signin({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetStat
         setCloseDisplay(!closeDisplay);
         setTimeout(() => {
             setShowSignIn(false);
-        }, 2000);
+        }, 1000);
     };
     return (
-        <BlurBackground className={closeDisplay ? 'close-display' : 'null'}>
-            <SignInBox className={closeDisplay ? 'out-display' : 'null'}>
+        <BlurBackground className={closeDisplay ? 'close-display' : 'null'} onClick={haldleClose}>
+            <SignInBox
+                className={closeDisplay ? 'out-display' : 'null'}
+                onClick={(e) => {
+                    e.stopPropagation();
+                }}
+            >
                 {/**/}
                 {/*여기에 인풋창 하고 이것저것 넣어주시면 될듯용*/}
                 {/**/}
@@ -26,7 +31,7 @@ function Signin({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetStat
 
 export default Signin;
 
-const BlurBackground = styled.article`
+export const BlurBackground = styled.article`
     display: flex;
     justify-content: center;
     align-items: center;
@@ -41,7 +46,7 @@ const BlurBackground = styled.article`
         }
     }
     &.close-display {
-        animation: closedisplay 2s forwards;
+        animation: closedisplay 1s forwards;
     }
     @keyframes closedisplay {
         0% {
@@ -53,7 +58,7 @@ const BlurBackground = styled.article`
     }
 `;
 
-const SignInBox = styled.div`
+export const SignInBox = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
@@ -74,7 +79,7 @@ const SignInBox = styled.div`
         }
     }
     &.out-display {
-        animation: outdisplay 2s forwards;
+        animation: outdisplay 1s forwards;
     }
     @keyframes outdisplay {
         0% {
