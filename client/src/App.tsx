@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './css/App.css';
 import './css/reset.css';
 import styled from 'styled-components';
@@ -8,15 +8,31 @@ import Signup from './components/sign/Signup';
 // import NotFound from './components/NotFound';
 
 function App() {
+    const [showSignIn, setShowSignIn] = useState<boolean>(false);
+    const [showSignUp, setShowSignUp] = useState<boolean>(false);
     return (
         <MainSection>
-            <Signview>
-                <Signin />
-                <Signup />
-            </Signview>
+            {showSignIn ? (
+                <Signview>
+                    <Signin setShowSignIn={setShowSignIn} />
+                </Signview>
+            ) : null}
+            {showSignUp ? <Signview>{/* <Signup setShowSignUp={setShowSignUp} /> */}</Signview> : null}
             <SignBtnSection>
-                <button>LOGIN</button>
-                <button>JOIN</button>
+                <ButtonStyle
+                    onClick={() => {
+                        setShowSignIn(true);
+                    }}
+                >
+                    LOGIN
+                </ButtonStyle>
+                <ButtonStyle2
+                    onClick={() => {
+                        setShowSignUp(true);
+                    }}
+                >
+                    JOIN
+                </ButtonStyle2>
             </SignBtnSection>
             <NavSection>
                 <Navigate />
@@ -67,34 +83,36 @@ const SignBtnSection = styled.div`
     z-index: 1;
     opacity: 0;
     animation: sildeSign 2s forwards;
-    button {
-        margin: 10px;
-        border: 2px solid rgba(199, 68, 68, 1);
-        color: rgba(199, 68, 68, 1);
-        padding: 7px 25px;
-        background: none;
-        font-weight: 500;
-        border-radius: 20px;
-        transition: 0.2s ease-in-out;
-    }
-    button:nth-child(2) {
-        border-color: #999;
-        color: #999;
-    }
-    button:hover {
-        border-color: #ccc;
-        color: #ccc;
-        background-color: rgba(255, 255, 255, 0.2);
-    }
-    button:active {
-        border-color: rgba(199, 68, 68, 1);
-        color: rgba(199, 68, 68, 1);
-        background-color: rgba(199, 68, 68, 0.2);
-    }
     @keyframes sildeSign {
         100% {
             opacity: 1;
             top: 20px;
         }
     }
+`;
+
+export const ButtonStyle = styled.button`
+    margin: 10px;
+    border: 2px solid rgba(199, 68, 68, 1);
+    color: rgba(199, 68, 68, 1);
+    padding: 7px 25px;
+    background: none;
+    font-weight: 500;
+    border-radius: 20px;
+    transition: 0.2s ease-in-out;
+    :hover {
+        border-color: #ccc;
+        color: #ccc;
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+    :active {
+        border-color: rgba(199, 68, 68, 1);
+        color: rgba(199, 68, 68, 1);
+        background-color: rgba(199, 68, 68, 0.2);
+    }
+`;
+
+const ButtonStyle2 = styled(ButtonStyle)`
+    border-color: #999;
+    color: #999;
 `;

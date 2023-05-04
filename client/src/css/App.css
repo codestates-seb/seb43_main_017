@@ -15,6 +15,5 @@
     height: 100vh;
     background: url('https://i.imgur.com/WanCrNh.jpg');
     background-size: cover;
-    opacity: 0.2;
-    filter: blur(10px);
+    opacity: 0.1;
 }
