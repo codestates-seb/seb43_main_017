@@ -1,19 +1,35 @@
 import styled from 'styled-components';
-// import { HiSearch } from 'react-icons/hi';
+import { Link } from 'react-router-dom';
 import { MdOutlineQueueMusic, MdOutlineVideoSettings } from 'react-icons/md';
 import { BiHomeAlt } from 'react-icons/bi';
 import { HiOutlineMusicNote } from 'react-icons/hi';
 import { useState } from 'react';
+
 function Navigate() {
     const [selectIndex, setSelectIndex] = useState<number>(0);
     const [click, setClick] = useState<boolean>(false);
-    console.log(selectIndex);
 
     const menuIconlist = [
-        { index: 0, name: <BiHomeAlt /> },
-        { index: 1, name: <HiOutlineMusicNote /> },
-        { index: 2, name: <MdOutlineQueueMusic /> },
-        { index: 3, name: <MdOutlineVideoSettings /> },
+        {
+            index: 0,
+            name: <BiHomeAlt />,
+            link: '/',
+        },
+        {
+            index: 1,
+            name: <HiOutlineMusicNote />,
+            link: '/musiclist',
+        },
+        {
+            index: 2,
+            name: <MdOutlineQueueMusic />,
+            link: '/playlist',
+        },
+        {
+            index: 3,
+            name: <MdOutlineVideoSettings />,
+            link: '/mixing',
+        },
     ];
 
     return (
@@ -29,15 +45,17 @@ function Navigate() {
                 </Dotsstyle>
                 <MenuIcon>
                     {menuIconlist.map((el, index) => (
-                        <li
-                            key={el.index}
-                            onClick={() => {
-                                setSelectIndex(el.index);
-                            }}
-                            className={selectIndex === index ? 'click-icon' : 'null'}
-                        >
-                            {el.name}
-                        </li>
+                        <Link to={el.link}>
+                            <li
+                                key={el.index}
+                                onClick={() => {
+                                    setSelectIndex(el.index);
+                                }}
+                                className={selectIndex === index ? 'click-icon' : 'null'}
+                            >
+                                {el.name}
+                            </li>
+                        </Link>
                     ))}
                 </MenuIcon>
                 <Dotsstyle>
@@ -84,9 +102,16 @@ const LogoIcon = styled.div`
     }
 `;
 const MenuIcon = styled.ul`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    border-radius: 200px;
+    background-color: #222222;
     li {
-        border-radius: 10px;
-        margin-top: 5px;
+        border-radius: 50px;
+        margin: 5px;
         padding: 10px;
         color: #9b9b9b;
         font-size: 1rem;
@@ -95,9 +120,17 @@ const MenuIcon = styled.ul`
     li:hover {
         background-color: rgba(199, 68, 68, 1);
         color: #fff;
+        transform: scale(1.2);
     }
     .click-icon {
         background-color: rgba(199, 68, 68, 1);
+        color: #fff;
+    }
+    a {
+        color: #9b9b9b;
+        transition: 0.3s ease-in-out;
+    }
+    a:hover {
         color: #fff;
     }
 `;

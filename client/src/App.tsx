@@ -1,48 +1,59 @@
 import React, { useState } from 'react';
 import './css/App.css';
 import './css/reset.css';
+import { BrowserRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import Navigate from './components/nav/Navigete';
 import Signin from './components/sign/Signin';
 import Signup from './components/sign/Signup';
-// import NotFound from './components/NotFound';
+import RoutingPages from './pages/Routingpages';
 
 function App() {
     const [showSignIn, setShowSignIn] = useState<boolean>(false);
     const [showSignUp, setShowSignUp] = useState<boolean>(false);
     return (
-        <MainSection>
-            {showSignIn ? (
-                <Signview>
-                    <Signin setShowSignIn={setShowSignIn} />
-                </Signview>
-            ) : null}
-            {showSignUp ? (
-                <Signview>
-                    <Signup setShowSignUp={setShowSignUp} />
-                </Signview>
-            ) : null}
-            <SignBtnSection>
-                <ButtonStyle
-                    onClick={() => {
-                        setShowSignIn(true);
-                    }}
-                >
-                    LOGIN
-                </ButtonStyle>
-                <ButtonStyle2
-                    onClick={() => {
-                        setShowSignUp(true);
-                    }}
-                >
-                    JOIN
-                </ButtonStyle2>
-            </SignBtnSection>
-            <NavSection>
-                <Navigate />
-            </NavSection>
-            <div className="main-css"></div>
-        </MainSection>
+        <BrowserRouter>
+            <MainSection>
+                {/* Login botton Start*/}
+                {showSignIn ? (
+                    <Signview>
+                        <Signin setShowSignIn={setShowSignIn} />
+                    </Signview>
+                ) : null}
+                {showSignUp ? (
+                    <Signview>
+                        <Signup setShowSignUp={setShowSignUp} />
+                    </Signview>
+                ) : null}
+                <SignBtnSection>
+                    <ButtonStyle
+                        onClick={() => {
+                            setShowSignIn(true);
+                        }}
+                    >
+                        LOGIN
+                    </ButtonStyle>
+                    <ButtonStyle2
+                        onClick={() => {
+                            setShowSignUp(true);
+                        }}
+                    >
+                        JOIN
+                    </ButtonStyle2>
+                </SignBtnSection>
+                {/* Login botton End*/}
+                {/* Nav Start*/}
+                <NavSection>
+                    <Navigate />
+                </NavSection>
+                {/* Nav End*/}
+                {/* view Start*/}
+                <RouterSection>
+                    <RoutingPages />
+                </RouterSection>
+                {/* view Start*/}
+            </MainSection>
+        </BrowserRouter>
     );
 }
 
@@ -119,4 +130,9 @@ export const ButtonStyle = styled.button`
 const ButtonStyle2 = styled(ButtonStyle)`
     border-color: #999;
     color: #999;
+`;
+
+const RouterSection = styled.section`
+    width: 100%;
+    min-height: 100vh;
 `;
