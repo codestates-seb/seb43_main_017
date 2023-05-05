@@ -1,5 +1,6 @@
 package com.codestates.mainProject.playList.entity;
 
+import com.codestates.mainProject.audit.Auditable;
 import com.codestates.mainProject.member.entity.Member;
 import com.codestates.mainProject.music.entity.Music;
 import com.codestates.mainProject.playListLike.entity.PlayListLike;
@@ -15,7 +16,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-public class PlayList {
+public class PlayList extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,4 +33,11 @@ public class PlayList {
     @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
     private List<PlayListLike> playListLikes = new ArrayList<>();
 
+    private String title;
+
+    private String body;
+
+    public String getMemberName(){
+        return this.member.getName();
+    }
 }
