@@ -6,6 +6,7 @@ import com.codestates.mainProject.auth.filter.JwtVerificationFilter;
 import com.codestates.mainProject.auth.handler.*;
 import com.codestates.mainProject.auth.jwt.JwtTokenizer;
 import com.codestates.mainProject.auth.utils.CustomAuthorityUtils;
+import com.codestates.mainProject.member.repository.MemberRepository;
 import com.codestates.mainProject.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,6 +44,8 @@ public class SecurityConfiguration {
     private final CustomAuthorityUtils authorityUtils;
     private final MemberService memberService;
 
+    private final MemberRepository memberRepository;
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -64,8 +67,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .antMatchers(HttpMethod.POST, "/members/**").permitAll()
-                        .antMatchers(HttpMethod.GET, "/members").permitAll()
-                        .antMatchers(HttpMethod.GET, "/members/**").hasRole("USER")
+                        .antMatchers(HttpMethod.GET, "/members/**").permitAll()
                         .antMatchers(HttpMethod.PATCH, "/members/**").hasRole("USER")
                         .antMatchers(HttpMethod.DELETE, "/members/**").hasRole("USER")
                         .anyRequest().permitAll()
@@ -94,7 +96,7 @@ public class SecurityConfiguration {
         public void configure(HttpSecurity builder) throws Exception {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
 
-            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer);
+            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer, memberRepository);
 
             // 상속받은 AbstractAuthenticationProcessingFilter 클래스의 FilterProcessesUrl 설정해주기 (설정안할시 default: /Login)
             // 즉, 로그인 요청할때 이 Url로 요청해야함, 우리가 기존에 UsernamePassword 필터 사용시에는 /process_login 하던부분임
