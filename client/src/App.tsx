@@ -89,13 +89,18 @@ const NavSection = styled.section`
             left: 0px;
         }
     }
+    @media (max-width: 700px) {
+        width: 100%;
+        height: 100px;
+        background: none;
+    }
 `;
 
 const SignBtnSection = styled.div`
     position: absolute;
     top: -50px;
     right: 20px;
-    z-index: 1;
+    z-index: 2;
     opacity: 0;
     animation: sildeSign 2s forwards;
     @keyframes sildeSign {
@@ -134,5 +139,6 @@ const ButtonStyle2 = styled(ButtonStyle)`
 
 const RouterSection = styled.section`
     width: 100%;
-    min-height: 100vh;
+    height: 100vh;
+    overflow-x: hidden;
 `;

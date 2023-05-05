@@ -92,6 +92,12 @@ const NavigateBox = styled.nav`
         justify-content: space-between;
         align-items: center;
     }
+    @media (max-width: 700px) {
+        .icon-group {
+            flex-direction: row;
+            padding: 20px;
+        }
+    }
 `;
 
 const LogoIcon = styled.div`
@@ -132,6 +138,11 @@ const MenuIcon = styled.ul`
     }
     a:hover {
         color: #fff;
+    }
+    @media (max-width: 700px) {
+        flex-direction: row;
+        width: 200px;
+        height: 100%;
     }
 `;
 
@@ -193,5 +204,8 @@ const Dotsstyle = styled.div`
         50% {
             margin: 8px 0px;
         }
+    }
+    @media (max-width: 700px) {
+        display: none;
     }
 `;
