@@ -141,7 +141,7 @@ const MenuIcon = styled.ul`
     }
     @media (max-width: 700px) {
         flex-direction: row;
-        width: 200px;
+        width: 180px;
         height: 100%;
     }
 `;
@@ -182,6 +182,18 @@ const ProfileIcon = styled.div`
     @keyframes showborder {
         50% {
             border: 7px solid #333;
+        }
+    }
+    @media (max-width: 700px) {
+        width: 55px;
+        height: 55px;
+        span {
+            width: 40px;
+            height: 40px;
+        }
+        span:hover {
+            width: 50px;
+            height: 50px;
         }
     }
 `;

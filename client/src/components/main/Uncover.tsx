@@ -6,10 +6,10 @@ function Uncover() {
     return (
         <UncoverInfoGroup>
             <BackgroundCover></BackgroundCover>
+            <SideImage>
+                <Imagemoving></Imagemoving>
+            </SideImage>
             <UncoverInfo>
-                <SideImage>
-                    <Imagemoving></Imagemoving>
-                </SideImage>
                 <MovingText>
                     <div className="content-logo flex-center">
                         <img src="/assets/logo_icon_001.png" alt="logo image" />
@@ -151,7 +151,7 @@ const MovingText = styled.article`
 
     // 서브 텍스트
     .content-subtext {
-        font-family: 'Bruno Ace SC', cursive;
+        font-family: 'Rajdhani', sans-serif;
         position: relative;
         height: 120px;
         margin-top: 30px;
@@ -201,22 +201,28 @@ const MovingText = styled.article`
             transform: translateY(140px);
         }
     }
-    @media (max-width: 650px) {
-        .content-subtext {
-            height: 200px;
-            font-size: 14px;
-        }
-        .content-subtext > span {
-            width: 100%;
-            transform: translateY(200px);
+    @media (max-width: 700px) {
+        .flex-center {
+            justify-content: center;
+            text-align: center;
         }
         .content-title {
+            margin-top: 15px;
             height: 55px;
             font-size: 2.5rem;
         }
         .content-title > span {
             position: absolute;
             transform: translateY(55px);
+        }
+        .content-subtext {
+            margin-top: 10px;
+            height: 200px;
+            font-size: 14px;
+        }
+        .content-subtext > span {
+            width: 100%;
+            transform: translateY(220px);
         }
     }
 `;
