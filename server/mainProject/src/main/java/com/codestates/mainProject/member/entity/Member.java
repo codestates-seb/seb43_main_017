@@ -34,7 +34,7 @@ public class Member extends Auditable {
     private String password;
 
     @Column(name = "image")
-    private String image;
+    private String image="";
 
     @Enumerated(value = EnumType.STRING)
     @Column(length = 20, nullable = false)
