@@ -77,6 +77,7 @@ const SideImage = styled.aside`
     right: 0px;
     width: 30%;
     height: 100vh;
+    overflow: hidden;
     @media (max-width: 1300px) {
         display: none;
     }
