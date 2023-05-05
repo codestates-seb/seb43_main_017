@@ -11,7 +11,7 @@ function NotFound() {
                     Sorry. the page you're looking for doesn't exist. <br /> If you think something is broken. report a
                     problem.
                 </span>
-                <Button> HOME </Button>
+                <HomeButton> HOME </HomeButton>
             </div>
         </NotfoundSection>
     );
@@ -82,7 +82,7 @@ const NotfoundSection = styled.div`
     }
 `;
 
-const Button = styled.Button`
+const HomeButton = styled.button`
     margin-top: 50px;
     padding: 8px 30px;
     border-radius: 20px;
