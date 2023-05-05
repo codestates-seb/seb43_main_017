@@ -4,7 +4,7 @@ import { BlurBackground, SignInBox } from './Signin'; // 로그인과 회원가�
 
 function Signup({ setShowSignUp }: { setShowSignUp: React.Dispatch<React.SetStateAction<boolean>> }) {
     const [closeDisplay, setCloseDisplay] = useState<boolean>(false); // display closing 모션효과 상태
-
+    /**로 */
     const haldleClose = () => {
         // 회원가입 버튼 클릭 함수. 함수명은 차후에 편한대로 변경해주세요~!
         // 회원가입 axios 요청이 성공했을때 주석사이의 상태변경 함수가 포함되어야합니다.
