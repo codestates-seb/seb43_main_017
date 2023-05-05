@@ -128,16 +128,20 @@ const MenuIcon = styled.ul`
         padding: 10px;
         color: #9b9b9b;
         font-size: 1rem;
-        transition: 0.3s ease-in-out;
+        transition: 0.2s ease-in-out;
     }
     li:hover {
         background-color: #333;
         color: #fff;
         transform: scale(1.2);
     }
+    li:active {
+        background-color: #fff;
+    }
     .click-icon {
         background-color: rgba(199, 68, 68, 1);
         color: #fff;
+        animation: scale 2s infinite;
     }
     a {
         color: #9b9b9b;
@@ -150,6 +154,12 @@ const MenuIcon = styled.ul`
         flex-direction: row;
         width: 180px;
         height: 100%;
+    }
+    @keyframes scale {
+        50% {
+            transform: scale(1.2);
+            background-color: #333;
+        }
     }
 `;
 /**2023-05-05 프로필아이콘 : 김주비*/
