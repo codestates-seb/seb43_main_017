@@ -6,9 +6,14 @@ import { HiOutlineMusicNote } from 'react-icons/hi';
 import { useState } from 'react';
 
 function Navigate() {
+    /**2023-05-05 선택된 아이콘 인덱스 스테이트 : 김주비*/
     const [selectIndex, setSelectIndex] = useState<number>(0);
+    /**2023-05-05 프로필 아이콘 클릭시 이벤트실행 스테이트 : 김주비*/
     const [click, setClick] = useState<boolean>(false);
 
+    /**2023-05-05 주 메뉴리스트 및 경로 : 김주비
+     * - 메뉴에 경로 지정하고싶을시 link 엔드포인트로 기입
+     */
     const menuIconlist = [
         {
             index: 0,
@@ -83,6 +88,7 @@ function Navigate() {
 
 export default Navigate;
 
+/**2023-05-05 전체섹션 : 김주비*/
 const NavigateBox = styled.nav`
     width: 100%;
     .icon-group {
@@ -99,7 +105,7 @@ const NavigateBox = styled.nav`
         }
     }
 `;
-
+/**2023-05-05 로고아이콘 : 김주비*/
 const LogoIcon = styled.div`
     width: 50px;
     height: 50px;
@@ -107,6 +113,7 @@ const LogoIcon = styled.div`
         width: 100%;
     }
 `;
+/**2023-05-05 메뉴아이콘 : 김주비*/
 const MenuIcon = styled.ul`
     display: flex;
     flex-direction: column;
@@ -145,7 +152,7 @@ const MenuIcon = styled.ul`
         height: 100%;
     }
 `;
-
+/**2023-05-05 프로필아이콘 : 김주비*/
 const ProfileIcon = styled.div`
     width: 70px;
     height: 70px;
@@ -197,7 +204,7 @@ const ProfileIcon = styled.div`
         }
     }
 `;
-
+/**2023-05-05 도트디자인 : 김주비*/
 const Dotsstyle = styled.div`
     display: flex;
     flex-direction: column;

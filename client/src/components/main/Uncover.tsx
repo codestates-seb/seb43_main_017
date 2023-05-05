@@ -39,6 +39,7 @@ function Uncover() {
 
 export default Uncover;
 
+/**2023-05-06 전체섹션 - 김주비*/
 const UncoverInfoGroup = styled.section`
     position: relative;
     width: 100vw;
@@ -49,7 +50,7 @@ const UncoverInfoGroup = styled.section`
     color: #ccc;
     overflow: hidden;
 `;
-/**자동적으로 Scale 되는 백그라운드 구현 */
+/**2023-05-06 ScaleOver 되는 백그라운드 애니메이션 - 김주비 */
 const BackgroundCover = styled.div`
     box-sizing: border-box;
     position: absolute;
@@ -68,6 +69,7 @@ const BackgroundCover = styled.div`
         }
     }
 `;
+/**2023-05-06 슬라이딩되는 사이드 이미지 애니메이션 - 김주비 */
 const SideImage = styled.aside`
     display: flex;
     justify-content: center;
@@ -82,6 +84,7 @@ const SideImage = styled.aside`
         display: none;
     }
 `;
+/**2023-05-06 슬라이딩되는 사이드 이미지 애니메이션 (bg) - 김주비  */
 const Imagemoving = styled.div`
     width: 100%;
     height: 0vh;
@@ -95,7 +98,7 @@ const Imagemoving = styled.div`
         }
     }
 `;
-/**중앙 정렬 전체섹션 */
+/**2023-05-06 컨텐츠 그룹 - 김주비*/
 const UncoverInfo = styled.div`
     display: flex;
     flex-direction: column;
@@ -106,7 +109,7 @@ const UncoverInfo = styled.div`
     width: 60%;
     min-height: 100vh;
 `;
-/**모션 텍스트 */
+/**2023-05-06 슬라이드 업 되는 텍스트 애니메이션 - 김주비*/
 const MovingText = styled.article`
     display: flex;
     flex-direction: column;
@@ -227,7 +230,7 @@ const MovingText = styled.article`
         }
     }
 `;
-/**스크롤 아이콘 모션*/
+/**2023-05-06 스크롤링 아이콘 애니메이션 - 김주비*/
 const MovingScroll = styled.article`
     position: absolute;
     display: flex;
