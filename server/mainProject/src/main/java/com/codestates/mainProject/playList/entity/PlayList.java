@@ -32,6 +32,4 @@ public class PlayList {
     @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
     private List<PlayListLike> playListLikes = new ArrayList<>();
 
-
-
 }
