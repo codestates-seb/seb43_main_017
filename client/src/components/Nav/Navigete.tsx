@@ -118,7 +118,7 @@ const MenuIcon = styled.ul`
         transition: 0.3s ease-in-out;
     }
     li:hover {
-        background-color: rgba(199, 68, 68, 1);
+        background-color: #333;
         color: #fff;
         transform: scale(1.2);
     }
