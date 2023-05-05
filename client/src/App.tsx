@@ -3,7 +3,7 @@ import './css/App.css';
 import './css/reset.css';
 import { BrowserRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import Navigate from './components/nav/Navigete';
+import Navigate from './components/Nav/Navigete';
 import Signin from './components/sign/Signin';
 import Signup from './components/sign/Signup';
 import RoutingPages from './pages/Routingpages';
@@ -31,14 +31,14 @@ function App() {
                             setShowSignIn(true);
                         }}
                     >
-                        LOGIN
+                        SignIn
                     </ButtonStyle>
                     <ButtonStyle2
                         onClick={() => {
                             setShowSignUp(true);
                         }}
                     >
-                        JOIN
+                        SingUp
                     </ButtonStyle2>
                 </SignBtnSection>
                 {/* Login botton End*/}
