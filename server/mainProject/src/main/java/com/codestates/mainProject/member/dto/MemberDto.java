@@ -2,10 +2,7 @@ package com.codestates.mainProject.member.dto;
 
 
 import com.codestates.mainProject.member.entity.Member;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -16,6 +13,7 @@ public class MemberDto {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
+    @Setter
     public static class PostDto{
         private String name;
         @NotBlank
@@ -31,7 +29,7 @@ public class MemberDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class PatchDto{
-        private long MemberId;
+        private long memberId;
         private String name;
         private String email;
         private String image;
@@ -40,15 +38,15 @@ public class MemberDto {
 
     @Getter
     @Setter
+    @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ResponseDto {
 
-        private long MemberId;
+        private long memberId;
         private String name;
         private String email;
         private String image;
-        private LocalDateTime createdAt;
-        private LocalDateTime modifiedAt;
+        private Member.Status status;
     }
 }

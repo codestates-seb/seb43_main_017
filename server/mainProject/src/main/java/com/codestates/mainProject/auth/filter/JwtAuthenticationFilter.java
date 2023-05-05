@@ -2,13 +2,20 @@ package com.codestates.mainProject.auth.filter;
 
 import com.codestates.mainProject.auth.dto.LoginDto;
 import com.codestates.mainProject.auth.jwt.JwtTokenizer;
+import com.codestates.mainProject.exception.BusinessLogicException;
+import com.codestates.mainProject.exception.ExceptionCode;
 import com.codestates.mainProject.member.dto.MemberDto;
 import com.codestates.mainProject.member.entity.Member;
 import com.codestates.mainProject.member.mapper.MemberMapper;
+import com.codestates.mainProject.member.repository.MemberRepository;
+import com.codestates.mainProject.member.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,25 +34,48 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private final AuthenticationManager authenticationManager;
     private final JwtTokenizer jwtTokenizer;
 
-    // (2)
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtTokenizer jwtTokenizer) {
+    private final MemberRepository memberRepository;
+
+
+
+
+
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtTokenizer jwtTokenizer ,MemberRepository memberRepository) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenizer = jwtTokenizer;
+        this.memberRepository = memberRepository;
     }
+
 
     // (3)
     @SneakyThrows
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        LoginDto loginDto = objectMapper.readValue(request.getInputStream(), LoginDto.class);
+            ObjectMapper objectMapper = new ObjectMapper();
+            LoginDto loginDto;
+            try {
+                loginDto = objectMapper.readValue(request.getInputStream(), LoginDto.class);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 
-        // (3-3)
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
 
-        return authenticationManager.authenticate(authenticationToken);
+            Optional<Member> optionalMember = memberRepository.findByEmail(loginDto.getEmail());
+
+            Member findMember = optionalMember.orElseThrow(() ->
+                    new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+
+            if (findMember.getStatus() == Member.Status.MEMBER_DELETE) {
+                throw new BusinessLogicException(ExceptionCode.MEMBER_IS_DELETED);
+            }
+
+            // (3-3)
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
+
+            return authenticationManager.authenticate(authenticationToken);
+
     }
 
     @Override
@@ -101,4 +131,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         return refreshToken;
     }
+
+
 }

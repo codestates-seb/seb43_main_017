@@ -57,7 +57,6 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
-    @Transactional(readOnly = true)
     public Member findMember(long memberId) {
         return findVerifiedMember(memberId);
     }
@@ -79,28 +78,36 @@ public class MemberService {
 
     @Transactional
     public Member updateMember(Member member) {
+
         Member findMember = findVerifiedMember(member.getMemberId());
         Optional.ofNullable(member.getName())
                 .ifPresent(name -> findMember.setName(name));
         Optional.ofNullable(member.getEmail())
                 .ifPresent(email -> findMember.setEmail(email));
+        Optional.ofNullable(member.getImage())
+                .ifPresent(image -> findMember.setImage(image));
 
         return findMember;
     }
 
-    public void deleteMember(long memberId) {
+    public void updateStatus(long memberId) {
+        Member findMember = findVerifiedMember(memberId);
+        findMember.setStatus(Member.Status.MEMBER_ACTIVE);
+    }
+
+    public Member deleteMember(long memberId) {
         Member findMember = findVerifiedMember(memberId);
 
         findMember.setStatus(Member.Status.MEMBER_DELETE);
+        return findMember;
     }
-
-
 
 
     public Member findVerifiedMember(long memberId) {
         Optional<Member> optionalMember =  memberRepository.findById(memberId);
         Member findMember = optionalMember.orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+
 
         return findMember;
     }
