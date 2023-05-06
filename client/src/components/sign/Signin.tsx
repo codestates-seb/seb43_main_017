@@ -160,7 +160,7 @@ export const SignInBox = styled.div`
     min-height: 600px;
     margin-top: -1000px;
     border-radius: 20px;
-    background-color: rgba(28, 31, 34, 0.5);
+    background-color: rgba(28, 31, 34, 0.7);
     border: 1px solid rgba(0, 0, 0, 0.2);
     box-shadow: 0px 0px 40px rgb(0, 0, 0, 0.2);
     > span {
@@ -246,7 +246,7 @@ export const InputBox = styled.input`
     color: #fff;
     border-bottom: 2px solid #5e5e5e;
     ::placeholder {
-        color: rgba(94, 94, 94, 0.6);
+        color: rgba(130, 129, 129, 0.6);
     }
     &:focus {
         width: 100%;
