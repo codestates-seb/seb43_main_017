@@ -237,7 +237,7 @@ export const InputContainer = styled.div`
 
 /**2023/05/05 - 로그인 인풋창 컴포넌트 - 박수범 */
 export const InputBox = styled.input`
-    width: 100%;
+    width: 90%;
     margin: 10px 0px;
     padding: 3px;
     outline: none;
@@ -249,6 +249,8 @@ export const InputBox = styled.input`
         color: rgba(94, 94, 94, 0.6);
     }
     &:focus {
+        width: 100%;
+        border-bottom: 2px solid rgba(199, 68, 68, 1);
         ::placeholder {
             opacity: 0;
         }
