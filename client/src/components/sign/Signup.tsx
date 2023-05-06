@@ -9,23 +9,29 @@ import { LoginPost } from '../../types/AxiosInterface';
 function Signup({ setShowSignUp }: { setShowSignUp: React.Dispatch<React.SetStateAction<boolean>> }) {
     const BaseUrl = 'https://1a3f-59-17-229-47.jp.ngrok.io/members/signup';
     const [closeDisplay, setCloseDisplay] = useState<boolean>(false); // display closing 모션효과 상태
+    /** 에러메시지  */
     const [nameMessage, setnameMessage] = useState('');
     const [emailMessage, setEmailMessage] = useState('');
     const [passwordMessage, setPasswordMessage] = useState('');
     const [checkMessage, setCheckMessage] = useState('');
+    /** 이름, 이메일, 패스워드, 패스워드체크 유효성 통과 여부 */
     const [isEmail, setIsEmail] = useState(false);
     const [isPassword, setIsPassword] = useState(false);
     const [isCheck, setIsCheck] = useState(false);
     const [isName, setIsName] = useState(false);
+    /** 회원가입 인풋창 입력값 저장*/
     const [userInfo, setUserInfo] = useState<userType>({
         name: '',
         email: '',
         password: '',
     });
+    /**2023/05/06 - 인풋창에 회원정보를 저장하고 유효성검사를 진행하는 함수 - 박수범 */
     const InputValueHandler = (e: React.ChangeEvent<HTMLInputElement>, key: string) => {
         setUserInfo({ ...userInfo, [key]: e.target.value });
+        /**2023/05/06 - 이메일 유효성 검사 - 박수범  */
         const emailRegex =
             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        // 이름 유효성 검사
         if (key === 'name' && e.target.value.length < 1) {
             setnameMessage('이름을 입력해주세요.');
         } else if (e.target.value.length === 0) {
@@ -35,6 +41,7 @@ function Signup({ setShowSignUp }: { setShowSignUp: React.Dispatch<React.SetStat
             setnameMessage('');
             setIsName(true);
         }
+        // 이메일 유효성 검사
         if (key === 'email' && e.target.value.length > 0) {
             setEmailMessage('올바른 이메일 형식이 아닙니다.');
             setIsEmail(false);
@@ -45,6 +52,7 @@ function Signup({ setShowSignUp }: { setShowSignUp: React.Dispatch<React.SetStat
             setEmailMessage('');
             setIsEmail(true);
         }
+        // 패스워드 유효성 검사
         if (key === 'password' && e.target.value.length < 8 && e.target.value.length > 0) {
             setPasswordMessage('비밀번호는 8자리 이상 입력해주세요.');
             setIsPassword(false);
@@ -55,6 +63,7 @@ function Signup({ setShowSignUp }: { setShowSignUp: React.Dispatch<React.SetStat
             setPasswordMessage('');
             setIsPassword(true);
         }
+        // 패스워드체크
         if (key === 'check' && e.target.value !== userInfo.password) {
             setCheckMessage('비밀번호가 일치하지 않습니다.');
             setIsCheck(false);
@@ -67,7 +76,7 @@ function Signup({ setShowSignUp }: { setShowSignUp: React.Dispatch<React.SetStat
         }
     };
 
-    /**2023/05/05 - 로그인 시 서버로부터 받아 온 Access토큰을 로컬스토리지에 저장하고 로그인 모달을 종료한다 -bumpist  */
+    /**2023/05/05 - 회원가입시 서버로 이름,이메일,패스워드를 전송하는 함수 -bumpist  */
     const SignUpHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (isPassword && isEmail && isName && isCheck) {
@@ -137,6 +146,7 @@ function Signup({ setShowSignUp }: { setShowSignUp: React.Dispatch<React.SetStat
                             />
                             {checkMessage ? <Errorbox>{checkMessage}</Errorbox> : ''}
                         </div>
+                        {/* 유효성 검사를 모두 통과하지못하면 회원가입버튼이 비활성화된다. */}
                         {!isEmail || !isPassword || !isName || !isCheck ? (
                             <Disablebtn disabled={!(isEmail && isPassword && isName && isCheck)}>SignUp</Disablebtn>
                         ) : (
@@ -148,7 +158,7 @@ function Signup({ setShowSignUp }: { setShowSignUp: React.Dispatch<React.SetStat
         </BlurBackground>
     );
 }
-
+/**2023/05/06 - 유효성 검사를 통과하지 못할 시 보여지는 disable 버튼 컴포넌트 - 박수범  */
 const Disablebtn = styled.button`
     margin: 10px;
     border: 2px solid #656565;
