@@ -2,39 +2,56 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { ButtonStyle } from '../../App'; // 버튼 디자인은 App 컴포넌트와 공유합니다.
 import axios from 'axios';
-
 import { infoType } from '../../types/LoginInput';
 import { LoginPost } from '../../types/AxiosInterface';
 
 function Signin({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetStateAction<boolean>> }) {
-    const End_point = '/members/login';
+    const BaseUrl = 'https://1a3f-59-17-229-47.jp.ngrok.io/members/login';
     const [closeDisplay, setCloseDisplay] = useState<boolean>(false); // display closing 모션효과 상태
+    const [errorMessage, setErrorMessage] = useState<string>('');
     const [loginInfo, setLoginInfo] = useState<infoType>({
-        userId: '',
+        email: '',
         password: '',
     });
 
-    const InputValueHandler = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const InputValueHandler = (e: React.ChangeEvent<HTMLInputElement>, key: string) => {
         setLoginInfo({ ...loginInfo, [key]: e.target.value });
     };
-    console.log(loginInfo);
+
     /**2023/05/05 - 로그인 시 서버로부터 받아 온 Access토큰을 로컬스토리지에 저장하고 로그인 모달을 종료한다 -bumpist  */
-    const SignInHandler = () => {
-        axios
-            .post<LoginPost>(`${End_point}`, {
-                userId: loginInfo.userId,
-                password: loginInfo.password,
-            })
-            .then((res) => {
-                if (res.data.accessToken !== undefined) {
-                    window.localStorage.setItem('access_token', res.data.accessToken);
-                    //토큰 리코일로 관리.setToken(localStorage.getItem('access_token'));
-                }
-                setCloseDisplay(!closeDisplay);
-                setTimeout(() => {
-                    setShowSignIn(false);
-                }, 1000);
-            });
+    const SignInHandler = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const { email, password } = loginInfo;
+        if (!email || !password) {
+            setErrorMessage('이메일과 비밀번호를 모두 입력하세요');
+        } else if (email && password) {
+            setErrorMessage('');
+            axios
+                .post<LoginPost>(`${BaseUrl}`, {
+                    email: loginInfo.email,
+                    password: loginInfo.password,
+                })
+                .then((res) => {
+                    console.log(res.data);
+                    if (res.data.accessToken !== undefined) {
+                        window.localStorage.setItem('access_token', res.data.accessToken);
+                        //토큰 리코일로 관리setToken(localStorage.getItem('access_token')); setCloseDisplay(!closeDisplay);
+                        setCloseDisplay(!closeDisplay);
+                        setTimeout(() => {
+                            setShowSignIn(false);
+                        }, 1000);
+                    }
+                });
+            setErrorMessage('유효하지 않은 로그인입니다.');
+        }
+    };
+
+    /**2023/05/05 - Signin 모달창 밖을 클릭시 모달창을 종료시켜주는 함수 -bumpist  */
+    const ModalHandler = () => {
+        setCloseDisplay(!closeDisplay);
+        setTimeout(() => {
+            setShowSignIn(false);
+        }, 1000);
     };
 
     /**2023/05/05 - 로그인 시 서버로부터 받아 온 Access토큰을 로컬스토리지에 저장하고 로그인 모달을 종료한다 -bumpist  */
@@ -52,7 +69,7 @@ function Signin({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetStat
         console.log('네이버로그인이다.');
     };
     return (
-        <BlurBackground className={closeDisplay ? 'close-display' : 'null'} onClick={SignInHandler}>
+        <BlurBackground className={closeDisplay ? 'close-display' : 'null'} onClick={ModalHandler}>
             <SignInBox
                 className={closeDisplay ? 'out-display' : 'null'}
                 onClick={(e) => {
@@ -81,18 +98,20 @@ function Signin({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetStat
                         <div>
                             {/* 아이디 인풋창 */}
                             <InputBox
-                                placeholder="아이디를 입력하세요"
+                                placeholder="이메일 입력하세요"
                                 type="text"
-                                onChange={() => InputValueHandler('userId')}
+                                onChange={(e) => InputValueHandler(e, 'email')}
                             />
                             {/* 패스워드 인풋창 */}
 
                             <InputBox
                                 placeholder="패스워드를 입력하세요"
                                 type="password"
-                                onChange={() => InputValueHandler('password')}
+                                onChange={(e) => InputValueHandler(e, 'password')}
                             />
                         </div>
+
+                        {errorMessage ? <Errorbox>{errorMessage}</Errorbox> : ''}
                         <ButtonStyle>LOGIN</ButtonStyle>
                     </form>
                 </InputContainer>
@@ -207,7 +226,7 @@ export const SignText = styled.p`
     font-weight: 600;
     color: #757575;
 `;
-/**2023/05/05 - 로그인 모달창 텍스트 컴포넌트 - 박수범 */
+/**2023/05/05 - 로그인 인풋창 컨테이너  - 박수범 */
 export const InputContainer = styled.div`
     display: inline-block;
     margin: 0 auto;
@@ -234,4 +253,10 @@ export const InputBox = styled.input`
             opacity: 0;
         }
     }
+`;
+
+/**2023/05/05 - 에러메시지 박스 컴포넌트 - 박수범 */
+export const Errorbox = styled.div`
+    color: red;
+    font-size: 14px;
 `;
