@@ -66,7 +66,10 @@ public class SecurityConfiguration {
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
                         .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .antMatchers(HttpMethod.POST, "/members/**").permitAll()
+                        .antMatchers(HttpMethod.POST, "/members/signup").permitAll()
+                        .antMatchers(HttpMethod.POST, "/members/login").permitAll()
+                        .antMatchers(HttpMethod.POST, "/members/logout").hasRole("USER")
+                        .antMatchers(HttpMethod.POST, "/members/image/**").hasRole("USER")
                         .antMatchers(HttpMethod.GET, "/members/**").permitAll()
                         .antMatchers(HttpMethod.PATCH, "/members/**").hasRole("USER")
                         .antMatchers(HttpMethod.DELETE, "/members/**").hasRole("USER")
@@ -84,7 +87,10 @@ public class SecurityConfiguration {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("*"));   // (8-1)
-        configuration.setAllowedMethods(Arrays.asList("GET","POST", "PATCH", "DELETE"));
+        configuration.setAllowedMethods(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setExposedHeaders(Arrays.asList("*"));
+        configuration.addAllowedHeader("*");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
@@ -109,8 +115,8 @@ public class SecurityConfiguration {
 
             builder
                     .addFilter(jwtAuthenticationFilter)
-                    // .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class); //  jwtVerificationFilter 필터추가, 뒤에 클래스는 어느클래스 다음에 실행할지 설정
-                    .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class);
+                    .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class); //  jwtVerificationFilter 필터추가, 뒤에 클래스는 어느클래스 다음에 실행할지 설정
+//                    .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class);
         }
     }
 
