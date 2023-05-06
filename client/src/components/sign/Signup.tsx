@@ -80,12 +80,12 @@ function Signup({ setShowSignUp }: { setShowSignUp: React.Dispatch<React.SetStat
     const SignUpHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (isPassword && isEmail && isName && isCheck) {
-            axios.post<LoginPost>(`${BaseUrl}`, {
+            axios.post<null>(`${BaseUrl}`, {
                 neme: userInfo.name,
                 email: userInfo.email,
                 password: userInfo.password,
             });
-            alert(`Uncover에 오신걸 환영합니다 ${userInfo.name}님`);
+            alert(`Uncover에 오신걸 환영합니다`);
             setCloseDisplay(!closeDisplay);
             setTimeout(() => {
                 setShowSignUp(false);
