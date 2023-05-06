@@ -150,17 +150,14 @@ const MusicListContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid red;
 `;
 
 const MypageContainer = styled.div`
     align-items: center;
-    border: 1px solid red;
 `;
 
 const UserProfile = styled.div`
     display: flex;
-    border: 1px solid green;
     padding: 20px;
 
     .user-profile {
@@ -173,73 +170,68 @@ const UserProfile = styled.div`
 `;
 
 const UserContainer = styled.div`
-    align-items: center;
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
 
     .user-name-container {
         input {
-            font-size: 40px;
-            color: #ffffff;
+            font-size: 50px;
+            color: hsl(0, 0%, 100%);
             font-weight: bold;
-            width: 250px;
+            width: 300px;
             height: 50px;
-            margin-left: 25px;
-            margin-top: 10px;
             background-color: black;
             border: none;
+            margin: 10px 0px 10px 25px;
         }
 
         .user-name {
             font-size: 50px;
             font-weight: bold;
             color: hsl(0, 0%, 100%);
-            margin-left: 25px;
-            margin-top: 10px;
-            margin-bottom: 10px;
+            margin: 10px 0px 10px 25px;
         }
     }
 
     .user-email {
         font-size: 20px;
-        color: hsl(0, 0%, 65%);
-        margin-left: 25px;
-        margin-bottom: 10px;
+        color: hsl(0, 0%, 100%);
+        margin: 10px 0px 15px 25px;
     }
 
     .user-coment-container {
         input {
-            font-size: 15px;
-            color: hsl(32, 100%, 60%);
-            font-weight: bold;
+            font-size: 20px;
+            color: hsl(0, 0%, 100%);
             width: 250px;
-            height: 50px;
-            margin-left: 25px;
-            margin-top: 10px;
+            height: 20px;
             background-color: black;
             border: none;
+            margin: 10px 0px 10px 25px;
         }
 
         .user-coment {
-            font-size: 25px;
-            color: hsl(32, 100%, 60%);
-            margin-left: 25px;
+            font-size: 20px;
+            color: hsl(0, 0%, 100%);
+            margin: 10px 0px 10px 25px;
         }
     }
 `;
 
 const MusicInfor = styled.div`
     display: flex;
-    border: 1px solid blue;
 `;
 
 const LeftContainer = styled.div`
     align-items: center;
-    border: 1px solid red;
-    width: 500px;
-    padding: 20px;
+    width: 600px;
+    height: 400px;
 `;
 
 const VoteContainer = styled.div`
     align-items: center;
+    margin: 10px;
     border: 1px solid red;
 
     .vote-title {
@@ -264,7 +256,6 @@ const VoteContainer = styled.div`
         align-items: center;
         justify-content: space-between;
         border-bottom: 1px solid white;
-        border: 1px solid red;
 
         img {
             width: 30px;
@@ -300,6 +291,7 @@ const VoteContainer = styled.div`
 
 const PlayListContainer = styled.div`
     align-items: center;
+    margin: 10px;
     border: 1px solid red;
 
     .playlist-title {
@@ -324,7 +316,6 @@ const PlayListContainer = styled.div`
         align-items: center;
         justify-content: space-between;
         background: rgba(43, 43, 43, 0.8);
-        border: 1px solid red;
 
         img {
             width: 50px;
@@ -370,12 +361,13 @@ const PlayListContainer = styled.div`
 
 const RightContainer = styled.div`
     align-items: center;
-    border: 1px solid red;
-    padding: 20px;
+    width: 700px;
+    height: 400px;
 `;
 
 const ModifyContainer = styled.div`
     align-items: center;
+    margin: 10px;
     border: 1px solid red;
 
     .modify-title {
