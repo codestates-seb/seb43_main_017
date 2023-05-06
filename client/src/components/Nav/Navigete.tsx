@@ -69,17 +69,19 @@ function Navigate() {
                     ))}
                 </Dotsstyle>
                 <ProfileIcon>
-                    <span
-                        onClick={() => {
-                            setClick(!click);
-                        }}
-                    >
-                        <img
-                            src="/assets/profile-icon.png"
-                            alt="profile icon"
-                            className={click ? 'img-active' : 'null'}
-                        />
-                    </span>
+                    <Link to="/mypage">
+                        <span
+                            onClick={() => {
+                                setClick(!click);
+                            }}
+                        >
+                            <img
+                                src="/assets/profile-icon.png"
+                                alt="profile icon"
+                                className={click ? 'img-active' : 'null'}
+                            />
+                        </span>
+                    </Link>
                 </ProfileIcon>
             </div>
         </NavigateBox>

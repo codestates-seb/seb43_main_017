@@ -4,37 +4,58 @@ import { BsMusicPlayer, BsPencilSquare, BsPlayCircle } from 'react-icons/bs';
 import { CiMenuKebab } from 'react-icons/ci';
 import { useRecoilState } from 'recoil';
 import { nameState, introState } from './atoms';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+
+type UserData = {
+    name: string;
+    intro: string;
+};
 
 function MusicList() {
+    /* 2023.05.06 유저의 name과 intro부분을 클릭했을 시 수정할 수 있는 상태관리 - 홍혜란 */
     const [name, setName] = useRecoilState(nameState);
     const [intro, setIntro] = useRecoilState(introState);
     const [editingName, setEditingName] = useState(false);
     const [editingIntro, setEditingIntro] = useState(false);
 
+    /* 2023.05.06 사용자가 이름을 클릭했을 때 호출되는 함수 , 이름이 편집 모드로 전환 - 홍혜란 */
     const handleNameClick = () => {
         setEditingName(true);
     };
 
+    /* 2023.05.06 사용자가 이름 입력 폼에서 포커스를 벗어났을 때 호출되는 함수 , 이름이 편집 모드에서 보기 모드로 전환 - 홍혜란 */
     const handleNameBlur = () => {
         setEditingName(false);
     };
 
+    /* 2023.05.06 사용자가 이름 입력 폼에서 값을 변경할 때마다 호출되는 함수 , 입력 폼에 입력된 값으로 name 상태가 업데이트 - 홍혜란 */
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
     };
 
+    /* 2023.05.06 사용자가 자기소개를 클릭했을 때 호출되는 함수 , 자기소개가 편집 모드로 전환 - 홍혜란 */
     const handleIntroClick = () => {
         setEditingIntro(true);
     };
 
+    /* 2023.05.06 사용자가 자기소개 입력 폼에서 포커스를 벗어났을 때 호출되는 함수 , 자기소개가 편집 모드에서 보기 모드로 전환 - 홍혜란 */
     const handleIntroBlur = () => {
         setEditingIntro(false);
     };
 
+    /* 2023.05.06 사용자가 자기소개 입력 폼에서 값을 변경할 때마다 호출되는 함수 , 입력 폼에 입력된 값으로 intro 상태가 업데이트 - 홍혜란 */
     const handleIntroChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIntro(event.target.value);
     };
+
+    /* 2023.05.06 수정된 이름과 자기소개 데이터를 서버에 저장 - 홍혜란 */
+    useEffect(() => {
+        return () => {
+            const userData: UserData = { name, intro };
+            axios.patch('/api/user', userData);
+        };
+    }, [name, intro]);
 
     return (
         <MusicListContainer>
@@ -44,6 +65,7 @@ function MusicList() {
                         <img src="./assets/ditto.png" alt="userimg" />
                     </div>
                     <UserContainer>
+                        {/* 사용자의 이름 출력 및 수정 */}
                         <div className="user-name-container">
                             {editingName ? (
                                 <input type="text" value={name} onChange={handleNameChange} onBlur={handleNameBlur} />
@@ -54,6 +76,7 @@ function MusicList() {
                             )}
                         </div>
                         <div className="user-email">undefined@gmail.com</div>
+                        {/* 사용자의 자기소개 출력 및 수정 */}
                         <div className="user-coment-container">
                             {editingIntro ? (
                                 <input
@@ -169,6 +192,7 @@ const UserProfile = styled.div`
     }
 `;
 
+/* 2023.05.06 유저의 이름 / 이메일 / 자기소개 컴포넌트 구현 -홍혜란 */
 const UserContainer = styled.div`
     align-items: flex-start;
     display: flex;
@@ -227,6 +251,7 @@ const LeftContainer = styled.div`
     align-items: center;
     width: 600px;
     height: 400px;
+    border: 1px solid blue;
 `;
 
 const VoteContainer = styled.div`
@@ -363,6 +388,7 @@ const RightContainer = styled.div`
     align-items: center;
     width: 700px;
     height: 400px;
+    border: 1px solid blue;
 `;
 
 const ModifyContainer = styled.div`
