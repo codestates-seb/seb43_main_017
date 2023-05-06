@@ -22,7 +22,6 @@ public class MemberDto {
         @NotBlank
         private String password;
 
-
     }
     @Getter
     @Setter
@@ -32,7 +31,6 @@ public class MemberDto {
         private long memberId;
         private String name;
         private String email;
-        private String image;
 
     }
 

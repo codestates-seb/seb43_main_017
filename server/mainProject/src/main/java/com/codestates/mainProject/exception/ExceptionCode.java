@@ -17,7 +17,9 @@ public enum ExceptionCode {
     NO_PERMISSION_EDITING_POST(403,"작성자만 수정할 수 있습니다."),
     NO_PERMISSION_DELETING_POST(403,"작성자만 삭제할 수 있습니다."),
     NO_PERMISSION_CREATING_POST(403, "회원만 작성 할 수 있습니다."),
-    INTERNAL_SERVER_ERROR(500, "인터넷 서버 오류입니다");
+    INTERNAL_SERVER_ERROR(500, "인터넷 서버 오류입니다"),
+    IMAGE_URL_ERROR(404, "음악 경로를 찾을 수 없습니다"),
+    FILE_NOT_FOUND(404, "파일을 찾을 수 없습니다");
     @Getter
     private int status;
 
