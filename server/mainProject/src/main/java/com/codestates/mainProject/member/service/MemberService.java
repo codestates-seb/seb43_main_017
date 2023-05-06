@@ -3,20 +3,20 @@ package com.codestates.mainProject.member.service;
 import com.codestates.mainProject.auth.utils.CustomAuthorityUtils;
 import com.codestates.mainProject.exception.BusinessLogicException;
 import com.codestates.mainProject.exception.ExceptionCode;
+import com.codestates.mainProject.image.FileStorageService;
 import com.codestates.mainProject.member.entity.Member;
 import com.codestates.mainProject.member.repository.MemberRepository;
-import com.codestates.mainProject.music.entity.Music;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +28,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils authorityUtils;
+    private final FileStorageService fileStorageService;
 
     public Member createMember(Member member) {
         verifyExistEmail(member.getEmail());
@@ -46,6 +47,14 @@ public class MemberService {
         return savedMember;
     }
 
+    public Member uploadImage(long memberId, MultipartFile imageFile) throws IOException {
+        Member findMember = findVerifiedMember(memberId);
+        String filename = fileStorageService.storeFile(imageFile);
+        findMember.setImage(filename);
+
+        return memberRepository.save(findMember);
+    }
+
     public Member createMemberOAuth2(Member member) {
         Optional<Member> findMember = memberRepository.findByEmail(member.getEmail());
         if(findMember.isPresent()){
@@ -57,7 +66,14 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
-    @Transactional(readOnly = true)
+    public Resource findImage(long  memberId){
+        Member findMember = findVerifiedMember(memberId);
+        String filename = findMember.getImage();
+        Resource file = fileStorageService.loadFileAsResource(filename);
+
+        return file;
+    }
+
     public Member findMember(long memberId) {
         return findVerifiedMember(memberId);
     }
@@ -79,6 +95,7 @@ public class MemberService {
 
     @Transactional
     public Member updateMember(Member member) {
+
         Member findMember = findVerifiedMember(member.getMemberId());
         Optional.ofNullable(member.getName())
                 .ifPresent(name -> findMember.setName(name));
@@ -88,19 +105,24 @@ public class MemberService {
         return findMember;
     }
 
-    public void deleteMember(long memberId) {
+    public void updateStatus(long memberId) {
+        Member findMember = findVerifiedMember(memberId);
+        findMember.setStatus(Member.Status.MEMBER_ACTIVE);
+    }
+
+    public Member deleteMember(long memberId) {
         Member findMember = findVerifiedMember(memberId);
 
         findMember.setStatus(Member.Status.MEMBER_DELETE);
+        return findMember;
     }
-
-
 
 
     public Member findVerifiedMember(long memberId) {
         Optional<Member> optionalMember =  memberRepository.findById(memberId);
         Member findMember = optionalMember.orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+
 
         return findMember;
     }

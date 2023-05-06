@@ -10,10 +10,12 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 @Component
@@ -30,10 +32,13 @@ public class JwtTokenizer {
     @Value("${jwt.refresh-token-expiration-minutes}")
     private int refreshTokenExpirationMinutes;
 
+    private final Map<String, Long> tokenBlackList = new HashMap<>();
+
     public String encodeBase64SecretKey(String secretKey) {
         return Encoders.BASE64.encode(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
+    // Access Token 생성 메서드
     public String generateAccessToken(Map<String, Object> claims,
                                       String subject,
                                       Date expiration,
@@ -48,6 +53,8 @@ public class JwtTokenizer {
                 .signWith(key)
                 .compact();
     }
+
+    // Refresh Token 생성 메서드 : Access Token이 만료되었을 경우, Access Token을 새로 생성하는 토큰
 
     public String generateRefreshToken(String subject, Date expiration, String base64EncodedSecretKey) {
         Key key = getKeyFromBase64EncodedKey(base64EncodedSecretKey);
@@ -94,5 +101,27 @@ public class JwtTokenizer {
         Key key = Keys.hmacShaKeyFor(keyBytes);
 
         return key;
+    }
+
+    public void addToTokenBlackList(String jws) {
+        SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes());
+        Long expirationTime = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jws)
+                .getBody().get("refreshTokenExpirationMinutes", Long.class);
+
+        tokenBlackList.put(jws, expirationTime);
+    }
+
+    public boolean isTokenInBlackList(String jws) {
+        if(!tokenBlackList.containsKey(jws)) {
+            return false;
+        }
+
+        long expirationTime = tokenBlackList.get(jws);
+        if(System.currentTimeMillis() > expirationTime) {
+            tokenBlackList.remove(jws);
+            return false;
+        }
+
+        return true;
     }
 }
