@@ -1,10 +1,13 @@
 import styled from 'styled-components';
 import Slider from './Silder';
+import { useState } from 'react';
 
 function Playlist() {
+    const [bgSrc, setBgSrc] = useState<string>('');
+
     return (
         <PlaylistSection>
-            <PlaylistBackground url="./assets/background-playlist.jpg"></PlaylistBackground>
+            <PlaylistBackground url={bgSrc}></PlaylistBackground>
             <PlaylistHeader>
                 <div className="flex-center">
                     <Pltitle>
@@ -19,7 +22,7 @@ function Playlist() {
                 </div>
             </PlaylistHeader>
             <PlaylistContents>
-                <Slider />
+                <Slider setBgSrc={setBgSrc} />
             </PlaylistContents>
         </PlaylistSection>
     );

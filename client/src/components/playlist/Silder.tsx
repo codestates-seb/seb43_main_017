@@ -3,6 +3,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { useState, useEffect } from 'react';
+import { SamplePrevArrow, SampleNextArrow } from './Arrow';
 
 interface PlcardProps {
     index: number;
@@ -15,12 +16,19 @@ interface PlcardProps {
     tag: { tagname: string }[];
 }
 
-function PlSilder() {
+function PlSilder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<string>> }) {
+    /**2023-05-06 플리데이터 저장 스테이트 : 김주비 */
     const [pldata, setPldata] = useState<PlcardProps[]>([]);
+    const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
 
+    /**2023-05-06 플리 슬라이드 더미데이터 : 김주비 */
+    const handleAfterChange = (index: number) => {
+        setCurrentSlideIndex(index);
+    };
+    /**2023-05-06 플리 슬라이드 더미데이터 : 김주비 */
     const dummydata: PlcardProps[] = [
         {
-            index: 1,
+            index: 0,
             treck: 8,
             coverimg: '/assets/background-playlist.jpg',
             plname: 'PLAY LIST: 숲속느낌 BGM',
@@ -31,7 +39,7 @@ function PlSilder() {
             tag: [{ tagname: '잔잔한' }, { tagname: '백색소음' }, { tagname: '차분한' }],
         },
         {
-            index: 2,
+            index: 1,
             treck: 7,
             coverimg: '/assets/background-playlist1.jpg',
             plname: 'PLAY LIST: 사랑에 빠졌나봐',
@@ -42,7 +50,7 @@ function PlSilder() {
             tag: [{ tagname: '달달함' }, { tagname: '로맨스' }, { tagname: '어쿠스틱' }, { tagname: '발라드' }],
         },
         {
-            index: 3,
+            index: 2,
             treck: 5,
             coverimg: '/assets/background-playlist2.jpg',
             plname: 'PLAY LIST: 환상의 나라 BGM',
@@ -52,7 +60,7 @@ function PlSilder() {
             tag: [{ tagname: '몽환적인' }, { tagname: '신비한' }],
         },
         {
-            index: 4,
+            index: 3,
             treck: 12,
             coverimg: '/assets/background-playlist5.jpg',
             plname: 'PLAY LIST: 오늘은 신나게! BGM',
@@ -63,7 +71,7 @@ function PlSilder() {
             tag: [{ tagname: '클럽뮤직' }, { tagname: 'EDM' }, { tagname: '신나는' }],
         },
         {
-            index: 5,
+            index: 4,
             treck: 20,
             coverimg: '/assets/background-playlist3.jpg',
             plname: 'PLAY LIST: 감성뿜뿜 시티팝',
@@ -74,12 +82,15 @@ function PlSilder() {
             tag: [{ tagname: '감성' }, { tagname: '시티팝' }],
         },
     ];
-
+    /**2023-05-06 첫 렌더시 데이터 전달 : 김주비 */
     useEffect(() => {
         setPldata(dummydata);
     }, []);
 
+    setBgSrc(dummydata[currentSlideIndex].coverimg);
+    /**2023-05-07 슬라이드 설정옵션 : 김주비 */
     const settings = {
+        afterChange: handleAfterChange,
         className: 'center',
         centerMode: true,
         infinite: true,
@@ -87,13 +98,17 @@ function PlSilder() {
         slidesToShow: 3,
         speed: 500,
         dots: true,
+        arrow: true,
+        prevArrow: <SamplePrevArrow />,
+        nextArrow: <SampleNextArrow />,
+        // dotsClass: 'my-dots-class',
     };
 
     return (
         <SilderGroup>
             <Slider {...settings}>
                 {pldata.map((data) => (
-                    <Plcard bgImg={data.coverimg}>
+                    <Plcard key={data.index} bgImg={data.coverimg}>
                         <div className="pl-treck">TRECK {data.treck}</div>
                         <div className="pl-contents">
                             <Pltag>
@@ -133,7 +148,7 @@ export const Plcard = styled.div<bgimg>`
     border-radius: 20px;
     background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.9)), url(${(props) => props.bgImg});
     background-size: cover;
-    transform: scale(0.8);
+    transform: scale(0.85);
     color: #ddd;
     overflow: hidden;
     transition: 0.3s ease-in-out;
