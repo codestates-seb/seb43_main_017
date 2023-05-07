@@ -3,7 +3,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { useState, useEffect } from 'react';
-import { SamplePrevArrow, SampleNextArrow } from './Arrow';
+import { ReactNode } from 'react';
 
 interface PlcardProps {
     index: number;
@@ -17,18 +17,41 @@ interface PlcardProps {
 }
 
 function PlSilder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<string>> }) {
-    /**2023-05-06 플리데이터 저장 스테이트 : 김주비 */
-    const [pldata, setPldata] = useState<PlcardProps[]>([]);
-    const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+    const [pldata, setPldata] = useState<PlcardProps[]>([]); //플리데이터 저장 스테이트
+    const [currentSlideIndex, setCurrentSlideIndex] = useState(0); //포커스된 슬라이드 인덱스
+    const [silderPage, setSliderPage] = useState<number>(3); //슬라이더 페이지 갯수
 
-    /**2023-05-06 플리 슬라이드 더미데이터 : 김주비 */
+    /**2023-05-07 window width 값 가져오기 : 김주비 */
+    window.addEventListener('resize', () => {
+        const width = window.innerWidth;
+        // 변화된 width 값을 이용하여 필요한 작업 수행
+        console.log(width);
+
+        if (width <= 1100) {
+            setSliderPage(1);
+        } else {
+            setSliderPage(3);
+        }
+    });
+    /**2023-05-07 플리 슬라이드 인덱스 : 김주비 */
     const handleAfterChange = (index: number) => {
         setCurrentSlideIndex(index);
     };
-    /**2023-05-06 플리 슬라이드 더미데이터 : 김주비 */
+    /**2023-05-07 플리 슬라이드 더미데이터 : 김주비 */
     const dummydata: PlcardProps[] = [
         {
             index: 0,
+            treck: 20,
+            coverimg: '/assets/background-playlist3.jpg',
+            plname: 'PLAY LIST: 감성뿜뿜 시티팝',
+            plcontent:
+                '내 플레이 리스트를 봐 대박임. 지금까지 이런 플레이 리스트는 없었다. 플레이 리스트의 명가uncover 를 사용하세요.',
+            like: '2087',
+            user: 'Uncover',
+            tag: [{ tagname: '감성' }, { tagname: '시티팝' }],
+        },
+        {
+            index: 1,
             treck: 8,
             coverimg: '/assets/background-playlist.jpg',
             plname: 'PLAY LIST: 숲속느낌 BGM',
@@ -39,7 +62,7 @@ function PlSilder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<
             tag: [{ tagname: '잔잔한' }, { tagname: '백색소음' }, { tagname: '차분한' }],
         },
         {
-            index: 1,
+            index: 2,
             treck: 7,
             coverimg: '/assets/background-playlist1.jpg',
             plname: 'PLAY LIST: 사랑에 빠졌나봐',
@@ -50,7 +73,7 @@ function PlSilder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<
             tag: [{ tagname: '달달함' }, { tagname: '로맨스' }, { tagname: '어쿠스틱' }, { tagname: '발라드' }],
         },
         {
-            index: 2,
+            index: 3,
             treck: 5,
             coverimg: '/assets/background-playlist2.jpg',
             plname: 'PLAY LIST: 환상의 나라 BGM',
@@ -60,7 +83,7 @@ function PlSilder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<
             tag: [{ tagname: '몽환적인' }, { tagname: '신비한' }],
         },
         {
-            index: 3,
+            index: 4,
             treck: 12,
             coverimg: '/assets/background-playlist5.jpg',
             plname: 'PLAY LIST: 오늘은 신나게! BGM',
@@ -70,24 +93,26 @@ function PlSilder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<
             user: 'Uncover',
             tag: [{ tagname: '클럽뮤직' }, { tagname: 'EDM' }, { tagname: '신나는' }],
         },
-        {
-            index: 4,
-            treck: 20,
-            coverimg: '/assets/background-playlist3.jpg',
-            plname: 'PLAY LIST: 감성뿜뿜 시티팝',
-            plcontent:
-                '내 플레이 리스트를 봐 대박임. 지금까지 이런 플레이 리스트는 없었다. 플레이 리스트의 명가uncover 를 사용하세요.',
-            like: '2087',
-            user: 'Uncover',
-            tag: [{ tagname: '감성' }, { tagname: '시티팝' }],
-        },
     ];
-    /**2023-05-06 첫 렌더시 데이터 전달 : 김주비 */
+    /**2023-05-07 커버이미지 데이터 전달 : 김주비 */
     useEffect(() => {
         setPldata(dummydata);
-    }, []);
+        setBgSrc(dummydata[currentSlideIndex].coverimg);
+    }, [currentSlideIndex]);
 
-    setBgSrc(dummydata[currentSlideIndex].coverimg);
+    /**2023-05-07 슬라이드 버튼 appen : 김주비 */
+    const appendDots = (dots: ReactNode) => {
+        return (
+            <div style={{ height: '0px' }}>
+                <ul style={{ margin: '10px' }}> {dots} </ul>
+            </div>
+        );
+    };
+    /**2023-05-07 슬라이드 버튼 custom : 김주비 */
+    const customPaging = (i: number) => {
+        return <div className="dots-paging">{i + 1}</div>;
+    };
+
     /**2023-05-07 슬라이드 설정옵션 : 김주비 */
     const settings = {
         afterChange: handleAfterChange,
@@ -95,12 +120,12 @@ function PlSilder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<
         centerMode: true,
         infinite: true,
         centerPadding: '80px',
-        slidesToShow: 3,
+        slidesToShow: silderPage,
         speed: 500,
         dots: true,
         arrow: true,
-        prevArrow: <SamplePrevArrow />,
-        nextArrow: <SampleNextArrow />,
+        appendDots: appendDots,
+        customPaging: customPaging,
         // dotsClass: 'my-dots-class',
     };
 
@@ -141,7 +166,7 @@ interface bgimg {
 }
 
 /**2023-05-06 플리 슬라이드 카드 섹션 : 김주비 */
-export const Plcard = styled.div<bgimg>`
+const Plcard = styled.div<bgimg>`
     position: relative;
     width: 500px;
     height: 350px;
@@ -164,17 +189,33 @@ export const Plcard = styled.div<bgimg>`
         left: 30px;
     }
 `;
-
 const SilderGroup = styled.div`
     width: 100%;
     .slick-center ${Plcard} {
         transform: scale(1);
+    }
+    .dots-paging {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 30px;
+        height: 30px;
+        border: 3px solid #ccc;
+        border-radius: 40px;
+        transform: scale(0.6);
+        transition: 0.2s ease-in-out;
+    }
+    .dots-paging:hover {
+        transform: scale(0.8);
+        border-color: #ff8716;
+        color: #ff8716;
     }
 `;
 /**2023-05-06 슬라이드 태그 : 김주비 */
 const Pltag = styled.ul`
     display: flex;
     li {
+        word-break: keep-all;
         border: 2px solid #ccc;
         padding: 5px 10px;
         margin-right: 10px;

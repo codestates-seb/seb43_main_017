@@ -42,6 +42,9 @@ const PlaylistSection = styled.section`
     align-items: center;
     color: #ccc;
     overflow: hidden;
+    @media (max-height: 800px) {
+        padding-top: 100px;
+    }
 `;
 interface url {
     url: string;
@@ -105,6 +108,12 @@ const Pltitle = styled.div`
         transform: translateY(70px);
         animation: movingtext 1s forwards 0.5s;
     }
+    @media (max-width: 700px) {
+        height: 50px;
+        .pl-title {
+            font-size: 2.5rem;
+        }
+    }
 `;
 /**2023-05-06 슬라이드 업 되는 서브텍스트 애니메이션 : 김주비*/
 const Plsubtext = styled.div`
@@ -121,7 +130,7 @@ const Plsubtext = styled.div`
     }
 `;
 /**2023-05-06 펼쳐지는 서치바 애니메이션 : 김주비*/
-const Plsearch = styled.input`
+export const Plsearch = styled.input`
     border-radius: 30px;
     width: 0%;
     background: rgb(255, 255, 255, 0.2);
@@ -143,9 +152,12 @@ const Plsearch = styled.input`
             border-radius: 30px;
         }
     }
+    @media (max-width: 700px) {
+        transform: scale(0.8);
+    }
 `;
 /**2023-05-06 플레이리스트 슬라이드 섹션 : 김주비 */
-const PlaylistContents = styled.article`
+export const PlaylistContents = styled.article`
     display: flex;
     justify-content: center;
     align-items: center;
