@@ -4,7 +4,8 @@ import NotFound from '../components/NotFound';
 import MainPage from './MainPage';
 import Playlist from '../components/playlist/Playlist';
 import Mixing from '../components/mixing/Mixing';
-import Mypage from '../components/mypage/mypage';
+import Mypage from '../components/mypage/Mypage';
+import Musiclist from '../components/musiclist/Musiclist';
 
 function RoutingPages() {
     return (
@@ -14,6 +15,7 @@ function RoutingPages() {
             <Route path="/playlist" element={<Playlist />} />
             <Route path="/mixing" element={<Mixing />} />
             <Route path="/mypage" element={<Mypage />} />
+            <Route path="/musiclist" element={<Musiclist />} />
         </Routes>
     );
 }

@@ -12,7 +12,7 @@ type UserData = {
     intro: string;
 };
 
-function MusicList() {
+function Mypage() {
     /* 2023.05.06 유저의 name과 intro부분을 클릭했을 시 수정할 수 있는 상태관리 - 홍혜란 */
     const [name, setName] = useRecoilState(nameState);
     const [intro, setIntro] = useRecoilState(introState);
@@ -164,7 +164,7 @@ function MusicList() {
     );
 }
 
-export default MusicList;
+export default Mypage;
 
 const MusicListContainer = styled.div`
     width: 100%;
