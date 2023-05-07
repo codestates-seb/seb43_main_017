@@ -43,8 +43,8 @@ public class PlayListDto {
     @NoArgsConstructor
     public static class ResponseDto {
         // TODO: 주석 처리된 부분 추후에 작업
-        private Long id;
-        private MemberDto member;
+        private Long playListId;
+        private Long memberId;
 //        private MusicDto music;
 //        private List<PlayListLikeDto> likes = new ArrayList<>();
         private String title;
