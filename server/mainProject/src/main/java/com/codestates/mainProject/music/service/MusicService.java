@@ -2,6 +2,8 @@ package com.codestates.mainProject.music.service;
 
 import com.codestates.mainProject.exception.BusinessLogicException;
 import com.codestates.mainProject.exception.ExceptionCode;
+import com.codestates.mainProject.member.entity.Member;
+import com.codestates.mainProject.member.repository.MemberRepository;
 import com.codestates.mainProject.music.entity.Music;
 import com.codestates.mainProject.music.repository.MusicRepository;
 import org.springframework.data.domain.Page;
@@ -10,7 +12,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,9 +19,12 @@ import java.util.Optional;
 public class MusicService {
 
     private final MusicRepository musicRepository;
+    private final MemberRepository memberRepository;
 
-    public MusicService(MusicRepository musicRepository) {
+    public MusicService(MusicRepository musicRepository,
+                        MemberRepository memberRepository) {
         this.musicRepository = musicRepository;
+        this.memberRepository = memberRepository;
     }
 
     // Music 생성(등록)
@@ -60,7 +64,13 @@ public class MusicService {
     }
 
     // Music 삭제
-    public void deleteMusic(long musicId) {
+    public void deleteMusic(long musicId, long currentUserId) {
+        // 매개변수를 musicId 만 받고, 현재 사용자의 역할(admin인지 아닌지)판단은 메서드로 해보려고 했으나...
+        // 그걸 구현하기 위해서는 현재 사용자의 ID를 가져올 수 있어야함. 그걸 위해서는...
+        // 1. Spring Security 적용 ~~~~~~~~(단계 복잡)
+        // 2. MusicController에서 deleteMusic 메서드를 호출하기 전에 @AuthenticationPrincipal 을 사용하여
+        //    현재 사용자의 ID를 가져올 수 있음.
+        isUserAdmin(currentUserId);
         findVerifiedMusic(musicId);
 
         musicRepository.deleteById(musicId);
@@ -80,6 +90,17 @@ public class MusicService {
         Optional<Music> optionalMusic = musicRepository.findByMusicUri(musicUri);
         if(optionalMusic.isPresent()) {
             throw new BusinessLogicException(ExceptionCode.MUSIC_EXISTS);
+        }
+    }
+
+    // 현재 사용자가 admin 이 맞는지 조회
+    private void isUserAdmin(long memberId) {
+        Optional<Member> optionalMember = memberRepository.findById(memberId);
+        Member findMember = optionalMember.orElseThrow(() ->
+                new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+
+        if (!findMember.getRoles().contains("admin")) {
+            throw new BusinessLogicException(ExceptionCode.NO_PERMISSION_DELETING_MUSIC);
         }
     }
 }
