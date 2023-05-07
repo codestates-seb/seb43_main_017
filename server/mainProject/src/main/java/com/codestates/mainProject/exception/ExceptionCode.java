@@ -8,6 +8,7 @@ public enum ExceptionCode {
     MEMBER_EXISTS(409, "회원이 존재합니다."),
     MEMBER_IS_DELETED(404, "탈퇴한 회원입니다"),
 
+    MUSIC_EXISTS(409, "이미 등록된 음악입니다."),
     MUSIC_NOT_FOUND(404, "음악을 찾을 수 없습니다"),
 
     MUSIC_LIKE_NOT_FOUND(404, "음악 추천을 찾을 수 없습니다"),

@@ -25,19 +25,16 @@ public class Music extends Auditable {
     @Column(nullable = false)
     private String artistName;
 
-    @Column(nullable = true)
     private String albumName;
 
     @Column(nullable = false)
     private Long musicTime;
 
-    @Column(nullable = true)
     private String albumImg;
 
-    @Column(nullable = true)
     private String backgroundImg;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String musicUri = "";
 
     @ElementCollection(fetch = FetchType.LAZY)
