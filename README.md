@@ -1,5 +1,3 @@
-## Main Project - 17 
-
 ## Team. Undefined
 
 
