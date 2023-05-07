@@ -26,9 +26,8 @@ public class PlayList extends Auditable {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @ManyToOne
-    @JoinColumn(name = "MUSIC_ID")
-    private Music music;
+    @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
+    private List<Music> musics = new ArrayList<>();
 
     @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
     private List<PlayListLike> playListLikes = new ArrayList<>();
@@ -40,4 +39,14 @@ public class PlayList extends Auditable {
     public String getMemberName(){
         return this.member.getName();
     }
+
+    public void addMusic(Music music){
+        this.musics.add(music);
+        music.setPlayList(this);
+    }
+
+    //TODO: PlayListLike 작업 완료 후 수정
+//    public void addPlayListLikes(PlayListLike playListLike){
+//        this.playListLikes.add(playListLike);
+//    }
 }
