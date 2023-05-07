@@ -3,7 +3,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { useState, useEffect } from 'react';
-import { ReactNode } from 'react';
+// import { ReactNode } from 'react';
 
 interface PlcardProps {
     index: number;
@@ -25,10 +25,11 @@ function PlSilder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<
     window.addEventListener('resize', () => {
         const width = window.innerWidth;
         // 변화된 width 값을 이용하여 필요한 작업 수행
-        console.log(width);
 
         if (width <= 1100) {
             setSliderPage(1);
+        } else if (width <= 700) {
+            setSliderPage(2);
         } else {
             setSliderPage(3);
         }
@@ -39,6 +40,16 @@ function PlSilder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<
     };
     /**2023-05-07 플리 슬라이드 더미데이터 : 김주비 */
     const dummydata: PlcardProps[] = [
+        {
+            index: 1,
+            treck: 8,
+            coverimg: '/assets/background-playlist6.jpg',
+            plname: '여름밤의 낭만 BGM',
+            plcontent: '다가오는 여름, 여행계획은 세웠나요? 노래로 해변가 여행을 떠나보는건 어떨까요.',
+            like: '2087',
+            user: 'Uncover',
+            tag: [{ tagname: '청량한' }, { tagname: '신나는' }, { tagname: '어쿠스틱' }],
+        },
         {
             index: 0,
             treck: 20,
@@ -65,7 +76,7 @@ function PlSilder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<
             index: 2,
             treck: 7,
             coverimg: '/assets/background-playlist1.jpg',
-            plname: 'PLAY LIST: 사랑에 빠졌나봐',
+            plname: '❤ 사랑에 빠졌나봐 ❤',
             plcontent:
                 '사랑에 빠진 기분을 느껴보고 싶으신가요? 오늘하루만큼은 달달하게. 당신을 위해 준비한 초콜렛같은 플리!',
             like: '2087',
@@ -101,17 +112,17 @@ function PlSilder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<
     }, [currentSlideIndex]);
 
     /**2023-05-07 슬라이드 버튼 appen : 김주비 */
-    const appendDots = (dots: ReactNode) => {
-        return (
-            <div style={{ height: '0px' }}>
-                <ul style={{ margin: '10px' }}> {dots} </ul>
-            </div>
-        );
-    };
-    /**2023-05-07 슬라이드 버튼 custom : 김주비 */
-    const customPaging = (i: number) => {
-        return <div className="dots-paging">{i + 1}</div>;
-    };
+    // const appendDots = (dots: ReactNode) => {
+    //     return (
+    //         <div style={{ height: '0px' }}>
+    //             <ul style={{ margin: '10px' }}> {dots} </ul>
+    //         </div>
+    //     );
+    // };
+    // /**2023-05-07 슬라이드 버튼 custom : 김주비 */
+    // const customPaging = (i: number) => {
+    //     return <div className="dots-paging">{i + 1}</div>;
+    // };
 
     /**2023-05-07 슬라이드 설정옵션 : 김주비 */
     const settings = {
@@ -121,12 +132,13 @@ function PlSilder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<
         infinite: true,
         centerPadding: '80px',
         slidesToShow: silderPage,
-        speed: 500,
+        speed: 1000,
+        autoplay: true,
+        autoplaySpeed: 5000,
         dots: true,
         arrow: true,
-        appendDots: appendDots,
-        customPaging: customPaging,
-        // dotsClass: 'my-dots-class',
+        // appendDots: appendDots,
+        // customPaging: customPaging,
     };
 
     return (
@@ -248,7 +260,8 @@ const Pltext = styled.div`
         color: #fff;
         letter-spacing: -0.5px;
         font-size: 1.6rem;
-        width: 100%;
+        min-width: 103%;
+        word-break: break-all;
         font-weight: 600;
     }
     span:nth-child(2) {
@@ -257,5 +270,10 @@ const Pltext = styled.div`
         opacity: 0.5;
         width: 80%;
         font-size: 0.7rem;
+    }
+    @media (max-width: 600px) {
+        span:nth-child(1) {
+            font-size: 1rem;
+        }
     }
 `;
