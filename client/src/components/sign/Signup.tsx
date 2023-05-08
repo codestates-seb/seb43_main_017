@@ -1,13 +1,12 @@
 import { useState } from 'react';
-import { ButtonStyle } from '../../App'; // 버튼 디자인은 App 컴포넌트와 공유합니다.
+import { ButtonStyle } from 'src/App'; // 버튼 디자인은 App 컴포넌트와 공유합니다.
 import { BlurBackground, SignInBox, SignTitle, SignText, InputContainer, InputBox, Errorbox } from './Signin'; // 로그인과 회원가입은 같은 스타일드 컴포넌트를 공유합니다.
 import axios from 'axios';
 import styled from 'styled-components';
-import { userType } from '../../types/LoginInput';
-import { LoginPost } from '../../types/AxiosInterface';
+import { userType } from 'src/types/LoginInput';
 
 function Signup({ setShowSignUp }: { setShowSignUp: React.Dispatch<React.SetStateAction<boolean>> }) {
-    const BaseUrl = 'https://1a3f-59-17-229-47.jp.ngrok.io/members/signup';
+    const BaseUrl = 'https://c2fe-59-17-229-47.ngrok-free.app/members/signup';
     const [closeDisplay, setCloseDisplay] = useState<boolean>(false); // display closing 모션효과 상태
     /** 에러메시지  */
     const [nameMessage, setnameMessage] = useState('');
@@ -81,7 +80,7 @@ function Signup({ setShowSignUp }: { setShowSignUp: React.Dispatch<React.SetStat
         e.preventDefault();
         if (isPassword && isEmail && isName && isCheck) {
             axios.post<null>(`${BaseUrl}`, {
-                neme: userInfo.name,
+                name: userInfo.name,
                 email: userInfo.email,
                 password: userInfo.password,
             });

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import './css/App.css';
-import './css/reset.css';
+import 'src/css/App.css';
+import 'src/css/reset.css';
 import { BrowserRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import Navigate from './components/Nav/Navigete';
-import Signin from './components/sign/Signin';
-import Signup from './components/sign/Signup';
-import RoutingPages from './pages/Routingpages';
+import Navigate from 'src/components/Nav/Navigete';
+import Signin from 'src/components/sign/Signin';
+import Signup from 'src/components/sign/Signup';
+import RoutingPages from 'src/pages/Routingpages';
 import { RiProfileFill } from 'react-icons/ri';
 import { MdFaceRetouchingNatural } from 'react-icons/md';
 
@@ -15,6 +15,7 @@ function App() {
     const [showSignIn, setShowSignIn] = useState<boolean>(false);
     /**2023-05-05 회원가입 모달오픈 여부 스테이트 : 김주비*/
     const [showSignUp, setShowSignUp] = useState<boolean>(false);
+    const token = localStorage.getItem('access_token'); // 로컬스토리지에 담긴 토큰 정보를 가져옵니다.
 
     return (
         <BrowserRouter>
@@ -30,22 +31,35 @@ function App() {
                         <Signup setShowSignUp={setShowSignUp} />
                     </Signview>
                 ) : null}
-                <SignBtnSection>
-                    <ButtonStyle
-                        onClick={() => {
-                            setShowSignIn(true);
-                        }}
-                    >
-                        SignIn
-                    </ButtonStyle>
-                    <ButtonStyle2
-                        onClick={() => {
-                            setShowSignUp(true);
-                        }}
-                    >
-                        SingUp
-                    </ButtonStyle2>
-                </SignBtnSection>
+                {token ? (
+                    <SignBtnSection>
+                        <ButtonStyle
+                            onClick={() => {
+                                localStorage.removeItem('access_token');
+                                location.reload();
+                            }}
+                        >
+                            Logout
+                        </ButtonStyle>
+                    </SignBtnSection>
+                ) : (
+                    <SignBtnSection>
+                        <ButtonStyle
+                            onClick={() => {
+                                setShowSignIn(true);
+                            }}
+                        >
+                            SignIn
+                        </ButtonStyle>
+                        <ButtonStyle2
+                            onClick={() => {
+                                setShowSignUp(true);
+                            }}
+                        >
+                            SingUp
+                        </ButtonStyle2>{' '}
+                    </SignBtnSection>
+                )}
                 <SignBtnSection2>
                     <ButtonStyle3
                         onClick={() => {
