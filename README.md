@@ -34,10 +34,18 @@
 
 ## Service info
 
-No Copyright Music 서비스 플랫폼 입니다.
+No Copyright Music 서비스 플랫폼 입니다. <br>
+프로젝트 기간: 2023.04.28 ~ 2023.05.31
 
 ![un1.png](./img/un1.png)
 
 ![un2.png](./img/un2.png)
 
 ![un3.png](./img/un3.png)
+
+
+## [API 명세서](https://documenter.getpostman.com/view/25524075/2s93eX1DP8#de8c1b63-20c9-40cf-ad48-514269974fb3)
+
+## ERD
+
+![erd](./img/%EC%9B%B9%20%EC%BA%A1%EC%B2%98_6-5-2023_14939_.jpeg)
