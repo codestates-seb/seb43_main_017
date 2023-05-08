@@ -34,7 +34,7 @@
 
 ## Service info
 
-No Copyright Music 서비스 플랫폼 입니다. <br>
+**No Copyright Music 서비스 플랫폼 입니다.**
 프로젝트 기간: 2023.04.28 ~ 2023.05.31
 
 ![un1.png](./img/un1.png)
