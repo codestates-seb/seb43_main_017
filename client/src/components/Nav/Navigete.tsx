@@ -3,13 +3,23 @@ import { Link } from 'react-router-dom';
 import { MdOutlineQueueMusic, MdOutlineVideoSettings } from 'react-icons/md';
 import { BiHomeAlt } from 'react-icons/bi';
 import { HiOutlineMusicNote } from 'react-icons/hi';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function Navigate() {
     /**2023-05-05 선택된 아이콘 인덱스 스테이트 : 김주비*/
-    const [selectIndex, setSelectIndex] = useState<number>(0);
+    const [selectIndex, setSelectIndex] = useState<number>(Number(sessionStorage.getItem('index')));
     /**2023-05-05 프로필 아이콘 클릭시 이벤트실행 스테이트 : 김주비*/
     const [click, setClick] = useState<boolean>(false);
+    const [localIndex, setLocalIndex] = useState<string | null>(sessionStorage.getItem('index'));
+
+    /**2023-05-08 선택된 아이콘 인덱스 로컬스토리지에 삽입 : 김주비*/
+    // let localIndex = '1';
+    useEffect(() => {
+        sessionStorage.setItem('index', selectIndex.toString());
+        setLocalIndex(sessionStorage.getItem('index'));
+    }, [localIndex, selectIndex]);
+
+    console.log(localIndex);
 
     /**2023-05-05 주 메뉴리스트 및 경로 : 김주비
      * - 메뉴에 경로 지정하고싶을시 link 엔드포인트로 기입
@@ -55,7 +65,7 @@ function Navigate() {
                                 onClick={() => {
                                     setSelectIndex(el.index);
                                 }}
-                                className={selectIndex === index ? 'click-icon' : 'null'}
+                                className={localIndex === String(index) ? 'click-icon' : 'null'}
                             >
                                 {el.name}
                             </li>
