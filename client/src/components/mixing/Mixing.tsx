@@ -13,9 +13,6 @@ function Mixing() {
                         <span className="pl-subtext">Enjoy the various playlists of users</span>
                     </Plsubtext>
                 </div>
-                <div className="flex-center">
-                    <Plsearch placeholder="태그를 검색해주세요" />
-                </div>
             </PlaylistHeader>
         </PlaylistSection>
     );
@@ -44,7 +41,7 @@ const PlaylistBackground = styled.article`
     left: 0;
     width: 100%;
     min-height: 100vh;
-    background: url('./assets/background-playlist.jpg');
+    background: url('./assets/background-mixing.jpg');
     filter: blur(10px);
     background-size: cover;
     opacity: 0.2;
