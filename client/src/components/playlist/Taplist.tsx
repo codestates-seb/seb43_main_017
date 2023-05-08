@@ -91,7 +91,9 @@ function Taplist() {
         <TapGroup>
             <ul>
                 {pldata.map((el) => (
-                    <TapList key={el.index} bgImg={el.coverimg}></TapList>
+                    <TapList key={el.index} bgImg={el.coverimg}>
+                        {el.plname}
+                    </TapList>
                 ))}
             </ul>
         </TapGroup>
