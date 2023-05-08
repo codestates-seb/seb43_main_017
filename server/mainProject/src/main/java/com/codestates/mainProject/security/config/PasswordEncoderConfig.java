@@ -1,4 +1,4 @@
-package com.codestates.mainProject.auth.config;
+package com.codestates.mainProject.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

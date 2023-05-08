@@ -1,6 +1,6 @@
 package com.codestates.mainProject.member.service;
 
-import com.codestates.mainProject.auth.utils.CustomAuthorityUtils;
+import com.codestates.mainProject.security.auth.utils.CustomAuthorityUtils;
 import com.codestates.mainProject.exception.BusinessLogicException;
 import com.codestates.mainProject.exception.ExceptionCode;
 import com.codestates.mainProject.image.FileStorageService;
@@ -40,6 +40,7 @@ public class MemberService {
         // (4) 추가: DB에 User Role 저장
         List<String> roles = authorityUtils.createRoles(member.getEmail());
         member.setRoles(roles);
+        member.setStatus(Member.Status.MEMBER_ACTIVE);
 
         Member savedMember = memberRepository.save(member);
 
