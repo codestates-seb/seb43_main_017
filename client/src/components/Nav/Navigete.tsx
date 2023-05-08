@@ -45,14 +45,13 @@ function Navigate() {
                 </LogoIcon>
                 <Dotsstyle>
                     {[...Array(5)].map((_, index) => (
-                        <span key={index}></span>
+                        <span key={`dots-${index}`}></span>
                     ))}
                 </Dotsstyle>
                 <MenuIcon>
                     {menuIconlist.map((el, index) => (
-                        <Link to={el.link}>
+                        <Link to={el.link} key={el.index}>
                             <li
-                                key={el.index}
                                 onClick={() => {
                                     setSelectIndex(el.index);
                                 }}

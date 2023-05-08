@@ -9,7 +9,7 @@ import { RiKakaoTalkFill } from 'react-icons/ri';
 import { SiNaver } from 'react-icons/si';
 
 function Signin({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetStateAction<boolean>> }) {
-    const BaseUrl = 'https://1a3f-59-17-229-47.jp.ngrok.io/members/login';
+    const BaseUrl = 'https://c2fe-59-17-229-47.ngrok-free.app/members/login';
     const [closeDisplay, setCloseDisplay] = useState<boolean>(false); // display closing 모션효과 상태
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [loginInfo, setLoginInfo] = useState<infoType>({
@@ -35,9 +35,9 @@ function Signin({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetStat
                     password: loginInfo.password,
                 })
                 .then((res) => {
-                    console.log(res.data);
-                    if (res.data.accessToken !== undefined) {
-                        window.localStorage.setItem('access_token', res.data.accessToken);
+                    console.log(res.headers.authorization);
+                    if (res.headers.authorization !== undefined) {
+                        window.localStorage.setItem('access_token', res.headers.authorization);
                         //토큰 리코일로 관리setToken(localStorage.getItem('access_token')); setCloseDisplay(!closeDisplay);
                         setCloseDisplay(!closeDisplay);
                         setTimeout(() => {
@@ -45,7 +45,6 @@ function Signin({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetStat
                         }, 1000);
                     }
                 });
-            setErrorMessage('유효하지 않은 로그인입니다.');
         }
     };
 

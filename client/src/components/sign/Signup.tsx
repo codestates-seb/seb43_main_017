@@ -7,7 +7,7 @@ import { userType } from '../../types/LoginInput';
 import { LoginPost } from '../../types/AxiosInterface';
 
 function Signup({ setShowSignUp }: { setShowSignUp: React.Dispatch<React.SetStateAction<boolean>> }) {
-    const BaseUrl = 'https://1a3f-59-17-229-47.jp.ngrok.io/members/signup';
+    const BaseUrl = 'https://c2fe-59-17-229-47.ngrok-free.app/members/signup';
     const [closeDisplay, setCloseDisplay] = useState<boolean>(false); // display closing 모션효과 상태
     /** 에러메시지  */
     const [nameMessage, setnameMessage] = useState('');
@@ -81,7 +81,7 @@ function Signup({ setShowSignUp }: { setShowSignUp: React.Dispatch<React.SetStat
         e.preventDefault();
         if (isPassword && isEmail && isName && isCheck) {
             axios.post<null>(`${BaseUrl}`, {
-                neme: userInfo.name,
+                name: userInfo.name,
                 email: userInfo.email,
                 password: userInfo.password,
             });
