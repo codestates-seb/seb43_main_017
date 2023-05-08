@@ -1,6 +1,9 @@
 package com.codestates.mainProject.member.service;
 
-import com.codestates.mainProject.auth.utils.CustomAuthorityUtils;
+import com.codestates.mainProject.music.entity.Music;
+import com.codestates.mainProject.musicLike.entity.MusicLike;
+import com.codestates.mainProject.musicLike.repository.MusicLikeRepository;
+import com.codestates.mainProject.security.auth.utils.CustomAuthorityUtils;
 import com.codestates.mainProject.exception.BusinessLogicException;
 import com.codestates.mainProject.exception.ExceptionCode;
 import com.codestates.mainProject.image.FileStorageService;
@@ -10,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -29,6 +34,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils authorityUtils;
     private final FileStorageService fileStorageService;
+    private final MusicLikeRepository musicLikeRepository;
 
     public Member createMember(Member member) {
         verifyExistEmail(member.getEmail());
@@ -40,6 +46,7 @@ public class MemberService {
         // (4) 추가: DB에 User Role 저장
         List<String> roles = authorityUtils.createRoles(member.getEmail());
         member.setRoles(roles);
+        member.setStatus(Member.Status.MEMBER_ACTIVE);
 
         Member savedMember = memberRepository.save(member);
 
@@ -83,10 +90,13 @@ public class MemberService {
                 Sort.by("memberId").descending()));
     }
 
-//    public List<Music> findMusics(long memberId){
-//        Member findMember = findVerifiedMember(memberId);
-//        return findMember.getMusics();
-//    }
+    public Page<Music> findLikedMusics(long memberId, int page, int size){
+        Member findMember = findVerifiedMember(memberId);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<MusicLike> musicLikes = musicLikeRepository.findAllByMember(findMember, pageable);
+        return musicLikes.map(MusicLike::getMusic);
+    }
+
 //
 //    public List<Music> findRecentMusics(long memberId) {
 //        List<Music> subList = findMusics(memberId).subList(0, 3);

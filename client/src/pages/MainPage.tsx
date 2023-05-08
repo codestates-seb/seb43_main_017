@@ -1,4 +1,4 @@
-import Uncover from '../components/main/Uncover';
+import Uncover from 'src/components/main/Uncover';
 function MainPage() {
     return (
         <>

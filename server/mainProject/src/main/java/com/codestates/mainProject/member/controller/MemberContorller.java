@@ -1,6 +1,6 @@
 package com.codestates.mainProject.member.controller;
 
-import com.codestates.mainProject.auth.jwt.JwtTokenizer;
+import com.codestates.mainProject.security.auth.jwt.JwtTokenizer;
 import com.codestates.mainProject.exception.BusinessLogicException;
 import com.codestates.mainProject.exception.ExceptionCode;
 import com.codestates.mainProject.member.dto.MemberDto;
@@ -51,10 +51,6 @@ public class MemberContorller {
         return ResponseEntity.created(location).build();
     }
 
-    @PostMapping("/login")
-    public String loginForm() {
-        return "login";
-    }
 
     @PostMapping("/logout")
     public ResponseEntity logout(HttpServletRequest request) {

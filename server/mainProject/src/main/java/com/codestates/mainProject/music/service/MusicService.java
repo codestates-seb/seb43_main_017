@@ -2,8 +2,13 @@ package com.codestates.mainProject.music.service;
 
 import com.codestates.mainProject.exception.BusinessLogicException;
 import com.codestates.mainProject.exception.ExceptionCode;
+import com.codestates.mainProject.member.entity.Member;
+import com.codestates.mainProject.member.repository.MemberRepository;
 import com.codestates.mainProject.music.entity.Music;
 import com.codestates.mainProject.music.repository.MusicRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,16 +19,88 @@ import java.util.Optional;
 public class MusicService {
 
     private final MusicRepository musicRepository;
+    private final MemberRepository memberRepository;
 
-    public MusicService(MusicRepository musicRepository) {
+    public MusicService(MusicRepository musicRepository,
+                        MemberRepository memberRepository) {
         this.musicRepository = musicRepository;
+        this.memberRepository = memberRepository;
     }
 
-    public Music findVerifiedMusic(long musicId) {
+    // Music 생성(등록)
+    public Music createMusic(Music music) {
+        verifyExistMusicUri(music.getMusicUri());
+
+        // music 에 맞는 태그를 생성하거나 지정해줘야함
+
+        Music savedMusic = musicRepository.save(music);
+
+        return savedMusic;
+    }
+
+    // Music 수정
+    public Music updateMusic(Music music) {
+        Music findMusic = findVerifiedMusic(music.getMusicId());
+
+        Optional.ofNullable(music.getArtistName())
+                .ifPresent(name -> findMusic.setArtistName(name));
+        Optional.ofNullable(music.getAlbumName())
+                .ifPresent(name -> findMusic.setAlbumName(name));
+        Optional.ofNullable(music.getMusicTime())
+                .ifPresent(time -> findMusic.setMusicTime(time));
+
+        return findMusic;
+    }
+
+    // musicId 로 Music 조회
+    public Music findMusicById(long musicId) {
+        return findVerifiedMusic(musicId);
+    }
+
+    // Music 전체 조회
+    public Page<Music> findAllMusic(int page, int size) {
+        return musicRepository.findAll(PageRequest.of(page, size,
+                Sort.by("musicId").descending()));
+    }
+
+    // Music 삭제
+    public void deleteMusic(long musicId, long currentUserId) {
+        // 매개변수를 musicId 만 받고, 현재 사용자의 역할(admin인지 아닌지)판단은 메서드로 해보려고 했으나...
+        // 그걸 구현하기 위해서는 현재 사용자의 ID를 가져올 수 있어야함. 그걸 위해서는...
+        // 1번 방법. Spring Security 적용 ~~~~~~~~(단계 복잡하니까 2번 방법을 하자)
+        // 2번 방법. MusicController에서 deleteMusic 메서드를 호출하기 전에 @AuthenticationPrincipal 을 사용하여
+        //          현재 사용자의 ID를 가져올 수 있음.
+        isUserAdmin(currentUserId);
+        findVerifiedMusic(musicId);
+
+        musicRepository.deleteById(musicId);
+    }
+
+    // 유효한 musicId 인지 조회
+    private Music findVerifiedMusic(long musicId) {
         Optional<Music> optionalMusic = musicRepository.findById(musicId);
         Music findMusic = optionalMusic.orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.MUSIC_NOT_FOUND));
 
         return findMusic;
+    }
+
+    // 이미 등록된 musicUri 인지 조회
+    private void verifyExistMusicUri(String musicUri) {
+        Optional<Music> optionalMusic = musicRepository.findByMusicUri(musicUri);
+        if(optionalMusic.isPresent()) {
+            throw new BusinessLogicException(ExceptionCode.MUSIC_EXISTS);
+        }
+    }
+
+    // 현재 사용자가 admin 이 맞는지 조회
+    private void isUserAdmin(long memberId) {
+        Optional<Member> optionalMember = memberRepository.findById(memberId);
+        Member findMember = optionalMember.orElseThrow(() ->
+                new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+
+        if (!findMember.getRoles().contains("admin")) {
+            throw new BusinessLogicException(ExceptionCode.NO_PERMISSION_DELETING_MUSIC);
+        }
     }
 }

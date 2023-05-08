@@ -10,4 +10,9 @@ public class HelloHomeController {
     public String home() {
         return "hello-oauth2";
     }
+
+    @GetMapping("/index")
+    public String index() {
+        return "index";
+    }
 }

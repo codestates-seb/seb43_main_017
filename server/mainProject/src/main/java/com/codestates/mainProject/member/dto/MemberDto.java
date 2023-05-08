@@ -22,6 +22,7 @@ public class MemberDto {
         @NotBlank
         private String password;
 
+
     }
     @Getter
     @Setter

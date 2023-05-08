@@ -2,10 +2,7 @@ package com.codestates.mainProject.playList.dto;
 
 import com.codestates.mainProject.member.dto.MemberDto;
 import com.codestates.mainProject.playList.entity.PlayList;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -20,8 +17,6 @@ public class PlayListDto {
     public static class PostDto {
         @NotNull
         private Long memberId;
-        @NotNull
-        private Long musicId;
         @NotBlank
         private String title;
         @NotBlank
@@ -50,8 +45,8 @@ public class PlayListDto {
         private String title;
         private String body;
 
-        private LocalDateTime createdAt;
-        private LocalDateTime modifiedAt;
+        private String createdAt;
+        private String modifiedAt;
 
 //        public ResponseDto(PlayList playList) {
 //            if (playList.getMember() == null) throw new IllegalArgumentException("Member is null");
@@ -64,6 +59,13 @@ public class PlayListDto {
 //                this.likes.add(new PlayListLikeDto(playListLike));
 //            }
 //        }
+    }
+
+    @Data
+    public static class DeleteSuccessDto {
+        private String message;
+
+        public DeleteSuccessDto(String message) {this.message = message;}
     }
 
 }
