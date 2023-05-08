@@ -9,7 +9,7 @@ import { RiKakaoTalkFill } from 'react-icons/ri';
 import { SiNaver } from 'react-icons/si';
 
 function Signin({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetStateAction<boolean>> }) {
-    const BaseUrl = 'https://1a3f-59-17-229-47.jp.ngrok.io/members/login';
+    const BaseUrl = 'https://c2fe-59-17-229-47.ngrok-free.app/members/login';
     const [closeDisplay, setCloseDisplay] = useState<boolean>(false); // display closing 모션효과 상태
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [loginInfo, setLoginInfo] = useState<infoType>({

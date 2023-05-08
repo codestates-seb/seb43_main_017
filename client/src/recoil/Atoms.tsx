@@ -11,3 +11,9 @@ export const introState = atom({
     key: 'introState',
     default: 'Undefined is good people',
 });
+
+/* 2023.05.08 뮤직리스트 출력 상태 관리 - 홍혜란 */
+export const playlistState = atom<string[]>({
+    key: 'playlistState',
+    default: [],
+});
