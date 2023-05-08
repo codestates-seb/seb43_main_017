@@ -19,8 +19,6 @@ function Navigate() {
         setLocalIndex(sessionStorage.getItem('index'));
     }, [localIndex, selectIndex]);
 
-    console.log(localIndex);
-
     /**2023-05-05 주 메뉴리스트 및 경로 : 김주비
      * - 메뉴에 경로 지정하고싶을시 link 엔드포인트로 기입
      */

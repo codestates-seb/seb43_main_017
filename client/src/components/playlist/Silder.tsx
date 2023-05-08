@@ -16,7 +16,7 @@ interface PlcardProps {
     tag: { tagname: string }[];
 }
 
-function PlSilder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<string>> }) {
+function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<string>> }) {
     const [pldata, setPldata] = useState<PlcardProps[]>([]); //플리데이터 저장 스테이트
     const [currentSlideIndex, setCurrentSlideIndex] = useState(0); //포커스된 슬라이드 인덱스
     const [silderPage, setSliderPage] = useState<number>(3); //슬라이더 페이지 갯수
@@ -156,8 +156,8 @@ function PlSilder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<
                         <div className="pl-treck">TRECK {data.treck}</div>
                         <div className="pl-contents">
                             <Pltag>
-                                {data.tag.map((tag) => (
-                                    <li>{tag.tagname}</li>
+                                {data.tag.map((tag, index) => (
+                                    <li key={`tag-${index}`}>{tag.tagname}</li>
                                 ))}
                             </Pltag>
                             <Pluser>
@@ -178,7 +178,7 @@ function PlSilder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<
     );
 }
 
-export default PlSilder;
+export default Silder;
 
 interface bgimg {
     bgImg: string;
