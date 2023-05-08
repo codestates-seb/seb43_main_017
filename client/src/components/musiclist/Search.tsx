@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+/* 2023.05.07 검색 컴포넌트 구현 - 홍혜란 */
 const SearchContainer = styled.div`
     position: relative;
     display: flex;
@@ -26,6 +27,7 @@ const SearchInput = styled.input`
     }
 `;
 
+/* 2023.05.07 검색 컴포넌트 구현 - 홍혜란 */
 function Search() {
     return (
         <SearchContainer>
