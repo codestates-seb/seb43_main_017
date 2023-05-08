@@ -13,9 +13,6 @@ function Mixing() {
                         <span className="pl-subtext">Enjoy the various playlists of users</span>
                     </Plsubtext>
                 </div>
-                <div className="flex-center">
-                    <Plsearch placeholder="태그를 검색해주세요" />
-                </div>
             </PlaylistHeader>
         </PlaylistSection>
     );
