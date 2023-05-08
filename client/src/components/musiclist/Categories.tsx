@@ -22,7 +22,7 @@ const categories: Category[] = [
     {
         index: 2,
         name: 'SITUATION',
-        subCategories: ['집에서', '잠들기 전', '드라이브', '운동하며', '밥먹다가'],
+        subCategories: ['집에서', '잠들기 전', '드라이브', '운동하며', '밤산책'],
     },
 ];
 
