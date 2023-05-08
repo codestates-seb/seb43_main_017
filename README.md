@@ -9,16 +9,6 @@
 
 <br>
 
-## Service info
-
-No Copyright Music 서비스 플랫폼 입니다.
-
-![un1.png](./img/un1.png)
-
-![un2.png](./img/un2.png)
-
-![un3.png](./img/un3.png)
-
 ### FE Stacks
 <p>
 <img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white">
@@ -39,3 +29,14 @@ No Copyright Music 서비스 플랫폼 입니다.
 <img src="https://img.shields.io/badge/linux-FCC624?style=for-the-badge&logo=linux&logoColor=black">
 <img src="https://img.shields.io/badge/Amazon EC2-FF9900?style=for-the-badge&logo=Amazon EC2&logoColor=white">
 </p>
+
+<br>
+## Service info
+
+No Copyright Music 서비스 플랫폼 입니다.
+
+![un1.png](./img/un1.png)
+
+![un2.png](./img/un2.png)
+
+![un3.png](./img/un3.png)
