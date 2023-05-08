@@ -1,25 +1,17 @@
-package com.codestates.mainProject.auth.filter;
+package com.codestates.mainProject.security.auth.filter;
 
-import com.codestates.mainProject.auth.dto.LoginDto;
-import com.codestates.mainProject.auth.jwt.JwtTokenizer;
+import com.codestates.mainProject.security.auth.dto.LoginDto;
+import com.codestates.mainProject.security.auth.jwt.JwtTokenizer;
 import com.codestates.mainProject.exception.BusinessLogicException;
 import com.codestates.mainProject.exception.ExceptionCode;
-import com.codestates.mainProject.member.dto.MemberDto;
 import com.codestates.mainProject.member.entity.Member;
-import com.codestates.mainProject.member.mapper.MemberMapper;
 import com.codestates.mainProject.member.repository.MemberRepository;
-import com.codestates.mainProject.member.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;

@@ -26,9 +26,9 @@ public class PlayList extends Auditable {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @ManyToOne
-    @JoinColumn(name = "MUSIC_ID")
-    private Music music;
+
+    @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
+    private List<Music> musics = new ArrayList<>();
 
     @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
     private List<PlayListLike> playListLikes = new ArrayList<>();

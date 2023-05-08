@@ -3,6 +3,7 @@ package com.codestates.mainProject.member.service;
 
 import com.codestates.mainProject.member.entity.Member;
 import com.codestates.mainProject.member.repository.MemberRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -20,8 +21,15 @@ import java.util.Optional;
 @Service
 public class OAuth2MemberService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
-    MemberRepository memberRepository;
-    HttpSession httpSession;
+    private final MemberRepository memberRepository;
+    private final HttpSession httpSession;
+
+
+    @Autowired
+    public OAuth2MemberService(MemberRepository memberRepository, HttpSession httpSession) {
+        this.memberRepository = memberRepository;
+        this.httpSession = httpSession;
+    }
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {

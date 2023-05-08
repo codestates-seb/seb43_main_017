@@ -20,8 +20,6 @@ public class PlayListDto {
     public static class PostDto {
         @NotNull
         private Long memberId;
-        @NotNull
-        private Long musicId;
         @NotBlank
         private String title;
         @NotBlank
@@ -43,15 +41,15 @@ public class PlayListDto {
     @NoArgsConstructor
     public static class ResponseDto {
         // TODO: 주석 처리된 부분 추후에 작업
-        private Long id;
-        private MemberDto member;
+        private long playListId;
+        private long memberId;
 //        private MusicDto music;
 //        private List<PlayListLikeDto> likes = new ArrayList<>();
         private String title;
         private String body;
 
-        private LocalDateTime createdAt;
-        private LocalDateTime modifiedAt;
+        private String createdAt;
+        private String modifiedAt;
 
 //        public ResponseDto(PlayList playList) {
 //            if (playList.getMember() == null) throw new IllegalArgumentException("Member is null");

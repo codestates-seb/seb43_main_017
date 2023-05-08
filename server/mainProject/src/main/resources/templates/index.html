@@ -6,13 +6,13 @@
 </head>
 <body>
 
-<a th:href="@{/>login/google}">Google Login</a> <br>
+<a th:href="@{/>members/login/google}">Google Login</a> <br>
 <a th:href="@{/>login/naver}"> Naver Login</a> <br>
-<a th:href="@{/login}"> 통합 login </a> <br>
+<a th:href="@{/members/login}"> 통합 login </a> <br>
 <a th:href="@{/member}"> 로그인한 유저만 사용 가능</a> <br>
 
-<div>
-    <a th:href="@{/logout}"> logout</a>
+<div th:if="${session.member != null}">
+    [[${session.member.email}]],[[${session.member.name}]] <a th:href="@{/logout}"> logout </a>
 </div>
 
 </body>
