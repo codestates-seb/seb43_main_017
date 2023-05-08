@@ -2,9 +2,9 @@ package com.codestates.mainProject.music.controller;
 
 import com.codestates.mainProject.exception.BusinessLogicException;
 import com.codestates.mainProject.exception.ExceptionCode;
-import com.codestates.mainProject.member.dto.MemberDto;
 import com.codestates.mainProject.member.entity.Member;
 import com.codestates.mainProject.member.repository.MemberRepository;
+import com.codestates.mainProject.member.service.MemberService;
 import com.codestates.mainProject.music.dto.MusicDto;
 import com.codestates.mainProject.music.entity.Music;
 import com.codestates.mainProject.music.mapper.MusicMapper;
@@ -36,6 +36,7 @@ public class MusicController {
     private final static String MUSIC_DEFAULT_URL = "/musics";
     private final MusicService musicService;
     private final MusicMapper mapper;
+    private final MemberService memberService;
     private final MemberRepository memberRepository;
 
     // 음악 생성
@@ -71,8 +72,24 @@ public class MusicController {
                 new MultiResponseDto<>(response, pageMusic), HttpStatus.OK);
     }
 
-    // 유저 음악 조회(like)
-//    @GetMapping()
+    // 유저 음악 조회(liked)
+    // 기존 엔드포인트는 ("/members/{member-id}") 이었지만 @AuthenticationPrincipal 을 사용해서
+    // 현재 로그인한 사용자의 정보를 가져오고 있기 때문에 엔드포인트에 memberId가 필요하지않음.
+    // 그러므로 엔드포인트를 아래와 같이 변경함.
+    @GetMapping("/liked-musics")
+    public ResponseEntity getLikedMusics(@AuthenticationPrincipal UserDetails userDetails,
+                                         @Positive @RequestParam(value = "page", defaultValue = "1") int page,
+                                         @Positive @RequestParam(value = "size", defaultValue = "20") int size) {
+        Member member = memberRepository.findByEmail(userDetails.getUsername()).orElseThrow(() ->
+                new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+        long memberId = member.getMemberId();
+
+        Page<Music> likedMusics = memberService.findLikedMusics(memberId, page - 1, size);
+        List<MusicDto.ResponseDto> response = mapper.musicsToResponses(likedMusics.getContent());
+
+        return new ResponseEntity<>(
+                new MultiResponseDto<>(response, likedMusics), HttpStatus.OK);
+    }
 
     // 음악 다운로드
 
