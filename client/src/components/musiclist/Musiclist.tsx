@@ -1,60 +1,135 @@
 import styled from 'styled-components';
 import Search from './Search';
-import React, { useState } from 'react';
+import Categories from './Categories';
+import Trending from './Tranding';
+import { FiPlayCircle, FiFolderPlus } from 'react-icons/fi';
+import { BsBoxArrowInDown } from 'react-icons/bs';
+import { AiOutlineHeart } from 'react-icons/ai';
 
-/* 2023.05.07 카테고리 타입, 종류 선언 - 홍혜란 */
-type Category = {
-    name: string;
-    subCategories: string[];
-};
+/* 2023.05.08 MusicList MusicList 타입 선언 - 홍혜란 */
+interface MusicData {
+    index: number;
+    albumCover: string;
+    songTitle: string;
+    artistName: string;
+    songAlbum: string;
+    musicTime: string;
+}
 
-const categories: Category[] = [
+const MusicList: MusicData[] = [
     {
-        name: 'FEEL',
-        subCategories: ['잔잔한', '우울한', '신나는', '로맨틱한', '희망적인'],
+        index: 1,
+        albumCover: '/assets/ditto.png',
+        songTitle: 'Ditto',
+        artistName: 'Newjeans',
+        songAlbum: 'OMG',
+        musicTime: '3:15',
     },
     {
-        name: 'WEATHER',
-        subCategories: ['맑은 날', '흐린 날', '비 오는 날', '눈 오는 날', '바람 부는 날'],
+        index: 2,
+        albumCover: '/assets/ditto.png',
+        songTitle: 'Ditto',
+        artistName: 'Newjeans',
+        songAlbum: 'OMG',
+        musicTime: '3:15',
     },
     {
-        name: 'SITUATION',
-        subCategories: ['집에서', '잠들기 전', '드라이브', '운동하며', '밥먹다가'],
+        index: 3,
+        albumCover: '/assets/ditto.png',
+        songTitle: 'Ditto',
+        artistName: 'Newjeans',
+        songAlbum: 'OMG',
+        musicTime: '3:15',
+    },
+    {
+        index: 4,
+        albumCover: '/assets/ditto.png',
+        songTitle: 'Ditto',
+        artistName: 'Newjeans',
+        songAlbum: 'OMG',
+        musicTime: '3:15',
+    },
+    {
+        index: 5,
+        albumCover: '/assets/ditto.png',
+        songTitle: 'Ditto',
+        artistName: 'Newjeans',
+        songAlbum: 'OMG',
+        musicTime: '3:15',
+    },
+    {
+        index: 6,
+        albumCover: '/assets/ditto.png',
+        songTitle: 'Ditto',
+        artistName: 'Newjeans',
+        songAlbum: 'OMG',
+        musicTime: '3:15',
+    },
+    {
+        index: 7,
+        albumCover: '/assets/ditto.png',
+        songTitle: 'Ditto',
+        artistName: 'Newjeans',
+        songAlbum: 'OMG',
+        musicTime: '3:15',
     },
 ];
 
 const Musiclist = () => {
-    /* 2023.05.07 카테고리 클릭 이벤트 - 홍혜란 */
-    const [openCategory, setOpenCategory] = useState('');
-
-    const handleCategoryClick = (name: string) => {
-        if (openCategory === name) {
-            setOpenCategory('');
-        } else {
-            setOpenCategory(name);
-        }
-    };
-
+    const MsList = MusicList;
     return (
         <div>
             <MusiclistContainer>
                 <TagContainer>
                     <Search />
-                    <CategoryContainer>
-                        {categories.map((category) => (
-                            <div key={category.name}>
-                                <CategoryButton onClick={() => handleCategoryClick(category.name)}>
-                                    {category.name}
-                                </CategoryButton>
-                                <SubCategoryList isOpen={openCategory === category.name}>
-                                    {category.subCategories.map((subCategory) => (
-                                        <SubCategoryItem key={subCategory}>{subCategory}</SubCategoryItem>
-                                    ))}
-                                </SubCategoryList>
-                            </div>
-                        ))}
-                    </CategoryContainer>
+                    <Categories />
                 </TagContainer>
+                <RightContainer>
+                    <Trending />
+                    <MusicListTitle>
+                        <div className="musicList-title">Music List</div>
+                        <div className="music-inquiry">
+                            <li>최신순</li>
+                            <li>좋아요순</li>
+                        </div>
+                    </MusicListTitle>
+                    <SongContainer>
+                        <Item>
+                            <li>COVER</li>
+                            <li>TITLE</li>
+                            <li>ARTIST</li>
+                            <li>ALBUM</li>
+                            <li>TIME</li>
+                            <li>PLAY</li>
+                            <li>PLAYLIST</li>
+                            <li>DOWNLOAD</li>
+                            <li>VOTE</li>
+                        </Item>
+                        {MsList.map((data) => (
+                            <Item key={data.index}>
+                                <li>
+                                    <img src={data.albumCover} alt={data.songTitle} />
+                                </li>
+                                <li>{data.songTitle}</li>
+                                <li>{data.artistName}</li>
+                                <li>{data.songAlbum}</li>
+                                <li>{data.musicTime}</li>
+                                <li>
+                                    <FiPlayCircle />
+                                </li>
+                                <li>
+                                    <FiFolderPlus />
+                                </li>
+                                <li>
+                                    <BsBoxArrowInDown />
+                                </li>
+                                <li>
+                                    <AiOutlineHeart />
+                                </li>
+                            </Item>
+                        ))}
+                    </SongContainer>
+                </RightContainer>
             </MusiclistContainer>
         </div>
     );
@@ -62,49 +137,99 @@ const Musiclist = () => {
 
 export default Musiclist;
 
+/* 2023.05.08 MusicList (뮤직리스트 전체 컨테이너) 컴포넌트 구현 - 홍혜란 */
 const MusiclistContainer = styled.div`
     display: flex;
     align-items: center;
+    flex-direction: row;
+
+    @media (max-width: 700px) {
+        flex-direction: column;
+    }
 `;
 
+/* 2023.05.08 MusicList (검색,카테고리 컨테이너) 컴포넌트 구현 - 홍혜란 */
 const TagContainer = styled.div`
-    width: 250px;
+    width: 200px;
     height: 100vh;
     background-color: #1f1f1f;
-    margin-left: 150px;
+    margin-left: 100px;
 `;
 
-/* 2023.05.07 카테고리 컴포넌트 구현 - 홍혜란 */
-const CategoryContainer = styled.div`
+const RightContainer = styled.div`
     display: flex;
+    align-items: center;
     flex-direction: column;
+    width: 100%;
+    height: 100vh;
 `;
 
-/* 2023.05.07 큰 카테고리를 버튼으로 컴포넌틑 구현 - 홍혜란 */
-const CategoryButton = styled.button`
-    font-size: 20px;
-    font-weight: bold;
+/* 2023.05.08 MusicList (뮤직리스트 출력 타이틀) 컴포넌트 구현 - 홍혜란 */
+const MusicListTitle = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+
+    .musicList-title {
+        font-size: 30px;
+        font-weight: bold;
+        color: hsl(0, 0%, 100%);
+        margin: 20px 10px 10px 30px;
+    }
+
+    .music-inquiry {
+        display: flex;
+        margin: 20px 10px 0px 30px;
+
+        li {
+            font-size: 10px;
+            color: hsl(0, 0%, 100%);
+            border-left: 1px solid hsl(0, 0%, 100%);
+            padding-left: 10px;
+            margin: 5px;
+        }
+    }
+`;
+
+/* 2023.05.08 MusicList (뮤직리스트) 컴포넌트 구현 - 홍혜란 */
+const SongContainer = styled.div`
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 500px;
+`;
+
+/* 2023.05.08 MusicList (뮤직리스트의 아이템 전체) 컴포넌트 구현 - 홍혜란 */
+const Item = styled.ul`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    flex: 1;
+    width: 100%;
     color: hsl(0, 0%, 100%);
-    background-color: #1f1f1f;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-`;
 
-/* 2023.05.07 "isOpen"이라는 이름의 boolean 타입의 prop을 가진 <ul> 요소를 스타일링 - 홍혜란 */
-const SubCategoryList = styled.ul<{ isOpen: boolean }>`
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    transition: height 0.3s ease-in-out;
-    height: ${({ isOpen }) => (isOpen ? 'auto' : '0')}; // isOpen 상태면 auto, 아니면 0
-`;
+    li {
+        height: 50px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-/* 2023.05.07 서브카테고리 컴포넌트 구현 - 홍혜란 */
-const SubCategoryItem = styled.li`
-    font-size: 16px;
-    color: hsl(0, 0%, 100%);
-    padding: 10px;
-    cursor: pointer;
+    li:nth-child(6) {
+        color: #d235d4;
+    }
+
+    li:nth-child(9) {
+        color: rgb(199, 68, 68);
+    }
+
+    li > img {
+        width: 50px;
+        height: 50px;
+        border-radius: 10%;
+    }
 `;
