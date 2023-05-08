@@ -4,8 +4,9 @@ import NotFound from 'src/components/NotFound';
 import MainPage from './MainPage';
 import Playlist from 'src/components/playlist/Playlist';
 import Mixing from 'src/components/mixing/Mixing';
-import Mypage from 'src/components/mypage/Mypage';
+import Mypage from '@/components/mypage/Mypage';
 import Musiclist from 'src/components/musiclist/Musiclist';
+import MusicDetail from './MusicDetail';
 
 function RoutingPages() {
     return (

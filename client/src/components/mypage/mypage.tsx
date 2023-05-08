@@ -57,6 +57,7 @@ function Mypage() {
         };
     }, [name, intro]);
 
+    /* 2023.05.06 수정된 이름과 자기소개 데이터를 서버에 저장 - 홍혜란 */
     return (
         <MusicListContainer>
             <MypageContainer>
