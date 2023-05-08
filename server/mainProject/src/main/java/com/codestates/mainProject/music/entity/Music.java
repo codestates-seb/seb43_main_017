@@ -23,19 +23,19 @@ public class Music extends Auditable {
     private Long musicId;
 
     @Column(nullable = false)
-    private String artist_name;
+    private String artistName;
 
-    private String album_name;
-
-    @Column(nullable = false)
-    private Long music_time;
-
-    private String album_img;
-
-    private String background_img;
+    private String albumName;
 
     @Column(nullable = false)
-    private String music_uri = "";
+    private Long musicTime;
+
+    private String albumImg;
+
+    private String backgroundImg;
+
+    @Column(nullable = false, unique = true)
+    private String musicUri = "";
 
     @ElementCollection(fetch = FetchType.LAZY)
     private List<String> tags = new ArrayList<>();
