@@ -3,7 +3,7 @@ import { AiOutlineHeart, AiFillHeart, AiOutlinePlusSquare } from 'react-icons/ai
 import { BsMusicPlayer, BsPencilSquare, BsPlayCircle } from 'react-icons/bs';
 import { CiMenuKebab } from 'react-icons/ci';
 import { useRecoilState } from 'recoil';
-import { nameState, introState } from '../../recoil/atoms';
+import { nameState, introState } from '../../recoil/Atoms';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
