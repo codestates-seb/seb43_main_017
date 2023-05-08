@@ -16,6 +16,7 @@ function RoutingPages() {
             <Route path="/mixing" element={<Mixing />} />
             <Route path="/mypage" element={<Mypage />} />
             <Route path="/musiclist" element={<Musiclist />} />
+            <Route path="/musicdetail" element={<MusicDetail />} />
         </Routes>
     );
 }

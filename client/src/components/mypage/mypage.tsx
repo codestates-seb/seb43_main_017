@@ -53,7 +53,7 @@ function Mypage() {
     useEffect(() => {
         return () => {
             const userData: UserData = { name, intro };
-            axios.patch('/api/user', userData);
+            axios.patch('https://c2fe-59-17-229-47.ngrok-free.app/members/{member-id}', userData);
         };
     }, [name, intro]);
 
