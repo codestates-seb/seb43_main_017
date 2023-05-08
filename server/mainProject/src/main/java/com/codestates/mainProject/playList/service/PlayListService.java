@@ -39,7 +39,7 @@ public class PlayListService {
         return findVerifiedPlayList(playListId);
     }
 
-    Page<PlayList> findPlayLists(int page, int size){
+    public Page<PlayList> findPlayLists(int page, int size){
         // 모든 플리 조회 기능
         return playListRepository.findAll(PageRequest.of(
                 page, size, Sort.by("playListId").descending()));
@@ -54,7 +54,8 @@ public class PlayListService {
         return playListRepository.save(findPlayList);
     }
 
-    public void deletePlayList(long playListId){
+    public void deletePlayList(long playListId, long currentUserId){
+        //TODO: 어드민, 유저 구분해서 삭제 기능
         PlayList findPlayList = findVerifiedPlayList(playListId);
         playListRepository.delete(findPlayList);
     }

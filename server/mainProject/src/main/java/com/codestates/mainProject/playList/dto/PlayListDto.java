@@ -2,10 +2,7 @@ package com.codestates.mainProject.playList.dto;
 
 import com.codestates.mainProject.member.dto.MemberDto;
 import com.codestates.mainProject.playList.entity.PlayList;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -41,13 +38,8 @@ public class PlayListDto {
     @NoArgsConstructor
     public static class ResponseDto {
         // TODO: 주석 처리된 부분 추후에 작업
-<<<<<<< HEAD
-        private long playListId;
-        private long memberId;
-=======
         private Long playListId;
         private Long memberId;
->>>>>>> 557dd4b32be2a97a4798b3a896ec233a7c1efbd2
 //        private MusicDto music;
 //        private List<PlayListLikeDto> likes = new ArrayList<>();
         private String title;
@@ -67,6 +59,13 @@ public class PlayListDto {
 //                this.likes.add(new PlayListLikeDto(playListLike));
 //            }
 //        }
+    }
+
+    @Data
+    public static class DeleteSuccessDto {
+        private String message;
+
+        public DeleteSuccessDto(String message) {this.message = message;}
     }
 
 }
