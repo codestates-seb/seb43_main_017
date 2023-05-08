@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import './css/App.css';
-import './css/reset.css';
+import 'src/css/App.css';
+import 'src/css/reset.css';
 import { BrowserRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import Navigate from './components/Nav/Navigete';
-import Signin from './components/sign/Signin';
-import Signup from './components/sign/Signup';
-import RoutingPages from './pages/Routingpages';
+import Navigate from 'src/components/Nav/Navigete';
+import Signin from 'src/components/sign/Signin';
+import Signup from 'src/components/sign/Signup';
+import RoutingPages from 'src/pages/Routingpages';
 import { RiProfileFill } from 'react-icons/ri';
 import { MdFaceRetouchingNatural } from 'react-icons/md';
 

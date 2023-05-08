@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import { ButtonStyle } from '../../App'; // 버튼 디자인은 App 컴포넌트와 공유합니다.
+import { ButtonStyle } from 'src/App'; // 버튼 디자인은 App 컴포넌트와 공유합니다.
 import axios from 'axios';
-import { infoType } from '../../types/LoginInput';
-import { LoginPost } from '../../types/AxiosInterface';
+import { infoType } from 'src/types/LoginInput';
+import { LoginPost } from 'src/types/AxiosInterface';
 import { FcGoogle } from 'react-icons/fc';
 import { RiKakaoTalkFill } from 'react-icons/ri';
 import { SiNaver } from 'react-icons/si';
 
 function Signin({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetStateAction<boolean>> }) {
-    const BaseUrl = 'https://1a3f-59-17-229-47.jp.ngrok.io/members/login';
+    const BaseUrl = 'https://c2fe-59-17-229-47.ngrok-free.app/members/login';
     const [closeDisplay, setCloseDisplay] = useState<boolean>(false); // display closing 모션효과 상태
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [loginInfo, setLoginInfo] = useState<infoType>({
@@ -35,17 +35,18 @@ function Signin({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetStat
                     password: loginInfo.password,
                 })
                 .then((res) => {
-                    console.log(res.data);
-                    if (res.data.accessToken !== undefined) {
-                        window.localStorage.setItem('access_token', res.data.accessToken);
+                    if (res.status === 200 && res.headers.authorization !== undefined) {
+                        window.localStorage.setItem('access_token', res.headers.authorization);
                         //토큰 리코일로 관리setToken(localStorage.getItem('access_token')); setCloseDisplay(!closeDisplay);
                         setCloseDisplay(!closeDisplay);
                         setTimeout(() => {
                             setShowSignIn(false);
                         }, 1000);
                     }
+                })
+                .catch((err) => {
+                    setErrorMessage('유효하지 않은 로그인입니다.');
                 });
-            setErrorMessage('유효하지 않은 로그인입니다.');
         }
     };
 
