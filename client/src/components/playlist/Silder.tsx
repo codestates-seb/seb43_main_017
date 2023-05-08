@@ -203,6 +203,8 @@ const Plcard = styled.div<bgimg>`
 `;
 const SilderGroup = styled.div`
     width: 100%;
+    opacity: 0;
+    animation: opacity 2s forwards;
     .slick-center ${Plcard} {
         transform: scale(1);
     }
@@ -221,6 +223,11 @@ const SilderGroup = styled.div`
         transform: scale(0.8);
         border-color: #ff8716;
         color: #ff8716;
+    }
+    @keyframes opacity {
+        100% {
+            opacity: 1;
+        }
     }
 `;
 /**2023-05-06 슬라이드 태그 : 김주비 */
