@@ -3,7 +3,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { useState, useEffect } from 'react';
-// import { ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 interface PlcardProps {
     index: number;
@@ -22,18 +22,25 @@ function PlSilder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<
     const [silderPage, setSliderPage] = useState<number>(3); //슬라이더 페이지 갯수
 
     /**2023-05-07 window width 값 가져오기 : 김주비 */
+    let width = window.innerWidth;
     window.addEventListener('resize', () => {
-        const width = window.innerWidth;
+        width = window.innerWidth;
         // 변화된 width 값을 이용하여 필요한 작업 수행
 
         if (width <= 1100) {
             setSliderPage(1);
-        } else if (width <= 700) {
-            setSliderPage(2);
         } else {
             setSliderPage(3);
         }
     });
+    /**2023-05-07 새로고침시 width에 따라 페이징 변환 : 김주비 */
+    useEffect(() => {
+        if (width <= 1100) {
+            setSliderPage(1);
+        } else {
+            setSliderPage(3);
+        }
+    }, []);
     /**2023-05-07 플리 슬라이드 인덱스 : 김주비 */
     const handleAfterChange = (index: number) => {
         setCurrentSlideIndex(index);
@@ -112,17 +119,17 @@ function PlSilder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<
     }, [currentSlideIndex]);
 
     /**2023-05-07 슬라이드 버튼 appen : 김주비 */
-    // const appendDots = (dots: ReactNode) => {
-    //     return (
-    //         <div style={{ height: '0px' }}>
-    //             <ul style={{ margin: '10px' }}> {dots} </ul>
-    //         </div>
-    //     );
-    // };
-    // /**2023-05-07 슬라이드 버튼 custom : 김주비 */
-    // const customPaging = (i: number) => {
-    //     return <div className="dots-paging">{i + 1}</div>;
-    // };
+    const appendDots = (dots: ReactNode) => {
+        return (
+            <div style={{ height: '0px' }}>
+                <ul style={{ margin: '10px' }}> {dots} </ul>
+            </div>
+        );
+    };
+    /**2023-05-07 슬라이드 버튼 custom : 김주비 */
+    const customPaging = (i: number) => {
+        return <div className="dots-paging">{i + 1}</div>;
+    };
 
     /**2023-05-07 슬라이드 설정옵션 : 김주비 */
     const settings = {
@@ -137,8 +144,8 @@ function PlSilder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<
         autoplaySpeed: 5000,
         dots: true,
         arrow: true,
-        // appendDots: appendDots,
-        // customPaging: customPaging,
+        appendDots: appendDots,
+        customPaging: customPaging,
     };
 
     return (

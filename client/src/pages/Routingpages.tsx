@@ -6,6 +6,7 @@ import Playlist from '../components/playlist/Playlist';
 import Mixing from '../components/mixing/Mixing';
 import Mypage from '../components/mypage/Mypage';
 import Musiclist from '../components/musiclist/Musiclist';
+import MusicDetail from './MusicDetail';
 
 function RoutingPages() {
     return (
@@ -16,6 +17,7 @@ function RoutingPages() {
             <Route path="/mixing" element={<Mixing />} />
             <Route path="/mypage" element={<Mypage />} />
             <Route path="/musiclist" element={<Musiclist />} />
+            <Route path="/musicdetail" element={<MusicDetail />} />
         </Routes>
     );
 }
