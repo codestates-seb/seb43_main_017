@@ -1,14 +1,34 @@
 import styled from 'styled-components';
 import Slider from './Silder';
 import { useState } from 'react';
+import Taplist from './Taplist';
 
 function Playlist() {
     const [bgSrc, setBgSrc] = useState<string>('');
+    const [changeTap, setChangeTap] = useState<string>('slide');
 
     return (
         <PlaylistSection>
             <PlaylistBackground url={bgSrc}></PlaylistBackground>
             <PlaylistHeader>
+                <div className="flex-center">
+                    <Pltap>
+                        <li
+                            onClick={() => {
+                                setChangeTap('slide');
+                            }}
+                        >
+                            Slide
+                        </li>
+                        <li
+                            onClick={() => {
+                                setChangeTap('tap');
+                            }}
+                        >
+                            List
+                        </li>
+                    </Pltap>
+                </div>
                 <div className="flex-center">
                     <Pltitle>
                         <span className="pl-title">PLAYLIST</span>
@@ -22,7 +42,8 @@ function Playlist() {
                 </div>
             </PlaylistHeader>
             <PlaylistContents>
-                <Slider setBgSrc={setBgSrc} />
+                {changeTap === 'slide' ? <Slider setBgSrc={setBgSrc} /> : null}
+                {changeTap === 'tap' ? <Taplist /> : null}
             </PlaylistContents>
         </PlaylistSection>
     );
@@ -41,7 +62,7 @@ const PlaylistSection = styled.section`
     justify-content: center;
     align-items: center;
     color: #ccc;
-    overflow: hidden;
+    /* overflow: hidden; */
     @media (max-height: 800px) {
         padding-top: 100px;
     }
@@ -52,7 +73,7 @@ interface url {
 /**2023-05-06 ScaleOver 되는 백그라운드 애니메이션 : 김주비 */
 const PlaylistBackground = styled.article<url>`
     box-sizing: border-box;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
@@ -130,7 +151,7 @@ const Plsubtext = styled.div`
     }
 `;
 /**2023-05-06 펼쳐지는 서치바 애니메이션 : 김주비*/
-export const Plsearch = styled.input`
+const Plsearch = styled.input`
     border-radius: 30px;
     width: 0%;
     background: rgb(255, 255, 255, 0.2);
@@ -156,13 +177,45 @@ export const Plsearch = styled.input`
         transform: scale(0.8);
     }
 `;
-/**2023-05-06 플레이리스트 슬라이드 섹션 : 김주비 */
-export const PlaylistContents = styled.article`
+
+const Pltap = styled.ul`
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    height: 30px;
+    border: 2px solid #ccc;
+    border-radius: 30px;
+    overflow: hidden;
+    animation: opacity 1s forwards 3.5s;
+    opacity: 0;
+    li {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 50px;
+        padding: 5px 10px;
+        border-left: 1px solid #ccc;
+        height: 100%;
+        cursor: pointer;
+    }
+    li:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+    @keyframes opacity {
+        100% {
+            opacity: 1;
+        }
+    }
+`;
+
+/**2023-05-06 플레이리스트 슬라이드 섹션 : 김주비 */
+const PlaylistContents = styled.article`
+    display: flex;
+    flex-direction: column;
     height: 400px;
+    /* justify-content: center; */
+    align-items: center;
+    width: 100%;
     margin-top: 20px;
     opacity: 0;
     animation: opacity 2s forwards 3s;

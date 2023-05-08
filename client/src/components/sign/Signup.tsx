@@ -81,7 +81,7 @@ function Signup({ setShowSignUp }: { setShowSignUp: React.Dispatch<React.SetStat
         e.preventDefault();
         if (isPassword && isEmail && isName && isCheck) {
             axios.post<null>(`${BaseUrl}`, {
-                neme: userInfo.name,
+                name: userInfo.name,
                 email: userInfo.email,
                 password: userInfo.password,
             });
