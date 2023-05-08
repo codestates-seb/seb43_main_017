@@ -7,6 +7,7 @@
 |[홍혜란](https://github.com/forhrever)|[김주비](https://github.com/mscojl24)|[박수범](https://github.com/parksubeom)|[김인환](https://github.com/Preasim)|[이재관](https://github.com/CordJG)|[강지산](https://github.com/hunm719)|
 |FE 팀장|FE|FE|BE 팀장|BE|BE|
 
+
 ## Service info
 
 No Copyright Music 서비스 플랫폼 입니다.
