@@ -1,4 +1,4 @@
-package com.codestates.mainProject.auth.handler;
+package com.codestates.mainProject.security.auth.handler;
 
 import com.codestates.mainProject.response.ErrorResponse;
 import com.google.gson.Gson;
