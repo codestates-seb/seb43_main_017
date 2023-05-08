@@ -92,7 +92,7 @@ function Taplist() {
             <ul>
                 {pldata.map((el) => (
                     <TapList key={el.index} bgImg={el.coverimg}>
-                        {el.plname}
+                        {el.plname} ㄴㅁㅇㅁㄴㅁㄴㅇㅁㄴㅇㄴㅇㅁㄴㅇㄴ
                     </TapList>
                 ))}
             </ul>
