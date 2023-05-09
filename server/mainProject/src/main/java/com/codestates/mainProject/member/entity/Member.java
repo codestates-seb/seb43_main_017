@@ -21,13 +21,13 @@ public class Member extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
 
-    @Column(length = 8, nullable = false, unique = true)
+    @Column(length = 20, nullable = false, unique = true)
     private String name;
 
     @Column(nullable = false, updatable = false, unique = true)
     private String email;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100)
     private String password;
 
     @Column(name = "image")
@@ -40,13 +40,13 @@ public class Member extends Auditable {
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
     private List<Music> musics = new ArrayList<>();  // 음악에 like를 누르면 musics에 포함
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
     private List<PlayList> playLists = new ArrayList<>(); //playlist를 새로 생성하거나, 기존의 playlist 추가시 playlists에 추가
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
     private List<PlayList> likedPlayLists = new ArrayList<>();
 
     public void addMusic(Music music){
