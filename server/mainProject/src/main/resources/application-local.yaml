@@ -57,8 +57,7 @@ spring:
 
 
 file:
-  upload-dir: C:/Users/Hp/Desktop/image저장소
-
+  upload-dir: C:/Users/UserK/Desktop/image저장소
 
 
 logging:
