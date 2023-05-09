@@ -44,7 +44,10 @@ public class MusicDto {
         private String albumImg;
         private String backgroundImg;
         private String musicUri;
+
         // 태그
+        private String createdAt;
+        private String modifiedAt;
     }
 
     @Data
