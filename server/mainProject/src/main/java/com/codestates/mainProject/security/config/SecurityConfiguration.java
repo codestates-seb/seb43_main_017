@@ -13,12 +13,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
+
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
+
+
 
 
 
@@ -63,21 +66,36 @@ public class SecurityConfiguration {
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
                         .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        // # member관련
                         .antMatchers(HttpMethod.POST, "/members/signup").permitAll()
                         .antMatchers(HttpMethod.POST, "/members/login").permitAll()
                         .antMatchers(HttpMethod.POST, "/members/logout").hasRole("USER")
-                        .antMatchers(HttpMethod.POST, "/members/image/**").hasRole("USER")
+                        .antMatchers(HttpMethod.POST, "/members/image/**").hasAnyRole("USER", "ADMIN")
                         .antMatchers(HttpMethod.GET, "/members/**").permitAll()
-                        .antMatchers(HttpMethod.PATCH, "/members/**").hasRole("USER")
-                        .antMatchers(HttpMethod.DELETE, "/members/**").hasRole("USER")
+                        .antMatchers(HttpMethod.PATCH, "/members/**").hasAnyRole("USER", "ADMIN")
+                        .antMatchers(HttpMethod.DELETE, "/members/**").hasAnyRole("USER", "ADMIN")
+
+                        // # music 관련
+                        .antMatchers(HttpMethod.GET, "/musics/**").permitAll()
+                        .antMatchers(HttpMethod.POST, "/musics/**").hasRole("ADMIN")
+                        .antMatchers(HttpMethod.PATCH, "/musics/**").hasRole("ADMIN")
+                        .antMatchers(HttpMethod.DELETE, "/musics/**").hasRole("ADMIN")
+
+                        // #playlist 관련
+                        .antMatchers(HttpMethod.GET, "/playlists/**").permitAll()
+                        .antMatchers(HttpMethod.POST, "/playlists/**").hasAnyRole("USER", "ADMIN")
+                        .antMatchers(HttpMethod.PATCH, "/playlists/**").hasAnyRole("USER", "ADMIN")
+                        .antMatchers(HttpMethod.DELETE, "/playlists/**").hasAnyRole("USER", "ADMIN")
+
                         .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2
-                        .successHandler(new OAuth2MemberSuccessHandler(jwtTokenizer, authorityUtils, memberService)));
+                        .successHandler(new OAuth2MemberSuccessHandler(jwtTokenizer, authorityUtils, memberService))
+                );
 
         return httpSecurity.build();
     }
-
 
 
     @Bean
@@ -120,7 +138,7 @@ public class SecurityConfiguration {
 
             builder
                     .addFilter(jwtAuthenticationFilter)
-                    .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class) //  (filter,afterFilter) afterFilter 뒤 filter 가 적용된다
+//                    .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class) //  (filter,afterFilter) afterFilter 뒤 filter 가 적용된다
                     .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class);
         }
     }

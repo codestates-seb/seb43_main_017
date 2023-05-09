@@ -12,10 +12,9 @@ import java.util.List;
 
 @NoArgsConstructor
 @Getter
-@Setter
 @Entity
-@Builder
 @AllArgsConstructor
+@Data
 public class Member extends Auditable {
 
     @Id
