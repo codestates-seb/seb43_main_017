@@ -20,11 +20,12 @@ public class PlayList extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long PlayListId;
+    private Long playListId;
 
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
+
 
     @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
     private List<Music> musics = new ArrayList<>();

@@ -27,6 +27,8 @@ public class PlayListDto {
     @Setter
     @NoArgsConstructor
     public static class PatchDto {
+
+        private Long playListId;
         @NotBlank
         private String title;
         @NotBlank
@@ -38,15 +40,17 @@ public class PlayListDto {
     @NoArgsConstructor
     public static class ResponseDto {
         // TODO: 주석 처리된 부분 추후에 작업
+
         private Long playListId;
         private Long memberId;
 //        private MusicDto music;
 //        private List<PlayListLikeDto> likes = new ArrayList<>();
+
         private String title;
         private String body;
 
-        private String createdAt;
-        private String modifiedAt;
+        private LocalDateTime createdAt;
+        private LocalDateTime modifiedAt;
 
 //        public ResponseDto(PlayList playList) {
 //            if (playList.getMember() == null) throw new IllegalArgumentException("Member is null");

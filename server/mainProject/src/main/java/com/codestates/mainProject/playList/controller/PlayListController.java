@@ -80,7 +80,7 @@ public class PlayListController {
 
     @DeleteMapping("/{playlist-id}")
     public ResponseEntity<SingleResponseDto<PlayListDto.DeleteSuccessDto>>
-    deletePlayList(@PathVariable long playListId, @AuthenticationPrincipal UserDetails userDetails){
+    deletePlayList(@PathVariable("playlist-id") long playListId, @AuthenticationPrincipal UserDetails userDetails){
 
         Member member = memberRepository.findByEmail(userDetails.getUsername()).orElseThrow(
                 () -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND)

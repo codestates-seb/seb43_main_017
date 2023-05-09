@@ -20,11 +20,11 @@ public class PlayListLikeService {
         this.playListLikeRepository = playListLikeRepository;
     }
 
-    public PlayListLike findVerifiedPlayListLike(long playListLikeId) {
-        Optional<PlayListLike> optionalPlayListLike = playListLikeRepository.findById(playListLikeId);
-        PlayListLike findPlayListLike = optionalPlayListLike.orElseThrow(() ->
-                new BusinessLogicException(ExceptionCode.PlAYLIST_LIKE_NOT_FOUND));
-
-        return findPlayListLike;
-    }
+//    public PlayListLike findVerifiedPlayListLike(long playListLikeId) {
+//        Optional<PlayListLike> optionalPlayListLike = playListLikeRepository.findById(playListLikeId);
+//        PlayListLike findPlayListLike = optionalPlayListLike.orElseThrow(() ->
+//                new BusinessLogicException(ExceptionCode.PlAYLIST_LIKE_NOT_FOUND));
+//
+//        return findPlayListLike;
+//    }
 }

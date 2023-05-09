@@ -102,6 +102,7 @@ public class MemberContorller {
                 new MultiResponseDto<>(response, pageMember), HttpStatus.OK);
     }
 
+
     @PatchMapping("/{member-id}")
     public ResponseEntity patchMember(@PathVariable("member-id") @Positive long memberId,
                                       @Valid @RequestBody MemberDto.PatchDto requestBody){
@@ -131,23 +132,42 @@ public class MemberContorller {
 
         MemberDto.ResponseDto response = mapper.memberToResponse(deleteMember);
 
-
         return new ResponseEntity<>((response), HttpStatus.OK);
-
     }
 
+//    @PostMapping("/oauth/signup")
+//    public ResponseEntity oAuth2Login(@RequestBody @Valid AuthLoginDto dto) {
+//        log.info("### oauth2 login start! ###");
+//        String accessToken = "";
+//        String refreshToken = "";
+//
+//        Member member = mapper.AuthLoginDtoToUser(dto);
+//        if (!memberService.existsByEmail(member.getEmail())) {
+//            member = memberService.authUserSave(member);
+//        } else {
+//            member = memberService.checkUserExist(member.getEmail());
+//        }
+//
+//        accessToken = memberService.delegateAccessToken(member);
+//        refreshToken = memberService.delegateRefreshToken(member);
+//        return ResponseEntity.ok().header("Authorization", "Bearer " + accessToken)
+//                .header("Refresh", refreshToken).build();
+//    }
+//
+//    @PostMapping("/oauth/exist")
+//    public ResponseEntity oauth2Exist(@RequestBody @Valid AuthExistDto dto) {
+//        log.info("### oauth2 Exist start! ###");
+//
+//        Member member = memberService.checkUserExist(dto.getEmail());
+//        memberService.checkGoogleAuth(member);
+//
+//        String accessToken = memberService.delegateAccessToken(member);
+//        String refreshToken = memberService.delegateRefreshToken(member);
+//
+//        return ResponseEntity.ok().header("Authorization", "Bearer " + accessToken)
+//                .header("Refresh", refreshToken).build();
+//    }
 
-    @GetMapping("/home")
-    public String index() {
-        return "index";
-    }
-
-    @GetMapping("/login/oauth2/code/google")
-    public String handleGoogleOAuth2Callback(HttpServletRequest request) {
-        // OAuth2 인증 결과를 처리하는 코드를 작성합니다.
-        // authorizedClientService를 사용하여 인증 정보를 가져올 수 있습니다.
-        return "redirect:/"; // 처리 결과에 따라 적절한 페이지로 리다이렉트합니다.
-    }
 
 
 

@@ -46,7 +46,6 @@ public class MemberService {
         // (4) 추가: DB에 User Role 저장
         List<String> roles = authorityUtils.createRoles(member.getEmail());
         member.setRoles(roles);
-        member.setStatus(Member.Status.MEMBER_ACTIVE);
 
         Member savedMember = memberRepository.save(member);
 
@@ -69,6 +68,7 @@ public class MemberService {
         }
         List<String> roles = authorityUtils.createRoles(member.getEmail());
         member.setRoles(roles);
+        member.setStatus(Member.Status.MEMBER_ACTIVE);
         verifyExistEmail(member.getEmail());
         return memberRepository.save(member);
     }
