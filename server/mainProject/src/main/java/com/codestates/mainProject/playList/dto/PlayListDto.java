@@ -49,8 +49,8 @@ public class PlayListDto {
         private String title;
         private String body;
 
-        private LocalDateTime createdAt;
-        private LocalDateTime modifiedAt;
+        private String createdAt;
+        private String modifiedAt;
 
 //        public ResponseDto(PlayList playList) {
 //            if (playList.getMember() == null) throw new IllegalArgumentException("Member is null");

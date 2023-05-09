@@ -25,15 +25,13 @@ public abstract class Auditable {
     @Column(name = "LAST_MODIFIED_AT")
     private LocalDateTime modifiedAt;
 
-}
+    public String getCreatedAt() {
+        return createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
 
-//    public String getCreatedAt() {
-//        return createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-//    }
-//
-//    public String getModifiedAt() {
-//        return modifiedAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-//    }
-//
-//
-//}
+    public String getModifiedAt() {
+        return modifiedAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
+
+}

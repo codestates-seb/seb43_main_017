@@ -47,5 +47,8 @@ public class MemberDto {
         private String email;
         private String image;
         private Member.Status status;
+
+        private String createdAt;
+        private String modifiedAt;
     }
 }
