@@ -73,6 +73,7 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.POST, "/members/logout").hasRole("USER")
                         .antMatchers(HttpMethod.POST, "/members/image/**").hasAnyRole("USER", "ADMIN")
                         .antMatchers(HttpMethod.GET, "/members/**").permitAll()
+                        .antMatchers(HttpMethod.PATCH, "/members/status/**").hasAnyRole( "ADMIN")
                         .antMatchers(HttpMethod.PATCH, "/members/**").hasAnyRole("USER", "ADMIN")
                         .antMatchers(HttpMethod.DELETE, "/members/**").hasAnyRole("USER", "ADMIN")
 
@@ -138,7 +139,6 @@ public class SecurityConfiguration {
 
             builder
                     .addFilter(jwtAuthenticationFilter)
-//                    .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class) //  (filter,afterFilter) afterFilter 뒤 filter 가 적용된다
                     .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class);
         }
     }

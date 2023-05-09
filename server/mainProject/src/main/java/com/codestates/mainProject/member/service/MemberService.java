@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -68,7 +69,8 @@ public class MemberService {
         }
         List<String> roles = authorityUtils.createRoles(member.getEmail());
         member.setRoles(roles);
-        member.setStatus(Member.Status.MEMBER_ACTIVE);
+        String newName = verifyExistName(member.getName());
+        member.setName(newName);
         verifyExistEmail(member.getEmail());
         return memberRepository.save(member);
     }
@@ -115,16 +117,24 @@ public class MemberService {
         return findMember;
     }
 
-    public void updateStatus(long memberId) {
+    public Member updateActiveStatus(long memberId) {
         Member findMember = findVerifiedMember(memberId);
         findMember.setStatus(Member.Status.MEMBER_ACTIVE);
+
+        return findMember;
     }
 
-    public Member deleteMember(long memberId) {
+    public Member updateDeleteStatus(long memberId) {
         Member findMember = findVerifiedMember(memberId);
 
         findMember.setStatus(Member.Status.MEMBER_DELETE);
         return findMember;
+    }
+
+    public void deleteMember(long memberId ) {
+        Member findMember = findVerifiedMember(memberId);
+
+        memberRepository.delete(findMember);
     }
 
 
@@ -141,5 +151,17 @@ public class MemberService {
         Optional<Member> user = memberRepository.findByEmail(email);
         if (user.isPresent())
             throw new BusinessLogicException(ExceptionCode.MEMBER_EXISTS);
+    }
+
+    private String verifyExistName(String name){     // oauth2로 로그인 했을 때 같은 이름이 있을 때 1~1000까지의 랜덤숫자를 붙임
+        String newName = name;
+        Optional<Member> optionalMember = memberRepository.findByName(name);
+        if(optionalMember.isPresent()){
+            Random random = new Random();
+            int randomNumber = random.nextInt(1000) + 1;
+            newName = name + randomNumber;
+        }
+
+        return newName;
     }
 }

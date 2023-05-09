@@ -17,6 +17,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -118,21 +119,31 @@ public class MemberContorller {
                 new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
-    @PatchMapping("/status/{member-id}")     // 탈퇴 취소하는 컨트롤러
-    public ResponseEntity patchMemberStatus(@PathVariable("member-id") @Positive long memberId){
-        memberService.updateStatus(memberId);
+    @PatchMapping("/status/active/{member-id}")     // Status를 Active로 변경
+    public ResponseEntity patchStatusActive(@PathVariable("member-id") @Positive long memberId){
+        Member activeMember =memberService.updateActiveStatus(memberId);
 
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        MemberDto.ResponseDto response = mapper.memberToResponse(activeMember);
+
+        return new ResponseEntity<>((response), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{member-id}")
-    public ResponseEntity deleteMember(@PathVariable("member-id") @Positive long memberId){
+    @PatchMapping("/status/delete/{member-id}")   // Status를 delete로 변경(로그인 못하게 막음)
+    public ResponseEntity patchStatusDelete(@PathVariable("member-id") @Positive long memberId){
 
-        Member deleteMember  = memberService.deleteMember(memberId);
+        Member deleteMember  = memberService.updateDeleteStatus(memberId);
 
         MemberDto.ResponseDto response = mapper.memberToResponse(deleteMember);
 
         return new ResponseEntity<>((response), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{member-id}")    //Member 삭제
+    public ResponseEntity deleteMember(@PathVariable("member-id") @Positive long memberId){
+
+        memberService.deleteMember(memberId);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 //    @PostMapping("/oauth/signup")

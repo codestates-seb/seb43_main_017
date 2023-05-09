@@ -34,28 +34,42 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         OAuth2User oAuth2User = (OAuth2User)authentication.getPrincipal();
 
+        String name = (String) oAuth2User.getAttributes().get("name");
         String email = String.valueOf(oAuth2User.getAttributes().get("email"));
+        String image = (String) oAuth2User.getAttributes().get("picture");
+        if(image==null){
+            image = (String) oAuth2User.getAttributes().get("profile_image");
+        }
 
 
         // 얻은 email 주소로 권한 List 만들기
         List<String> authorities = authorityUtils.createRoles(email);
 
-        saveMember(email);
+        Member member = buildOAuth2Member(name, email, image);
+        Member savedMember = saveMember(member);
 
         // 리다이렉트를 하기위한 정보들을 보내줌
-        redirect(request, response, email, authorities);
+        redirect(request, response, savedMember, authorities);
+    }
+
+    private Member buildOAuth2Member(String name, String email, String image){
+        Member member = new Member();
+        member.setName(name);
+        member.setEmail(email);
+        member.setImage(image);
+
+        return member;
     }
 
 
-    private Member saveMember(String email) {
-        Member member = new Member(email);
+    private Member saveMember(Member member) {
 
         return memberService.createMemberOAuth2(member);
     }
 
-    private void redirect(HttpServletRequest request, HttpServletResponse response, String username, List<String> authorities) throws IOException {
-        String accessToken = delegateAccessToken(username, authorities);
-        String refreshToken = delegateRefreshToken(username);
+    private void redirect(HttpServletRequest request, HttpServletResponse response, Member member, List<String> authorities) throws IOException {
+        String accessToken = delegateAccessToken(member, authorities);
+        String refreshToken = delegateRefreshToken(member);
 
         String uri = createURI(request, accessToken, refreshToken).toString();
 
@@ -67,13 +81,13 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
     }
 
-    private String delegateAccessToken(String username, List<String> authorities) {
+    private String delegateAccessToken(Member member, List<String> authorities) {
 
         Map<String, Object> claims = new HashMap<>();
-        claims.put("username", username);
+        claims.put("email", member.getEmail());
         claims.put("roles", authorities);
 
-        String subject = username;
+        String subject = member.getEmail();
 
         Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());
 
@@ -84,8 +98,8 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         return accessToken;
     }
 
-    private String delegateRefreshToken(String username) {
-        String subject = username;
+    private String delegateRefreshToken(Member member) {
+        String subject = member.getEmail();
 
         Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes());
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
@@ -106,7 +120,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         return UriComponentsBuilder
                 .newInstance()
                 .scheme("http")
-                .host(serverName)
+                .host("localhost")
                 //.port(80)   -> aws로 배포했을 때 싸용
 //              .port(8080)   //-> local 테스트용
                 .path("/receive-token.html")
