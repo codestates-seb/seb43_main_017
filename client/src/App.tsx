@@ -112,7 +112,7 @@ const NavSection = styled.section`
     background: linear-gradient(90deg, rgb(0, 0, 0), rgb(0, 0, 0, 0));
     animation: sildeNav 2s forwards;
     opacity: 0;
-    z-index: 1;
+    z-index: 3;
     @keyframes sildeNav {
         100% {
             opacity: 1;

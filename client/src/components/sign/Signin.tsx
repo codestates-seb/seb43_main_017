@@ -36,7 +36,6 @@ function Signin({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetStat
                 })
                 .then((res) => {
                     if (res.status === 200 && res.headers.authorization !== undefined) {
-
                         window.localStorage.setItem('access_token', res.headers.authorization);
                         //토큰 리코일로 관리setToken(localStorage.getItem('access_token')); setCloseDisplay(!closeDisplay);
                         setCloseDisplay(!closeDisplay);
@@ -45,7 +44,7 @@ function Signin({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetStat
                         }, 1000);
                     }
                 })
-                .catch((err) => {
+                .catch(() => {
                     setErrorMessage('유효하지 않은 로그인입니다.');
                 });
         }
