@@ -121,8 +121,8 @@ function Mypage() {
                         </ModifyContainer>
                     </RightContainer>
                 </MusicInfor>
-            </MypageContainer>
-        </MusicListContainer>
+            </MypageListContainer>
+        </MypageContainer>
     );
 }
 
@@ -233,135 +233,6 @@ const LeftContainer = styled.div`
     align-items: center;
     width: 600px;
     height: 600px;
-
-const VoteContainer = styled.div`
-    align-items: center;
-    margin: 10px;
-    border: 1px solid red;
-
-    .vote-title {
-        display: flex;
-        align-items: center;
-
-        .vote-icon {
-            font-size: 25px;
-            color: hsl(330, 100%, 51%);
-            padding-top: 5px;
-        }
-
-        p {
-            font-size: 20px;
-            color: #ffffff;
-            margin-left: 5px;
-        }
-    }
-
-    .music-like {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        border-bottom: 1px solid white;
-
-        img {
-            width: 30px;
-            height: 30px;
-            border-radius: 10%;
-        }
-
-        .music-name {
-            font-size: 20px;
-            color: white;
-            font-weight: bold;
-        }
-
-        .music-artist {
-            font-size: 20px;
-            color: white;
-        }
-
-        .music-album {
-            font-size: 20px;
-            color: white;
-        }
-
-        .music-icon {
-            font-size: 25px;
-            color: hsl(330, 100%, 51%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-    }
-`;
-
-const PlayListContainer = styled.div`
-    align-items: center;
-    margin: 10px;
-    border: 1px solid red;
-
-    .playlist-title {
-        display: flex;
-        align-items: center;
-
-        .play-icon {
-            font-size: 25px;
-            color: hsl(216, 100%, 50%);
-            padding-top: 5px;
-        }
-
-        p {
-            font-size: 20px;
-            color: #ffffff;
-            margin-left: 5px;
-        }
-    }
-
-    .playlist-list {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        background: rgba(43, 43, 43, 0.8);
-
-        img {
-            width: 50px;
-            height: 50px;
-        }
-
-        .playlist-name {
-            font-size: 20px;
-            color: white;
-            font-weight: bold;
-        }
-
-        .playlist-time {
-            font-size: 10px;
-            color: white;
-        }
-
-        .playlist-vote-icon {
-            font-size: 15px;
-            color: red;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .playlist-button {
-            font-size: 30px;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .playlist-menu {
-            font-size: 30px;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-    }
 `;
 
 const RightContainer = styled.div`
