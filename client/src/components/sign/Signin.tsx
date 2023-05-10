@@ -1,15 +1,18 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import { ButtonStyle } from 'src/App'; // 버튼 디자인은 App 컴포넌트와 공유합니다.
 import axios from 'axios';
 import { infoType } from 'src/types/LoginInput';
 import { LoginPost } from 'src/types/AxiosInterface';
-import { FcGoogle } from 'react-icons/fc';
-import { RiKakaoTalkFill } from 'react-icons/ri';
-import { SiNaver } from 'react-icons/si';
+import { accessToken } from 'src/recoil/Atoms';
+import { useSetRecoilState } from 'recoil';
+import { ButtonStyle } from 'src/App'; // 버튼 디자인은 App 컴포넌트와 공유합니다.
+import GoogleBtn from './GoogleBtn';
+import KakaoBtn from './KakaoBtn';
+import NaverBtn from './NaverBtn';
 
 function Signin({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetStateAction<boolean>> }) {
     const BaseUrl = 'https://c2fe-59-17-229-47.ngrok-free.app/members/login';
+    const setTokenState = useSetRecoilState(accessToken);
     const [closeDisplay, setCloseDisplay] = useState<boolean>(false); // display closing 모션효과 상태
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [loginInfo, setLoginInfo] = useState<infoType>({
@@ -37,7 +40,7 @@ function Signin({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetStat
                 .then((res) => {
                     if (res.status === 200 && res.headers.authorization !== undefined) {
                         window.localStorage.setItem('access_token', res.headers.authorization);
-                        //토큰 리코일로 관리setToken(localStorage.getItem('access_token')); setCloseDisplay(!closeDisplay);
+                        setTokenState(localStorage.getItem('access_token'));
                         setCloseDisplay(!closeDisplay);
                         setTimeout(() => {
                             setShowSignIn(false);
@@ -58,20 +61,6 @@ function Signin({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetStat
         }, 1000);
     };
 
-    /**2023/05/05 - 로그인 시 서버로부터 받아 온 Access토큰을 로컬스토리지에 저장하고 로그인 모달을 종료한다 -bumpist  */
-    const GoogleHandler = () => {
-        console.log('구글로그인이다.');
-    };
-
-    /**2023/05/05 - 카카오 Oauth 로그인 요청 함수 -bumpist  */
-    const KakaoHandler = () => {
-        console.log('카카오로그인이다.');
-    };
-
-    /**2023/05/05 - 로그인 시 서버로부터 받아 온 Access토큰을 로컬스토리지에 저장하고 로그인 모달을 종료한다 -bumpist  */
-    const NaverHandler = () => {
-        console.log('네이버로그인이다.');
-    };
     return (
         <BlurBackground className={closeDisplay ? 'close-display' : 'null'} onClick={ModalHandler}>
             <SignInBox
@@ -85,18 +74,9 @@ function Signin({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetStat
                     <SignText>UNCOVER 로그인 페이지 입니다.</SignText>
                     <SignText> 소셜로그인을 통한 간편 로그인 또한 가능합니다.</SignText>
                 </span>
-                <OauthBtn bgColor="#f9f8f8" color="#2e2e2e" onClick={GoogleHandler}>
-                    <FcGoogle className="googleicon" />
-                    구글 계정으로 로그인하기
-                </OauthBtn>
-                <OauthBtn bgColor="#fee500" color="#2e2e2e" onClick={KakaoHandler}>
-                    <RiKakaoTalkFill className="kakaoicon" />
-                    카카오 계정으로 로그인하기
-                </OauthBtn>
-                <OauthBtn bgColor="#15c654" color="#fff" onClick={NaverHandler}>
-                    <SiNaver className="navericon" />
-                    네이버 계정으로 로그인하기
-                </OauthBtn>
+                <GoogleBtn />
+                <KakaoBtn />
+                <NaverBtn />
                 <InputContainer>
                     <form onSubmit={SignInHandler}>
                         <div>

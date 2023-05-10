@@ -1,5 +1,8 @@
 package com.codestates.mainProject.member.service;
 
+import com.codestates.mainProject.music.entity.Music;
+import com.codestates.mainProject.musicLike.entity.MusicLike;
+import com.codestates.mainProject.musicLike.repository.MusicLikeRepository;
 import com.codestates.mainProject.security.auth.utils.CustomAuthorityUtils;
 import com.codestates.mainProject.exception.BusinessLogicException;
 import com.codestates.mainProject.exception.ExceptionCode;
@@ -10,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -29,6 +35,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils authorityUtils;
     private final FileStorageService fileStorageService;
+    private final MusicLikeRepository musicLikeRepository;
 
     public Member createMember(Member member) {
         verifyExistEmail(member.getEmail());
@@ -40,7 +47,6 @@ public class MemberService {
         // (4) 추가: DB에 User Role 저장
         List<String> roles = authorityUtils.createRoles(member.getEmail());
         member.setRoles(roles);
-        member.setStatus(Member.Status.MEMBER_ACTIVE);
 
         Member savedMember = memberRepository.save(member);
 
@@ -63,6 +69,8 @@ public class MemberService {
         }
         List<String> roles = authorityUtils.createRoles(member.getEmail());
         member.setRoles(roles);
+        String newName = verifyExistName(member.getName());
+        member.setName(newName);
         verifyExistEmail(member.getEmail());
         return memberRepository.save(member);
     }
@@ -84,10 +92,13 @@ public class MemberService {
                 Sort.by("memberId").descending()));
     }
 
-//    public List<Music> findMusics(long memberId){
-//        Member findMember = findVerifiedMember(memberId);
-//        return findMember.getMusics();
-//    }
+    public Page<Music> findLikedMusics(long memberId, int page, int size){
+        Member findMember = findVerifiedMember(memberId);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<MusicLike> musicLikes = musicLikeRepository.findAllByMember(findMember, pageable);
+        return musicLikes.map(MusicLike::getMusic);
+    }
+
 //
 //    public List<Music> findRecentMusics(long memberId) {
 //        List<Music> subList = findMusics(memberId).subList(0, 3);
@@ -106,16 +117,24 @@ public class MemberService {
         return findMember;
     }
 
-    public void updateStatus(long memberId) {
+    public Member updateActiveStatus(long memberId) {
         Member findMember = findVerifiedMember(memberId);
         findMember.setStatus(Member.Status.MEMBER_ACTIVE);
+
+        return findMember;
     }
 
-    public Member deleteMember(long memberId) {
+    public Member updateDeleteStatus(long memberId) {
         Member findMember = findVerifiedMember(memberId);
 
         findMember.setStatus(Member.Status.MEMBER_DELETE);
         return findMember;
+    }
+
+    public void deleteMember(long memberId ) {
+        Member findMember = findVerifiedMember(memberId);
+
+        memberRepository.delete(findMember);
     }
 
 
@@ -132,5 +151,17 @@ public class MemberService {
         Optional<Member> user = memberRepository.findByEmail(email);
         if (user.isPresent())
             throw new BusinessLogicException(ExceptionCode.MEMBER_EXISTS);
+    }
+
+    private String verifyExistName(String name){     // oauth2로 로그인 했을 때 같은 이름이 있을 때 1~1000까지의 랜덤숫자를 붙임
+        String newName = name;
+        Optional<Member> optionalMember = memberRepository.findByName(name);
+        if(optionalMember.isPresent()){
+            Random random = new Random();
+            int randomNumber = random.nextInt(1000) + 1;
+            newName = name + randomNumber;
+        }
+
+        return newName;
     }
 }

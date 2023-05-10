@@ -32,35 +32,38 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        OAuth2User oAuth2User = (OAuth2User)authentication.getPrincipal();
+        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
 
-        String name = String.valueOf(oAuth2User.getAttributes().get("name"));
+        String name = (String) oAuth2User.getAttributes().get("name");
         String email = String.valueOf(oAuth2User.getAttributes().get("email"));
-        String picture = String.valueOf(oAuth2User.getAttributes().get("picture"));
+        String image = (String) oAuth2User.getAttributes().get("picture");
+        if (image == null) {
+            image = (String) oAuth2User.getAttributes().get("profile_image");
+        }
 
-        Member member = buildOAuth2Member(name, email, picture);
-
-        Member savedmember = saveMember(member);     // 멤버의 이메일이 이미 저장되어있으면 그 멤버를 get 하고 없으면 새로 저장
 
         // 얻은 email 주소로 권한 List 만들기
         List<String> authorities = authorityUtils.createRoles(email);
 
+        Member member = buildOAuth2Member(name, email, image);
+        Member savedMember = saveMember(member);
 
         // 리다이렉트를 하기위한 정보들을 보내줌
-        redirect(request, response, savedmember, authorities);
+        redirect(request, response, savedMember, authorities);
     }
 
-    private Member buildOAuth2Member(String name, String email, String picture){
-        return Member.builder()
-                .name(name)
-                .email(email)
-                .image(picture)
-                .password("")
-                .status(Member.Status.MEMBER_ACTIVE)
-                .build();
+    private Member buildOAuth2Member(String name, String email, String image) {
+        Member member = new Member();
+        member.setName(name);
+        member.setEmail(email);
+        member.setImage(image);
+
+        return member;
     }
+
 
     private Member saveMember(Member member) {
+
         return memberService.createMemberOAuth2(member);
     }
 
@@ -116,14 +119,15 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
         return UriComponentsBuilder
                 .newInstance()
-                .scheme("http")
+                .scheme("https")
                 .host(serverName)
                 //.port(80)   -> aws로 배포했을 때 싸용
-                .port(8080)   //-> local 테스트용
-                .path("/receive-token.html")
+//               .port(8080)   //-> local 테스트용
+                .path("/members")
                 .queryParams(queryParams)
                 .build()
                 .toUri();
     }
-
 }
+
+

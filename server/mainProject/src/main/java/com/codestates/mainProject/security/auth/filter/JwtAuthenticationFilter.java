@@ -84,11 +84,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setHeader("Authorization", headerValue);
         response.setHeader("Refresh", refreshToken);
 
-//        String body = new Gson().toJson(new DataResponseDto<>(memberLoginResponseDto));
-//        response.setContentType("application/json");
-//        response.setCharacterEncoding("UTF-8");
-//        response.getWriter().write(body);
-
 
         this.getSuccessHandler().onAuthenticationSuccess(request,response,authResult);
 
@@ -100,7 +95,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private String delegateAccessToken(Member member) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("email", member.getEmail());
+        claims.put("memberId", member.getMemberId());
         claims.put("roles", member.getRoles());
 
         String subject = member.getEmail();

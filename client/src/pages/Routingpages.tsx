@@ -6,7 +6,7 @@ import Playlist from 'src/components/playlist/Playlist';
 import Mixing from 'src/components/mixing/Mixing';
 import Mypage from 'src/components/mypage/Mypage';
 import Musiclist from 'src/components/musiclist/Musiclist';
-import MusicDetail from './MusicDetail';
+import MusicDetail from 'src/pages/MusicDetail';
 
 function RoutingPages() {
     return (

@@ -67,9 +67,9 @@ public class MusicService {
     public void deleteMusic(long musicId, long currentUserId) {
         // 매개변수를 musicId 만 받고, 현재 사용자의 역할(admin인지 아닌지)판단은 메서드로 해보려고 했으나...
         // 그걸 구현하기 위해서는 현재 사용자의 ID를 가져올 수 있어야함. 그걸 위해서는...
-        // 1. Spring Security 적용 ~~~~~~~~(단계 복잡)
-        // 2. MusicController에서 deleteMusic 메서드를 호출하기 전에 @AuthenticationPrincipal 을 사용하여
-        //    현재 사용자의 ID를 가져올 수 있음.
+        // 1번 방법. Spring Security 적용 ~~~~~~~~(단계 복잡하니까 2번 방법을 하자)
+        // 2번 방법. MusicController에서 deleteMusic 메서드를 호출하기 전에 @AuthenticationPrincipal 을 사용하여
+        //          현재 사용자의 ID를 가져올 수 있음.
         isUserAdmin(currentUserId);
         findVerifiedMusic(musicId);
 

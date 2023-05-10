@@ -2,6 +2,7 @@ package com.codestates.mainProject.security.auth.filter;
 
 
 
+import com.codestates.mainProject.security.auth.dto.TokenPrincipalDto;
 import com.codestates.mainProject.security.auth.jwt.JwtTokenizer;
 import com.codestates.mainProject.security.auth.utils.CustomAuthorityUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,6 +34,8 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         Map<String, Object> claims = verifyJws(request);
         setAuthenticationToContext(claims);
+
+
         filterChain.doFilter(request, response);
     }
 
@@ -57,11 +60,13 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
     // SecurityContext에 저장하는 부분
 
     private void setAuthenticationToContext(Map<String, Object> claims) {
-        String username = (String) claims.get("username");
+
+        String email = (String) claims.get("sub");
+        Long id = Long.valueOf((Integer) claims.get("memberId"));
         List<GrantedAuthority> authorities = authorityUtils.createAuthorities((List)claims.get("roles"));
 
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(new TokenPrincipalDto(id, email), null, authorities);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }
