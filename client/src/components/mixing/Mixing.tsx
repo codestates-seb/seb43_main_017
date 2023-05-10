@@ -2,26 +2,26 @@ import styled from 'styled-components';
 
 function Mixing() {
     return (
-        <PlaylistSection>
-            <PlaylistBackground></PlaylistBackground>
-            <PlaylistHeader>
+        <MixingSection>
+            <MixingBackground></MixingBackground>
+            <MixingHeader>
                 <div className="flex-center">
-                    <Pltitle>
-                        <span className="pl-title">MIXING</span>
-                    </Pltitle>
-                    <Plsubtext>
-                        <span className="pl-subtext">Enjoy the various playlists of users</span>
-                    </Plsubtext>
+                    <MixingPage>
+                        <span className="mixing-title">MIXING</span>
+                    </MixingPage>
+                    <MixingTitle>
+                        <span className="mixing-subtext">Enjoy the various playlists of users</span>
+                    </MixingTitle>
                 </div>
-            </PlaylistHeader>
-        </PlaylistSection>
+            </MixingHeader>
+        </MixingSection>
     );
 }
 
 export default Mixing;
 
 /**2023-05-05 플레이리스트 전체섹션 : 김주비*/
-const PlaylistSection = styled.section`
+const MixingSection = styled.section`
     display: flex;
     flex-direction: column;
     position: relative;
@@ -34,7 +34,7 @@ const PlaylistSection = styled.section`
     overflow: hidden;
 `;
 /**2023-05-06 ScaleOver 되는 백그라운드 애니메이션 : 김주비 */
-const PlaylistBackground = styled.article`
+const MixingBackground = styled.article`
     box-sizing: border-box;
     position: absolute;
     top: 0;
@@ -53,7 +53,7 @@ const PlaylistBackground = styled.article`
     }
 `;
 /**2023-05-06 플레이리스트 상단 섹션 : 김주비 */
-const PlaylistHeader = styled.article`
+const MixingHeader = styled.article`
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -82,11 +82,11 @@ const PlaylistHeader = styled.article`
     }
 `;
 /**2023-05-06 슬라이드 업 되는 타이틀 애니메이션 - 타이틀 : 김주비*/
-const Pltitle = styled.div`
+const MixingPage = styled.div`
     position: relative;
     height: 70px;
     overflow: hidden;
-    .pl-title {
+    .mixing-title {
         font-family: 'Monoton', cursive;
         font-size: 4rem;
         transform: translateY(70px);
@@ -94,40 +94,16 @@ const Pltitle = styled.div`
     }
 `;
 /**2023-05-06 슬라이드 업 되는 서브텍스트 애니메이션 : 김주비*/
-const Plsubtext = styled.div`
+const MixingTitle = styled.div`
     position: relative;
     height: 20px;
     margin-top: 10px;
     overflow: hidden;
-    .pl-subtext {
+    .mixing-subtext {
         font-family: 'Rajdhani', sans-serif;
         font-size: 16px;
         transform: translateY(20px);
         animation: movingtext 1s forwards 1s;
         opacity: 0.6;
-    }
-`;
-/**2023-05-06 펼쳐지는 서치바 애니메이션 : 김주비*/
-const Plsearch = styled.input`
-    border-radius: 30px;
-    width: 0%;
-    background: rgb(255, 255, 255, 0.2);
-    animation: showinput 1s forwards 2s;
-    opacity: 0;
-
-    ::placeholder {
-        color: #969696;
-        font-family: 'Rajdhani', sans-serif;
-    }
-    @keyframes showinput {
-        100% {
-            opacity: 1;
-            width: 100%;
-            padding: 10px 30px;
-            border: 2px solid #b1b1b1;
-            color: #dddddd;
-            outline: none;
-            border-radius: 30px;
-        }
     }
 `;
