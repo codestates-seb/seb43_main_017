@@ -80,7 +80,7 @@ const Musiclist = () => {
     return (
         <div>
             <MusiclistContainer>
-                {/* <img src="./assets/musiclist.jpg" alt="backimg" /> */}
+                <BackgroundCover></BackgroundCover>
                 <TagContainer>
                     <Search />
                     <Categories />
@@ -147,6 +147,26 @@ const MusiclistContainer = styled.div`
 
     @media (max-width: 700px) {
         flex-direction: column;
+    }
+`;
+
+/**2023-05-06 ScaleOver 되는 백그라운드 애니메이션 - 김주비 */
+const BackgroundCover = styled.div`
+    box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 100vh;
+    background: url('./assets/musiclist.jpg');
+    filter: blur(5px);
+    background-size: cover;
+    opacity: 0.2;
+    animation: bgScale 30s infinite;
+    @keyframes bgScale {
+        50% {
+            transform: scale(1.3);
+        }
     }
 `;
 

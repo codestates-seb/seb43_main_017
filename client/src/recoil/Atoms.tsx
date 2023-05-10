@@ -23,3 +23,8 @@ export const selectedTagsState = atom<string[]>({
     key: 'selectedTagsState',
     default: [],
 });
+
+export const musicDataState = atom<string[]>({
+    key: 'musicDataState',
+    default: [],
+});
