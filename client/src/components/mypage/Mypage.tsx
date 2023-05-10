@@ -1,11 +1,12 @@
 import styled from 'styled-components';
-import { AiOutlineHeart, AiFillHeart, AiOutlinePlusSquare } from 'react-icons/ai';
-import { BsMusicPlayer, BsPencilSquare, BsPlayCircle } from 'react-icons/bs';
-import { CiMenuKebab } from 'react-icons/ci';
+import { AiOutlinePlusSquare } from 'react-icons/ai';
+import { BsPencilSquare } from 'react-icons/bs';
 import { useRecoilState } from 'recoil';
 import { nameState, introState } from 'src/recoil/Atoms';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import LikeMusic from './LIkeMusic';
+import Myplaylist from './Myplaylist';
 
 type UserData = {
     name: string;
@@ -57,9 +58,11 @@ function Mypage() {
         };
     }, [name, intro]);
 
+    /* 2023.05.06 수정된 이름과 자기소개 데이터를 서버에 저장 - 홍혜란 */
     return (
-        <MusicListContainer>
-            <MypageContainer>
+        <MypageContainer>
+            <BackgroundCover></BackgroundCover>
+            <MypageListContainer>
                 <UserProfile>
                     <div className="user-profile">
                         <img src="./assets/ditto.png" alt="userimg" />
@@ -96,49 +99,8 @@ function Mypage() {
 
                 <MusicInfor>
                     <LeftContainer>
-                        <VoteContainer>
-                            <div className="vote-title">
-                                <div className="vote-icon">
-                                    <AiOutlineHeart />
-                                </div>{' '}
-                                <p>VOTE MUSIC</p>
-                            </div>
-
-                            <div className="music-like">
-                                <img src="./assets/ditto.png" alt="musicimg" />
-                                <div className="music-name">Ditto</div>
-                                <div className="music-artist">Newjeans</div>
-                                <div className="music-album">OMG</div>
-                                <div className="music-icon">
-                                    <AiFillHeart />
-                                </div>
-                            </div>
-                        </VoteContainer>
-
-                        <PlayListContainer>
-                            <div className="playlist-title">
-                                <div className="play-icon">
-                                    <BsMusicPlayer />
-                                </div>{' '}
-                                <p>MY PLAYLIST</p>
-                            </div>
-
-                            <div className="playlist-list">
-                                <img src="./assets/ditto.png" alt="musicimg" />
-                                <div className="playlist-name">나만의 플레이리스트</div>
-                                <div className="playlist-time">2023.05.04</div>
-                                <div className="playlist-vote-icon">
-                                    <AiFillHeart />
-                                    13
-                                </div>
-                                <div className="playlist-button">
-                                    <BsPlayCircle />
-                                </div>
-                                <div className="playlist-menu">
-                                    <CiMenuKebab />
-                                </div>
-                            </div>
-                        </PlayListContainer>
+                        <LikeMusic /> {/* like music 파일 */}
+                        <Myplaylist /> {/* my playlist 파일 */}
                     </LeftContainer>
 
                     <RightContainer>
@@ -166,7 +128,7 @@ function Mypage() {
 
 export default Mypage;
 
-const MusicListContainer = styled.div`
+const MypageContainer = styled.div`
     width: 100%;
     min-height: 100vh;
     background-color: #000000;
@@ -175,7 +137,27 @@ const MusicListContainer = styled.div`
     justify-content: center;
 `;
 
-const MypageContainer = styled.div`
+/**2023-05-06 ScaleOver 되는 백그라운드 애니메이션 - 김주비 */
+const BackgroundCover = styled.div`
+    box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 100vh;
+    background: url('./assets/mypage.png');
+    filter: blur(5px);
+    background-size: cover;
+    opacity: 0.2;
+    animation: bgScale 30s infinite;
+    @keyframes bgScale {
+        50% {
+            transform: scale(1.3);
+        }
+    }
+`;
+
+const MypageListContainer = styled.div`
     align-items: center;
 `;
 
@@ -250,9 +232,7 @@ const MusicInfor = styled.div`
 const LeftContainer = styled.div`
     align-items: center;
     width: 600px;
-    height: 400px;
-    border: 1px solid blue;
-`;
+    height: 600px;
 
 const VoteContainer = styled.div`
     align-items: center;
@@ -388,13 +368,11 @@ const RightContainer = styled.div`
     align-items: center;
     width: 700px;
     height: 400px;
-    border: 1px solid blue;
 `;
 
 const ModifyContainer = styled.div`
     align-items: center;
     margin: 10px;
-    border: 1px solid red;
 
     .modify-title {
         display: flex;

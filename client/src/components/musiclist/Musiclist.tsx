@@ -85,6 +85,7 @@ const Musiclist = () => {
                     <Categories />
                 </TagContainer>
                 <RightContainer>
+                    {/* <BackgroundCover></BackgroundCover> */}
                     <Trending />
                     <MusicListTitle>
                         <div className="musicList-title">Music List</div>
@@ -94,7 +95,7 @@ const Musiclist = () => {
                         </div>
                     </MusicListTitle>
                     <SongContainer>
-                        <Item>
+                        {/* <Item>
                             <li>COVER</li>
                             <li>TITLE</li>
                             <li>ARTIST</li>
@@ -104,7 +105,7 @@ const Musiclist = () => {
                             <li>PLAYLIST</li>
                             <li>DOWNLOAD</li>
                             <li>VOTE</li>
-                        </Item>
+                        </Item> */}
                         {MsList.map((data) => (
                             <Item key={data.index}>
                                 <li>
@@ -139,6 +140,7 @@ export default Musiclist;
 
 /* 2023.05.08 MusicList (뮤직리스트 전체 컨테이너) 컴포넌트 구현 - 홍혜란 */
 const MusiclistContainer = styled.div`
+    position: relative;
     display: flex;
     align-items: center;
     flex-direction: row;
@@ -148,12 +150,32 @@ const MusiclistContainer = styled.div`
     }
 `;
 
+// /**2023-05-06 ScaleOver 되는 백그라운드 애니메이션 - 김주비 */
+// const BackgroundCover = styled.div`
+//     box-sizing: border-box;
+//     position: absolute;
+//     top: 0;
+//     left: 0;
+//     width: 100%;
+//     min-height: 100vh;
+//     background: url('./assets/musiclist.jpg');
+//     filter: blur(5px);
+//     background-size: cover;
+//     opacity: 0.2;
+//     animation: bgScale 30s infinite;
+//     @keyframes bgScale {
+//         50% {
+//             transform: scale(1.3);
+//         }
+//     }
+// `;
+
 /* 2023.05.08 MusicList (검색,카테고리 컨테이너) 컴포넌트 구현 - 홍혜란 */
 const TagContainer = styled.div`
-    width: 200px;
+    width: 300px;
     height: 100vh;
     background-color: #1f1f1f;
-    margin-left: 100px;
+    margin-left: 120px;
 `;
 
 const RightContainer = styled.div`
@@ -170,9 +192,10 @@ const MusicListTitle = styled.div`
     align-items: center;
     justify-content: space-between;
     width: 100%;
+    margin-bottom: 10px;
 
     .musicList-title {
-        font-size: 30px;
+        font-size: 40px;
         font-weight: bold;
         color: hsl(0, 0%, 100%);
         margin: 20px 10px 10px 30px;
@@ -183,7 +206,7 @@ const MusicListTitle = styled.div`
         margin: 20px 10px 0px 30px;
 
         li {
-            font-size: 10px;
+            font-size: 15px;
             color: hsl(0, 0%, 100%);
             border-left: 1px solid hsl(0, 0%, 100%);
             padding-left: 10px;
@@ -206,12 +229,12 @@ const Item = styled.ul`
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-around;
     flex: 1;
     width: 100%;
     color: hsl(0, 0%, 100%);
 
     li {
+        font-size: 18px;
         height: 50px;
         width: 100%;
         display: flex;
@@ -219,8 +242,16 @@ const Item = styled.ul`
         justify-content: center;
     }
 
+    li:nth-child(n + 2):nth-child(-n + 5) {
+        margin-right: 100px;
+    }
+
+    li:nth-child(1) {
+        margin-right: 50px;
+    }
+
     li:nth-child(6) {
-        color: #d235d4;
+        color: #b62dc9;
     }
 
     li:nth-child(9) {

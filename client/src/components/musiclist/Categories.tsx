@@ -1,5 +1,8 @@
 import styled from 'styled-components';
 import { useState } from 'react';
+import { TiDeleteOutline } from 'react-icons/ti';
+import { useRecoilState } from 'recoil';
+import { selectedTagsState } from 'src/recoil/Atoms';
 
 /* 2023.05.07 카테고리 타입, 종류 선언 - 홍혜란 */
 type Category = {
@@ -16,18 +19,18 @@ const categories: Category[] = [
     },
     {
         index: 1,
-        name: 'WEATHER',
-        subCategories: ['맑은 날', '흐린 날', '비 오는 날', '눈 오는 날', '바람 부는 날'],
+        name: 'GENRE',
+        subCategories: ['EDM', '발라드', '어쿠스틱', '인디', '댄스'],
     },
     {
         index: 2,
-        name: 'SITUATION',
-        subCategories: ['집에서', '잠들기 전', '드라이브', '운동하며', '밥먹다가'],
+        name: 'INSTRUMENT',
+        subCategories: ['피아노', '드럼', '기타', '베이스', '현악기'],
     },
 ];
 
 const Categories = () => {
-    /* 2023.05.07 카테고리 클릭 이벤트 - 홍혜란 */
+    /* 2023.05.07 Category 클릭 시  subCategories 오픈 - 홍혜란 */
     const [openCategory, setOpenCategory] = useState('');
     const [index, setIndex] = useState(0);
 
@@ -40,9 +43,17 @@ const Categories = () => {
         setIndex(i);
     };
 
+    /* 2023.05.10 subCategory 클릭 시 태그 생성 - 홍혜란 */
+    const [selectedTags, setSelectedTags] = useRecoilState(selectedTagsState);
+
+    const handleSubCategoryClick = (subCategory: string) => {
+        setSelectedTags([...selectedTags, subCategory]);
+    };
+
     return (
         <div>
             <CategoryContainer>
+                {/* 2023.05.07 큰 카테고리에서 작은 카테고리를 보여주는 CategoryContainer - 홍혜란 */}
                 {categories.map((category, i) => (
                     <div key={category.name}>
                         <CategoryButton onClick={() => handleCategoryClick(category.name, category.index)}>
@@ -53,12 +64,24 @@ const Categories = () => {
                             isOpen={openCategory === category.name}
                         >
                             {category.subCategories.map((subCategory) => (
-                                <SubCategoryItem key={subCategory}>{subCategory}</SubCategoryItem>
+                                <SubCategoryItem key={subCategory} onClick={() => handleSubCategoryClick(subCategory)}>
+                                    {subCategory}
+                                </SubCategoryItem>
                             ))}
                         </SubCategoryList>
                     </div>
                 ))}
             </CategoryContainer>
+
+            {/* 2023.05.10 선택된 태그들을 나타내는 TagContainer - 홍혜란 */}
+            {selectedTags.map((tag) => (
+                <TagContainer key={tag}>
+                    <div className="tagText">{tag}</div>
+                    <div className="tagIcon" onClick={() => setSelectedTags(selectedTags.filter((t) => t !== tag))}>
+                        <TiDeleteOutline />
+                    </div>
+                </TagContainer>
+            ))}
         </div>
     );
 };
@@ -69,6 +92,7 @@ export default Categories;
 const CategoryContainer = styled.div`
     display: flex;
     flex-direction: column;
+    border-bottom: 1px solid white;
 `;
 
 /* 2023.05.07 큰 카테고리를 버튼으로 컴포넌틑 구현 - 홍혜란 */
@@ -109,4 +133,31 @@ const SubCategoryItem = styled.li`
     color: hsl(0, 0%, 100%);
     padding: 10px;
     cursor: pointer;
+`;
+
+/* 2023.05.10 태그 컴포넌트 구현 - 홍혜란 */
+const TagContainer = styled.div`
+    border: 1px solid white;
+    border-radius: 50px;
+    width: 80px;
+    height: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    margin: 10px;
+
+    .tagText {
+        font-size: 15px;
+        color: white;
+        text-align: center;
+        flex: 1;
+    }
+
+    .tagIcon {
+        display: flex;
+        align-items: center;
+        color: white;
+    }
 `;
