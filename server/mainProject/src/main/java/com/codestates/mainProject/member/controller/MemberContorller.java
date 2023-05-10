@@ -1,5 +1,6 @@
 package com.codestates.mainProject.member.controller;
 
+import com.codestates.mainProject.response.DataResponseDto;
 import com.codestates.mainProject.security.auth.jwt.JwtTokenizer;
 import com.codestates.mainProject.exception.BusinessLogicException;
 import com.codestates.mainProject.exception.ExceptionCode;
@@ -10,6 +11,7 @@ import com.codestates.mainProject.member.service.MemberService;
 
 import com.codestates.mainProject.response.MultiResponseDto;
 import com.codestates.mainProject.response.SingleResponseDto;
+import com.codestates.mainProject.security.auth.loginResolver.LoginMemberId;
 import com.codestates.mainProject.utils.UriCreator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +52,15 @@ public class MemberContorller {
         URI location = UriCreator.createUri(MEMBER_DEFAULT_URL, createdMember.getMemberId());
 
         return ResponseEntity.created(location).build();
+    }
+
+    @GetMapping("/token")
+    public ResponseEntity getMemberInfo(@LoginMemberId Long memberId){
+        Member findMember = memberService.findMember(memberId);
+        MemberDto.ResponseDto response = mapper.memberToResponse(findMember);
+
+        return new ResponseEntity<>(
+                new DataResponseDto<>(response), HttpStatus.OK);
     }
 
 
