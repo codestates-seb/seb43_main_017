@@ -18,7 +18,7 @@ interface PlcardProps {
 
 function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<string>> }) {
     const [pldata, setPldata] = useState<PlcardProps[]>([]); //플리데이터 저장 스테이트
-    const [currentSlideIndex, setCurrentSlideIndex] = useState(0); //포커스된 슬라이드 인덱스
+    const [currentSlideIndex, setCurrentSlideIndex] = useState<number>(0); //포커스된 슬라이드 인덱스
     const [silderPage, setSliderPage] = useState<number>(3); //슬라이더 페이지 갯수
 
     /**2023-05-07 window width 값 가져오기 : 김주비 */
@@ -128,7 +128,7 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
     };
     /**2023-05-07 슬라이드 버튼 custom : 김주비 */
     const customPaging = (i: number) => {
-        return <div className="dots-paging">{i + 1}</div>;
+        return <div className={`${i === currentSlideIndex ? 'dots-paging dots-active' : 'dots-paging'}`}>{i + 1}</div>;
     };
 
     /**2023-05-07 슬라이드 설정옵션 : 김주비 */
@@ -208,6 +208,8 @@ const Plcard = styled.div<bgimg>`
         left: 30px;
     }
 `;
+
+/**2023-05-06 슬라이드 하단버튼 디자인 : 김주비 */
 const SilderGroup = styled.div`
     width: 100%;
     opacity: 0;
@@ -223,12 +225,19 @@ const SilderGroup = styled.div`
         height: 30px;
         border: 3px solid #ccc;
         border-radius: 40px;
-        transform: scale(0.6);
+        transform: scale(0.2);
         transition: 0.2s ease-in-out;
+        background: #ccc;
     }
-    .dots-paging:hover {
+    .dots-active {
         transform: scale(0.8);
-        border-color: #ff8716;
+        border: 3px solid #ff8716;
+        color: #ff8716;
+        background: none;
+    }
+
+    .dots-paging:hover {
+        border: 3px solid #ff8716;
         color: #ff8716;
     }
     @keyframes opacity {
