@@ -3,7 +3,9 @@ import styled from 'styled-components';
 function MusicDetail() {
     return (
         <DetailGroup>
-            <PlaylistBackground url={'./assets/background-detail.jpg'}></PlaylistBackground>
+            <PlaylistBackground
+                url={'https://uppbeat.imgix.net/images/Hartzmann_avatar_8842544684411792.jpg?auto=compress'}
+            ></PlaylistBackground>
             <DetailSection>
                 <MusicContents>
                     <MusicTitle>
@@ -24,21 +26,58 @@ function MusicDetail() {
                     </MusicInfo>
                     <MusicText>
                         <span>
-                            이 플레이 리스트는 영국에서 최초로 시작되어 일년에 한 바퀴 돌면서 듣는 사람에게 행운을
-                            주었고 지금은 당신에게로 옮겨진 이 플레이 리스트는 3일내 다른사람에게 공유를 해야만 합니다.
-                            이 플레이 리스트는 영국에서 최초로 시작되어 일년에 한 바퀴 돌면서 듣는 사람에게 행운을
-                            주었고 지금은 당신에게로 옮겨진 이 플레이 리스트는 3일내 다른사람에게 공유를 해야만 합니다.
+                            A London-based collective of producers and composers. Masters of urban beats and high-end
+                            music for creators looking to take their content to the next level.
                         </span>
                     </MusicText>
                 </MusicContents>
                 <MusicCover>
-                    <AlbumDesign url={'./assets/background-detail.jpg'}>
+                    <AlbumDesign
+                        url={'https://uppbeat.imgix.net/images/Hartzmann_avatar_8842544684411792.jpg?auto=compress'}
+                    >
                         <div className="album-recode">
                             <div className="recode-img"></div>
                         </div>
                         <div className="cover-img"></div>
                     </AlbumDesign>
                 </MusicCover>
+                <MusicComment>
+                    <CommentBox>
+                        <h2>COMMENT</h2>
+                        <ul className="comment-detail">
+                            <li className="user-icon">
+                                <img src="./assets/profile-icon-01.png" alt="profile-icon" />
+                            </li>
+                            <li className="user-comment">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras in arcu tellus. Maecenas
+                                ligula justo, ullamcorper eget ex eu, feugiat pharetra augue.
+                            </li>
+                            <li className="created-time">
+                                <span>1 hour ago</span>
+                            </li>
+                        </ul>
+                    </CommentBox>
+                    <LikedBox>
+                        <h2>LIKED</h2>
+                        <ul className="liked-detail">
+                            <li>
+                                <img src="./assets/profile-icon-01.png" alt="profile-icon" />
+                            </li>
+                            <li>
+                                <img src="./assets/profile-icon-01.png" alt="profile-icon" />
+                            </li>
+                            <li>
+                                <img src="./assets/profile-icon-01.png" alt="profile-icon" />
+                            </li>
+                            <li>
+                                <img src="./assets/profile-icon-01.png" alt="profile-icon" />
+                            </li>
+                            <li>
+                                <img src="./assets/profile-icon-01.png" alt="profile-icon" />
+                            </li>
+                        </ul>
+                    </LikedBox>
+                </MusicComment>
             </DetailSection>
         </DetailGroup>
     );
@@ -55,7 +94,6 @@ const DetailGroup = styled.section`
     height: 100vh;
     color: #ccc;
 `;
-
 interface url {
     url: string;
 }
@@ -78,7 +116,6 @@ const PlaylistBackground = styled.article<url>`
         }
     }
 `;
-
 /**2023-05-09 detailpage 서브 섹션 : 김주비 */
 const DetailSection = styled.div`
     box-sizing: border-box;
@@ -201,15 +238,17 @@ const MusicText = styled.div`
     @media (max-width: 1000px) {
         width: 100%;
     }
+    @media (max-width: 700px) {
+        text-align: center;
+    }
 `;
-
 /**2023-05-09 detailpage 앨범커버 섹션 : 김주비 */
 const MusicCover = styled.article`
     display: flex;
     width: 100%;
     margin-top: 50px;
 `;
-
+/**2023-05-09 detailpage 앨범커버 디자인 : 김주비 */
 const AlbumDesign = styled.div<url>`
     position: relative;
     width: 650px;
@@ -249,5 +288,81 @@ const AlbumDesign = styled.div<url>`
         100% {
             transform: rotate(360deg);
         }
+    }
+`;
+
+/**2023-05-09 detailpage 사이드 코멘트 섹션 : 김주비 */
+const MusicComment = styled.article`
+    display: flex;
+    margin-top: 50px;
+    height: 100px;
+    width: 90%;
+
+    > div {
+        width: 100%;
+    }
+    > div h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+`;
+/**2023-05-09 detailpage 코멘트 디테일 섹션 : 김주비 */
+const CommentBox = styled.div`
+    ul {
+        display: flex;
+        width: 100%;
+    }
+
+    li {
+        display: flex;
+        justify-content: left;
+        align-items: center;
+        margin-right: 20px;
+    }
+    .comment-detail {
+        width: 100%;
+    }
+
+    .user-icon img {
+        width: 50px;
+        height: 50px;
+        border-radius: 60px;
+        background-size: cover;
+        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+    }
+    .user-comment {
+        min-width: 350px;
+        font-size: 14px;
+        line-height: 150%;
+    }
+    .created-time span {
+        padding: 8px 20px;
+        background-color: rgba(199, 68, 68, 1);
+        border-radius: 20px;
+        white-space: nowrap;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+`;
+/**2023-05-09 detailpage 좋아요 섹션 : 김주비 */
+const LikedBox = styled.div`
+    margin-left: 20px;
+    width: 100%;
+    .liked-detail {
+        display: flex;
+    }
+    .liked-detail li {
+        margin-left: -10px;
+    }
+    .liked-detail li:nth-child(1) {
+        margin-left: 0px;
+    }
+    .liked-detail li > img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50px;
+        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
     }
 `;
