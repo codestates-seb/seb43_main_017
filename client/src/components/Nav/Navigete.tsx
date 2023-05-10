@@ -80,6 +80,7 @@ function Navigate() {
                         <span
                             onClick={() => {
                                 setClick(!click);
+                                setSelectIndex(4);
                             }}
                         >
                             <img

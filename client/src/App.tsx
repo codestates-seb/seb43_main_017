@@ -112,7 +112,7 @@ const NavSection = styled.section`
     background: linear-gradient(90deg, rgb(0, 0, 0), rgb(0, 0, 0, 0));
     animation: sildeNav 2s forwards;
     opacity: 0;
-    z-index: 1;
+    z-index: 3;
     @keyframes sildeNav {
         100% {
             opacity: 1;
@@ -131,7 +131,7 @@ const SignBtnSection = styled.aside`
     position: absolute;
     margin-top: 20px;
     right: 20px;
-    z-index: 2;
+    z-index: 99;
     opacity: 0;
     animation: sildeSign 2s forwards;
     @keyframes sildeSign {
@@ -207,6 +207,7 @@ const ButtonStyle3 = styled(ButtonStyle)`
     height: 40px;
     border-radius: 60px;
     font-size: 1.5rem;
+    background-color: rgba(0, 0, 0, 0.6);
 `;
 /**2023-05-06 미디어쿼리 반응형 - 회원가입버튼 디자인 : 김주비*/
 const ButtonStyle4 = styled(ButtonStyle3)`
