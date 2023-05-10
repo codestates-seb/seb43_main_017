@@ -27,4 +27,9 @@ export const selectedTagsState = atom<string[]>({
 export const musicDataState = atom<string[]>({
     key: 'musicDataState',
     default: [],
+      
+/* 2023.05.10 로그인이 발급받는 엑세스토큰 상태 관리 - 홍혜란 */
+export const accessToken = atom<string | null>({
+    key: 'accessToken',
+    default: '',
 });

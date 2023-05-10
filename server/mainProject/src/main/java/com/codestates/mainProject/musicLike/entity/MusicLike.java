@@ -25,4 +25,9 @@ public class MusicLike {
     @ManyToOne
     @JoinColumn(name = "MUSIC_ID")
     private Music music;
+
+    public MusicLike(Member member, Music music) {
+        this.member = member;
+        this.music = music;
+    }
 }
