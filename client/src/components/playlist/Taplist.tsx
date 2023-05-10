@@ -97,17 +97,19 @@ function Taplist() {
                         <div>
                             <img src={el.coverimg} />
                         </div>
-                        <span className="pl-title">{el.plname}</span>
+                        <div className="pl-title">
+                            <p>{el.plname.slice(0, 20)}…</p>
+                            <p>{el.user}</p>
+                        </div>
                         <ul className="pl-tag">
                             {el.tag.slice(0, 2).map((tag, i) => (
                                 <li key={`tag-${i}`}>{tag.tagname}</li>
                             ))}
                         </ul>
-                        <span>{el.user}</span>
-                        <span>
+                        <div className="pl-like">
                             <Like />
-                            {el.like}
-                        </span>
+                            <span>{el.like}</span>
+                        </div>
                     </TapList>
                 ))}
             </ul>
@@ -185,12 +187,19 @@ const TapList = styled.li`
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 60%;
+    width: 70%;
     background-color: rgba(0, 0, 0, 0.5);
+    border: 1px solid #494949;
     border-radius: 50px;
     opacity: 0;
     animation: opacity 1s forwards;
     margin-top: 10px;
+    transition: 0.3s ease-in-out;
+
+    :hover {
+        transform: scale(1.05);
+        background-color: rgba(20, 20, 20, 0.5);
+    }
 
     > div img {
         margin: 10px;
@@ -202,7 +211,15 @@ const TapList = styled.li`
     }
 
     .pl-title {
+        display: flex;
         width: 100%;
+    }
+    .pl-title p:nth-child(1) {
+        font-weight: 600;
+    }
+    .pl-title p:nth-child(2) {
+        color: #666;
+        margin: 0px 10px;
     }
 
     .pl-tag {
@@ -210,22 +227,47 @@ const TapList = styled.li`
         flex-direction: row;
         justify-content: right;
         align-items: center;
-        width: 300px;
     }
     .pl-tag li {
-        margin: 0px 5px;
         border: 2px solid #ccc;
         padding: 5px 10px;
         border-radius: 50px;
         font-size: 12px;
-        opacity: 0.6;
+        opacity: 0.5;
+        transform: scale(0.8);
+    }
+    .pl-like {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-width: 100px;
+        color: rgba(199, 68, 68, 1);
     }
     @keyframes opacity {
-        50% {
-            transform: scale(1.1);
-        }
         100% {
             opacity: 1;
         }
+    }
+
+    @media (max-width: 1350px) {
+        .pl-title p:nth-child(2) {
+            display: none;
+        }
+        .pl-like {
+            min-width: 50px;
+            font-size: 20px;
+        }
+        .pl-like span {
+            display: none;
+        }
+    }
+    @media (max-width: 1100px) {
+        .pl-tag {
+            display: none;
+        }
+    }
+
+    @media (max-width: 700px) {
+        width: 100%;
     }
 `;
