@@ -253,13 +253,11 @@ const LeftContainer = styled.div`
     align-items: center;
     width: 600px;
     height: 400px;
-    border: 1px solid blue;
 `;
 
 const VoteContainer = styled.div`
     align-items: center;
     margin: 10px;
-    border: 1px solid red;
 
     .vote-title {
         display: flex;
@@ -319,7 +317,6 @@ const VoteContainer = styled.div`
 const PlayListContainer = styled.div`
     align-items: center;
     margin: 10px;
-    border: 1px solid red;
 
     .playlist-title {
         display: flex;
@@ -390,13 +387,11 @@ const RightContainer = styled.div`
     align-items: center;
     width: 700px;
     height: 400px;
-    border: 1px solid blue;
 `;
 
 const ModifyContainer = styled.div`
     align-items: center;
     margin: 10px;
-    border: 1px solid red;
 
     .modify-title {
         display: flex;

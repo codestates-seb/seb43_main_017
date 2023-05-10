@@ -17,3 +17,9 @@ export const playlistState = atom<string[]>({
     key: 'playlistState',
     default: [],
 });
+
+/* 2023.05.10 뮤직리스트 카테고리 클릭시 태그 생성 상태 관리 - 홍혜란 */
+export const selectedTagsState = atom<string[]>({
+    key: 'selectedTagsState',
+    default: [],
+});
