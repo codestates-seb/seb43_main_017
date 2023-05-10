@@ -80,12 +80,12 @@ const Musiclist = () => {
     return (
         <div>
             <MusiclistContainer>
-                <BackgroundCover></BackgroundCover>
                 <TagContainer>
                     <Search />
                     <Categories />
                 </TagContainer>
                 <RightContainer>
+                    {/* <BackgroundCover></BackgroundCover> */}
                     <Trending />
                     <MusicListTitle>
                         <div className="musicList-title">Music List</div>
@@ -150,25 +150,25 @@ const MusiclistContainer = styled.div`
     }
 `;
 
-/**2023-05-06 ScaleOver 되는 백그라운드 애니메이션 - 김주비 */
-const BackgroundCover = styled.div`
-    box-sizing: border-box;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    min-height: 100vh;
-    background: url('./assets/musiclist.jpg');
-    filter: blur(5px);
-    background-size: cover;
-    opacity: 0.2;
-    animation: bgScale 30s infinite;
-    @keyframes bgScale {
-        50% {
-            transform: scale(1.3);
-        }
-    }
-`;
+// /**2023-05-06 ScaleOver 되는 백그라운드 애니메이션 - 김주비 */
+// const BackgroundCover = styled.div`
+//     box-sizing: border-box;
+//     position: absolute;
+//     top: 0;
+//     left: 0;
+//     width: 100%;
+//     min-height: 100vh;
+//     background: url('./assets/musiclist.jpg');
+//     filter: blur(5px);
+//     background-size: cover;
+//     opacity: 0.2;
+//     animation: bgScale 30s infinite;
+//     @keyframes bgScale {
+//         50% {
+//             transform: scale(1.3);
+//         }
+//     }
+// `;
 
 /* 2023.05.08 MusicList (검색,카테고리 컨테이너) 컴포넌트 구현 - 홍혜란 */
 const TagContainer = styled.div`
