@@ -1,10 +1,11 @@
 import styled from 'styled-components';
-
+import Comment from 'src/components/musicdetail/Comment';
+import MusicSpectrum from 'src/components/musicdetail/MusicSpectrum';
 function MusicDetail() {
     return (
         <DetailGroup>
             <PlaylistBackground
-                url={'https://uppbeat.imgix.net/images/Hartzmann_avatar_8842544684411792.jpg?auto=compress'}
+                url={'https://musicvine.imgix.net/images/yeti-music-avatar-v1.jpg?auto=compress&w=388&h=388'}
             ></PlaylistBackground>
             <DetailSection>
                 <MusicContents>
@@ -33,51 +34,16 @@ function MusicDetail() {
                 </MusicContents>
                 <MusicCover>
                     <AlbumDesign
-                        url={'https://uppbeat.imgix.net/images/Hartzmann_avatar_8842544684411792.jpg?auto=compress'}
+                        url={'https://musicvine.imgix.net/images/yeti-music-avatar-v1.jpg?auto=compress&w=388&h=388'}
                     >
                         <div className="album-recode">
                             <div className="recode-img"></div>
                         </div>
                         <div className="cover-img"></div>
                     </AlbumDesign>
+                    <MusicSpectrum />
                 </MusicCover>
-                <MusicComment>
-                    <CommentBox>
-                        <h2>COMMENT</h2>
-                        <ul className="comment-detail">
-                            <li className="user-icon">
-                                <img src="./assets/profile-icon-01.png" alt="profile-icon" />
-                            </li>
-                            <li className="user-comment">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras in arcu tellus. Maecenas
-                                ligula justo, ullamcorper eget ex eu, feugiat pharetra augue.
-                            </li>
-                            <li className="created-time">
-                                <span>1 hour ago</span>
-                            </li>
-                        </ul>
-                    </CommentBox>
-                    <LikedBox>
-                        <h2>LIKED</h2>
-                        <ul className="liked-detail">
-                            <li>
-                                <img src="./assets/profile-icon-01.png" alt="profile-icon" />
-                            </li>
-                            <li>
-                                <img src="./assets/profile-icon-01.png" alt="profile-icon" />
-                            </li>
-                            <li>
-                                <img src="./assets/profile-icon-01.png" alt="profile-icon" />
-                            </li>
-                            <li>
-                                <img src="./assets/profile-icon-01.png" alt="profile-icon" />
-                            </li>
-                            <li>
-                                <img src="./assets/profile-icon-01.png" alt="profile-icon" />
-                            </li>
-                        </ul>
-                    </LikedBox>
-                </MusicComment>
+                <Comment />
             </DetailSection>
         </DetailGroup>
     );
@@ -128,7 +94,8 @@ const DetailSection = styled.div`
     }
     @media (max-width: 700px) {
         margin-left: 0;
-        width: 90%;
+        width: 80%;
+        margin-top: 100px;
     }
 `;
 /**2023-05-09 detailpage 컨텐츠 섹션 + 키프레임 애니메이션 : 김주비 */
@@ -199,11 +166,11 @@ const MusicInfo = styled.div`
     }
     .music-tag li {
         padding: 5px 20px;
-        border: 2px solid #ccc;
+        border: 2px solid rgba(199, 68, 68, 1);
         border-radius: 20px;
         font-size: 13px;
         transform: translateY(30px);
-
+        color: rgba(199, 68, 68, 1);
         animation: ascendText2 1s forwards 1.8s;
     }
 
@@ -247,6 +214,14 @@ const MusicCover = styled.article`
     display: flex;
     width: 100%;
     margin-top: 50px;
+    opacity: 0;
+    animation: fadeInSection 2s forwards 2.5s;
+
+    @keyframes fadeInSection {
+        100% {
+            opacity: 1;
+        }
+    }
 `;
 /**2023-05-09 detailpage 앨범커버 디자인 : 김주비 */
 const AlbumDesign = styled.div<url>`
@@ -269,8 +244,8 @@ const AlbumDesign = styled.div<url>`
         align-items: center;
         top: 0;
         right: 0;
-        width: 400px;
-        height: 400px;
+        min-width: 400px;
+        min-height: 400px;
         background: url('./assets/background-detail-recode.png');
         background-size: cover;
         animation: roundingrecode 10s infinite linear;
@@ -289,80 +264,28 @@ const AlbumDesign = styled.div<url>`
             transform: rotate(360deg);
         }
     }
-`;
-
-/**2023-05-09 detailpage 사이드 코멘트 섹션 : 김주비 */
-const MusicComment = styled.article`
-    display: flex;
-    margin-top: 50px;
-    height: 100px;
-    width: 90%;
-
-    > div {
-        width: 100%;
-    }
-    > div h2 {
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin-bottom: 20px;
-    }
-`;
-/**2023-05-09 detailpage 코멘트 디테일 섹션 : 김주비 */
-const CommentBox = styled.div`
-    ul {
+    @media (max-width: 700px) {
+        /* width: 100%;
         display: flex;
-        width: 100%;
-    }
-
-    li {
-        display: flex;
-        justify-content: left;
+        justify-content: center;
         align-items: center;
-        margin-right: 20px;
-    }
-    .comment-detail {
-        width: 100%;
-    }
-
-    .user-icon img {
-        width: 50px;
-        height: 50px;
-        border-radius: 60px;
-        background-size: cover;
-        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
-    }
-    .user-comment {
-        min-width: 350px;
-        font-size: 14px;
-        line-height: 150%;
-    }
-    .created-time span {
-        padding: 8px 20px;
-        background-color: rgba(199, 68, 68, 1);
-        border-radius: 20px;
-        white-space: nowrap;
-        font-size: 12px;
-        font-weight: 600;
-        text-transform: uppercase;
-    }
-`;
-/**2023-05-09 detailpage 좋아요 섹션 : 김주비 */
-const LikedBox = styled.div`
-    margin-left: 20px;
-    width: 100%;
-    .liked-detail {
+        transform: scale(0.8);
+        .album-recode {
+            position: relative;
+        }
+        .cover-img {
+            display: none;
+        } */
         display: flex;
-    }
-    .liked-detail li {
-        margin-left: -10px;
-    }
-    .liked-detail li:nth-child(1) {
-        margin-left: 0px;
-    }
-    .liked-detail li > img {
-        width: 50px;
-        height: 50px;
-        border-radius: 50px;
-        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        .cover-img {
+            width: 300px;
+            height: 300px;
+            border-radius: 30px;
+        }
+        .album-recode {
+            display: none;
+        }
     }
 `;
