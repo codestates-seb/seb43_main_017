@@ -32,12 +32,12 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        OAuth2User oAuth2User = (OAuth2User)authentication.getPrincipal();
+        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
 
         String name = (String) oAuth2User.getAttributes().get("name");
         String email = String.valueOf(oAuth2User.getAttributes().get("email"));
         String image = (String) oAuth2User.getAttributes().get("picture");
-        if(image==null){
+        if (image == null) {
             image = (String) oAuth2User.getAttributes().get("profile_image");
         }
 
@@ -52,7 +52,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         redirect(request, response, savedMember, authorities);
     }
 
-    private Member buildOAuth2Member(String name, String email, String image){
+    private Member buildOAuth2Member(String name, String email, String image) {
         Member member = new Member();
         member.setName(name);
         member.setEmail(email);
@@ -84,7 +84,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
     private String delegateAccessToken(Member member, List<String> authorities) {
 
         Map<String, Object> claims = new HashMap<>();
-        claims.put("email", member.getEmail());
+        claims.put("memberId", member.getMemberId());
         claims.put("roles", authorities);
 
         String subject = member.getEmail();
@@ -119,14 +119,15 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
         return UriComponentsBuilder
                 .newInstance()
-                .scheme("http")
-                .host("localhost")
+                .scheme("https")
+                .host(serverName)
                 //.port(80)   -> aws로 배포했을 때 싸용
-//              .port(8080)   //-> local 테스트용
-                .path("/receive-token.html")
+//               .port(8080)   //-> local 테스트용
+                .path("/members")
                 .queryParams(queryParams)
                 .build()
                 .toUri();
     }
-
 }
+
+
