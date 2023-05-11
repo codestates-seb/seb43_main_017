@@ -5,13 +5,13 @@ import { useRecoilState } from 'recoil';
 import { selectedTagsState } from 'src/recoil/Atoms';
 
 /* 2023.05.07 카테고리 타입, 종류 선언 - 홍혜란 */
-type Category = {
+export type Category = {
     index: number;
     name: string;
     subCategories: string[];
 };
 
-const categories: Category[] = [
+export const categories: Category[] = [
     {
         index: 0,
         name: 'FEEL',
@@ -47,11 +47,17 @@ const Categories = () => {
     const [selectedTags, setSelectedTags] = useRecoilState(selectedTagsState);
 
     const handleSubCategoryClick = (subCategory: string) => {
-        setSelectedTags([...selectedTags, subCategory]);
+        // 이미 선택된 태그가 있는지 확인
+        const tagAlreadySelected = selectedTags.includes(subCategory);
+
+        // 선택된 태그가 없을 경우만 추가
+        if (!tagAlreadySelected) {
+            setSelectedTags([...selectedTags, subCategory]);
+        }
     };
 
     return (
-        <div>
+        <CateTagContainer>
             <CategoryContainer>
                 {/* 2023.05.07 큰 카테고리에서 작은 카테고리를 보여주는 CategoryContainer - 홍혜란 */}
                 {categories.map((category, i) => (
@@ -72,35 +78,45 @@ const Categories = () => {
                     </div>
                 ))}
             </CategoryContainer>
-
             {/* 2023.05.10 선택된 태그들을 나타내는 TagContainer - 홍혜란 */}
-            {selectedTags.map((tag) => (
-                <TagContainer key={tag}>
-                    <div className="tagText">{tag}</div>
-                    <div className="tagIcon" onClick={() => setSelectedTags(selectedTags.filter((t) => t !== tag))}>
-                        <TiDeleteOutline />
-                    </div>
-                </TagContainer>
-            ))}
-        </div>
+            <TagBox>
+                {selectedTags.map((tag) => (
+                    <TagContainer key={tag}>
+                        <div className="tagText">{tag}</div>
+                        <div className="tagIcon" onClick={() => setSelectedTags(selectedTags.filter((t) => t !== tag))}>
+                            <TiDeleteOutline />
+                        </div>
+                    </TagContainer>
+                ))}
+            </TagBox>
+        </CateTagContainer>
     );
 };
 
 export default Categories;
 
+const CateTagContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    @media (max-width: 1000px) {
+        display: none;
+    }
+`;
+
 /* 2023.05.07 카테고리 컴포넌트 구현 - 홍혜란 */
 const CategoryContainer = styled.div`
     display: flex;
     flex-direction: column;
-    border-bottom: 1px solid white;
+    margin-left: 180px;
 `;
 
 /* 2023.05.07 큰 카테고리를 버튼으로 컴포넌틑 구현 - 홍혜란 */
 const CategoryButton = styled.button`
-    font-size: 20px;
+    font-size: 16px;
     font-weight: bold;
     color: hsl(0, 0%, 100%);
-    background-color: #1f1f1f;
+    background-color: transparent;
     border: none;
     padding: 10px;
     cursor: pointer;
@@ -129,17 +145,22 @@ const SubCategoryList = styled.ul<{ isOpen: boolean }>`
 
 /* 2023.05.07 서브카테고리 컴포넌트 구현 - 홍혜란 */
 const SubCategoryItem = styled.li`
-    font-size: 16px;
+    font-size: 12px;
     color: hsl(0, 0%, 100%);
     padding: 10px;
     cursor: pointer;
+`;
+
+const TagBox = styled.div`
+    position: absolute;
+    right: -35px;
 `;
 
 /* 2023.05.10 태그 컴포넌트 구현 - 홍혜란 */
 const TagContainer = styled.div`
     border: 1px solid white;
     border-radius: 50px;
-    width: 80px;
+    width: 70px;
     height: 10px;
     display: flex;
     flex-direction: row;
@@ -147,15 +168,17 @@ const TagContainer = styled.div`
     justify-content: space-between;
     padding: 10px;
     margin: 10px;
+    background: rgba(0, 0, 0, 0, 0.5);
 
     .tagText {
-        font-size: 15px;
+        font-size: 12px;
         color: white;
         text-align: center;
         flex: 1;
     }
 
     .tagIcon {
+        font-size: 20px;
         display: flex;
         align-items: center;
         color: white;

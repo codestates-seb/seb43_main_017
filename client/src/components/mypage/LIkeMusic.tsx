@@ -80,7 +80,7 @@ export default LikeMusic;
 /* 2023.05.10 Like Music 전체 박스 컴포넌트 - 홍혜란 */
 const LikeContainer = styled.div`
     align-items: center;
-    margin: 10px;
+    margin: 30px;
 `;
 
 /* 2023.05.10 Like Music 타이틀 컴포넌트 - 홍혜란 */
@@ -88,17 +88,18 @@ const LikeTitle = styled.div`
     display: flex;
     align-items: center;
     flex-direction: row;
+    margin-bottom: 20px;
 
     .vote-icon {
         display: flex;
         align-items: center;
-        font-size: 25px;
+        font-size: 16px;
         color: red;
         padding-top: 5px;
     }
 
     p {
-        font-size: 20px;
+        font-size: 16px;
         color: #ffffff;
         margin-left: 5px;
     }
@@ -110,7 +111,7 @@ const LikeList = styled.div`
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid white;
-    margin-top: 10px;
+    margin-bottom: 15px;
 
     img {
         width: 30px;
@@ -119,12 +120,12 @@ const LikeList = styled.div`
     }
 
     li {
-        font-size: 20px;
+        font-size: 12px;
         color: white;
     }
 
     .music-icon {
-        font-size: 25px;
+        font-size: 16px;
         color: red;
         display: flex;
         align-items: center;
