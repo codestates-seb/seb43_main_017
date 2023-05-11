@@ -29,10 +29,10 @@ spring:
           naver:
             client-id: ${N_CLIENT_ID}
             client-secret: ${N_CLIENT_SECRET}
-            client-name: Naver
             redirect-uri: http://localhost:8080/login/oauth2/code/naver
             authorization-grant-type: authorization_code
             scope: name, email, profile_image
+            client-name: Naver
           kakao:
             client-id: ${K_CLIENT_ID}
             client-secret: ${K_CLIENT_SECRET}

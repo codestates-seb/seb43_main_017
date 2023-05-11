@@ -1,6 +1,8 @@
 package com.codestates.mainProject.member.controller;
 
+import com.codestates.mainProject.member.dto.AuthLoginDto;
 import com.codestates.mainProject.response.DataResponseDto;
+import com.codestates.mainProject.security.auth.filter.JwtAuthenticationFilter;
 import com.codestates.mainProject.security.auth.jwt.JwtTokenizer;
 import com.codestates.mainProject.exception.BusinessLogicException;
 import com.codestates.mainProject.exception.ExceptionCode;
@@ -54,6 +56,23 @@ public class MemberContorller {
         return ResponseEntity.created(location).build();
     }
 
+    @PostMapping("/oauth/signup")
+    public ResponseEntity oAuth2Login(@RequestBody @Valid AuthLoginDto requesBody) {
+        log.info("### oauth2 login start! ###");
+        String accessToken = "";
+        String refreshToken = "";
+
+        Member member = mapper.AuthLoginDtoMember(requesBody);
+
+            member = memberService.createMemberOAuth2(member);
+
+        accessToken = memberService.delegateAccessToken(member);
+        refreshToken = memberService.delegateRefreshToken(member);
+        return ResponseEntity.ok().header("Authorization", "Bearer " + accessToken)
+                .header("Refresh", refreshToken).build();
+    }
+
+
     @GetMapping("/token")
     public ResponseEntity getMemberInfo(@LoginMemberId Long memberId){
         Member findMember = memberService.findMember(memberId);
@@ -76,8 +95,8 @@ public class MemberContorller {
 
     }
 
-    @PostMapping("/image/{member-id}")
-    public ResponseEntity postImage(@PathVariable("member-id") @Positive long memberId,
+    @PostMapping("/image")
+    public ResponseEntity postImage(@LoginMemberId Long memberId,
                                     @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
         Member savedMember = memberService.uploadImage(memberId, imageFile);
         MemberDto.ResponseDto response = mapper.memberToResponse(savedMember);

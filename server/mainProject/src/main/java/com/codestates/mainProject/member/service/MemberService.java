@@ -3,6 +3,7 @@ package com.codestates.mainProject.member.service;
 import com.codestates.mainProject.music.entity.Music;
 import com.codestates.mainProject.musicLike.entity.MusicLike;
 import com.codestates.mainProject.musicLike.repository.MusicLikeRepository;
+import com.codestates.mainProject.security.auth.jwt.JwtTokenizer;
 import com.codestates.mainProject.security.auth.utils.CustomAuthorityUtils;
 import com.codestates.mainProject.exception.BusinessLogicException;
 import com.codestates.mainProject.exception.ExceptionCode;
@@ -10,6 +11,7 @@ import com.codestates.mainProject.image.FileStorageService;
 import com.codestates.mainProject.member.entity.Member;
 import com.codestates.mainProject.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,9 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,6 +36,8 @@ public class MemberService {
     private final CustomAuthorityUtils authorityUtils;
     private final FileStorageService fileStorageService;
     private final MusicLikeRepository musicLikeRepository;
+    @Autowired
+    private final JwtTokenizer jwtTokenizer;
 
     public Member createMember(Member member) {
         verifyExistEmail(member.getEmail());
@@ -63,15 +65,12 @@ public class MemberService {
     }
 
     public Member createMemberOAuth2(Member member) {
-        Optional<Member> findMember = memberRepository.findByEmail(member.getEmail());
-        if(findMember.isPresent()){
-            return findMember.get();
-        }
+        verifyExistEmail(member.getEmail());
+
         List<String> roles = authorityUtils.createRoles(member.getEmail());
         member.setRoles(roles);
         String newName = verifyExistName(member.getName());
         member.setName(newName);
-        verifyExistEmail(member.getEmail());
         return memberRepository.save(member);
     }
 
@@ -163,5 +162,31 @@ public class MemberService {
         }
 
         return newName;
+    }
+
+     public String delegateAccessToken(Member member) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("memberId", member.getMemberId());
+        claims.put("roles", member.getRoles());
+
+        String subject = member.getEmail();
+        Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());
+
+        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
+
+        String accessToken = jwtTokenizer.generateAccessToken(claims, subject, expiration, base64EncodedSecretKey);
+
+        return accessToken;
+    }
+
+    // (6)
+    public String delegateRefreshToken(Member member) {
+        String subject = member.getEmail();
+        Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes());
+        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
+
+        String refreshToken = jwtTokenizer.generateRefreshToken(subject, expiration, base64EncodedSecretKey);
+
+        return refreshToken;
     }
 }
