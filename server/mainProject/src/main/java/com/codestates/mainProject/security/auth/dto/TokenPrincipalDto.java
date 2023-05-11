@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class TokenPrincipalDto {
-    private Long id;
+    private long id;
     private String email;
-    private String name;
 }

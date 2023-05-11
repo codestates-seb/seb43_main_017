@@ -123,23 +123,23 @@ const Item = styled.div`
 
 /* 2023.05.08 MusicList Tranding (노래 앨범 커버) 컴포넌트 구현 - 홍혜란 */
 const Image = styled.img`
-    width: 100px;
-    height: 100px;
+    width: 130px;
+    height: 130px;
     border-radius: 10%;
     object-fit: cover;
 `;
 
 /* 2023.05.08 MusicList Tranding (노래 제목) 컴포넌트 구현 - 홍혜란 */
 const Title = styled.p`
-    font-size: 15px;
+    font-size: 18px;
     color: hsl(0, 0%, 100%);
     font-weight: bold;
-    margin-top: 8px;
+    margin-top: 10px;
 `;
 
 /* 2023.05.08 MusicList Tranding (노래 가수 이름) 컴포넌트 구현 - 홍혜란 */
 const Artist = styled.p`
     font-size: 15px;
     color: hsl(0, 0%, 100%);
-    margin-top: 4px;
+    margin-top: 8px;
 `;

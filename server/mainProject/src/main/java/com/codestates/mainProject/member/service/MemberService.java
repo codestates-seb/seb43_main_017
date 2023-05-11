@@ -3,6 +3,7 @@ package com.codestates.mainProject.member.service;
 import com.codestates.mainProject.music.entity.Music;
 import com.codestates.mainProject.musicLike.entity.MusicLike;
 import com.codestates.mainProject.musicLike.repository.MusicLikeRepository;
+import com.codestates.mainProject.security.auth.jwt.JwtTokenizer;
 import com.codestates.mainProject.security.auth.utils.CustomAuthorityUtils;
 import com.codestates.mainProject.exception.BusinessLogicException;
 import com.codestates.mainProject.exception.ExceptionCode;
@@ -10,6 +11,7 @@ import com.codestates.mainProject.image.FileStorageService;
 import com.codestates.mainProject.member.entity.Member;
 import com.codestates.mainProject.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,8 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,6 +36,8 @@ public class MemberService {
     private final CustomAuthorityUtils authorityUtils;
     private final FileStorageService fileStorageService;
     private final MusicLikeRepository musicLikeRepository;
+    @Autowired
+    private final JwtTokenizer jwtTokenizer;
 
     public Member createMember(Member member) {
         verifyExistEmail(member.getEmail());
@@ -62,14 +65,12 @@ public class MemberService {
     }
 
     public Member createMemberOAuth2(Member member) {
-        Optional<Member> findMember = memberRepository.findByEmail(member.getEmail());
-        if(findMember.isPresent()){
-            return findMember.get();
-        }
+        verifyExistEmail(member.getEmail());
+
         List<String> roles = authorityUtils.createRoles(member.getEmail());
         member.setRoles(roles);
-        member.setStatus(Member.Status.MEMBER_ACTIVE);
-        verifyExistEmail(member.getEmail());
+        String newName = verifyExistName(member.getName());
+        member.setName(newName);
         return memberRepository.save(member);
     }
 
@@ -115,16 +116,24 @@ public class MemberService {
         return findMember;
     }
 
-    public void updateStatus(long memberId) {
+    public Member updateActiveStatus(long memberId) {
         Member findMember = findVerifiedMember(memberId);
         findMember.setStatus(Member.Status.MEMBER_ACTIVE);
+
+        return findMember;
     }
 
-    public Member deleteMember(long memberId) {
+    public Member updateDeleteStatus(long memberId) {
         Member findMember = findVerifiedMember(memberId);
 
         findMember.setStatus(Member.Status.MEMBER_DELETE);
         return findMember;
+    }
+
+    public void deleteMember(long memberId ) {
+        Member findMember = findVerifiedMember(memberId);
+
+        memberRepository.delete(findMember);
     }
 
 
@@ -137,9 +146,60 @@ public class MemberService {
         return findMember;
     }
 
+    public Member findVerifiedMember(String email) {
+        Optional<Member> optionalMember =  memberRepository.findByEmail(email);
+        Member findMember = optionalMember.orElseThrow(() ->
+                new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+
+
+        return findMember;
+    }
+
     private void verifyExistEmail(String email) {
-        Optional<Member> user = memberRepository.findByEmail(email);
-        if (user.isPresent())
-            throw new BusinessLogicException(ExceptionCode.MEMBER_EXISTS);
+            Optional<Member> member = memberRepository.findByEmail(email);
+            if (member.isPresent())
+                throw new BusinessLogicException(ExceptionCode.MEMBER_EXISTS);
+    }
+
+    public Boolean existsByEmail(String email) {
+        return memberRepository.existsByEmail(email);
+    }
+
+    private String verifyExistName(String name){     // oauth2로 로그인 했을 때 같은 이름이 있을 때 1~1000까지의 랜덤숫자를 붙임
+        String newName = name;
+        Optional<Member> optionalMember = memberRepository.findByName(name);
+        if(optionalMember.isPresent()){
+            Random random = new Random();
+            int randomNumber = random.nextInt(1000) + 1;
+            newName = name + randomNumber;
+        }
+
+        return newName;
+    }
+
+     public String delegateAccessToken(Member member) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("memberId", member.getMemberId());
+        claims.put("roles", member.getRoles());
+
+        String subject = member.getEmail();
+        Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());
+
+        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
+
+        String accessToken = jwtTokenizer.generateAccessToken(claims, subject, expiration, base64EncodedSecretKey);
+
+        return accessToken;
+    }
+
+    // (6)
+    public String delegateRefreshToken(Member member) {
+        String subject = member.getEmail();
+        Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes());
+        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
+
+        String refreshToken = jwtTokenizer.generateRefreshToken(subject, expiration, base64EncodedSecretKey);
+
+        return refreshToken;
     }
 }

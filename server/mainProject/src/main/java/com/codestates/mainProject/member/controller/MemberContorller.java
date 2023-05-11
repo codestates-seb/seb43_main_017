@@ -1,5 +1,8 @@
 package com.codestates.mainProject.member.controller;
 
+import com.codestates.mainProject.member.dto.AuthLoginDto;
+import com.codestates.mainProject.response.DataResponseDto;
+import com.codestates.mainProject.security.auth.filter.JwtAuthenticationFilter;
 import com.codestates.mainProject.security.auth.jwt.JwtTokenizer;
 import com.codestates.mainProject.exception.BusinessLogicException;
 import com.codestates.mainProject.exception.ExceptionCode;
@@ -10,6 +13,7 @@ import com.codestates.mainProject.member.service.MemberService;
 
 import com.codestates.mainProject.response.MultiResponseDto;
 import com.codestates.mainProject.response.SingleResponseDto;
+import com.codestates.mainProject.security.auth.loginResolver.LoginMemberId;
 import com.codestates.mainProject.utils.UriCreator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +21,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,6 +56,35 @@ public class MemberContorller {
         return ResponseEntity.created(location).build();
     }
 
+    @PostMapping("/oauth/signup")
+    public ResponseEntity oAuth2Login(@RequestBody @Valid AuthLoginDto requesBody) {
+        log.info("### oauth2 login start! ###");
+        String accessToken = "";
+        String refreshToken = "";
+
+        Member member = mapper.AuthLoginDtoMember(requesBody);
+        if(!memberService.existsByEmail(member.getEmail())) {
+            member = memberService.createMemberOAuth2(member);
+        } else {
+            member = memberService.findVerifiedMember(member.getEmail());
+        }
+
+        accessToken = memberService.delegateAccessToken(member);
+        refreshToken = memberService.delegateRefreshToken(member);
+        return ResponseEntity.ok().header("Authorization", "Bearer " + accessToken)
+                .header("Refresh", refreshToken).build();
+    }
+
+
+    @GetMapping("/token")
+    public ResponseEntity getMemberInfo(@LoginMemberId Long memberId){
+        Member findMember = memberService.findMember(memberId);
+        MemberDto.ResponseDto response = mapper.memberToResponse(findMember);
+
+        return new ResponseEntity<>(
+                new DataResponseDto<>(response), HttpStatus.OK);
+    }
+
 
     @PostMapping("/logout")
     public ResponseEntity logout(HttpServletRequest request) {
@@ -64,8 +98,8 @@ public class MemberContorller {
 
     }
 
-    @PostMapping("/image/{member-id}")
-    public ResponseEntity postImage(@PathVariable("member-id") @Positive long memberId,
+    @PostMapping("/image")
+    public ResponseEntity postImage(@LoginMemberId Long memberId,
                                     @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
         Member savedMember = memberService.uploadImage(memberId, imageFile);
         MemberDto.ResponseDto response = mapper.memberToResponse(savedMember);
@@ -118,21 +152,31 @@ public class MemberContorller {
                 new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
-    @PatchMapping("/status/{member-id}")     // 탈퇴 취소하는 컨트롤러
-    public ResponseEntity patchMemberStatus(@PathVariable("member-id") @Positive long memberId){
-        memberService.updateStatus(memberId);
+    @PatchMapping("/status/active/{member-id}")     // Status를 Active로 변경
+    public ResponseEntity patchStatusActive(@PathVariable("member-id") @Positive long memberId){
+        Member activeMember =memberService.updateActiveStatus(memberId);
 
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        MemberDto.ResponseDto response = mapper.memberToResponse(activeMember);
+
+        return new ResponseEntity<>((response), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{member-id}")
-    public ResponseEntity deleteMember(@PathVariable("member-id") @Positive long memberId){
+    @PatchMapping("/status/delete/{member-id}")   // Status를 delete로 변경(로그인 못하게 막음)
+    public ResponseEntity patchStatusDelete(@PathVariable("member-id") @Positive long memberId){
 
-        Member deleteMember  = memberService.deleteMember(memberId);
+        Member deleteMember  = memberService.updateDeleteStatus(memberId);
 
         MemberDto.ResponseDto response = mapper.memberToResponse(deleteMember);
 
         return new ResponseEntity<>((response), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{member-id}")    //Member 삭제
+    public ResponseEntity deleteMember(@PathVariable("member-id") @Positive long memberId){
+
+        memberService.deleteMember(memberId);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 //    @PostMapping("/oauth/signup")
