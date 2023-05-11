@@ -105,10 +105,10 @@ public class PlayListController {
     }
 
     // 만들어진 플리에 음악 추가
-    @PostMapping("/{playlist-id}/musics")
+    @PostMapping("/{playlist-id}/musics/{music-id}")
     public ResponseEntity addMusicToPlayList(@PathVariable("playlist-id") long playListId,
-                                             @RequestBody Music music){
-        playListService.addMusicToPlayList(playListId, music);
+                                             @PathVariable("music-id") long musicId){
+        playListService.addMusicToPlayList(playListId, musicId);
         return ResponseEntity.ok("Music added to playlist successfully.");
     }
 }
