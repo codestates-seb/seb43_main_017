@@ -1,5 +1,6 @@
 package com.codestates.mainProject.member.service;
 
+import com.codestates.mainProject.member.dto.NaverUserInfo;
 import com.codestates.mainProject.music.entity.Music;
 import com.codestates.mainProject.musicLike.entity.MusicLike;
 import com.codestates.mainProject.musicLike.repository.MusicLikeRepository;
@@ -10,7 +11,13 @@ import com.codestates.mainProject.exception.ExceptionCode;
 import com.codestates.mainProject.image.FileStorageService;
 import com.codestates.mainProject.member.entity.Member;
 import com.codestates.mainProject.member.repository.MemberRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -21,10 +28,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.apache.http.impl.client.HttpClientBuilder;
+
 
 import java.io.IOException;
+import java.net.http.HttpRequest;
+
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 @Service
 @Transactional
@@ -38,6 +49,7 @@ public class MemberService {
     private final MusicLikeRepository musicLikeRepository;
     @Autowired
     private final JwtTokenizer jwtTokenizer;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public Member createMember(Member member) {
         verifyExistEmail(member.getEmail());
@@ -73,6 +85,39 @@ public class MemberService {
         member.setName(newName);
         return memberRepository.save(member);
     }
+    // request 헤더에 있는 토큰을 통한 oauth2 유저 정보 받기
+    public Member createNaverOAuth2(HttpRequest request) throws IOException {
+
+        String authorizationHeader = request.headers().firstValue("Authorization").orElse("");
+        String accessToken = authorizationHeader.substring("Bearer ".length());
+
+        NaverUserInfo userInfo = getNaverUserInfo(accessToken);
+        Member member = new Member();
+        member.setName(userInfo.getName());
+        member.setEmail(userInfo.getEmail());
+        if(!existsByEmail(member.getEmail())) {
+            member = createMemberOAuth2(member);
+        } else {
+            member = findVerifiedMember(member.getEmail());
+        }
+        return member;
+    }
+
+    public NaverUserInfo getNaverUserInfo(String accessToken) throws IOException {
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        HttpGet httpGet = new HttpGet("https://openapi.naver.com/v1/nid/me");
+        httpGet.addHeader("Authorization", "Bearer " + accessToken);
+        HttpResponse httpResponse = httpClient.execute(httpGet);
+        String json = EntityUtils.toString(httpResponse.getEntity());
+        JsonNode jsonNode = objectMapper.readTree(json);
+
+        JsonNode responseNode = jsonNode.get("response");
+        String email = responseNode.get("email").asText();
+        String nickname = responseNode.get("nickname").asText();
+
+        return new NaverUserInfo(email, nickname);
+    }
+
 
     public Resource findImage(long  memberId){
         Member findMember = findVerifiedMember(memberId);
