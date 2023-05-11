@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { LoginPost } from '@/types/AxiosInterface';
 
@@ -23,18 +23,14 @@ export const LoadingText = styled.div`
 `;
 
 export const Loading = () => {
-    const BaseUrl = 'https://1e0c-59-17-229-47.ngrok-free.app/oauth/signup';
+    if (location.hash) {
+        const token = window.location.hash.split('=')[1].split('&')[0];
+        localStorage.setItem('com.naver.nid.access_token', `bearer.${token}`);
+        localStorage.setItem('access_token', token);
+        window.location.href = '/';
+    }
 
-    const userAccessToken = () => {
-        window.location.href.includes('access_token');
-    };
-    useEffect(() => {
-        userAccessToken();
-    }, []);
-
-    const token = window.location.href.split('=')[1].split('&')[0];
-
-    axios
+    /*axios
         .post<LoginPost>(`${BaseUrl}`, {
             headers: {
                 Authorization: token,
@@ -45,7 +41,7 @@ export const Loading = () => {
                 window.localStorage.setItem('access_token', res.headers.authorization);
                 window.location.href = '/';
             }
-        });
+        });*/
 
     return (
         <Background>
