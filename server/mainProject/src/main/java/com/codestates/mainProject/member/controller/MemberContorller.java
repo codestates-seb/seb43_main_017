@@ -63,8 +63,11 @@ public class MemberContorller {
         String refreshToken = "";
 
         Member member = mapper.AuthLoginDtoMember(requesBody);
-
+        if(!memberService.existsByEmail(member.getEmail())) {
             member = memberService.createMemberOAuth2(member);
+        } else {
+            member = memberService.findVerifiedMember(member.getEmail());
+        }
 
         accessToken = memberService.delegateAccessToken(member);
         refreshToken = memberService.delegateRefreshToken(member);

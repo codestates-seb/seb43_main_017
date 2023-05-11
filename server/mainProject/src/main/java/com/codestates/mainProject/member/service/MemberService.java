@@ -146,10 +146,23 @@ public class MemberService {
         return findMember;
     }
 
+    public Member findVerifiedMember(String email) {
+        Optional<Member> optionalMember =  memberRepository.findByEmail(email);
+        Member findMember = optionalMember.orElseThrow(() ->
+                new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+
+
+        return findMember;
+    }
+
     private void verifyExistEmail(String email) {
-        Optional<Member> user = memberRepository.findByEmail(email);
-        if (user.isPresent())
-            throw new BusinessLogicException(ExceptionCode.MEMBER_EXISTS);
+            Optional<Member> member = memberRepository.findByEmail(email);
+            if (member.isPresent())
+                throw new BusinessLogicException(ExceptionCode.MEMBER_EXISTS);
+    }
+
+    public Boolean existsByEmail(String email) {
+        return memberRepository.existsByEmail(email);
     }
 
     private String verifyExistName(String name){     // oauth2로 로그인 했을 때 같은 이름이 있을 때 1~1000까지의 랜덤숫자를 붙임
