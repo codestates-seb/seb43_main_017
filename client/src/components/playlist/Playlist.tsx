@@ -2,31 +2,24 @@ import styled from 'styled-components';
 import Slider from './Silder';
 import { useState } from 'react';
 import Taplist from './Taplist';
-
+import { FaBars } from 'react-icons/fa';
 function Playlist() {
     const [bgSrc, setBgSrc] = useState<string>('');
-    const [changeTap, setChangeTap] = useState<string>('slide');
+    const [changeTap, setChangeTap] = useState<boolean>(true);
 
     return (
         <PlaylistSection>
             <PlaylistBackground url={bgSrc}></PlaylistBackground>
             <PlaylistHeader>
                 <div className="flex-center">
-                    <Pltap>
-                        <li
-                            onClick={() => {
-                                setChangeTap('slide');
-                            }}
-                        >
-                            Slide
-                        </li>
-                        <li
-                            onClick={() => {
-                                setChangeTap('tap');
-                            }}
-                        >
-                            List
-                        </li>
+                    <Pltap
+                        onClick={() => {
+                            setChangeTap(!changeTap);
+                        }}
+                    >
+                        <span className={changeTap ? 'tap-icon' : 'tap-icon moving'}>
+                            <FaBars />
+                        </span>
                     </Pltap>
                 </div>
                 <div className="flex-center">
@@ -37,14 +30,13 @@ function Playlist() {
                         <span className="pl-subtext">Enjoy the various playlists of users</span>
                     </Plsubtext>
                 </div>
-                <div className="flex-center">
-                    <Plsearch placeholder="태그를 검색해주세요" />
-                </div>
+                {/* {changeTap ? null : (
+                    <div className="flex-center">
+                        <Plsearch placeholder="태그를 검색해주세요" />
+                    </div>
+                )} */}
             </PlaylistHeader>
-            <PlaylistContents>
-                {changeTap === 'slide' ? <Slider setBgSrc={setBgSrc} /> : null}
-                {changeTap === 'tap' ? <Taplist /> : null}
-            </PlaylistContents>
+            <PlaylistContents>{changeTap ? <Slider setBgSrc={setBgSrc} /> : <Taplist />}</PlaylistContents>
         </PlaylistSection>
     );
 }
@@ -150,56 +142,39 @@ const Plsubtext = styled.div`
         opacity: 0.6;
     }
 `;
-/**2023-05-06 펼쳐지는 서치바 애니메이션 : 김주비*/
-const Plsearch = styled.input`
-    border-radius: 30px;
-    width: 0%;
-    background: rgb(255, 255, 255, 0.2);
-    animation: showinput 1s forwards 2s;
-    opacity: 0;
-
-    ::placeholder {
-        color: #969696;
-        font-family: 'Rajdhani', sans-serif;
-    }
-    @keyframes showinput {
-        100% {
-            opacity: 1;
-            width: 100%;
-            padding: 10px 30px;
-            border: 2px solid #b1b1b1;
-            color: #dddddd;
-            outline: none;
-            border-radius: 30px;
-        }
-    }
-    @media (max-width: 700px) {
-        transform: scale(0.8);
-    }
-`;
-
-const Pltap = styled.ul`
-    display: flex;
-    justify-content: center;
-    align-items: center;
+/**2023-05-06 메뉴전환 토글 아이콘 : 김주비*/
+const Pltap = styled.div`
+    position: relative;
     height: 30px;
-    border: 2px solid #ccc;
+    width: 80px;
+    background-color: #1a1a1a;
+    border: 1px solid #111;
     border-radius: 30px;
-    overflow: hidden;
-    animation: opacity 1s forwards 3.5s;
+    animation: opacity 1s forwards 2.5s;
     opacity: 0;
-    li {
+    transform: scale(0.8);
+
+    .tap-icon {
         display: flex;
         justify-content: center;
-        align-items: center;
-        width: 50px;
-        padding: 5px 10px;
-        border-left: 1px solid #ccc;
-        height: 100%;
-        cursor: pointer;
+        align-content: center;
+        position: absolute;
+        left: 1px;
+        width: 28px;
+        height: 28px;
+        background-color: #858585;
+        border-radius: 28px;
+        color: #1a1a1a;
+        font-size: 10px;
+        transition: 0.3s ease-in-out;
     }
-    li:hover {
-        background-color: rgba(255, 255, 255, 0.2);
+    .tap-icon > * {
+        margin-top: 50%;
+        transform: translateY(-50%);
+    }
+    .moving {
+        left: 51px;
+        transform: rotate(90deg);
     }
     @keyframes opacity {
         100% {
@@ -207,18 +182,18 @@ const Pltap = styled.ul`
         }
     }
 `;
-
 /**2023-05-06 플레이리스트 슬라이드 섹션 : 김주비 */
 const PlaylistContents = styled.article`
     display: flex;
     flex-direction: column;
-    height: 400px;
+    height: 450px;
+    /* border: 1px solid red; */
     /* justify-content: center; */
     align-items: center;
     width: 100%;
-    margin-top: 20px;
+    margin-top: 40px;
     opacity: 0;
-    animation: opacity 2s forwards 3s;
+    animation: opacity 2s forwards 2s;
     @keyframes opacity {
         100% {
             opacity: 1;
