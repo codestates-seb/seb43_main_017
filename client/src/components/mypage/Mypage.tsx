@@ -60,69 +60,76 @@ function Mypage() {
 
     /* 2023.05.06 수정된 이름과 자기소개 데이터를 서버에 저장 - 홍혜란 */
     return (
-        <MypageContainer>
+        <div>
             <BackgroundCover></BackgroundCover>
-            <MypageListContainer>
-                <UserProfile>
-                    <div className="user-profile">
-                        <img src="./assets/ditto.png" alt="userimg" />
-                    </div>
-                    <UserContainer>
-                        {/* 사용자의 이름 출력 및 수정 */}
-                        <div className="user-name-container">
-                            {editingName ? (
-                                <input type="text" value={name} onChange={handleNameChange} onBlur={handleNameBlur} />
-                            ) : (
-                                <div className="user-name" onClick={handleNameClick} contentEditable>
-                                    {name}
-                                </div>
-                            )}
+            <MypageContainer>
+                <MypageListContainer>
+                    <UserProfile>
+                        <div className="user-profile">
+                            <img src="./assets/ditto.png" alt="userimg" />
                         </div>
-                        <div className="user-email">undefined@gmail.com</div>
-                        {/* 사용자의 자기소개 출력 및 수정 */}
-                        <div className="user-coment-container">
-                            {editingIntro ? (
-                                <input
-                                    type="text"
-                                    value={intro}
-                                    onChange={handleIntroChange}
-                                    onBlur={handleIntroBlur}
-                                />
-                            ) : (
-                                <div className="user-coment" onClick={handleIntroClick} contentEditable>
-                                    {intro}
-                                </div>
-                            )}
-                        </div>
-                    </UserContainer>
-                </UserProfile>
-
-                <MusicInfor>
-                    <LeftContainer>
-                        <LikeMusic /> {/* like music 파일 */}
-                        <Myplaylist /> {/* my playlist 파일 */}
-                    </LeftContainer>
-
-                    <RightContainer>
-                        <ModifyContainer>
-                            <div className="modify-title">
-                                <div className="pencil-icon">
-                                    <BsPencilSquare />
-                                </div>{' '}
-                                <p>MODIFY PLAYLIST</p>
+                        <UserContainer>
+                            {/* 사용자의 이름 출력 및 수정 */}
+                            <div className="user-name-container">
+                                {editingName ? (
+                                    <input
+                                        type="text"
+                                        value={name}
+                                        onChange={handleNameChange}
+                                        onBlur={handleNameBlur}
+                                    />
+                                ) : (
+                                    <div className="user-name" onClick={handleNameClick} contentEditable>
+                                        {name}
+                                    </div>
+                                )}
                             </div>
-
-                            <div className="modify-adit">
-                                <div className="modify-name">PLAYLIST:나만의 플레이리스트</div>
-                                <div className="modify-icon">
-                                    <AiOutlinePlusSquare />
-                                </div>
+                            <div className="user-email">undefined@gmail.com</div>
+                            {/* 사용자의 자기소개 출력 및 수정 */}
+                            <div className="user-coment-container">
+                                {editingIntro ? (
+                                    <input
+                                        type="text"
+                                        value={intro}
+                                        onChange={handleIntroChange}
+                                        onBlur={handleIntroBlur}
+                                    />
+                                ) : (
+                                    <div className="user-coment" onClick={handleIntroClick} contentEditable>
+                                        {intro}
+                                    </div>
+                                )}
                             </div>
-                        </ModifyContainer>
-                    </RightContainer>
-                </MusicInfor>
-            </MypageListContainer>
-        </MypageContainer>
+                        </UserContainer>
+                    </UserProfile>
+
+                    <MusicInfor>
+                        <LeftContainer>
+                            <LikeMusic /> {/* like music 파일 */}
+                            <Myplaylist /> {/* my playlist 파일 */}
+                        </LeftContainer>
+
+                        <RightContainer>
+                            <ModifyContainer>
+                                <div className="modify-title">
+                                    <div className="pencil-icon">
+                                        <BsPencilSquare />
+                                    </div>{' '}
+                                    <p>MODIFY PLAYLIST</p>
+                                </div>
+
+                                <div className="modify-adit">
+                                    <div className="modify-name">PLAYLIST:나만의 플레이리스트</div>
+                                    <div className="modify-icon">
+                                        <AiOutlinePlusSquare />
+                                    </div>
+                                </div>
+                            </ModifyContainer>
+                        </RightContainer>
+                    </MusicInfor>
+                </MypageListContainer>
+            </MypageContainer>
+        </div>
     );
 }
 
@@ -131,7 +138,6 @@ export default Mypage;
 const MypageContainer = styled.div`
     width: 100%;
     min-height: 100vh;
-    background-color: #000000;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -159,6 +165,7 @@ const BackgroundCover = styled.div`
 
 const MypageListContainer = styled.div`
     align-items: center;
+    z-index: 2;
 `;
 
 const UserProfile = styled.div`
@@ -182,7 +189,7 @@ const UserContainer = styled.div`
 
     .user-name-container {
         input {
-            font-size: 50px;
+            font-size: 30px;
             color: hsl(0, 0%, 100%);
             font-weight: bold;
             width: 300px;
@@ -193,7 +200,7 @@ const UserContainer = styled.div`
         }
 
         .user-name {
-            font-size: 50px;
+            font-size: 30px;
             font-weight: bold;
             color: hsl(0, 0%, 100%);
             margin: 10px 0px 10px 25px;
@@ -201,14 +208,14 @@ const UserContainer = styled.div`
     }
 
     .user-email {
-        font-size: 20px;
+        font-size: 16px;
         color: hsl(0, 0%, 100%);
         margin: 10px 0px 15px 25px;
     }
 
     .user-coment-container {
         input {
-            font-size: 20px;
+            font-size: 15px;
             color: hsl(0, 0%, 100%);
             width: 250px;
             height: 20px;
@@ -218,7 +225,7 @@ const UserContainer = styled.div`
         }
 
         .user-coment {
-            font-size: 20px;
+            font-size: 15px;
             color: hsl(0, 0%, 100%);
             margin: 10px 0px 10px 25px;
         }
@@ -231,14 +238,14 @@ const MusicInfor = styled.div`
 
 const LeftContainer = styled.div`
     align-items: center;
-    width: 600px;
+    width: 500px;
     height: 600px;
 `;
 
 const RightContainer = styled.div`
     align-items: center;
-    width: 700px;
-    height: 400px;
+    width: 500px;
+    height: 600px;
 `;
 
 const ModifyContainer = styled.div`
@@ -250,13 +257,13 @@ const ModifyContainer = styled.div`
         align-items: center;
 
         .pencil-icon {
-            font-size: 25px;
+            font-size: 16px;
             color: hsl(152, 100%, 50%);
             padding-top: 5px;
         }
 
         p {
-            font-size: 20px;
+            font-size: 16px;
             color: #ffffff;
             margin-left: 5px;
         }
@@ -269,13 +276,13 @@ const ModifyContainer = styled.div`
         background: rgba(43, 43, 43, 0.8);
 
         .modify-name {
-            font-size: 30px;
+            font-size: 12px;
             color: white;
             font-weight: bold;
         }
 
         .modify-icon {
-            font-size: 30px;
+            font-size: 12px;
             color: white;
             display: flex;
             align-items: center;

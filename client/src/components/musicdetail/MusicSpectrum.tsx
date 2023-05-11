@@ -8,17 +8,17 @@ function MusicSpectrum() {
             <div>
                 <AudioSpectrum
                     id="audio-canvas"
-                    height={200}
-                    width={500}
+                    height={300}
+                    width={900}
                     audioId={'audio-element'}
                     capColor={'#E4E4E4'}
-                    capHeight={2}
-                    meterWidth={2}
+                    capHeight={0}
+                    meterWidth={10}
                     meterCount={512}
                     meterColor={[
-                        { stop: 0, color: '#ffe574' },
-                        { stop: 0.5, color: 'rgba(199, 68, 68, 1)' },
-                        { stop: 1, color: '#c485ff' },
+                        { stop: 0.3, color: '#ffe574' },
+                        { stop: 0.8, color: 'rgba(199, 68, 68, 1)' },
+                        { stop: 1, color: '#a748ff' },
                     ]}
                     gap={4}
                 />

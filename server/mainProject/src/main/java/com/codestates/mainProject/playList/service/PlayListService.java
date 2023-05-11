@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -60,12 +61,46 @@ public class PlayListService {
         playListRepository.delete(findPlayList);
     }
 
+    // 플리 안에 있는 음악 하나 삭제
+    public void deleteMusicFromPlayList(long playListId, long musicId){
+        PlayList playList = findVerifiedPlayList(playListId);
+
+        //TODO: 인증된 사용자 정보 가져오기
+
+        List<Music> musics = playList.getMusics();
+        // 음악 찾고 삭제
+        Optional<Music> optionalMusic = musics.stream()
+                .filter(music -> music.getMusicId().equals(musicId))
+                .findFirst();
+        if (optionalMusic.isPresent()) {
+            Music musicToRemove = optionalMusic.get();
+            musics.remove(musicToRemove);
+            playListRepository.save(playList);
+        } else throw new BusinessLogicException(ExceptionCode.MUSIC_NOT_FOUND);
+    }
+
+    // 만들어진 플리에 음악 추가
+    public void addMusicToPlayList(long playListId, Music music){
+        PlayList playList = findVerifiedPlayList(playListId);
+
+        List<Music> musics = playList.getMusics();
+        musics.add(music);
+
+        playListRepository.save(playList);
+    }
+
     public PlayList findVerifiedPlayList(long playListId) {
         Optional<PlayList> optionalPlayList = playListRepository.findById(playListId);
         PlayList findPlayList = optionalPlayList.orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.PLAYLIST_NOT_FOUND));
 
         return findPlayList;
+    }
+
+    // 플리 안에 있는 음악 조회
+    public List<Music> findVerifiedPlayListMusic(long playListId) {
+        PlayList playList = findVerifiedPlayList(playListId);
+        return playList.getMusics();
     }
 
 }

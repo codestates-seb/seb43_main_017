@@ -16,7 +16,7 @@ public class PlayListDto {
     @NoArgsConstructor
     public static class PostDto {
         @NotNull
-        private Long memberId;
+        private long memberId;
         @NotBlank
         private String title;
         @NotBlank
@@ -27,8 +27,8 @@ public class PlayListDto {
     @Setter
     @NoArgsConstructor
     public static class PatchDto {
-
-        private Long playListId;
+        @NotNull
+        private long playListId;
         @NotBlank
         private String title;
         @NotBlank
@@ -41,8 +41,8 @@ public class PlayListDto {
     public static class ResponseDto {
         // TODO: 주석 처리된 부분 추후에 작업
 
-        private Long playListId;
-        private Long memberId;
+        private long playListId;
+        private long memberId;
 //        private MusicDto music;
 //        private List<PlayListLikeDto> likes = new ArrayList<>();
 

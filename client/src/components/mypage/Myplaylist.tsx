@@ -74,22 +74,22 @@ export default Myplaylist;
 
 const PlayListContainer = styled.div`
     align-items: center;
-    margin: 10px;
-    margin-top: 20px;
+    margin: 30px;
+    margin-top: 40px;
 
     .playlist-title {
         display: flex;
         align-items: center;
 
         .play-icon {
-            font-size: 25px;
+            font-size: 16px;
             color: hsl(216, 100%, 50%);
             display: flex;
             align-items: center;
         }
 
         p {
-            font-size: 20px;
+            font-size: 16px;
             color: #ffffff;
             margin-left: 5px;
         }
@@ -108,7 +108,7 @@ const PlayListContainer = styled.div`
         }
 
         li {
-            font-size: 20px;
+            font-size: 12px;
             color: white;
         }
 
@@ -117,7 +117,7 @@ const PlayListContainer = styled.div`
         }
 
         .playlist-vote-icon {
-            font-size: 15px;
+            font-size: 12px;
             color: red;
             display: flex;
             align-items: center;
@@ -125,7 +125,7 @@ const PlayListContainer = styled.div`
         }
 
         .playlist-button {
-            font-size: 30px;
+            font-size: 16px;
             color: white;
             display: flex;
             align-items: center;
@@ -133,7 +133,7 @@ const PlayListContainer = styled.div`
         }
 
         .playlist-menu {
-            font-size: 30px;
+            font-size: 16px;
             color: white;
             display: flex;
             align-items: center;
