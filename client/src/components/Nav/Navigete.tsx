@@ -109,7 +109,10 @@ const NavigateBox = styled.nav`
         align-items: center;
     }
     @media (max-width: 700px) {
+        height: 100px;
         .icon-group {
+            box-sizing: border-box;
+            min-height: 100px;
             flex-direction: row;
             padding: 20px;
         }
