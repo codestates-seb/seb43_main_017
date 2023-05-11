@@ -23,6 +23,9 @@ public class Music extends Auditable {
     private Long musicId;
 
     @Column(nullable = false)
+    private String musicName;
+
+    @Column(nullable = false)
     private String artistName;
 
     private String albumName;
@@ -31,8 +34,6 @@ public class Music extends Auditable {
     private Long musicTime;
 
     private String albumImg;
-
-    private String backgroundImg;
 
     @Column(nullable = false, unique = true)
     private String musicUri = "";
