@@ -60,7 +60,7 @@ function App() {
                                 setShowSignIn(false);
                             }}
                         >
-                            SingUp
+                            SignUp
                         </ButtonStyle2>{' '}
                     </SignBtnSection>
                 )}
