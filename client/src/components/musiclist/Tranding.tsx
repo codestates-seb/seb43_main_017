@@ -89,6 +89,9 @@ const Container = styled.div`
     padding: 16px 0;
     width: 100%;
     margin-top: 40px;
+    @media (max-width: 1000px) {
+        display: none;
+    }
 `;
 
 /* 2023.05.08 MusicList Tranding (타이틀 컨테이너) 컴포넌트 구현 - 홍혜란 */
@@ -101,23 +104,29 @@ const TrTitleContainer = styled.div`
 
 /* 2023.05.08 MusicList Tranding (타이틀) 컴포넌트 구현 - 홍혜란 */
 const TrTitle = styled.div`
-    font-size: 30px;
+    font-size: 25px;
     font-weight: bold;
     color: hsl(0, 0%, 100%);
-    margin: 20px 10px 10px 30px;
+    margin: 20px 0px 20px 0px;
+    @media (max-width: 1000px) {
+        display: none;
+    }
 `;
 
 /* 2023.05.08 MusicList Tranding (트랜딩 리스트 컨테이너) 컴포넌트 구현 - 홍혜란 */
 const ItemsContainer = styled.div`
     display: flex;
     flex-direction: row;
+    @media (max-width: 1000px) {
+        display: none;
+    }
 `;
 
 /* 2023.05.08 MusicList Tranding (리스트 나올 박스) 컴포넌트 구현 - 홍혜란 */
 const Item = styled.div`
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     flex: 1;
 `;
 
@@ -131,7 +140,7 @@ const Image = styled.img`
 
 /* 2023.05.08 MusicList Tranding (노래 제목) 컴포넌트 구현 - 홍혜란 */
 const Title = styled.p`
-    font-size: 18px;
+    font-size: 12px;
     color: hsl(0, 0%, 100%);
     font-weight: bold;
     margin-top: 10px;
@@ -139,7 +148,7 @@ const Title = styled.p`
 
 /* 2023.05.08 MusicList Tranding (노래 가수 이름) 컴포넌트 구현 - 홍혜란 */
 const Artist = styled.p`
-    font-size: 15px;
+    font-size: 12px;
     color: hsl(0, 0%, 100%);
     margin-top: 8px;
 `;
