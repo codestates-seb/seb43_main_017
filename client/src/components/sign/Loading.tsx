@@ -46,7 +46,7 @@ export const Loading = () => {
     return (
         <Background>
             <LoadingText>잠시만 기다려 주세요...</LoadingText>
-            <img src="./assets/Spinner-1s-200px.gif"></img>
+            <img src="./assets/Dual Ring-1s-124px.gif"></img>
         </Background>
     );
 };
