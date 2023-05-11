@@ -4,6 +4,7 @@ import com.codestates.mainProject.exception.BusinessLogicException;
 import com.codestates.mainProject.exception.ExceptionCode;
 import com.codestates.mainProject.member.entity.Member;
 import com.codestates.mainProject.member.repository.MemberRepository;
+import com.codestates.mainProject.music.entity.Music;
 import com.codestates.mainProject.playList.dto.PlayListDto;
 import com.codestates.mainProject.playList.entity.PlayList;
 import com.codestates.mainProject.playList.mapper.PlayListMapper;
@@ -78,6 +79,7 @@ public class PlayListController {
         return new ResponseEntity<>(new MultiResponseDto<>(response, pagePlayList), HttpStatus.OK);
     }
 
+    //TODO: 전체다 삭제 가능 수정 필요
     @DeleteMapping("/{playlist-id}")
     public ResponseEntity<SingleResponseDto<PlayListDto.DeleteSuccessDto>>
     deletePlayList(@PathVariable("playlist-id") long playListId, @AuthenticationPrincipal UserDetails userDetails){
@@ -88,8 +90,25 @@ public class PlayListController {
         long currentUserId = member.getMemberId();
 
         playListService.deletePlayList(playListId, currentUserId);
-        PlayListDto.DeleteSuccessDto response = new PlayListDto.DeleteSuccessDto("히히 삭제해버리기");
+        PlayListDto.DeleteSuccessDto response = new PlayListDto.DeleteSuccessDto("PlayList removed successfully.");
 
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
+    }
+
+
+    // 플레이리스트 음악 삭제 기능
+    @DeleteMapping("/{playlist-id}/musics/{music-id}")
+    public ResponseEntity deleteMusicFromPlayList(@PathVariable("playlist-id") long playListId,
+                                                          @PathVariable("music-id") long musicId) {
+        playListService.deleteMusicFromPlayList(playListId, musicId);
+        return ResponseEntity.ok("Music removed successfully.");
+    }
+
+    // 만들어진 플리에 음악 추가
+    @PostMapping("/{playlist-id}/musics")
+    public ResponseEntity addMusicToPlayList(@PathVariable("playlist-id") long playListId,
+                                             @RequestBody Music music){
+        playListService.addMusicToPlayList(playListId, music);
+        return ResponseEntity.ok("Music added to playlist successfully.");
     }
 }

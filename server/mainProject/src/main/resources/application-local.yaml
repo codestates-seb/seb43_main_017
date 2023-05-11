@@ -28,7 +28,7 @@ spring:
               - profile
 
 file:
-  upload-dir: C:/Users/Hp/Desktop/image저장소
+  upload-dir: C:\Users\dlsgh\Desktop\image저장소
 
 
 

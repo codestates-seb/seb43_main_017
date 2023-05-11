@@ -26,8 +26,7 @@ public class PlayList extends Auditable {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-
-    @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<Music> musics = new ArrayList<>();
 
     @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
