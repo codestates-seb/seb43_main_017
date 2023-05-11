@@ -4,21 +4,11 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { useState, useEffect } from 'react';
 import { ReactNode } from 'react';
-
-interface PlcardProps {
-    index: number;
-    treck: number;
-    coverimg: string;
-    plname: string;
-    plcontent: string;
-    like: string;
-    user: string;
-    tag: { tagname: string }[];
-}
+import { PlcardProps, bgimg } from 'src/types/Slider';
 
 function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<string>> }) {
     const [pldata, setPldata] = useState<PlcardProps[]>([]); //플리데이터 저장 스테이트
-    const [currentSlideIndex, setCurrentSlideIndex] = useState(0); //포커스된 슬라이드 인덱스
+    const [currentSlideIndex, setCurrentSlideIndex] = useState<number>(0); //포커스된 슬라이드 인덱스
     const [silderPage, setSliderPage] = useState<number>(3); //슬라이더 페이지 갯수
 
     /**2023-05-07 window width 값 가져오기 : 김주비 */
@@ -26,7 +16,6 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
     window.addEventListener('resize', () => {
         width = window.innerWidth;
         // 변화된 width 값을 이용하여 필요한 작업 수행
-
         if (width <= 1100) {
             setSliderPage(1);
         } else {
@@ -117,7 +106,6 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
         setPldata(dummydata);
         setBgSrc(dummydata[currentSlideIndex].coverimg);
     }, [currentSlideIndex]);
-
     /**2023-05-07 슬라이드 버튼 appen : 김주비 */
     const appendDots = (dots: ReactNode) => {
         return (
@@ -128,7 +116,7 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
     };
     /**2023-05-07 슬라이드 버튼 custom : 김주비 */
     const customPaging = (i: number) => {
-        return <div className="dots-paging">{i + 1}</div>;
+        return <div className={`${i === currentSlideIndex ? 'dots-paging dots-active' : 'dots-paging'}`}>{i + 1}</div>;
     };
 
     /**2023-05-07 슬라이드 설정옵션 : 김주비 */
@@ -140,8 +128,6 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
         centerPadding: '80px',
         slidesToShow: silderPage,
         speed: 1000,
-        autoplay: true,
-        autoplaySpeed: 5000,
         dots: true,
         arrow: true,
         appendDots: appendDots,
@@ -180,10 +166,6 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
 
 export default Silder;
 
-interface bgimg {
-    bgImg: string;
-}
-
 /**2023-05-06 플리 슬라이드 카드 섹션 : 김주비 */
 const Plcard = styled.div<bgimg>`
     position: relative;
@@ -208,6 +190,7 @@ const Plcard = styled.div<bgimg>`
         left: 30px;
     }
 `;
+/**2023-05-06 슬라이드 하단버튼 디자인 : 김주비 */
 const SilderGroup = styled.div`
     width: 100%;
     opacity: 0;
@@ -223,13 +206,21 @@ const SilderGroup = styled.div`
         height: 30px;
         border: 3px solid #ccc;
         border-radius: 40px;
-        transform: scale(0.6);
+        transform: scale(0.2);
         transition: 0.2s ease-in-out;
+        background: #ccc;
     }
-    .dots-paging:hover {
+    .dots-active {
         transform: scale(0.8);
-        border-color: #ff8716;
-        color: #ff8716;
+        border: 3px solid rgba(199, 68, 68, 1);
+        color: rgba(199, 68, 68, 1);
+        background: none;
+        font-weight: 700;
+    }
+
+    .dots-paging:hover {
+        border: 3px solid rgba(199, 68, 68, 1);
+        color: rgba(199, 68, 68, 1);
     }
     @keyframes opacity {
         100% {

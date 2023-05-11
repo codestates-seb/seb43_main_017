@@ -1,6 +1,7 @@
 package com.codestates.mainProject.member.controller;
 
 import com.codestates.mainProject.member.dto.AuthLoginDto;
+import com.codestates.mainProject.member.dto.NaverUserInfo;
 import com.codestates.mainProject.response.DataResponseDto;
 import com.codestates.mainProject.security.auth.filter.JwtAuthenticationFilter;
 import com.codestates.mainProject.security.auth.jwt.JwtTokenizer;
@@ -30,6 +31,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.io.IOException;
 import java.net.URI;
+import java.net.http.HttpRequest;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,6 +48,7 @@ public class MemberContorller {
 
     private final JwtTokenizer jwtTokenizer;
 
+
     @PostMapping("/signup")
     public ResponseEntity postMember(@Valid @RequestBody MemberDto.PostDto requestBody) {
         Member member = mapper.postToMember(requestBody);
@@ -55,7 +58,7 @@ public class MemberContorller {
 
         return ResponseEntity.created(location).build();
     }
-
+       //  # 프론트엔드에서 네이버유저의 아이디와 비번을 알려주면 그걸 이용해 회원가입을 하고 토큰발급하는 방식
     @PostMapping("/oauth/signup")
     public ResponseEntity oAuth2Login(@RequestBody @Valid AuthLoginDto requesBody) {
         log.info("### oauth2 login start! ###");
@@ -74,6 +77,21 @@ public class MemberContorller {
         return ResponseEntity.ok().header("Authorization", "Bearer " + accessToken)
                 .header("Refresh", refreshToken).build();
     }
+
+    // 토큰을 이용해 사용자의 정보를 가져와 회원가입을 하고 받아오는 방식
+//    @PostMapping("/oauth/signup")
+//    public ResponseEntity oAuth2Login(HttpRequest request) throws IOException {
+//        log.info("### oauth2 login start! ###");
+//        String accessToken = "";
+//        String refreshToken = "";
+//
+//        Member member = memberService.createNaverOAuth2(request);
+//
+//        accessToken = memberService.delegateAccessToken(member);
+//        refreshToken = memberService.delegateRefreshToken(member);
+//        return ResponseEntity.ok().header("Authorization", "Bearer " + accessToken)
+//                .header("Refresh", refreshToken).build();
+//    }
 
 
     @GetMapping("/token")

@@ -7,6 +7,7 @@ import Mixing from 'src/components/mixing/Mixing';
 import Mypage from 'src/components/mypage/Mypage';
 import Musiclist from 'src/components/musiclist/Musiclist';
 import MusicDetail from 'src/pages/MusicDetail';
+import Loading from 'src/components/sign/Loading';
 
 function RoutingPages() {
     return (
@@ -18,6 +19,7 @@ function RoutingPages() {
             <Route path="/mypage" element={<Mypage />} />
             <Route path="/musiclist" element={<Musiclist />} />
             <Route path="/musicdetail" element={<MusicDetail />} />
+            <Route path="/oauthloading" element={<Loading />} />
         </Routes>
     );
 }

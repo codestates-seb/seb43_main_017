@@ -24,9 +24,22 @@ export const selectedTagsState = atom<string[]>({
     default: [],
 });
 
-export const musicDataState = atom<string[]>({
-    key: 'musicDataState',
+/* 2023.05.11 서치 상태 관리 - 홍혜란 */
+export const searchItemState = atom<string>({
+    key: 'searchItem',
+    default: '',
+});
+
+/* 2023.05.11 서치 결과 상태 관리 - 홍혜란 */
+export const searchResultState = atom({
+    key: 'searchResultState',
     default: [],
+});
+
+/* 2023.05.11 뮤직리스트 좋아요 상태 관리 - 홍혜란 */
+export const isLikedState = atom<boolean>({
+    key: 'isLikedState',
+    default: false,
 });
 
 /* 2023.05.10 로그인이 발급받는 엑세스토큰 상태 관리 - 박수범 */
