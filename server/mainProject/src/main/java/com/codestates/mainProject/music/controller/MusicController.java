@@ -74,16 +74,10 @@ public class MusicController {
     }
 
     // 유저 음악 조회(liked)
-    // 기존 엔드포인트는 ("/members/{member-id}") 이었지만 @AuthenticationPrincipal 을 사용해서
-    // 현재 로그인한 사용자의 정보를 가져오고 있기 때문에 엔드포인트에 memberId가 필요하지않음.
-    // 그러므로 엔드포인트를 아래와 같이 변경함.
     @GetMapping("/liked-musics")
-    public ResponseEntity getLikedMusics(@AuthenticationPrincipal UserDetails userDetails,
+    public ResponseEntity getLikedMusics(@LoginMemberId Long memberId,
                                          @Positive @RequestParam(value = "page", defaultValue = "1") int page,
                                          @Positive @RequestParam(value = "size", defaultValue = "20") int size) {
-        Member member = memberRepository.findByEmail(userDetails.getUsername()).orElseThrow(() ->
-                new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
-        long memberId = member.getMemberId();
 
         Page<Music> likedMusics = memberService.findLikedMusics(memberId, page - 1, size);
         List<MusicDto.ResponseDto> response = mapper.musicsToResponses(likedMusics.getContent());
@@ -92,7 +86,9 @@ public class MusicController {
                 new MultiResponseDto<>(response, likedMusics), HttpStatus.OK);
     }
 
+
     // 음악 다운로드
+
 
     // 음악 수정
     @PatchMapping("/{music-id}")
