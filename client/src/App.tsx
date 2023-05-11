@@ -36,6 +36,8 @@ function App() {
                         <ButtonStyle
                             onClick={() => {
                                 localStorage.removeItem('access_token');
+                                localStorage.removeItem('com.naver.nid.access_token');
+                                localStorage.removeItem('com.naver.nid.oauth.state_token');
                                 location.reload();
                             }}
                         >
@@ -47,6 +49,7 @@ function App() {
                         <ButtonStyle
                             onClick={() => {
                                 setShowSignIn(true);
+                                setShowSignUp(false);
                             }}
                         >
                             SignIn
@@ -54,6 +57,7 @@ function App() {
                         <ButtonStyle2
                             onClick={() => {
                                 setShowSignUp(true);
+                                setShowSignIn(false);
                             }}
                         >
                             SingUp
