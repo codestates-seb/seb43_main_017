@@ -47,6 +47,7 @@ function App() {
                         <ButtonStyle
                             onClick={() => {
                                 setShowSignIn(true);
+                                setShowSignUp(false);
                             }}
                         >
                             SignIn
@@ -54,6 +55,7 @@ function App() {
                         <ButtonStyle2
                             onClick={() => {
                                 setShowSignUp(true);
+                                setShowSignIn(false);
                             }}
                         >
                             SingUp

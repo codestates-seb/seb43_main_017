@@ -1,42 +1,53 @@
 import { SiNaver } from 'react-icons/si';
-import { accessToken } from 'src/recoil/Atoms';
-import { useSetRecoilState } from 'recoil';
 import { OauthBtn } from './Signin';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { LoginPost } from '@/types/AxiosInterface';
-import useScript from 'src/hook/useScript';
+import { useEffect, useRef } from 'react';
+import styled from 'styled-components';
 
 declare global {
     interface Window {
         naver: any;
     }
 }
-function NaverBtn() {
-    const { naver } = window;
-    const setTokenState = useSetRecoilState(accessToken);
-    const status = useScript('https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js');
-    const BaseUrl = 'https://c2fe-59-17-229-47.ngrok-free.app/members/login';
 
-    useEffect(() => {
+const NaverIdLogin = styled.div`
+    display: none;
+`;
+
+function NaverBtn() {
+    const naverRef = useRef<HTMLInputElement>(null);
+    const { naver } = window;
+    const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
+
+    /** 2023/05/11 네이버 Oauth 인증 함수 - 박수범 */
+    const initializeNaverLogin = () => {
         const naverLogin = new naver.LoginWithNaverId({
-            clientId: process.env.REACT_APP_CLIENT_ID,
-            callbackUrl: 'http://localhost:3000/',
+            clientId: CLIENT_ID,
+            callbackUrl: 'http://localhost:3000/oauthloading',
             isPopup: false,
-            loginButton: { color: 'green', type: 1, height: 30 },
+            loginButton: { color: 'green', type: 3, height: 45 },
             callbackHandle: true,
         });
         naverLogin.init();
-    }, [status]);
+    };
 
-    /**2023/05/05 - 로그인 시 서버로부터 받아 온 Access토큰을 로컬스토리지에 저장하고 로그인 모달을 종료한다 -bumpist  */
-    const NaverHandler = () => {
-        console.log('네이버로그인이다.');
+    useEffect(() => {
+        initializeNaverLogin();
+    }, []);
+
+    /** 2023/05/11 - 네이버 로그인 버튼 커스텀을 위해 useRef를 이용하여 커스텀 버튼 클릭 시, 기존 네이버로그인버튼 눌리도록 만든 함수 - 박수범 */
+    const handleNaverLogin = () => {
+        if (naverRef.current) {
+            (naverRef.current.children[0] as HTMLElement).click();
+        }
     };
 
     return (
         <>
-            <div id="naverIdLogin"></div>
+            <NaverIdLogin ref={naverRef} id="naverIdLogin" />
+            <OauthBtn bgColor="#1fd771" color="#f5f2f2" onClick={handleNaverLogin}>
+                <SiNaver className="navericon" />
+                네이버 계정으로 로그인하기
+            </OauthBtn>
         </>
     );
 }
