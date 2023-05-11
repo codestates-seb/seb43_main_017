@@ -85,6 +85,7 @@ const MusicList: MusicData[] = [
 ];
 
 const Musiclist = () => {
+    /* 2023.05.11 뮤직리스트 좋아요 상태 관리 - 홍혜란 */
     const [msList, setMsList] = useState(MusicList);
     const [isLiked, setIsLiked] = useRecoilState(isLikedState);
 
@@ -96,7 +97,7 @@ const Musiclist = () => {
     };
 
     return (
-        <div>
+        <Container>
             <BackgroundCover></BackgroundCover>
             <MusiclistContainer>
                 <TagContainer>
@@ -110,6 +111,7 @@ const Musiclist = () => {
                             <div className="musicList-title">Music List</div>
                             <div className="music-inquiry">
                                 <li>최신순</li>
+                                <li>I</li>
                                 <li>좋아요순</li>
                             </div>
                         </MusicListTitle>
@@ -141,11 +143,16 @@ const Musiclist = () => {
                     </RightchidContainer>
                 </RightContainer>
             </MusiclistContainer>
-        </div>
+        </Container>
     );
 };
 
 export default Musiclist;
+
+const Container = styled.div`
+    height: 100vh;
+    overflow-x: hidden;
+`;
 
 /* 2023.05.08 MusicList (뮤직리스트 전체 컨테이너) 컴포넌트 구현 - 홍혜란 */
 const MusiclistContainer = styled.div`
@@ -175,7 +182,7 @@ const TagContainer = styled.div`
 /**2023-05-06 ScaleOver 되는 백그라운드 애니메이션 - 김주비 */
 const BackgroundCover = styled.div`
     box-sizing: border-box;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
@@ -223,12 +230,13 @@ const MusicListTitle = styled.div`
     .music-inquiry {
         display: flex;
         margin: 20px 80px 0px 30px;
+        border: 1px solid white;
+        border-radius: 20px;
+        padding: 3px;
 
         li {
             font-size: 12px;
             color: hsl(0, 0%, 100%);
-            border-left: 1px solid hsl(0, 0%, 100%);
-            padding-left: 10px;
             margin: 5px;
         }
     }
@@ -254,6 +262,24 @@ const Item = styled.ul`
     &:hover {
         background-color: hsl(0, 0%, 46%, 0.5);
     }
+    opacity: 0; /* initially set opacity to 0 */
+    animation: fadeIn 1s ease-in-out forwards; /* apply the animation to the element */
+
+    @media (max-width: 1000px) {
+        display: none;
+    }
+
+    /* Define the animation using @keyframes rule */
+    @keyframes fadeIn {
+        from {
+            opacity: 0; /* set the initial opacity */
+            transform: translateY(20px); /* set initial position */
+        }
+        to {
+            opacity: 1; /* set the final opacity */
+            transform: translateY(0); /* set final position */
+        }
+    }
 
     li {
         font-size: 12px;
@@ -268,16 +294,28 @@ const Item = styled.ul`
         margin-right: 100px;
     }
 
+    li:nth-child(n + 3):nth-child(-n + 5) {
+        color: hsl(0, 0%, 72%);
+    }
+
+    li:nth-child(n + 6):nth-child(-n + 9) {
+        font-size: 18px;
+    }
+
     li:nth-child(1) {
         margin-right: 50px;
     }
 
+    li:nth-child(2) {
+        font-weight: bold;
+    }
+
     li:nth-child(6) {
-        color: #b62dc9;
+        color: hsl(207, 100%, 52%);
     }
 
     li:nth-child(9) {
-        color: rgb(199, 68, 68);
+        color: rgb(245, 109, 109);
         margin-right: 45px;
     }
 
