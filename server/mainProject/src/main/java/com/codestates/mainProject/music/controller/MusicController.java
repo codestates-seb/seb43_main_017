@@ -11,6 +11,7 @@ import com.codestates.mainProject.music.mapper.MusicMapper;
 import com.codestates.mainProject.music.service.MusicService;
 import com.codestates.mainProject.response.MultiResponseDto;
 import com.codestates.mainProject.response.SingleResponseDto;
+import com.codestates.mainProject.security.auth.loginResolver.LoginMemberId;
 import com.codestates.mainProject.utils.UriCreator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -108,13 +109,8 @@ public class MusicController {
     // 음악 삭제
     @DeleteMapping("/{music-id}")
     public ResponseEntity<SingleResponseDto<MusicDto.DeleteSuccessDto>> deleteMusic(@PathVariable long musicId,
-                                                                               @AuthenticationPrincipal UserDetails userDetails) {
-        // MemberRepository를 사용하여 userDetails로부터 email을 기반으로 사용자 ID를 가져옴
-        Member member = memberRepository.findByEmail(userDetails.getUsername()).orElseThrow(() ->
-                new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
-        long currentUserId = member.getMemberId();
-
-        musicService.deleteMusic(musicId, currentUserId);
+                                                                                    @LoginMemberId Long memberId) {
+        musicService.deleteMusic(musicId, memberId);
         MusicDto.DeleteSuccessDto response = new MusicDto.DeleteSuccessDto("음악이 성공적으로 삭제되었습니다.");
 
         return new ResponseEntity<>(
