@@ -12,10 +12,10 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@NoArgsConstructor
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class PlayList extends Auditable {
 
     @Id
@@ -26,19 +26,20 @@ public class PlayList extends Auditable {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL}, orphanRemoval = true)
-    private List<Music> musics = new ArrayList<>();
+    private String create;
 
-    @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
-    private List<PlayListLike> playListLikes = new ArrayList<>();
+//    @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
+//    private List<PlayListLike> playListLikes = new ArrayList<>();
+    private int playListLikes;
+
+    private String playListTags;
 
     private String title;
 
     private String body;
 
-    public String getMemberName(){
-        return this.member.getName();
-    }
+    @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
+    private List<Music> musics = new ArrayList<>();
 
     public void addMusic(Music music){
         this.musics.add(music);

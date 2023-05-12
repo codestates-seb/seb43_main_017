@@ -25,4 +25,6 @@ public class PlayListLike {
     @ManyToOne
     @JoinColumn(name = "PLAYLIST_ID")
     private PlayList playList;
+
+    private boolean like;
 }
