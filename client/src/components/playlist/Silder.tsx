@@ -10,11 +10,10 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
     const [pldata, setPldata] = useState<PlcardProps[]>([]); //플리데이터 저장 스테이트
     const [currentSlideIndex, setCurrentSlideIndex] = useState<number>(0); //포커스된 슬라이드 인덱스
     const [silderPage, setSliderPage] = useState<number>(3); //슬라이더 페이지 갯수
+    const [width, setWidth] = useState<number>(window.innerWidth); //현재 창의 width 길이
 
-    /**2023-05-07 window width 값 가져오기 : 김주비 */
-    let width = window.innerWidth;
     window.addEventListener('resize', () => {
-        width = window.innerWidth;
+        setWidth(window.innerWidth);
         // 변화된 width 값을 이용하여 필요한 작업 수행
         if (width <= 1100) {
             setSliderPage(1);
@@ -139,8 +138,8 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
             <Slider {...settings}>
                 {pldata.map((data) => (
                     <Plcard bgImg={data.coverimg} key={data.index}>
+                        <div className="pl-treck">TRECK {data.treck}</div>
                         <Link to="/musicdetail">
-                            <div className="pl-treck">TRECK {data.treck}</div>
                             <div className="pl-contents">
                                 <Pltag>
                                     {data.tag.map((tag, index) => (
