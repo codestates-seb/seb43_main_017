@@ -4,13 +4,14 @@ import com.codestates.mainProject.exception.BusinessLogicException;
 import com.codestates.mainProject.exception.ExceptionCode;
 import com.codestates.mainProject.member.entity.Member;
 import com.codestates.mainProject.member.repository.MemberRepository;
-import com.codestates.mainProject.music.entity.Music;
+import com.codestates.mainProject.member.service.MemberService;
 import com.codestates.mainProject.playList.dto.PlayListDto;
 import com.codestates.mainProject.playList.entity.PlayList;
 import com.codestates.mainProject.playList.mapper.PlayListMapper;
 import com.codestates.mainProject.playList.service.PlayListService;
 import com.codestates.mainProject.response.MultiResponseDto;
 import com.codestates.mainProject.response.SingleResponseDto;
+import com.codestates.mainProject.security.auth.loginResolver.LoginMemberId;
 import com.codestates.mainProject.utils.UriCreator;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -34,15 +35,23 @@ public class PlayListController {
     private final PlayListMapper playListMapper;
     private final MemberRepository memberRepository;
 
-    public PlayListController(PlayListService playListService, PlayListMapper playListMapper, MemberRepository memberRepository) {
+    private final MemberService memberService;
+
+    public PlayListController(PlayListService playListService, PlayListMapper playListMapper, MemberRepository memberRepository, MemberService memberService) {
         this.playListService = playListService;
         this.playListMapper = playListMapper;
         this.memberRepository = memberRepository;
+        this.memberService = memberService;
     }
 
     @PostMapping
-    public ResponseEntity createPlayList(@Valid @RequestBody PlayListDto.PostDto requestBody){
+    public ResponseEntity createPlayList(@LoginMemberId Long memberId,
+                                         @Valid @RequestBody PlayListDto.PostDto requestBody){
+
         PlayList playList = playListMapper.postToPlayList(requestBody);
+
+        // memberId 를 playlistEntity member에 할당
+        playList.setMember(memberService.findVerifiedMember(memberId));
 
         PlayList createPlayList = playListService.createPlayList(playList);
         URI location = UriCreator.createUri(PLAYLIST_DEFAULT_URL, createPlayList.getPlayListId());
@@ -53,6 +62,7 @@ public class PlayListController {
     @PatchMapping("/{playlist-id}")
     public ResponseEntity updatePlayList(@PathVariable("playlist-id") @Positive long playListId,
                                         @Valid @RequestBody PlayListDto.PatchDto requestBody){
+        requestBody.setPlayListId(playListId);
         PlayList playList = playListMapper.patchToPlayList(requestBody);
 
         PlayList updatePlayList = playListService.updatePlayList(playList);
