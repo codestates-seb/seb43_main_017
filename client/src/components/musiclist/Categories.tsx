@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useState } from 'react';
-import { TiDeleteOutline } from 'react-icons/ti';
+import { VscClose } from 'react-icons/vsc';
 import { useRecoilState } from 'recoil';
 import { selectedTagsState } from 'src/recoil/Atoms';
 
@@ -84,7 +84,7 @@ const Categories = () => {
                     <TagContainer key={tag}>
                         <div className="tagText">{tag}</div>
                         <div className="tagIcon" onClick={() => setSelectedTags(selectedTags.filter((t) => t !== tag))}>
-                            <TiDeleteOutline />
+                            <VscClose />
                         </div>
                     </TagContainer>
                 ))}
@@ -168,7 +168,8 @@ const TagContainer = styled.div`
     justify-content: space-between;
     padding: 10px;
     margin: 10px;
-    background: rgba(0, 0, 0, 0, 0.5);
+    border: none;
+    background: hsl(0, 75%, 61%);
 
     .tagText {
         font-size: 12px;

@@ -122,12 +122,26 @@ const ItemsContainer = styled.div`
     }
 `;
 
-/* 2023.05.08 MusicList Tranding (리스트 나올 박스) 컴포넌트 구현 - 홍혜란 */
+/* 2023.05.11 MusicList Tranding (리스트 나올 박스) 컴포넌트 구현 / slideIn 애니메이션 - 홍혜란 */
 const Item = styled.div`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     flex: 1;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideIn 1s ease-in-out forwards;
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
 `;
 
 /* 2023.05.08 MusicList Tranding (노래 앨범 커버) 컴포넌트 구현 - 홍혜란 */
