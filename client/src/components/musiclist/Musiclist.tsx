@@ -108,10 +108,9 @@ const Musiclist = () => {
                     <RightchidContainer>
                         <Trending />
                         <MusicListTitle>
-                            <div className="musicList-title">Music List</div>
+                            <div className="musicList-title">MUSIC LIST</div>
                             <div className="music-inquiry">
                                 <li>최신순</li>
-                                <li>I</li>
                                 <li>좋아요순</li>
                             </div>
                         </MusicListTitle>
@@ -221,10 +220,12 @@ const MusicListTitle = styled.div`
     margin-bottom: 10px;
 
     .musicList-title {
-        font-size: 25px;
-        font-weight: bold;
+        font-size: 30px;
         color: hsl(0, 0%, 100%);
         margin: 20px 0px 20px 0px;
+        font-family: 'Monoton';
+        transform: translateY(30px);
+        animation: movingtext 1s forwards 0.5s;
     }
 
     .music-inquiry {
@@ -232,12 +233,17 @@ const MusicListTitle = styled.div`
         margin: 20px 80px 0px 30px;
         border: 1px solid white;
         border-radius: 20px;
-        padding: 3px;
 
         li {
             font-size: 12px;
             color: hsl(0, 0%, 100%);
-            margin: 5px;
+            padding: 8px 12px;
+            align-items: center;
+            height: 100%;
+        }
+
+        li:nth-child(2) {
+            border-left: 1px solid white;
         }
     }
 `;
@@ -262,22 +268,21 @@ const Item = styled.ul`
     &:hover {
         background-color: hsl(0, 0%, 46%, 0.5);
     }
-    opacity: 0; /* initially set opacity to 0 */
-    animation: fadeIn 1s ease-in-out forwards; /* apply the animation to the element */
+    opacity: 0;
+    animation: fadeIn 1s ease-in-out forwards;
 
     @media (max-width: 1000px) {
         display: none;
     }
 
-    /* Define the animation using @keyframes rule */
     @keyframes fadeIn {
         from {
-            opacity: 0; /* set the initial opacity */
-            transform: translateY(20px); /* set initial position */
+            opacity: 0;
+            transform: translateY(20px);
         }
         to {
-            opacity: 1; /* set the final opacity */
-            transform: translateY(0); /* set final position */
+            opacity: 1;
+            transform: translateY(0);
         }
     }
 

@@ -72,6 +72,7 @@ const Myplaylist = () => {
 
 export default Myplaylist;
 
+/* 2023.05.07 마이플레이리스트 컴포넌트 구현 - 홍혜란 */
 const PlayListContainer = styled.div`
     align-items: center;
     margin: 30px;
@@ -100,7 +101,7 @@ const PlayListContainer = styled.div`
         align-items: center;
         justify-content: space-between;
         background: rgba(43, 43, 43, 0.8);
-        margin-top: 15px;
+        margin-top: 20px;
 
         img {
             width: 50px;

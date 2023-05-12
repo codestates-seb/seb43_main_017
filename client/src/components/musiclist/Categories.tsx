@@ -95,6 +95,7 @@ const Categories = () => {
 
 export default Categories;
 
+/* 2023.05.07 전체박스 컴포넌트 구현 - 홍헤란 */
 const CateTagContainer = styled.div`
     display: flex;
     flex-direction: row;
@@ -170,6 +171,20 @@ const TagContainer = styled.div`
     margin: 10px;
     border: none;
     background: hsl(0, 75%, 61%);
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideIn 0.2s ease-in-out forwards;
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
 
     .tagText {
         font-size: 12px;
@@ -179,7 +194,7 @@ const TagContainer = styled.div`
     }
 
     .tagIcon {
-        font-size: 20px;
+        font-size: 15px;
         display: flex;
         align-items: center;
         color: white;
