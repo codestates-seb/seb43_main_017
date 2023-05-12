@@ -100,9 +100,6 @@ const CateTagContainer = styled.div`
     display: flex;
     flex-direction: row;
     position: relative;
-    @media (max-width: 1000px) {
-        display: none;
-    }
 `;
 
 /* 2023.05.07 카테고리 컴포넌트 구현 - 홍혜란 */
@@ -110,6 +107,11 @@ const CategoryContainer = styled.div`
     display: flex;
     flex-direction: column;
     margin-left: 180px;
+    @media screen and (max-width: 768px) {
+        flex-direction: row;
+        margin-left: 0;
+        margin-top: 30px;
+    }
 `;
 
 /* 2023.05.07 큰 카테고리를 버튼으로 컴포넌틑 구현 - 홍혜란 */
