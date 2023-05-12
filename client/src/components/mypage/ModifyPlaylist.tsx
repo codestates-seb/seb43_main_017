@@ -112,6 +112,7 @@ const ModifyContainer = styled.div`
     .modify-title {
         display: flex;
         align-items: center;
+        margin-bottom: 15px;
 
         .pencil-icon {
             font-size: 16px;
@@ -222,11 +223,10 @@ const PlyList = styled.div`
 
     .plyItem {
         display: flex;
-        justify-content: space-around;
         align-items: center;
-        margin: 15px 0px 0px 0px;
-        border-bottom: 1px solid #424242;
-        padding: 5px;
+        justify-content: space-between;
+        border-bottom: 1px solid hsl(0, 0%, 65%);
+        padding: 15px;
 
         img {
             width: 30px;
