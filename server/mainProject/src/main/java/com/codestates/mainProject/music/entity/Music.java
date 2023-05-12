@@ -33,7 +33,7 @@ public class Music extends Auditable {
     @Column(nullable = false)
     private Long musicTime;
 
-    private String albumImg;
+    private String albumCoverImg;
 
     @Column(nullable = false, unique = true)
     private String musicUri = "";
