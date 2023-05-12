@@ -153,6 +153,11 @@ const TapGroup = styled.div`
         align-content: center;
         flex-wrap: wrap;
     }
+    @media (max-width: 700px) {
+        ul {
+            width: 90%;
+        }
+    }
 `;
 /**2023-05-06 펼쳐지는 서치바 애니메이션 : 김주비*/
 const Plsearch = styled.input`

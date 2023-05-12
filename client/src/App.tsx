@@ -178,7 +178,7 @@ const Signview = styled.section`
     position: absolute;
     width: 100%;
     min-height: 100vh;
-    z-index: 3;
+    z-index: 999;
 `;
 /**2023-05-05 라우팅 컴포넌트 : 김주비*/
 const RouterSection = styled.section`
