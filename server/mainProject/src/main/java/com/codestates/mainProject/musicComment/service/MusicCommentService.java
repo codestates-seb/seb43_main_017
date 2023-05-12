@@ -44,7 +44,7 @@ public class MusicCommentService {
 
     // musicId를 입력받아 해당 music의 댓글 전체 조회
     public List<MusicComment> getCommentsByMusicId(long musicId) {
-        return musicCommentRepository.findByMusicId(musicId);
+        return musicCommentRepository.findByMusicMusicId(musicId);
     }
 
     // 댓글 수정
