@@ -109,7 +109,7 @@ const TrTitle = styled.div`
     margin: 20px 0px 20px 0px;
     font-family: 'Monoton', cursive;
     transform: translateY(30px);
-    animation: movingtext 1s forwards 0.5s;
+    animation: movingtext 1s forwards 0.2s;
     @media (max-width: 1000px) {
         display: none;
     }

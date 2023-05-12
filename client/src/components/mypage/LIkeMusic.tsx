@@ -110,7 +110,7 @@ const LikeList = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid white;
+    border-bottom: 1px solid hsl(0, 0%, 65%);
     padding: 8px;
 
     img {

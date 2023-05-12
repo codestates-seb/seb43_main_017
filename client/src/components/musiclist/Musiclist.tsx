@@ -225,7 +225,7 @@ const MusicListTitle = styled.div`
         margin: 20px 0px 20px 0px;
         font-family: 'Monoton';
         transform: translateY(30px);
-        animation: movingtext 1s forwards 0.5s;
+        animation: movingtext 1s forwards 0.2s;
     }
 
     .music-inquiry {
@@ -233,6 +233,8 @@ const MusicListTitle = styled.div`
         margin: 20px 80px 0px 30px;
         border: 1px solid white;
         border-radius: 20px;
+        transform: translateY(30px);
+        animation: movingtext 1s forwards 0.2s;
 
         li {
             font-size: 12px;
