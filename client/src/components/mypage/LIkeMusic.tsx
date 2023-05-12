@@ -94,7 +94,7 @@ const LikeTitle = styled.div`
         display: flex;
         align-items: center;
         font-size: 16px;
-        color: red;
+        color: rgb(245, 109, 109);
         padding-top: 5px;
     }
 
@@ -126,7 +126,7 @@ const LikeList = styled.div`
 
     .music-icon {
         font-size: 16px;
-        color: red;
+        color: rgb(245, 109, 109);
         display: flex;
         align-items: center;
         justify-content: center;

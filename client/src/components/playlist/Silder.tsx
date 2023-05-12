@@ -2,8 +2,8 @@ import styled from 'styled-components';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { useState, useEffect } from 'react';
-import { ReactNode } from 'react';
+import { useState, useEffect, ReactNode } from 'react';
+import { Link } from 'react-router-dom';
 import { PlcardProps, bgimg } from 'src/types/Slider';
 
 function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<string>> }) {
@@ -138,25 +138,27 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
         <SilderGroup>
             <Slider {...settings}>
                 {pldata.map((data) => (
-                    <Plcard key={data.index} bgImg={data.coverimg}>
-                        <div className="pl-treck">TRECK {data.treck}</div>
-                        <div className="pl-contents">
-                            <Pltag>
-                                {data.tag.map((tag, index) => (
-                                    <li key={`tag-${index}`}>{tag.tagname}</li>
-                                ))}
-                            </Pltag>
-                            <Pluser>
-                                <span>WTITER</span>
-                                <span>{data.user}</span>
-                                <span>LIKE</span>
-                                <span>{data.like}</span>
-                            </Pluser>
-                            <Pltext>
-                                <span>{data.plname}</span>
-                                <span>{data.plcontent}</span>
-                            </Pltext>
-                        </div>
+                    <Plcard bgImg={data.coverimg} key={data.index}>
+                        <Link to="/musicdetail">
+                            <div className="pl-treck">TRECK {data.treck}</div>
+                            <div className="pl-contents">
+                                <Pltag>
+                                    {data.tag.map((tag, index) => (
+                                        <li key={`tag-${index}`}>{tag.tagname}</li>
+                                    ))}
+                                </Pltag>
+                                <Pluser>
+                                    <span>WTITER</span>
+                                    <span>{data.user}</span>
+                                    <span>LIKE</span>
+                                    <span>{data.like}</span>
+                                </Pluser>
+                                <Pltext>
+                                    <span>{data.plname}</span>
+                                    <span>{data.plcontent}</span>
+                                </Pltext>
+                            </div>
+                        </Link>
                     </Plcard>
                 ))}
             </Slider>
@@ -178,6 +180,10 @@ const Plcard = styled.div<bgimg>`
     color: #ddd;
     overflow: hidden;
     transition: 0.3s ease-in-out;
+
+    > a {
+        color: #ddd;
+    }
     .pl-treck {
         position: absolute;
         top: 30px;
