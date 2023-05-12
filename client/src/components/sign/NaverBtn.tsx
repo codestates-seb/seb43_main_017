@@ -19,13 +19,13 @@ function NaverBtn() {
     const naverRef = useRef<HTMLInputElement>(null);
     const { naver } = window;
     const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
-    const BaseUrl = 'https://1e0c-59-17-229-47.ngrok-free.app/members/oauth/signup';
+    const BaseUrl = 'ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/oauth/signup';
 
     /** 2023/05/11 네이버 Oauth 인증 함수 - 박수범 */
     const initializeNaverLogin = () => {
         const naverLogin = new naver.LoginWithNaverId({
             clientId: CLIENT_ID,
-            callbackUrl: 'http://localhost:3000',
+            callbackUrl: 'http://localhost:3000/oauthloading',
             isPopup: false,
             loginButton: { color: 'green', type: 3, height: 45 },
             callbackHandle: false,

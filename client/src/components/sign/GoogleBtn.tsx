@@ -4,7 +4,7 @@ import { useSetRecoilState } from 'recoil';
 import { OauthBtn } from './Signin';
 
 function GoogleBtn() {
-    const BaseUrl = 'https://c2fe-59-17-229-47.ngrok-free.app/members/login';
+    const BaseUrl = 'ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/login';
     const setTokenState = useSetRecoilState(accessToken);
 
     /**2023/05/05 - 로그인 시 서버로부터 받아 온 Access토큰을 로컬스토리지에 저장하고 로그인 모달을 종료한다 -bumpist  */
