@@ -122,7 +122,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
                 .scheme("http")
                 .host("localhost")
                 //.port(80)   -> aws로 배포했을 때 싸용
-                .port(8080)   //-> local 테스트용
+                .port(3000)   //-> local 테스트용
                 .path("/")
                 .queryParams(queryParams)
                 .build()

@@ -2,11 +2,9 @@ package com.codestates.mainProject.playList.service;
 
 import com.codestates.mainProject.exception.BusinessLogicException;
 import com.codestates.mainProject.exception.ExceptionCode;
-import com.codestates.mainProject.member.entity.Member;
 import com.codestates.mainProject.member.repository.MemberRepository;
 import com.codestates.mainProject.music.entity.Music;
-import com.codestates.mainProject.musicLike.entity.MusicLike;
-import com.codestates.mainProject.playList.dto.PlayListDto;
+import com.codestates.mainProject.music.service.MusicService;
 import com.codestates.mainProject.playList.entity.PlayList;
 import com.codestates.mainProject.playList.repository.PlayListRepository;
 import org.springframework.data.domain.Page;
@@ -24,11 +22,13 @@ public class PlayListService {
 
     private final PlayListRepository playListRepository;
     private final MemberRepository memberRepository;
+    private final MusicService musicService;
 
     public PlayListService(PlayListRepository playListRepository,
-                           MemberRepository memberRepository) {
+                           MemberRepository memberRepository, MusicService musicService) {
         this.playListRepository = playListRepository;
         this.memberRepository = memberRepository;
+        this.musicService = musicService;
     }
 
     public PlayList createPlayList(PlayList playList) {
@@ -80,8 +80,9 @@ public class PlayListService {
     }
 
     // 만들어진 플리에 음악 추가
-    public void addMusicToPlayList(long playListId, Music music){
+    public void addMusicToPlayList(long playListId, long musicId){
         PlayList playList = findVerifiedPlayList(playListId);
+        Music music = musicService.findMusicById(musicId);
 
         List<Music> musics = playList.getMusics();
         musics.add(music);
