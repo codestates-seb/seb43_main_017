@@ -2,19 +2,18 @@ import styled from 'styled-components';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { useState, useEffect } from 'react';
-import { ReactNode } from 'react';
+import { useState, useEffect, ReactNode } from 'react';
+import { Link } from 'react-router-dom';
 import { PlcardProps, bgimg } from 'src/types/Slider';
 
 function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<string>> }) {
     const [pldata, setPldata] = useState<PlcardProps[]>([]); //플리데이터 저장 스테이트
     const [currentSlideIndex, setCurrentSlideIndex] = useState<number>(0); //포커스된 슬라이드 인덱스
     const [silderPage, setSliderPage] = useState<number>(3); //슬라이더 페이지 갯수
+    const [width, setWidth] = useState<number>(window.innerWidth); //현재 창의 width 길이
 
-    /**2023-05-07 window width 값 가져오기 : 김주비 */
-    let width = window.innerWidth;
     window.addEventListener('resize', () => {
-        width = window.innerWidth;
+        setWidth(window.innerWidth);
         // 변화된 width 값을 이용하여 필요한 작업 수행
         if (width <= 1100) {
             setSliderPage(1);
@@ -138,25 +137,27 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
         <SilderGroup>
             <Slider {...settings}>
                 {pldata.map((data) => (
-                    <Plcard key={data.index} bgImg={data.coverimg}>
+                    <Plcard bgImg={data.coverimg} key={data.index}>
                         <div className="pl-treck">TRECK {data.treck}</div>
-                        <div className="pl-contents">
-                            <Pltag>
-                                {data.tag.map((tag, index) => (
-                                    <li key={`tag-${index}`}>{tag.tagname}</li>
-                                ))}
-                            </Pltag>
-                            <Pluser>
-                                <span>WTITER</span>
-                                <span>{data.user}</span>
-                                <span>LIKE</span>
-                                <span>{data.like}</span>
-                            </Pluser>
-                            <Pltext>
-                                <span>{data.plname}</span>
-                                <span>{data.plcontent}</span>
-                            </Pltext>
-                        </div>
+                        <Link to="/musicdetail">
+                            <div className="pl-contents">
+                                <Pltag>
+                                    {data.tag.map((tag, index) => (
+                                        <li key={`tag-${index}`}>{tag.tagname}</li>
+                                    ))}
+                                </Pltag>
+                                <Pluser>
+                                    <span>WTITER</span>
+                                    <span>{data.user}</span>
+                                    <span>LIKE</span>
+                                    <span>{data.like}</span>
+                                </Pluser>
+                                <Pltext>
+                                    <span>{data.plname}</span>
+                                    <span>{data.plcontent}</span>
+                                </Pltext>
+                            </div>
+                        </Link>
                     </Plcard>
                 ))}
             </Slider>
@@ -178,6 +179,10 @@ const Plcard = styled.div<bgimg>`
     color: #ddd;
     overflow: hidden;
     transition: 0.3s ease-in-out;
+
+    > a {
+        color: #ddd;
+    }
     .pl-treck {
         position: absolute;
         top: 30px;

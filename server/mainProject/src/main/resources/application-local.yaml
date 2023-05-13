@@ -59,7 +59,7 @@ spring:
 #file:
 #  upload-dir: C:\Users\Hp\Desktop\image저장소 #재관
 #file:
-#  upload-dir: C:\Users\dlsgh\Desktop\image저장소  #인환
+#  upload-dir: C:\Users\dlsgh\Desktop\image저장소 #인환
 file:
   upload-dir: C:/Users/UserK/Desktop/image #지산
 

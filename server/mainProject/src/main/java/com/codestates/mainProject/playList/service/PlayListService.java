@@ -4,11 +4,13 @@ import com.codestates.mainProject.exception.BusinessLogicException;
 import com.codestates.mainProject.exception.ExceptionCode;
 import com.codestates.mainProject.member.entity.Member;
 import com.codestates.mainProject.member.repository.MemberRepository;
+import com.codestates.mainProject.member.service.MemberService;
 import com.codestates.mainProject.music.entity.Music;
-import com.codestates.mainProject.musicLike.entity.MusicLike;
-import com.codestates.mainProject.playList.dto.PlayListDto;
+import com.codestates.mainProject.music.service.MusicService;
 import com.codestates.mainProject.playList.entity.PlayList;
 import com.codestates.mainProject.playList.repository.PlayListRepository;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -18,22 +20,43 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+@Slf4j
 @Service
 @Transactional
 public class PlayListService {
+    private static final Logger logger = LoggerFactory.getLogger(PlayListService.class);
 
     private final PlayListRepository playListRepository;
     private final MemberRepository memberRepository;
+    private final MemberService memberService;
+    private final MusicService musicService;
 
     public PlayListService(PlayListRepository playListRepository,
-                           MemberRepository memberRepository) {
+                           MemberRepository memberRepository, MemberService memberService, MusicService musicService) {
         this.playListRepository = playListRepository;
         this.memberRepository = memberRepository;
+        this.memberService = memberService;
+        this.musicService = musicService;
     }
 
     public PlayList createPlayList(PlayList playList) {
-        playList.getMember().addPlayList(playList);
-        return playListRepository.save(playList);
+        try {
+            long memberId = playList.getMember().getMemberId();
+            Member findMember = memberService.findVerifiedMember(memberId);
+            playList.setCreate(findMember.getName());
+
+            findMember.addPlayList(playList);
+
+            return playListRepository.save(playList);
+        } catch (Exception e){
+            // 예외를 로그에 기록
+            logger.error("!!!!!!!!!플레이리스트를 만드는 동안 오류 발생 끄아악!!!!!!!!!!!", e);
+            // 예외를 다시 던져서 상위로 전파하거나 적절한 응답을 반환할 수 있습니다.
+            throw new RuntimeException("플레이리스트 못만들어따!!! 살려줘!!!!!!", e);
+        }
     }
 
     public PlayList findPlayList(long playListId){
@@ -80,8 +103,9 @@ public class PlayListService {
     }
 
     // 만들어진 플리에 음악 추가
-    public void addMusicToPlayList(long playListId, Music music){
+    public void addMusicToPlayList(long playListId, long musicId){
         PlayList playList = findVerifiedPlayList(playListId);
+        Music music = musicService.findMusicById(musicId);
 
         List<Music> musics = playList.getMusics();
         musics.add(music);

@@ -1,9 +1,7 @@
 package com.codestates.mainProject.member.controller;
 
 import com.codestates.mainProject.member.dto.AuthLoginDto;
-import com.codestates.mainProject.member.dto.NaverUserInfo;
 import com.codestates.mainProject.response.DataResponseDto;
-import com.codestates.mainProject.security.auth.filter.JwtAuthenticationFilter;
 import com.codestates.mainProject.security.auth.jwt.JwtTokenizer;
 import com.codestates.mainProject.exception.BusinessLogicException;
 import com.codestates.mainProject.exception.ExceptionCode;
@@ -11,7 +9,6 @@ import com.codestates.mainProject.member.dto.MemberDto;
 import com.codestates.mainProject.member.entity.Member;
 import com.codestates.mainProject.member.mapper.MemberMapper;
 import com.codestates.mainProject.member.service.MemberService;
-
 import com.codestates.mainProject.response.MultiResponseDto;
 import com.codestates.mainProject.response.SingleResponseDto;
 import com.codestates.mainProject.security.auth.loginResolver.LoginMemberId;
@@ -22,16 +19,13 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.io.IOException;
 import java.net.URI;
-import java.net.http.HttpRequest;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;

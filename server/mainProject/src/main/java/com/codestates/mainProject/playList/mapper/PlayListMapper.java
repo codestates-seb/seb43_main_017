@@ -10,8 +10,6 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface PlayListMapper {
 
-
-    @Mapping(source = "memberId", target = "member.memberId")
     PlayList postToPlayList(PlayListDto.PostDto postDto);
 
     PlayList patchToPlayList(PlayListDto.PatchDto patchDto);

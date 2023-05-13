@@ -118,7 +118,7 @@ const PlayListContainer = styled.div`
 
         .playlist-vote-icon {
             font-size: 12px;
-            color: red;
+            color: rgb(245, 109, 109);
             display: flex;
             align-items: center;
             justify-content: center;

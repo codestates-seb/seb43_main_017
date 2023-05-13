@@ -86,9 +86,10 @@ public class MusicController {
                 new MultiResponseDto<>(response, likedMusics), HttpStatus.OK);
     }
 
+    // 플레이리스트 안에 있는 music을 모두 조회
+
 
     // 음악 다운로드
-
 
     // 음악 수정
     @PatchMapping("/{music-id}")

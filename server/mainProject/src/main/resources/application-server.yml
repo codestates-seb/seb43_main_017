@@ -1,0 +1,40 @@
+spring:
+  datasource:
+    url: jdbc:mysql://cordjg-database.c8izlkxyxcni.ap-northeast-2.rds.amazonaws.com:13306/uncover?serverTimezone=Asia/Seoul&useSSL=false&characterEncoding=UTF-8
+    username: admin
+    password: ${MYSQL_SECRET}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: ${G_CLIENT_ID}
+            clientSecret: ${G_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+
+config:
+  domain: http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com
+
+file:
+  upload-dir: ubuntu@ip-172-31-40-115:/home/ubuntu/image
+
+logging:
+  level:
+    org.hibernate.sql: debug
+    org.hibernate.type: trace
+mail:
+  address:
+    admin: admin@gmail.com
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+  access-token-expiration-minutes: 30
+  refresh-token-expiration-minutes: 240

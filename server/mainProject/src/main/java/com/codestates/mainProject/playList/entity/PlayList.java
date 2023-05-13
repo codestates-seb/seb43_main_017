@@ -7,38 +7,42 @@ import com.codestates.mainProject.playListLike.entity.PlayListLike;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@NoArgsConstructor
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class PlayList extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long playListId;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL}, orphanRemoval = true)
-    private List<Music> musics = new ArrayList<>();
+    private String create;
 
-    @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
-    private List<PlayListLike> playListLikes = new ArrayList<>();
+    private String playListTags;
 
     private String title;
 
     private String body;
 
-    public String getMemberName(){
-        return this.member.getName();
-    }
+//    @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
+//    private List<PlayListLike> playListLikes = new ArrayList<>();
+    @ColumnDefault("0")
+    @Column(name = "like_count", nullable = false)
+    private Integer likeCount;
+
+    @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
+    private List<Music> musics = new ArrayList<>();
 
     public void addMusic(Music music){
         this.musics.add(music);
