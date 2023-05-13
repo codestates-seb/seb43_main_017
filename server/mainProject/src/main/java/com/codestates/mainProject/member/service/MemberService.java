@@ -31,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.apache.http.impl.client.HttpClientBuilder;
 
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.http.HttpRequest;
 
@@ -86,9 +87,9 @@ public class MemberService {
         return memberRepository.save(member);
     }
     // request 헤더에 있는 토큰을 통한 oauth2 유저 정보 받기
-    public Member createNaverOAuth2(HttpRequest request) throws IOException {
+    public Member createNaverOAuth2(HttpServletRequest request) throws IOException {
 
-        String authorizationHeader = request.headers().firstValue("Authorization").orElse("");
+        String authorizationHeader = request.getHeader("Authrozation");
         String accessToken = authorizationHeader.substring("Bearer ".length());
 
         NaverUserInfo userInfo = getNaverUserInfo(accessToken);

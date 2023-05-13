@@ -22,10 +22,10 @@ spring:
               - profile
 
 config:
-  domain: http://pre-test-0424.s3-website.ap-northeast-2.amazonaws.com
+  domain: http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com
 
 file:
-  upload-dir: /image
+  upload-dir: ubuntu@ip-172-31-40-115:/home/ubuntu/image
 
 logging:
   level:

@@ -120,9 +120,9 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         return UriComponentsBuilder
                 .newInstance()
                 .scheme("http")
-                .host("localhost")
+                .host("mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com")
                 //.port(80)   -> aws로 배포했을 때 싸용
-                .port(3000)   //-> local 테스트용
+//                .port(3000)   //-> local 테스트용
                 .path("/")
                 .queryParams(queryParams)
                 .build()
