@@ -1,10 +1,13 @@
 package com.codestates.mainProject.playList.dto;
 
 import com.codestates.mainProject.member.entity.Member;
+import com.codestates.mainProject.playListLike.entity.PlayListLike;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
+import java.util.List;
+
 public class PlayListDto {
     @Getter
     @Setter
@@ -14,7 +17,6 @@ public class PlayListDto {
         private String title;
         @NotBlank
         private String body;
-        private int playListLikes;
         private String playListTags;
 
     }
@@ -45,7 +47,7 @@ public class PlayListDto {
 //        private List<PlayListLikeDto> likes = new ArrayList<>();
         private String title;
         private String body;
-        private int playListLikes;
+        private Integer playListLikes;
         private String playListTags;
         private String createdAt;
         private String modifiedAt;

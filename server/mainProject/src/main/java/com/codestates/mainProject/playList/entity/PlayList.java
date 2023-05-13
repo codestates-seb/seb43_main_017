@@ -7,6 +7,7 @@ import com.codestates.mainProject.playListLike.entity.PlayListLike;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -22,21 +23,23 @@ public class PlayList extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long playListId;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
     private String create;
-
-//    @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
-//    private List<PlayListLike> playListLikes = new ArrayList<>();
-    private int playListLikes;
 
     private String playListTags;
 
     private String title;
 
     private String body;
+
+//    @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
+//    private List<PlayListLike> playListLikes = new ArrayList<>();
+    @ColumnDefault("0")
+    @Column(name = "like_count", nullable = false)
+    private Integer likeCount;
 
     @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
     private List<Music> musics = new ArrayList<>();
