@@ -3,7 +3,7 @@ import { OauthBtn } from './Signin';
 import axios from 'axios';
 
 function KakaoBtn() {
-    const REST_API_KEY = '86b53da526902a3a1b6004af05a90009';
+    const REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
     const REDIRECT_URI = 'http://localhost:3000/oauthloading';
     const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 

@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { LoginPost } from '@/types/AxiosInterface';
 
