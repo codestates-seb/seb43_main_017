@@ -1,50 +1,79 @@
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 function Uncover() {
+    const navigate = useNavigate();
+
+    const HandleNavigate = (url: string, index: string) => {
+        navigate(url);
+        sessionStorage.setItem('index', index);
+    };
+
     return (
         <UncoverInfoGroup>
             <BackgroundCover></BackgroundCover>
             <UncoverInfo>
                 <InfoTitle>
-                    <span>UNCOVER 의</span>
-                    <span>다양한 기능을 확인해보세요 </span>
+                    <span>What's</span>
+                    <span>Uncover</span>
+                    <span>all about?</span>
                 </InfoTitle>
                 <Subcontents>
                     <li>
                         <div className="hover-line">
-                            <div></div>
+                            <span></span>
                         </div>
-                        <h3>저작권없는 음원 No copyright</h3>
-                        <p>
-                            Uncover에서는 상업적 이용에도 문제없는 no copyright music 을 제공합니다. YouTube, 소셜
-                            미디어, 라이브 스트림, 웹 사이트 및 온라인 어디에서나 공유하는 컨텐츠에 음악과 음향 효과를
-                            사용하세요. Uncover 에서는 언제나 현재 원하는 음원을 기분, 날씨, 상황에 따라 태그로 검색할수
-                            있습니다.
+                        <h3 className="sub-title">01 No copyright Music</h3>
+                        <p className="sub-text">
+                            Uncover provides free music for commercial use. Music and sound effects are available for
+                            YouTube, social media, live streams, websites, and content you share anywhere online! Search
+                            for the music you want through various tags.
                         </p>
-                        <button>more</button>
+                        <button
+                            className="sub-button"
+                            onClick={() => {
+                                HandleNavigate('/musiclist', '1');
+                            }}
+                        >
+                            more
+                        </button>
                     </li>
                     <li>
                         <div className="hover-line">
-                            <div></div>
+                            <span></span>
                         </div>
-                        <h3>플레이 리스트 Playlist </h3>
-                        <p>
-                            Uncover를 이용하는 모든 유저는 자신만의 플레이리스트를 생성할수 있습니다. 플레이리스트에서
-                            본인만의 무드를 저장하고 공유해주세요. 공유된 플레이 리스트들을 통해 유저들이 더욱 손 쉽게
-                            관련된 음원들을 찾아볼 수 있습니다.
+                        <h3 className="sub-title">02 Playlist </h3>
+                        <p className="sub-text">
+                            Anyone who uses Uncover can create their own playlist. Please save and share your own mood
+                            on the playlist. The shared playlists make it easier for users to find related music
+                            sources.
                         </p>
-                        <button>more</button>
+                        <button
+                            className="sub-button"
+                            onClick={() => {
+                                HandleNavigate('/playlist', '2');
+                            }}
+                        >
+                            more
+                        </button>
                     </li>
                     <li>
                         <div className="hover-line">
-                            <div></div>
+                            <span></span>
                         </div>
-                        <h3>음원 믹싱 Mixing</h3>
-                        <p>
-                            사용자가 원하는 샘플 음악을 영상에 직접 믹싱해 볼 수 있습니다. 영상, 사운드 효과, 디자인을
-                            위한 워크스테이션으로 작업에 완성도를 더해 보세요.
+                        <h3 className="sub-title">03 Mixing</h3>
+                        <p className="sub-text">
+                            You can mix the sample music you want directly into the video. Add completeness to your work
+                            with a workstation for video, sound effects and design.
                         </p>
-                        <button>more</button>
+                        <button
+                            className="sub-button"
+                            onClick={() => {
+                                HandleNavigate('/mixing', '3');
+                            }}
+                        >
+                            more
+                        </button>
                     </li>
                 </Subcontents>
             </UncoverInfo>
@@ -77,8 +106,8 @@ const BackgroundCover = styled.div`
     filter: blur(5px);
     background-size: cover;
     opacity: 0.3;
-    animation: bgScale 30s infinite;
-    @keyframes bgScale {
+    animation: bgScale1 30s infinite;
+    @keyframes bgScale1 {
         50% {
             transform: scale(1.3);
         }
@@ -99,55 +128,70 @@ const UncoverInfo = styled.div`
 const InfoTitle = styled.div`
     display: flex;
     flex-direction: column;
-    font-size: 3rem;
-    font-weight: 700;
+    font-size: 4rem;
     letter-spacing: -2px;
+    font-family: 'Monoton', cursive;
     span {
         margin: 5px 0px;
+    }
+    @media (max-width: 1200px) {
+        font-size: 2rem;
+        letter-spacing: 0px;
+        span {
+            margin-right: 10px;
+        }
+    }
+    @media (max-width: 500px) {
+        font-size: 1.5rem;
     }
 `;
 
 const Subcontents = styled.ul`
     display: flex;
     margin-top: 40px;
+
+    li {
+        /* border: 1px solid red; */
+        width: 100%;
+        padding: 30px 30px 0px 0px;
+    }
     .hover-line {
-        width: 320px;
-        height: 3px;
+        position: relative;
+        /* width: 320px; */
+        height: 2px;
         background-color: #ccc;
+        opacity: 0.6;
         overflow: hidden;
     }
 
-    .hover-line > div {
-        width: 0px;
+    .hover-line > span {
+        position: absolute;
+        width: 0%;
         height: 3px;
         background-color: rgba(199, 68, 68, 1);
         transition: 0.3s ease-in-out;
     }
 
-    li:hover .hover-line > div {
-        width: 320px;
+    li:hover .hover-line > span {
+        width: 100%;
     }
 
-    li {
-        width: 320px;
-        padding: 30px 70px 0px 0px;
-    }
-
-    li > h3 {
+    .sub-title {
+        font-family: 'Rajdhani', sans-serif;
         font-size: 1.2rem;
         font-weight: 700;
-        margin: 20px 0px;
+        margin: 40px 0px 20px 0px;
+        letter-spacing: 2px;
     }
-
-    li > p {
+    .sub-text {
+        font-family: 'Rajdhani', sans-serif;
         font-size: 14px;
         line-height: 150%;
-
+        word-break: break-all;
         opacity: 0.6;
-        letter-spacing: -1.3px;
     }
-
-    li > button {
+    .sub-button {
+        font-family: 'Rajdhani', sans-serif;
         margin: 30px 0px;
         padding: 5px 20px;
         background: rgba(199, 68, 68, 1);
@@ -159,5 +203,26 @@ const Subcontents = styled.ul`
 
     li > button:hover {
         background: #e96565;
+    }
+
+    @media (max-width: 1200px) {
+        flex-direction: column;
+
+        li {
+            padding: 0px;
+        }
+        .sub-title {
+            margin: 20px 0px 20px 0px;
+        }
+        .sub-button {
+            margin: 20px 0px;
+            padding: 3px 10px;
+        }
+    }
+
+    @media (max-width: 500px) {
+        .sub-title {
+            font-size: 1rem;
+        }
     }
 `;
