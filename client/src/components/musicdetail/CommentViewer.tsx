@@ -92,7 +92,7 @@ const CommentViewerGroup = styled.div`
     .comment-input {
         display: flex;
         margin-top: 120px;
-        padding: 0px 30px;
+        width: 80%;
     }
     .comment-input button {
         width: 80px;

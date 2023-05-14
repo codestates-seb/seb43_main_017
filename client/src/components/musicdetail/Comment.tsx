@@ -4,7 +4,7 @@ import { useRecoilState } from 'recoil';
 import { commentOpenState } from 'src/recoil/Atoms';
 
 function Comment() {
-    const [, setCommentOpen] = useRecoilState<boolean>(commentOpenState);
+    const [commentOpen, setCommentOpen] = useRecoilState<boolean>(commentOpenState);
 
     return (
         <MusicComment>
@@ -13,7 +13,7 @@ function Comment() {
                     <h2>COMMENT</h2>
                     <button
                         onClick={() => {
-                            setCommentOpen(true);
+                            setCommentOpen(!commentOpen);
                         }}
                     >
                         <BiMessageSquareAdd />
