@@ -62,8 +62,7 @@ export default Comment;
 const MusicComment = styled.article`
     display: flex;
     margin-top: 50px;
-    height: 180px;
-    width: 90%;
+    width: 100%;
     opacity: 0;
     animation: fadeInSection 2s forwards 3s;
 
@@ -80,6 +79,10 @@ const MusicComment = styled.article`
         100% {
             opacity: 1;
         }
+    }
+
+    @media (max-width: 700px) {
+        display: none;
     }
 `;
 /**2023-05-09 detailpage 코멘트 디테일 섹션 : 김주비 */
