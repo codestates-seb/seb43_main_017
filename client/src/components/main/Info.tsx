@@ -1,12 +1,15 @@
 import { useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { selectIndexState } from 'src/recoil/Atoms';
 import styled from 'styled-components';
 
 function Uncover() {
+    const [, setSelectIndex] = useRecoilState<number>(selectIndexState);
     const navigate = useNavigate();
 
-    const HandleNavigate = (url: string, index: string) => {
+    const HandleNavigate = (url: string, index: number) => {
         navigate(url);
-        sessionStorage.setItem('index', index);
+        setSelectIndex(index);
     };
 
     return (
@@ -32,7 +35,7 @@ function Uncover() {
                         <button
                             className="sub-button"
                             onClick={() => {
-                                HandleNavigate('/musiclist', '1');
+                                HandleNavigate('/musiclist', 1);
                             }}
                         >
                             more
@@ -51,7 +54,7 @@ function Uncover() {
                         <button
                             className="sub-button"
                             onClick={() => {
-                                HandleNavigate('/playlist', '2');
+                                HandleNavigate('/playlist', 2);
                             }}
                         >
                             more
@@ -69,7 +72,7 @@ function Uncover() {
                         <button
                             className="sub-button"
                             onClick={() => {
-                                HandleNavigate('/mixing', '3');
+                                HandleNavigate('/mixing', 3);
                             }}
                         >
                             more

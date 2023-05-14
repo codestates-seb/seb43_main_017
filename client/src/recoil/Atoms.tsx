@@ -47,3 +47,15 @@ export const accessToken = atom<string | null>({
     key: 'accessToken',
     default: '',
 });
+
+/* 2023.05.14 선택된 메뉴 인덱스 - 김주비 */
+export const selectIndexState = atom<number>({
+    key: 'selectIndexState',
+    default: Number(sessionStorage.getItem('index')),
+});
+
+/* 2023.05.14 선택된 메뉴 인덱스 (세션스토리지) - 김주비 */
+export const localIndexState = atom<string | null>({
+    key: 'localIndexState',
+    default: sessionStorage.getItem('index'),
+});
