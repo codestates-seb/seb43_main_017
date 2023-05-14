@@ -63,7 +63,7 @@ const Trending = () => {
     return (
         <Container>
             <TrTitleContainer>
-                <TrTitle>Tranding</TrTitle>
+                <TrTitle>TRANDING</TrTitle>
             </TrTitleContainer>
             <ItemsContainer>
                 {trList.map((data) => (
@@ -104,10 +104,12 @@ const TrTitleContainer = styled.div`
 
 /* 2023.05.08 MusicList Tranding (타이틀) 컴포넌트 구현 - 홍혜란 */
 const TrTitle = styled.div`
-    font-size: 25px;
-    font-weight: bold;
+    font-size: 30px;
     color: hsl(0, 0%, 100%);
     margin: 20px 0px 20px 0px;
+    font-family: 'Monoton', cursive;
+    transform: translateY(30px);
+    animation: movingtext 1s forwards 0.2s;
     @media (max-width: 1000px) {
         display: none;
     }
