@@ -37,6 +37,7 @@ public class PlayList extends Auditable {
 
     @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
     private List<PlayListLike> playListLikes = new ArrayList<>();
+    private int likeCount;
 //    @ColumnDefault("0")
 //    @Column(name = "like_count", nullable = false)
 //    private Integer likeCount;
