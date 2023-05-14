@@ -17,7 +17,7 @@ public class PlayListDto {
         private String title;
         @NotBlank
         private String body;
-        private String playListTags;
+//        private String playListTags;
 
     }
 
@@ -47,7 +47,7 @@ public class PlayListDto {
 //        private List<PlayListLikeDto> likes = new ArrayList<>();
         private String title;
         private String body;
-        private Integer playListLikes;
+        private int likeCount;
         private String playListTags;
         private String createdAt;
         private String modifiedAt;
