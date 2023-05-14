@@ -4,15 +4,30 @@ package com.codestates.mainProject.playListLike.dto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PlayListLikeDto {
-    private long memberId;
-    private long playListId;
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class PostDto {
+        private boolean playListLike;
+    }
 
-    public PlayListLikeDto(long memberId, long playListId){
-        this.memberId = memberId;
-        this.playListId = playListId;
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class PatchDto {
+        private boolean playListLike;
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class ResponseDto {
+        private long playListLikeId;
+        private long playListId;
+        private long memberId;
+        private boolean playListLike;
     }
 }

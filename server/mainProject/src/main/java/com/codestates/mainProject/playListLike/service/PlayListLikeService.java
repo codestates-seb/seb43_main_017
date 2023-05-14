@@ -13,6 +13,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,6 +51,12 @@ public class PlayListLikeService {
             log.error("좋아요 클릭 오류");
             throw new RuntimeException("플레이리스트 좋아요 불가능");
         }
+    }
+
+    public Page<PlayListLike> findPlayListLikes(int page, int size){
+        return playListLikeRepository.findAll(PageRequest.of(
+                page, size, Sort.by("playListId").descending()
+        ));
     }
 
     @Transactional

@@ -18,7 +18,7 @@ public class PlayListLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long PlayListLikeId;
+    private Long playListLikeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
@@ -27,6 +27,8 @@ public class PlayListLike {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PLAYLIST_ID")
     private PlayList playList;
+
+    private boolean playListLike;
 
     @Builder
     public PlayListLike(Member member, PlayList playList){
