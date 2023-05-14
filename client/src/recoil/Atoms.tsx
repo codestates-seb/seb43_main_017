@@ -59,3 +59,9 @@ export const localIndexState = atom<string | null>({
     key: 'localIndexState',
     default: sessionStorage.getItem('index'),
 });
+
+/* 2023.05.14 코멘트창 open 상태 관리 - 김주비 */
+export const commentOpenState = atom<boolean>({
+    key: 'commentOpenState',
+    default: false,
+});

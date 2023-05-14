@@ -1,10 +1,24 @@
 import styled from 'styled-components';
+import { BiMessageSquareAdd } from 'react-icons/bi';
+import { useRecoilState } from 'recoil';
+import { commentOpenState } from 'src/recoil/Atoms';
 
 function Comment() {
+    const [, setCommentOpen] = useRecoilState<boolean>(commentOpenState);
+
     return (
         <MusicComment>
             <CommentBox>
-                <h2>COMMENT</h2>
+                <div className="comment-title">
+                    <h2>COMMENT</h2>
+                    <button
+                        onClick={() => {
+                            setCommentOpen(true);
+                        }}
+                    >
+                        <BiMessageSquareAdd />
+                    </button>
+                </div>
                 <ul className="comment-detail">
                     <li className="user-icon">
                         <img src="./assets/profile-icon-01.png" alt="profile-icon" />
@@ -80,6 +94,23 @@ const CommentBox = styled.div`
         justify-content: left;
         align-items: center;
         margin-right: 20px;
+    }
+
+    .comment-title {
+        display: flex;
+    }
+    .comment-title > button {
+        width: 40px;
+        height: 30px;
+        background: none;
+        border: none;
+        color: #ccc;
+        opacity: 0.6;
+        font-size: 20px;
+    }
+    .comment-title > button:hover {
+        opacity: 1;
+        color: rgba(199, 68, 68, 1);
     }
     .comment-detail {
         width: 100%;

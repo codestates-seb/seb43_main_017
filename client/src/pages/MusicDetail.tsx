@@ -1,9 +1,15 @@
 import styled from 'styled-components';
 import Comment from 'src/components/musicdetail/Comment';
 import MusicSpectrum from 'src/components/musicdetail/MusicSpectrum';
+import CommentViewer from 'src/components/musicdetail/CommentViewer';
+import { useRecoilState } from 'recoil';
+import { commentOpenState } from 'src/recoil/Atoms';
 function MusicDetail() {
+    const [commentOpen] = useRecoilState<boolean>(commentOpenState);
+
     return (
         <DetailGroup>
+            {commentOpen ? <CommentViewer></CommentViewer> : null}
             <PlaylistBackground
                 url={'https://musicvine.imgix.net/images/yeti-music-avatar-v1.jpg?auto=compress&w=388&h=388'}
             ></PlaylistBackground>
