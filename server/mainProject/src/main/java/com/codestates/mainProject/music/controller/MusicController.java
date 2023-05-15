@@ -105,7 +105,7 @@ public class MusicController {
 
     // 음악 삭제
     @DeleteMapping("/{music-id}")
-    public ResponseEntity<SingleResponseDto<MusicDto.DeleteSuccessDto>> deleteMusic(@PathVariable long musicId,
+    public ResponseEntity<SingleResponseDto<MusicDto.DeleteSuccessDto>> deleteMusic(@PathVariable("music-id") long musicId,
                                                                                     @LoginMemberId Long memberId) {
         musicService.deleteMusic(musicId, memberId);
         MusicDto.DeleteSuccessDto response = new MusicDto.DeleteSuccessDto("음악이 성공적으로 삭제되었습니다.");
