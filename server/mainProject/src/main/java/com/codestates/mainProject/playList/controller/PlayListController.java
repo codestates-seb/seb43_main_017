@@ -104,7 +104,7 @@ public class PlayListController {
     // 플레이리스트 음악 삭제 기능
     @DeleteMapping("/{playlist-id}/musics/{music-id}")
     public ResponseEntity deleteMusicFromPlayList(@PathVariable("playlist-id") long playListId,
-                                                          @PathVariable("music-id") long musicId) {
+                                                  @PathVariable("music-id") long musicId) {
         playListService.deleteMusicFromPlayList(playListId, musicId);
         return ResponseEntity.ok("Music removed successfully.");
     }
