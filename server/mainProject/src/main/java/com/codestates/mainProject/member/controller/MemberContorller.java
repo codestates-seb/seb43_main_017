@@ -106,8 +106,6 @@ public class MemberContorller {
         jwtTokenizer.addToTokenBlackList(jws);     //블랙리스트에 jws 추가, 접근 막음
 
         return ResponseEntity.ok().body("Successfully logged out");
-
-
     }
 
     @PostMapping("/image")
