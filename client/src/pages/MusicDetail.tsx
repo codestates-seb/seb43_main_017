@@ -1,9 +1,15 @@
 import styled from 'styled-components';
 import Comment from 'src/components/musicdetail/Comment';
-import MusicSpectrum from 'src/components/musicdetail/MusicSpectrum';
+// import MusicSpectrum from 'src/components/musicdetail/MusicSpectrum';
+import CommentViewer from 'src/components/musicdetail/CommentViewer';
+import { useRecoilState } from 'recoil';
+import { commentOpenState } from 'src/recoil/Atoms';
 function MusicDetail() {
+    const [commentOpen] = useRecoilState<boolean>(commentOpenState);
+
     return (
         <DetailGroup>
+            {commentOpen ? <CommentViewer></CommentViewer> : null}
             <PlaylistBackground
                 url={'https://musicvine.imgix.net/images/yeti-music-avatar-v1.jpg?auto=compress&w=388&h=388'}
             ></PlaylistBackground>
@@ -41,7 +47,7 @@ function MusicDetail() {
                         </div>
                         <div className="cover-img"></div>
                     </AlbumDesign>
-                    <MusicSpectrum />
+                    {/* <MusicSpectrum /> */}
                 </MusicCover>
                 <Comment />
             </DetailSection>
@@ -84,6 +90,10 @@ const PlaylistBackground = styled.article<url>`
 `;
 /**2023-05-09 detailpage 서브 섹션 : 김주비 */
 const DetailSection = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     box-sizing: border-box;
     margin-left: 300px;
     width: calc(100% - 300px);
@@ -103,7 +113,6 @@ const MusicContents = styled.article`
     display: flex;
     flex-direction: column;
     width: 100%;
-    margin-top: 100px;
     @keyframes ascendText {
         100% {
             transform: translateY(0px);
@@ -223,10 +232,10 @@ const MusicCover = styled.article`
         }
     }
 `;
-/**2023-05-09 detailpage 앨범커버 디자인 : 김주비 */
+/**2023-05-09 detailpage 앨범커버 / 레코드 : 김주비 */
 const AlbumDesign = styled.div<url>`
     position: relative;
-    width: 650px;
+    width: 400px;
     height: 400px;
     .cover-img {
         position: absolute;
@@ -243,7 +252,7 @@ const AlbumDesign = styled.div<url>`
         justify-content: center;
         align-items: center;
         top: 0;
-        right: 0;
+        left: 250px;
         min-width: 400px;
         min-height: 400px;
         background: url('./assets/background-detail-recode.png');

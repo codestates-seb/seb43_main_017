@@ -4,13 +4,15 @@ import { MdOutlineQueueMusic, MdOutlineVideoSettings } from 'react-icons/md';
 import { BiHomeAlt } from 'react-icons/bi';
 import { HiOutlineMusicNote } from 'react-icons/hi';
 import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { selectIndexState, localIndexState } from 'src/recoil/Atoms';
 
 function Navigate() {
     /**2023-05-05 선택된 아이콘 인덱스 스테이트 : 김주비*/
-    const [selectIndex, setSelectIndex] = useState<number>(Number(sessionStorage.getItem('index')));
+    const [selectIndex, setSelectIndex] = useRecoilState<number>(selectIndexState);
+    const [localIndex, setLocalIndex] = useRecoilState<string | null>(localIndexState);
     /**2023-05-05 프로필 아이콘 클릭시 이벤트실행 스테이트 : 김주비*/
     const [click, setClick] = useState<boolean>(false);
-    const [localIndex, setLocalIndex] = useState<string | null>(sessionStorage.getItem('index'));
 
     /**2023-05-08 선택된 아이콘 인덱스 로컬스토리지에 삽입 : 김주비*/
     // let localIndex = '1';
