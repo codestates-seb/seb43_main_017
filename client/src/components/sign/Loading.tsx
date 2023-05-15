@@ -23,7 +23,7 @@ export const LoadingText = styled.div`
 `;
 
 export const Loading = () => {
-    const BaseUrl = 'ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/oauth/signup';
+    const BaseUrl = 'http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/oauth/signup';
 
     if (location.hash) {
         const { naver } = window;
@@ -51,6 +51,7 @@ export const Loading = () => {
                         if (res.status === 200 && res.headers.authorization !== undefined) {
                             window.localStorage.setItem('access_token', res.headers.authorization);
                             window.localStorage.setItem('refresh_token', res.headers.Refresh);
+                            window.location.href = 'http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com';
                         }
                     });
             }
