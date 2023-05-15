@@ -46,7 +46,7 @@ public class PlayListService {
         try {
             long memberId = playList.getMember().getMemberId();
             Member findMember = memberService.findVerifiedMember(memberId);
-            playList.setCreate(findMember.getName());
+            playList.setCreateMember(findMember.getName());
 
             findMember.addPlayList(playList);
 

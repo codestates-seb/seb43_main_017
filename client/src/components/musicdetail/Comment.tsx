@@ -1,10 +1,24 @@
 import styled from 'styled-components';
+import { BiMessageSquareAdd } from 'react-icons/bi';
+import { useRecoilState } from 'recoil';
+import { commentOpenState } from 'src/recoil/Atoms';
 
 function Comment() {
+    const [commentOpen, setCommentOpen] = useRecoilState<boolean>(commentOpenState);
+
     return (
         <MusicComment>
             <CommentBox>
-                <h2>COMMENT</h2>
+                <div className="comment-title">
+                    <h2>COMMENT</h2>
+                    <button
+                        onClick={() => {
+                            setCommentOpen(!commentOpen);
+                        }}
+                    >
+                        <BiMessageSquareAdd />
+                    </button>
+                </div>
                 <ul className="comment-detail">
                     <li className="user-icon">
                         <img src="./assets/profile-icon-01.png" alt="profile-icon" />
@@ -48,8 +62,7 @@ export default Comment;
 const MusicComment = styled.article`
     display: flex;
     margin-top: 50px;
-    height: 180px;
-    width: 90%;
+    width: 100%;
     opacity: 0;
     animation: fadeInSection 2s forwards 3s;
 
@@ -67,6 +80,10 @@ const MusicComment = styled.article`
             opacity: 1;
         }
     }
+
+    @media (max-width: 700px) {
+        display: none;
+    }
 `;
 /**2023-05-09 detailpage 코멘트 디테일 섹션 : 김주비 */
 const CommentBox = styled.div`
@@ -80,6 +97,23 @@ const CommentBox = styled.div`
         justify-content: left;
         align-items: center;
         margin-right: 20px;
+    }
+
+    .comment-title {
+        display: flex;
+    }
+    .comment-title > button {
+        width: 40px;
+        height: 30px;
+        background: none;
+        border: none;
+        color: #ccc;
+        opacity: 0.6;
+        font-size: 20px;
+    }
+    .comment-title > button:hover {
+        opacity: 1;
+        color: rgba(199, 68, 68, 1);
     }
     .comment-detail {
         width: 100%;
