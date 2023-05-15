@@ -89,9 +89,6 @@ const Container = styled.div`
     padding: 16px 0;
     width: 100%;
     margin-top: 40px;
-    @media (max-width: 1000px) {
-        display: none;
-    }
 `;
 
 /* 2023.05.08 MusicList Tranding (타이틀 컨테이너) 컴포넌트 구현 - 홍혜란 */
@@ -110,16 +107,7 @@ const TrTitle = styled.div`
     font-family: 'Monoton', cursive;
     transform: translateY(30px);
     animation: movingtext 1s forwards 0.2s;
-    @media (max-width: 1000px) {
-        display: none;
-    }
-`;
-
-/* 2023.05.08 MusicList Tranding (트랜딩 리스트 컨테이너) 컴포넌트 구현 - 홍혜란 */
-const ItemsContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    @media (max-width: 1000px) {
+    @media (max-width: 700px) {
         display: none;
     }
 `;
@@ -142,6 +130,42 @@ const Item = styled.div`
         to {
             opacity: 1;
             transform: translateX(0);
+        }
+    }
+`;
+
+/* 2023.05.08 MusicList Tranding (트랜딩 리스트 컨테이너) 컴포넌트 구현 - 홍혜란 */
+const ItemsContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    @media screen and (max-width: 1200px) {
+        & ${Item}:nth-child(6) {
+            display: none;
+        }
+    }
+    @media screen and (max-width: 1100px) {
+        & ${Item}:nth-child(5) {
+            display: none;
+        }
+    }
+    @media screen and (max-width: 1000px) {
+        & ${Item}:nth-child(4) {
+            display: none;
+        }
+    }
+    @media screen and (max-width: 900px) {
+        & ${Item}:nth-child(3) {
+            display: none;
+        }
+    }
+    @media screen and (max-width: 800px) {
+        & ${Item}:nth-child(2) {
+            display: none;
+        }
+    }
+    @media screen and (max-width: 700px) {
+        & ${Item}:nth-child(1) {
+            display: none;
         }
     }
 `;

@@ -105,41 +105,39 @@ const Musiclist = () => {
                     <Categories />
                 </TagContainer>
                 <RightContainer>
-                    <RightchidContainer>
-                        <Trending />
-                        <MusicListTitle>
-                            <div className="musicList-title">MUSIC LIST</div>
-                            <div className="music-inquiry">
-                                <li>최신순</li>
-                                <li>좋아요순</li>
-                            </div>
-                        </MusicListTitle>
-                        <SongContainer>
-                            {msList.map((music, index) => (
-                                <Item key={music.musicId}>
-                                    <li>
-                                        <img src={music.albumCoverImg} alt={music.musicName} />
-                                    </li>
-                                    <li>{music.musicName}</li>
-                                    <li>{music.artistName}</li>
-                                    <li>{music.albumName}</li>
-                                    <li>{music.musicTime}</li>
-                                    <li>
-                                        <FiPlayCircle />
-                                    </li>
-                                    <li>
-                                        <FiFolderPlus />
-                                    </li>
-                                    <li>
-                                        <BsBoxArrowInDown />
-                                    </li>
-                                    <li onClick={() => handleClick(music.musicId)}>
-                                        {music.isLiked ? <AiFillHeart /> : <AiOutlineHeart />}
-                                    </li>
-                                </Item>
-                            ))}
-                        </SongContainer>
-                    </RightchidContainer>
+                    <Trending />
+                    <MusicListTitle>
+                        <div className="musicList-title">MUSIC LIST</div>
+                        <div className="music-inquiry">
+                            <li>최신순</li>
+                            <li>좋아요순</li>
+                        </div>
+                    </MusicListTitle>
+                    <SongContainer>
+                        {msList.map((music) => (
+                            <Item key={music.musicId}>
+                                <li>
+                                    <img src={music.albumCoverImg} alt={music.musicName} />
+                                </li>
+                                <li>{music.musicName}</li>
+                                <li>{music.artistName}</li>
+                                <li>{music.albumName}</li>
+                                <li>{music.musicTime}</li>
+                                <li>
+                                    <FiPlayCircle />
+                                </li>
+                                <li>
+                                    <FiFolderPlus />
+                                </li>
+                                <li>
+                                    <BsBoxArrowInDown />
+                                </li>
+                                <li>
+                                    <AiOutlineHeart />
+                                </li>
+                            </Item>
+                        ))}
+                    </SongContainer>
                 </RightContainer>
             </MusiclistContainer>
         </Container>
@@ -148,6 +146,7 @@ const Musiclist = () => {
 
 export default Musiclist;
 
+/* 2023.05.08 MusicList 컴포넌트 구현 - 홍혜란 */
 const Container = styled.div`
     height: 100vh;
     overflow-x: hidden;
@@ -159,6 +158,9 @@ const MusiclistContainer = styled.div`
     display: flex;
     align-items: center;
     flex-direction: row;
+    @media screen and (max-width: 768px) {
+        flex-direction: column;
+    }
 `;
 
 /* 2023.05.08 MusicList (검색,카테고리 컨테이너) 컴포넌트 구현 - 홍혜란 */
@@ -168,6 +170,10 @@ const TagContainer = styled.div`
     background: rgba(0, 0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
+    @media screen and (max-width: 700px) {
+        width: 350px;
+        height: auto;
+    }
 `;
 
 /**2023-05-06 ScaleOver 되는 백그라운드 애니메이션 - 김주비 */
@@ -190,17 +196,18 @@ const BackgroundCover = styled.div`
     }
 `;
 
+/* 2023.05.08 MusicList (뮤직리스트 오른쪽 컨테이너) 컴포넌트 구현 - 홍혜란 */
 const RightContainer = styled.div`
     display: flex;
     align-items: center;
     flex-direction: column;
     width: 100%;
     height: 100vh;
-`;
-
-const RightchidContainer = styled.div`
-    width: 1300px;
-    height: 100vh;
+    margin-left: 100px;
+    @media screen and (max-width: 700px) {
+        margin-left: 0;
+        margin-top: 30px;
+    }
 `;
 
 /* 2023.05.08 MusicList (뮤직리스트 출력 타이틀) 컴포넌트 구현 - 홍혜란 */
@@ -239,6 +246,9 @@ const MusicListTitle = styled.div`
         li:nth-child(2) {
             border-left: 1px solid white;
         }
+    }
+    @media screen and (max-width: 800px) {
+        margin-left: 50px;
     }
 `;
 
@@ -318,6 +328,29 @@ const Item = styled.ul`
         width: 50px;
         height: 50px;
         border-radius: 10%;
+    }
+    @media screen and (max-width: 1200px) {
+        li:nth-child(n + 2):nth-child(-n + 5) {
+            font-size: 10px;
+            margin-right: 5px;
+        }
+    }
+    @media screen and (max-width: 800px) {
+        li:nth-child(n + 4):nth-child(-n + 5) {
+            display: none;
+        }
+        li > img {
+            width: 30px;
+            height: 30px;
+        }
+        li:nth-child(n + 2):nth-child(-n + 3) {
+            font-size: 10px;
+            margin-right: 5px;
+        }
+        li:nth-child(1) {
+            margin-right: 5px;
+            margin-left: 10px;
+        }
     }
 `;
 

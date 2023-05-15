@@ -154,6 +154,7 @@ const SubCategoryItem = styled.li`
     cursor: pointer;
 `;
 
+/* 2023.05.10 태그 박스 컴포넌트 구현 - 홍혜란 */
 const TagBox = styled.div`
     position: absolute;
     right: -35px;
