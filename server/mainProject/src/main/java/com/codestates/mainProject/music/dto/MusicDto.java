@@ -57,4 +57,14 @@ public class MusicDto {
             this.message = message;
         }
     }
+
+    @Getter
+    @Setter
+    public static class MessageResponseDto {
+        private String message;
+
+        public MessageResponseDto(String message) {
+            this.message = message;
+        }
+    }
 }

@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/comments")
+@RequestMapping("/music-comments")
 @Validated
 @Slf4j
 @RequiredArgsConstructor
 public class MusicCommentController {
-    private final static String MUSIC_DEFAULT_URL = "/comments";
+    private final static String MUSIC_DEFAULT_URL = "/music-comments";
     private final MusicCommentService musicCommentService;
 
     // 댓글 생성
