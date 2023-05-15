@@ -13,6 +13,7 @@ import com.codestates.mainProject.response.MultiResponseDto;
 import com.codestates.mainProject.response.SingleResponseDto;
 import com.codestates.mainProject.security.auth.loginResolver.LoginMemberId;
 import com.codestates.mainProject.utils.UriCreator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,20 +30,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/playlists")
 @Validated
+@RequiredArgsConstructor
 public class PlayListController {
     private final static String PLAYLIST_DEFAULT_URL = "/playlists";
     private final PlayListService playListService;
     private final PlayListMapper playListMapper;
     private final MemberRepository memberRepository;
-
     private final MemberService memberService;
 
-    public PlayListController(PlayListService playListService, PlayListMapper playListMapper, MemberRepository memberRepository, MemberService memberService) {
-        this.playListService = playListService;
-        this.playListMapper = playListMapper;
-        this.memberRepository = memberRepository;
-        this.memberService = memberService;
-    }
 
     @PostMapping
     public ResponseEntity createPlayList(@LoginMemberId Long memberId,

@@ -35,14 +35,20 @@ public class PlayList extends Auditable {
 
     private String body;
 
-//    @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
-//    private List<PlayListLike> playListLikes = new ArrayList<>();
-    @ColumnDefault("0")
-    @Column(name = "like_count", nullable = false)
-    private Integer likeCount;
+    @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
+    private List<PlayListLike> playListLikes = new ArrayList<>();
+    private int likeCount;
+//    @ColumnDefault("0")
+//    @Column(name = "like_count", nullable = false)
+//    private Integer likeCount;
 
     @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
     private List<Music> musics = new ArrayList<>();
+
+    public void addPlayListLike(PlayListLike playListLike){
+        this.playListLikes.add(playListLike);
+        playListLike.setPlayList(this);
+    }
 
     public void addMusic(Music music){
         this.musics.add(music);
