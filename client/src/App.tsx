@@ -60,7 +60,7 @@ function App() {
                                 setShowSignIn(false);
                             }}
                         >
-                            SingUp
+                            SignUp
                         </ButtonStyle2>{' '}
                     </SignBtnSection>
                 )}
@@ -178,13 +178,13 @@ const Signview = styled.section`
     position: absolute;
     width: 100%;
     min-height: 100vh;
-    z-index: 3;
+    z-index: 999;
 `;
 /**2023-05-05 라우팅 컴포넌트 : 김주비*/
 const RouterSection = styled.section`
     width: 100%;
     height: 100vh;
-    overflow-x: hidden;
+    overflow: hidden;
 `;
 
 /**2023-05-06 미디어쿼리 반응형 - sign 버튼 섹션 : 김주비*/

@@ -6,9 +6,6 @@ function Uncover() {
     return (
         <UncoverInfoGroup>
             <BackgroundCover></BackgroundCover>
-            <SideImage>
-                <Imagemoving></Imagemoving>
-            </SideImage>
             <UncoverInfo>
                 <MovingText>
                     <div className="content-logo flex-center">
@@ -26,6 +23,9 @@ function Uncover() {
                         </span>
                     </div>
                 </MovingText>
+                <SideImage>
+                    <Imagemoving></Imagemoving>
+                </SideImage>
                 <MovingScroll>
                     <div className="scroll-icon">
                         <BsMouse className="mouse-icon" />
@@ -71,15 +71,15 @@ const BackgroundCover = styled.div`
 `;
 /**2023-05-06 슬라이딩되는 사이드 이미지 애니메이션 - 김주비 */
 const SideImage = styled.aside`
+    position: absolute;
+    right: 0px;
+    width: 50%;
+    height: 40%;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    width: 30%;
-    height: 100vh;
-    overflow: hidden;
+    perspective: 1000px;
+    z-index: 1;
     @media (max-width: 1300px) {
         display: none;
     }
@@ -87,22 +87,29 @@ const SideImage = styled.aside`
 /**2023-05-06 슬라이딩되는 사이드 이미지 애니메이션 (bg) - 김주비  */
 const Imagemoving = styled.div`
     width: 100%;
-    height: 0vh;
-    animation: sildeSideimg 2s forwards 1s;
+    height: 0%;
     background: url('./assets/Side-background.jpg');
     background-size: cover;
     opacity: 0.8;
+    box-shadow: 5px 10px 20px rgb(0, 0, 0, 0.3);
+    transition: 0.3s ease-in-out;
+    animation: sildeSideimg 2s forwards 1s;
+
     @keyframes sildeSideimg {
         100% {
             height: 100%;
+            border-radius: 100px 0px 100px 0px;
         }
+    }
+    :hover {
+        transform: rotateY(-20deg);
     }
 `;
 /**2023-05-06 컨텐츠 그룹 - 김주비*/
 const UncoverInfo = styled.div`
+    position: relative;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    justify-content: left;
     align-items: center;
     top: 0;
     left: 0;
@@ -111,11 +118,13 @@ const UncoverInfo = styled.div`
 `;
 /**2023-05-06 슬라이드 업 되는 텍스트 애니메이션 - 김주비*/
 const MovingText = styled.article`
+    /* border: 1px solid red; */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    width: 700px;
+    z-index: 3;
     > div {
         width: 100%;
         overflow: hidden;
@@ -157,14 +166,14 @@ const MovingText = styled.article`
     .content-subtext {
         font-family: 'Rajdhani', sans-serif;
         position: relative;
-        height: 120px;
+        height: 100px;
         margin-top: 30px;
         line-height: 150%;
         font-size: 14px;
         opacity: 0.6;
     }
     .content-subtext > span {
-        width: 600px;
+        width: 550px;
         position: absolute;
         letter-spacing: 1px;
         transform: translateY(120px);

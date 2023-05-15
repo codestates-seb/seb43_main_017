@@ -11,75 +11,75 @@ import { useState } from 'react';
 
 /* 2023.05.08 MusicList MusicList 타입 선언 - 홍혜란 */
 interface MusicData {
-    index: number;
-    albumCover: string;
-    songTitle: string;
+    musicId: number;
+    albumCoverImg: string;
+    musicName: string;
     artistName: string;
-    songAlbum: string;
+    albumName: string;
     musicTime: string;
-    tag: string[];
+    tags: string[];
     isLiked: boolean;
 }
 
 const MusicList: MusicData[] = [
     {
-        index: 0,
-        albumCover: '/assets/ditto.png',
-        songTitle: 'Ditto',
+        musicId: 0,
+        albumCoverImg: '/assets/ditto.png',
+        musicName: 'Ditto',
         artistName: 'Newjeans',
-        songAlbum: 'OMG',
+        albumName: 'OMG',
         musicTime: '3:15',
-        tag: ['잔잔한', '발라드', '피아노'],
+        tags: ['잔잔한', '발라드', '피아노'],
         isLiked: false,
     },
     {
-        index: 1,
-        albumCover: '/assets/ditto.png',
-        songTitle: 'Stitches',
+        musicId: 1,
+        albumCoverImg: '/assets/ditto.png',
+        musicName: 'Stitches',
         artistName: 'Shawn Mendes',
-        songAlbum: 'Handwritten',
+        albumName: 'Handwritten',
         musicTime: '3:26',
-        tag: ['우울한', '어쿠스틱', '기타'],
+        tags: ['우울한', '어쿠스틱', '기타'],
         isLiked: false,
     },
     {
-        index: 2,
-        albumCover: '/assets/ditto.png',
-        songTitle: 'Attention',
+        musicId: 2,
+        albumCoverImg: '/assets/ditto.png',
+        musicName: 'Attention',
         artistName: 'Charlie Puth',
-        songAlbum: 'Voicenotes',
+        albumName: 'Voicenotes',
         musicTime: '3:31',
-        tag: ['신나는', '댄스'],
+        tags: ['신나는', '댄스'],
         isLiked: false,
     },
     {
-        index: 3,
-        albumCover: '/assets/ditto.png',
-        songTitle: 'Ditto',
+        musicId: 3,
+        albumCoverImg: '/assets/ditto.png',
+        musicName: 'Ditto',
         artistName: 'Newjeans',
-        songAlbum: 'OMG',
+        albumName: 'OMG',
         musicTime: '3:15',
-        tag: ['잔잔한', '발라드', '피아노'],
+        tags: ['잔잔한', '발라드', '피아노'],
         isLiked: false,
     },
     {
-        index: 4,
-        albumCover: '/assets/ditto.png',
-        songTitle: 'Stitches',
+        musicId: 4,
+        albumCoverImg: '/assets/ditto.png',
+        musicName: 'Stitches',
         artistName: 'Shawn Mendes',
-        songAlbum: 'Handwritten',
+        albumName: 'Handwritten',
         musicTime: '3:26',
-        tag: ['우울한', '어쿠스틱', '기타'],
+        tags: ['우울한', '어쿠스틱', '기타'],
         isLiked: false,
     },
     {
-        index: 5,
-        albumCover: '/assets/ditto.png',
-        songTitle: 'Attention',
+        musicId: 5,
+        albumCoverImg: '/assets/ditto.png',
+        musicName: 'Attention',
         artistName: 'Charlie Puth',
-        songAlbum: 'Voicenotes',
+        albumName: 'Voicenotes',
         musicTime: '3:31',
-        tag: ['신나는', '댄스'],
+        tags: ['신나는', '댄스'],
         isLiked: false,
     },
 ];
@@ -108,22 +108,21 @@ const Musiclist = () => {
                     <RightchidContainer>
                         <Trending />
                         <MusicListTitle>
-                            <div className="musicList-title">Music List</div>
+                            <div className="musicList-title">MUSIC LIST</div>
                             <div className="music-inquiry">
                                 <li>최신순</li>
-                                <li>I</li>
                                 <li>좋아요순</li>
                             </div>
                         </MusicListTitle>
                         <SongContainer>
                             {msList.map((music, index) => (
-                                <Item key={music.index}>
+                                <Item key={music.musicId}>
                                     <li>
-                                        <img src={music.albumCover} alt={music.songTitle} />
+                                        <img src={music.albumCoverImg} alt={music.musicName} />
                                     </li>
-                                    <li>{music.songTitle}</li>
+                                    <li>{music.musicName}</li>
                                     <li>{music.artistName}</li>
-                                    <li>{music.songAlbum}</li>
+                                    <li>{music.albumName}</li>
                                     <li>{music.musicTime}</li>
                                     <li>
                                         <FiPlayCircle />
@@ -134,7 +133,7 @@ const Musiclist = () => {
                                     <li>
                                         <BsBoxArrowInDown />
                                     </li>
-                                    <li onClick={() => handleClick(music.index)}>
+                                    <li onClick={() => handleClick(music.musicId)}>
                                         {music.isLiked ? <AiFillHeart /> : <AiOutlineHeart />}
                                     </li>
                                 </Item>
@@ -160,10 +159,6 @@ const MusiclistContainer = styled.div`
     display: flex;
     align-items: center;
     flex-direction: row;
-
-    @media (max-width: 1000px) {
-        display: none;
-    }
 `;
 
 /* 2023.05.08 MusicList (검색,카테고리 컨테이너) 컴포넌트 구현 - 홍혜란 */
@@ -173,10 +168,6 @@ const TagContainer = styled.div`
     background: rgba(0, 0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
-
-    @media (max-width: 1300px) {
-        display: none;
-    }
 `;
 
 /**2023-05-06 ScaleOver 되는 백그라운드 애니메이션 - 김주비 */
@@ -221,10 +212,12 @@ const MusicListTitle = styled.div`
     margin-bottom: 10px;
 
     .musicList-title {
-        font-size: 25px;
-        font-weight: bold;
+        font-size: 30px;
         color: hsl(0, 0%, 100%);
         margin: 20px 0px 20px 0px;
+        font-family: 'Monoton';
+        transform: translateY(30px);
+        animation: movingtext 1s forwards 0.2s;
     }
 
     .music-inquiry {
@@ -232,12 +225,19 @@ const MusicListTitle = styled.div`
         margin: 20px 80px 0px 30px;
         border: 1px solid white;
         border-radius: 20px;
-        padding: 3px;
+        transform: translateY(30px);
+        animation: movingtext 1s forwards 0.2s;
 
         li {
             font-size: 12px;
             color: hsl(0, 0%, 100%);
-            margin: 5px;
+            padding: 8px 12px;
+            align-items: center;
+            height: 100%;
+        }
+
+        li:nth-child(2) {
+            border-left: 1px solid white;
         }
     }
 `;
@@ -262,22 +262,17 @@ const Item = styled.ul`
     &:hover {
         background-color: hsl(0, 0%, 46%, 0.5);
     }
-    opacity: 0; /* initially set opacity to 0 */
-    animation: fadeIn 1s ease-in-out forwards; /* apply the animation to the element */
+    opacity: 0;
+    animation: fadeIn 1s ease-in-out forwards;
 
-    @media (max-width: 1000px) {
-        display: none;
-    }
-
-    /* Define the animation using @keyframes rule */
     @keyframes fadeIn {
         from {
-            opacity: 0; /* set the initial opacity */
-            transform: translateY(20px); /* set initial position */
+            opacity: 0;
+            transform: translateY(20px);
         }
         to {
-            opacity: 1; /* set the final opacity */
-            transform: translateY(0); /* set final position */
+            opacity: 1;
+            transform: translateY(0);
         }
     }
 

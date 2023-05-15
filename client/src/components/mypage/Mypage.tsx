@@ -1,12 +1,11 @@
 import styled from 'styled-components';
-import { AiOutlinePlusSquare } from 'react-icons/ai';
-import { BsPencilSquare } from 'react-icons/bs';
 import { useRecoilState } from 'recoil';
 import { nameState, introState } from 'src/recoil/Atoms';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import LikeMusic from './LIkeMusic';
 import Myplaylist from './Myplaylist';
+import ModifyPlaylist from './ModifyPlaylist';
 
 type UserData = {
     name: string;
@@ -110,60 +109,7 @@ function Mypage() {
                         </LeftContainer>
 
                         <RightContainer>
-                            <ModifyContainer>
-                                <div className="modify-title">
-                                    <div className="pencil-icon">
-                                        <BsPencilSquare />
-                                    </div>
-                                    <p>MODIFY PLAYLIST</p>
-                                </div>
-                                <Plcard>
-                                    <div className="pl-treck">TRECK 8</div>
-                                    <div className="pl-contents">
-                                        <Pltag>
-                                            <li>잔잔한</li>
-                                            <li>어쿠스틱</li>
-                                            <li>피아노</li>
-                                        </Pltag>
-                                        <Pluser>
-                                            <span>WTITER</span>
-                                            <span>Undefined</span>
-                                            <span>LIKE</span>
-                                            <span>13</span>
-                                        </Pluser>
-                                        <Pltext>
-                                            <span>나만의 플레이리스트</span>
-                                            <span>이건 나만 듣고 싶은 노래입니다.</span>
-                                        </Pltext>
-                                    </div>
-                                    <PlyItem>
-                                        <div className="plylist">
-                                            <img src="./assets/ditto.png" alt="cover-img" />
-                                            <li>Ditto</li>
-                                            <li>Newjeans</li>
-                                            <li>OMG</li>
-                                        </div>
-                                        <div className="plylist">
-                                            <img src="./assets/ditto.png" alt="cover-img" />
-                                            <li>Ditto</li>
-                                            <li>Newjeans</li>
-                                            <li>OMG</li>
-                                        </div>
-                                        <div className="plylist">
-                                            <img src="./assets/ditto.png" alt="cover-img" />
-                                            <li>Ditto</li>
-                                            <li>Newjeans</li>
-                                            <li>OMG</li>
-                                        </div>
-                                        <div className="plylist">
-                                            <img src="./assets/ditto.png" alt="cover-img" />
-                                            <li>Ditto</li>
-                                            <li>Newjeans</li>
-                                            <li>OMG</li>
-                                        </div>
-                                    </PlyItem>
-                                </Plcard>
-                            </ModifyContainer>
+                            <ModifyPlaylist />
                         </RightContainer>
                     </MusicInfor>
                 </MypageListContainer>
@@ -285,136 +231,4 @@ const RightContainer = styled.div`
     align-items: center;
     width: 500px;
     height: 600px;
-`;
-
-const ModifyContainer = styled.div`
-    align-items: center;
-    margin: 30px;
-
-    .modify-title {
-        display: flex;
-        align-items: center;
-
-        .pencil-icon {
-            font-size: 16px;
-            color: hsl(154, 100%, 40%);
-            padding-top: 5px;
-        }
-
-        p {
-            font-size: 16px;
-            color: #ffffff;
-            margin-left: 5px;
-        }
-    }
-`;
-
-/**2023-05-06 플리 슬라이드 카드 섹션 : 김주비 */
-const Plcard = styled.div`
-    position: relative;
-    width: 500px;
-    height: 500px;
-    border-radius: 20px;
-    background: url('./assets/mypage.png');
-    background-size: cover;
-    transform: scale(0.85);
-    color: #ddd;
-    overflow: hidden;
-    transition: 0.3s ease-in-out;
-    .pl-treck {
-        position: absolute;
-        top: 30px;
-        right: 30px;
-        font-weight: 600;
-    }
-    .pl-contents {
-        position: absolute;
-        bottom: 30px;
-        left: 30px;
-        margin-bottom: 200px;
-    }
-`;
-
-/**2023-05-06 슬라이드 태그 : 김주비 */
-const Pltag = styled.ul`
-    display: flex;
-    li {
-        word-break: keep-all;
-        border: 2px solid #ccc;
-        padding: 5px 10px;
-        margin-right: 10px;
-        border-radius: 20px;
-        font-size: 0.7rem;
-        color: rgba(255, 255, 255, 0.6);
-    }
-`;
-/**2023-05-06 슬라이드 유저정보 : 김주비 */
-const Pluser = styled.div`
-    margin-top: 20px;
-    font-size: 0.8rem;
-    > span {
-        margin-right: 15px;
-    }
-    span:nth-child(2n + 1) {
-        font-weight: 800;
-        color: #ff8716;
-    }
-`;
-/**2023-05-06 슬라이드 텍스트 : 김주비 */
-const Pltext = styled.div`
-    width: 98%;
-    display: flex;
-    flex-direction: column;
-    > span {
-        margin-top: 10px;
-    }
-    span:nth-child(1) {
-        color: #fff;
-        letter-spacing: -0.5px;
-        font-size: 1.6rem;
-        min-width: 103%;
-        word-break: break-all;
-        font-weight: 600;
-    }
-    span:nth-child(2) {
-        margin-top: 20px;
-        line-height: 140%;
-        opacity: 0.5;
-        width: 80%;
-        font-size: 0.7rem;
-    }
-    @media (max-width: 600px) {
-        span:nth-child(1) {
-            font-size: 1rem;
-        }
-    }
-`;
-
-const PlyItem = styled.div`
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    background-color: black;
-    z-index: 2;
-    width: 500px;
-    height: 200px;
-    margin-top: 300px;
-
-    .plylist {
-        display: flex;
-        align-items: center;
-        justify-content: space-around;
-        width: 500px;
-        margin: 10px 0px 10px 0px;
-
-        img {
-            width: 30px;
-            height: 30px;
-        }
-
-        li {
-            font-size: 13px;
-            color: white;
-        }
-    }
 `;

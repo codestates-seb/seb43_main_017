@@ -88,7 +88,7 @@ const LikeTitle = styled.div`
     display: flex;
     align-items: center;
     flex-direction: row;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 
     .vote-icon {
         display: flex;
@@ -110,8 +110,8 @@ const LikeList = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid white;
-    margin-bottom: 15px;
+    border-bottom: 1px solid hsl(0, 0%, 65%);
+    padding: 8px;
 
     img {
         width: 30px;
