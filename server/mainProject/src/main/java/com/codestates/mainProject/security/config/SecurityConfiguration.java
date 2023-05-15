@@ -9,6 +9,8 @@ import com.codestates.mainProject.security.auth.utils.CustomAuthorityUtils;
 import com.codestates.mainProject.member.repository.MemberRepository;
 import com.codestates.mainProject.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -19,20 +21,24 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 
+import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 
 
-
-
-
-
-
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @Configuration
@@ -44,6 +50,21 @@ public class SecurityConfiguration {
     private final MemberService memberService;
 
     private final MemberRepository memberRepository;
+
+    @Value("${G_CLIENT_ID}")
+    private String googleClientId;
+
+    @Value("${G_CLIENT_SECRET}")
+    private String googleClientSecret;
+    @Value("${N_CLIENT_ID}")
+    private String naverClientId;
+
+    @Value("${N_CLIENT_SECRET}")
+    private String naverClientSecret;
+    @Value("${K_CLIENT_ID}")
+    private String kakaoClientId;
+    @Value("${K_CLIENT_SECRET}")
+    private String kakaoClientSecret;
 
 
     @Bean
@@ -94,6 +115,15 @@ public class SecurityConfiguration {
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(new OAuth2MemberSuccessHandler(jwtTokenizer, authorityUtils, memberService))
+//                        .redirectionEndpoint(redirectionEndpoint -> redirectionEndpoint
+//                                .baseUri("/login/oauth2/code/*")
+//                        )
+//                        .clientRegistrationRepository(clientRegistrationRepository())
+//                        .clientRegistrationRepository(clientRegistrationRepository())
+//                        .userInfoEndpoint(userInfo -> userInfo
+//                                .userService(kakaoOAuth2UserService)
+//                                .userService(naverOAuth2UserService)
+//                        )
                 );
 
         return httpSecurity.build();
@@ -143,6 +173,55 @@ public class SecurityConfiguration {
                     .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class);
         }
     }
+
+//    @Bean
+//    public ClientRegistrationRepository clientRegistrationRepository() {
+//        List<ClientRegistration> registrations = Stream.of("google", "naver", "kakao")
+//                .map(this::getClientRegistration)
+//                .filter(Objects::nonNull)
+//                .collect(Collectors.toList());
+//        return new InMemoryClientRegistrationRepository(registrations);
+//    }
+
+//    private ClientRegistration getClientRegistration(String client) {
+//        if (client.equals("google")) {
+//            return CommonOAuth2Provider.GOOGLE.getBuilder(client)
+//                    .clientId(googleClientId)
+//                    .clientSecret(googleClientSecret)
+//                    .scope("email", "profile")
+//                    .build();
+//        }
+//        if (client.equals("naver")) {
+//            return ClientRegistration.withRegistrationId(client)
+//                    .clientId(naverClientId)
+//                    .clientSecret(naverClientSecret)
+//                    .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+//                    .redirectUri("http://localhost:8080/login/oauth2/code/naver")
+//                    .authorizationUri("https://nid.naver.com/oauth2.0/authorize")
+//                    .tokenUri("https://nid.naver.com/oauth2.0/token")
+//                    .userInfoUri("https://openapi.naver.com/v1/nid/me")
+//                    .userNameAttributeName("response")
+//                    .clientName("Naver")
+//                    .scope("name", "email", "profile_image")
+//                    .build();
+//        }
+//        if (client.equals("kakao")) {
+//            return ClientRegistration.withRegistrationId(client)
+//                    .clientId(kakaoClientId)
+//                    .clientSecret(kakaoClientSecret)
+//                    .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+//                    .redirectUri("http://localhost:8080/login/oauth2/code/kakao")
+//                    .authorizationUri("https://kauth.kakao.com/oauth/authorize")
+//                    .tokenUri("https://kauth.kakao.com/oauth/token")
+//                    .userInfoUri("https://kapi.kakao.com/v2/user/me")
+//                    .userNameAttributeName("id")
+//                    .clientName("Kakao")
+//                    .scope("profile_nickname", "account_email")
+//                    .build();
+//        }
+//        return null;
+//    }
+
 
 
 }
