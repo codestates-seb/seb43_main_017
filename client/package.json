@@ -72,5 +72,6 @@
         "prettier": "^2.8.8",
         "ts-node": "^10.9.1",
         "tsconfig-paths": "^4.2.0"
-    }
+    },
+    "proxy": "https://openapi.naver.com"
 }

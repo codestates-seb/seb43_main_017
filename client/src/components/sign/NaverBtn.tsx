@@ -10,7 +10,7 @@ declare global {
         naver: any;
     }
 }
-
+/** 2023/05/11 - 기존 네이버 Oauth 로그인 버튼 => 커스텀버튼으로 변경하기 위해 기존버튼 숨김 - 박수범 */
 const NaverIdLogin = styled.div`
     display: none;
 `;
@@ -18,13 +18,13 @@ const NaverIdLogin = styled.div`
 function NaverBtn() {
     const naverRef = useRef<HTMLInputElement>(null);
     const { naver } = window;
-    const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
-
+    const CLIENT_ID = process.env.REACT_APP_NAVER_CLIENT_ID;
+    const BaseUrl = 'http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/oauth/signup';
     /** 2023/05/11 네이버 Oauth 인증 함수 - 박수범 */
     const initializeNaverLogin = () => {
         const naverLogin = new naver.LoginWithNaverId({
             clientId: CLIENT_ID,
-            callbackUrl: 'http://localhost:3000/oauthloading',
+            callbackUrl: 'http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com/oauthloading',
             isPopup: false,
             loginButton: { color: 'green', type: 3, height: 45 },
             callbackHandle: false,
