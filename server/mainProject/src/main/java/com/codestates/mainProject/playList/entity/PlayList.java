@@ -27,16 +27,19 @@ public class PlayList extends Auditable {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    private String create;
+    @Column(nullable = false)
+    private String createMember;
 
+    @Column(nullable = false)
     private String playListTags;
-
+    @Column(nullable = false)
     private String title;
-
+    @Column(nullable = false)
     private String body;
 
     @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
     private List<PlayListLike> playListLikes = new ArrayList<>();
+    @Column(nullable = false)
     private int likeCount;
 //    @ColumnDefault("0")
 //    @Column(name = "like_count", nullable = false)
