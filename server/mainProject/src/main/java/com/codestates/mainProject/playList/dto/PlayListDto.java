@@ -47,8 +47,8 @@ public class PlayListDto {
 //        private List<PlayListLikeDto> likes = new ArrayList<>();
         private String title;
         private String body;
-        private int likeCount;
-        private String playListTags;
+//        private int likeCount;
+//        private String playListTags;
         private String createdAt;
         private String modifiedAt;
 
