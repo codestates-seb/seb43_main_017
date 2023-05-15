@@ -43,8 +43,8 @@ public class CommentService {
     }
 
     // {playlist-id} 댓글 전체 조회
-    public List<PlayListComment> getCommentsByPlaylistId(long playListId){
-        return commentRepository.findByPlayListId(playListId);
+    public List<PlayListComment> getCommentsByPlaylistId(Long playListId){
+        return commentRepository.findByPlayListPlayListId(playListId);
     }
 
     // 수정
