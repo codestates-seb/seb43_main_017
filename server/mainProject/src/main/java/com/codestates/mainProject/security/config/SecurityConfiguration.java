@@ -51,20 +51,20 @@ public class SecurityConfiguration {
 
     private final MemberRepository memberRepository;
 
-    @Value("${G_CLIENT_ID}")
-    private String googleClientId;
-
-    @Value("${G_CLIENT_SECRET}")
-    private String googleClientSecret;
-    @Value("${N_CLIENT_ID}")
-    private String naverClientId;
-
-    @Value("${N_CLIENT_SECRET}")
-    private String naverClientSecret;
-    @Value("${K_CLIENT_ID}")
-    private String kakaoClientId;
-    @Value("${K_CLIENT_SECRET}")
-    private String kakaoClientSecret;
+//    @Value("${G_CLIENT_ID}")
+//    private String googleClientId;
+//
+//    @Value("${G_CLIENT_SECRET}")
+//    private String googleClientSecret;
+//    @Value("${N_CLIENT_ID}")
+//    private String naverClientId;
+//
+//    @Value("${N_CLIENT_SECRET}")
+//    private String naverClientSecret;
+//    @Value("${K_CLIENT_ID}")
+//    private String kakaoClientId;
+//    @Value("${K_CLIENT_SECRET}")
+//    private String kakaoClientSecret;
 
 
     @Bean
