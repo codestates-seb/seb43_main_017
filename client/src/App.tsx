@@ -60,7 +60,7 @@ function App() {
                                 setShowSignIn(false);
                             }}
                         >
-                            SingUp
+                            SignUp
                         </ButtonStyle2>{' '}
                     </SignBtnSection>
                 )}
@@ -184,7 +184,7 @@ const Signview = styled.section`
 const RouterSection = styled.section`
     width: 100%;
     height: 100vh;
-    overflow-x: hidden;
+    overflow: hidden;
 `;
 
 /**2023-05-06 미디어쿼리 반응형 - sign 버튼 섹션 : 김주비*/

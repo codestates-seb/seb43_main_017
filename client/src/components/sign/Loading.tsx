@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { LoginPost } from '@/types/AxiosInterface';
 
@@ -23,17 +22,24 @@ export const LoadingText = styled.div`
 `;
 
 export const Loading = () => {
+    const BaseUrl = 'ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/oauth/signup';
     if (location.hash) {
-        const token = window.location.hash.split('=')[1].split('&')[0];
-        localStorage.setItem('com.naver.nid.access_token', `bearer.${token}`);
-        localStorage.setItem('access_token', token);
+        const navertoken = window.location.hash.split('=')[1].split('&')[0];
+        console.log(navertoken);
+        localStorage.setItem('access_token', navertoken);
         window.location.href = '/';
+    } else if (location.search) {
+        const kakaocode = window.location.search.split('=')[1];
+        localStorage.setItem('access_token', kakaocode);
+        window.location.href = '/';
+        console.log(kakaocode);
     }
+    const accesscode = localStorage.getItem('access_token');
 
-    /*axios
+    axios
         .post<LoginPost>(`${BaseUrl}`, {
             headers: {
-                Authorization: token,
+                Authorization: `${accesscode}`,
             },
         })
         .then((res) => {
@@ -41,12 +47,12 @@ export const Loading = () => {
                 window.localStorage.setItem('access_token', res.headers.authorization);
                 window.location.href = '/';
             }
-        });*/
+        });
 
     return (
         <Background>
             <LoadingText>잠시만 기다려 주세요...</LoadingText>
-            <img src="./assets/Spinner-1s-200px.gif"></img>
+            <img src="./assets/Dual Ring-1s-124px.gif"></img>
         </Background>
     );
 };

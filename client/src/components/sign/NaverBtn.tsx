@@ -19,39 +19,17 @@ function NaverBtn() {
     const naverRef = useRef<HTMLInputElement>(null);
     const { naver } = window;
     const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
-    const BaseUrl = 'https://1e0c-59-17-229-47.ngrok-free.app/members/oauth/signup';
 
     /** 2023/05/11 네이버 Oauth 인증 함수 - 박수범 */
     const initializeNaverLogin = () => {
         const naverLogin = new naver.LoginWithNaverId({
             clientId: CLIENT_ID,
-            callbackUrl: 'http://localhost:3000',
+            callbackUrl: 'http://localhost:3000/oauthloading',
             isPopup: false,
             loginButton: { color: 'green', type: 3, height: 45 },
             callbackHandle: false,
         });
         naverLogin.init();
-
-        naverLogin.getLoginStatus(async function (status: any) {
-            if (status) {
-                // 아래처럼 선택하여 추출이 가능하고,
-                const userid = naverLogin.user.getEmail();
-                const username = naverLogin.user.getNickName();
-                // 정보 전체를 아래처럼 state 에 저장하여 추출하여 사용가능하다.
-                console.log(naverLogin.user);
-                axios
-                    .post<LoginPost>(`${BaseUrl}`, {
-                        email: userid,
-                        name: username,
-                    })
-                    .then((res) => {
-                        if (res.status === 200 && res.headers.authorization !== undefined) {
-                            window.localStorage.setItem('access_token', res.headers.authorization);
-                            window.location.href = '/';
-                        }
-                    });
-            }
-        });
     };
 
     const userAccessToken = () => {
