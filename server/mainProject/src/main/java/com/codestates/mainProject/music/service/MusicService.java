@@ -63,6 +63,9 @@ public class MusicService {
                 Sort.by("musicId").descending()));
     }
 
+    // Playlist 안에 있는 Music을 모두 조회
+
+
     // Music 삭제
     public void deleteMusic(long musicId, Long memberId) {
         isUserAdmin(memberId);
@@ -97,5 +100,9 @@ public class MusicService {
         if (!findMember.getRoles().contains("ADMIN")) {
             throw new BusinessLogicException(ExceptionCode.NO_PERMISSION_DELETING_MUSIC);
         }
+    }
+
+    public Page<Music> findMusicByPlayListId(Long playListId, int page, int size) {
+        return musicRepository.findByPlayList_PlayListId(playListId, PageRequest.of(page, size));
     }
 }
