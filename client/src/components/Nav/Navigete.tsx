@@ -51,7 +51,14 @@ function Navigate() {
         <NavigateBox>
             <div className="icon-group">
                 <LogoIcon>
-                    <img src="/assets/logo_icon_012.png" alt="uncover logo image" />
+                    <Link
+                        to="/"
+                        onClick={() => {
+                            setSelectIndex(0);
+                        }}
+                    >
+                        <img src="/assets/logo_icon_012.png" alt="uncover logo image" />
+                    </Link>
                 </LogoIcon>
                 <Dotsstyle>
                     {[...Array(5)].map((_, index) => (

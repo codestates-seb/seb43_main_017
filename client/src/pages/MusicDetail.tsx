@@ -3,9 +3,15 @@ import Comment from 'src/components/musicdetail/Comment';
 // import MusicSpectrum from 'src/components/musicdetail/MusicSpectrum';
 import CommentViewer from 'src/components/musicdetail/CommentViewer';
 import { useRecoilState } from 'recoil';
-import { commentOpenState } from 'src/recoil/Atoms';
+import { commentOpenState, soundbarOpenState } from 'src/recoil/Atoms';
+import { useEffect } from 'react';
 function MusicDetail() {
     const [commentOpen] = useRecoilState<boolean>(commentOpenState);
+    const [, setSoundbarOpen] = useRecoilState<boolean>(soundbarOpenState);
+
+    useEffect(() => {
+        setSoundbarOpen(true);
+    }, []);
 
     return (
         <DetailGroup>
@@ -38,7 +44,7 @@ function MusicDetail() {
                         </span>
                     </MusicText>
                 </MusicContents>
-                <MusicCover>
+                {/* <MusicCover>
                     <AlbumDesign
                         url={'https://musicvine.imgix.net/images/yeti-music-avatar-v1.jpg?auto=compress&w=388&h=388'}
                     >
@@ -47,8 +53,8 @@ function MusicDetail() {
                         </div>
                         <div className="cover-img"></div>
                     </AlbumDesign>
-                    {/* <MusicSpectrum /> */}
-                </MusicCover>
+                    <MusicSpectrum />
+                </MusicCover> */}
                 <Comment />
             </DetailSection>
         </DetailGroup>
@@ -218,83 +224,83 @@ const MusicText = styled.div`
         text-align: center;
     }
 `;
-/**2023-05-09 detailpage 앨범커버 섹션 : 김주비 */
-const MusicCover = styled.article`
-    display: flex;
-    width: 100%;
-    margin-top: 50px;
-    opacity: 0;
-    animation: fadeInSection 2s forwards 2.5s;
+// /**2023-05-09 detailpage 앨범커버 섹션 : 김주비 */
+// const MusicCover = styled.article`
+//     display: flex;
+//     width: 100%;
+//     margin-top: 50px;
+//     opacity: 0;
+//     animation: fadeInSection 2s forwards 2.5s;
 
-    @keyframes fadeInSection {
-        100% {
-            opacity: 1;
-        }
-    }
-`;
-/**2023-05-09 detailpage 앨범커버 / 레코드 : 김주비 */
-const AlbumDesign = styled.div<url>`
-    position: relative;
-    width: 400px;
-    height: 400px;
-    .cover-img {
-        position: absolute;
-        width: 400px;
-        height: 400px;
-        background-color: #111;
-        background: url(${(props) => props.url});
-        background-size: cover;
-        box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.4);
-    }
-    .album-recode {
-        position: absolute;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        top: 0;
-        left: 250px;
-        min-width: 400px;
-        min-height: 400px;
-        background: url('./assets/background-detail-recode.png');
-        background-size: cover;
-        animation: roundingrecode 10s infinite linear;
-    }
+//     @keyframes fadeInSection {
+//         100% {
+//             opacity: 1;
+//         }
+//     }
+// `;
+// /**2023-05-09 detailpage 앨범커버 / 레코드 : 김주비 */
+// const AlbumDesign = styled.div<url>`
+//     position: relative;
+//     width: 400px;
+//     height: 400px;
+//     .cover-img {
+//         position: absolute;
+//         width: 400px;
+//         height: 400px;
+//         background-color: #111;
+//         background: url(${(props) => props.url});
+//         background-size: cover;
+//         box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.4);
+//     }
+//     .album-recode {
+//         position: absolute;
+//         display: flex;
+//         justify-content: center;
+//         align-items: center;
+//         top: 0;
+//         left: 250px;
+//         min-width: 400px;
+//         min-height: 400px;
+//         background: url('./assets/background-detail-recode.png');
+//         background-size: cover;
+//         animation: roundingrecode 10s infinite linear;
+//     }
 
-    .recode-img {
-        width: 150px;
-        height: 150px;
-        border-radius: 100%;
-        background: url(${(props) => props.url});
-        background-size: cover;
-    }
+//     .recode-img {
+//         width: 150px;
+//         height: 150px;
+//         border-radius: 100%;
+//         background: url(${(props) => props.url});
+//         background-size: cover;
+//     }
 
-    @keyframes roundingrecode {
-        100% {
-            transform: rotate(360deg);
-        }
-    }
-    @media (max-width: 700px) {
-        /* width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        transform: scale(0.8);
-        .album-recode {
-            position: relative;
-        }
-        .cover-img {
-            display: none;
-        } */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        .cover-img {
-            width: 300px;
-            height: 300px;
-            border-radius: 30px;
-        }
-        .album-recode {
-            display: none;
-        }
-    }
-`;
+//     @keyframes roundingrecode {
+//         100% {
+//             transform: rotate(360deg);
+//         }
+//     }
+//     @media (max-width: 700px) {
+//         /* width: 100%;
+//         display: flex;
+//         justify-content: center;
+//         align-items: center;
+//         transform: scale(0.8);
+//         .album-recode {
+//             position: relative;
+//         }
+//         .cover-img {
+//             display: none;
+//         } */
+//         display: flex;
+//         justify-content: center;
+//         align-items: center;
+//         .cover-img {
+//             width: 300px;
+//             height: 300px;
+//             border-radius: 30px;
+//         }
+//         .album-recode {
+//             display: none;
+//         }
+//     }
+// `;
