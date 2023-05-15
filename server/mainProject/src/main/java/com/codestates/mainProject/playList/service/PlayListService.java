@@ -9,6 +9,7 @@ import com.codestates.mainProject.music.entity.Music;
 import com.codestates.mainProject.music.service.MusicService;
 import com.codestates.mainProject.playList.entity.PlayList;
 import com.codestates.mainProject.playList.repository.PlayListRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -26,21 +27,13 @@ import org.slf4j.LoggerFactory;
 @Slf4j
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class PlayListService {
     private static final Logger logger = LoggerFactory.getLogger(PlayListService.class);
 
     private final PlayListRepository playListRepository;
-    private final MemberRepository memberRepository;
     private final MemberService memberService;
     private final MusicService musicService;
-
-    public PlayListService(PlayListRepository playListRepository,
-                           MemberRepository memberRepository, MemberService memberService, MusicService musicService) {
-        this.playListRepository = playListRepository;
-        this.memberRepository = memberRepository;
-        this.memberService = memberService;
-        this.musicService = musicService;
-    }
 
     public PlayList createPlayList(PlayList playList) {
         try {

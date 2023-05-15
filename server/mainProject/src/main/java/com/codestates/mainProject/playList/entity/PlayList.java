@@ -18,7 +18,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class PlayList extends Auditable {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long playListId;
@@ -30,8 +29,8 @@ public class PlayList extends Auditable {
     @Column(nullable = false)
     private String createMember;
 
-    @Column(nullable = false)
-    private String playListTags;
+//    @Column(nullable = false)
+//    private String playListTags;
     @Column(nullable = false)
     private String title;
     @Column(nullable = false)
@@ -40,11 +39,7 @@ public class PlayList extends Auditable {
     @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
     private List<PlayListLike> playListLikes = new ArrayList<>();
     @Column(nullable = false)
-    private int likeCount;
-//    @ColumnDefault("0")
-//    @Column(name = "like_count", nullable = false)
-//    private Integer likeCount;
-
+    private int likeCount = 0;
     @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
     private List<Music> musics = new ArrayList<>();
 
