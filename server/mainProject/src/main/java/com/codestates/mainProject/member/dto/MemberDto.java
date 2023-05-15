@@ -6,7 +6,7 @@ import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
+
 
 public class MemberDto {
 
@@ -29,9 +29,7 @@ public class MemberDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class PatchDto{
-        private long memberId;
         private String name;
-        private String email;
 
     }
 
