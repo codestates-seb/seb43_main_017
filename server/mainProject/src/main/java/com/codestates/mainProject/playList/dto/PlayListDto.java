@@ -42,7 +42,7 @@ public class PlayListDto {
         // TODO: 주석 처리된 부분 추후에 작업
         private long playListId;
         private long memberId;
-        private String create;
+        private String createMember;
 //        private MusicDto music;
 //        private List<PlayListLikeDto> likes = new ArrayList<>();
         private String title;

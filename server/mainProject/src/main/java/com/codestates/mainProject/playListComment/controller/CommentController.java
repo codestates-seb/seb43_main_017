@@ -20,17 +20,18 @@ import java.util.List;
 public class CommentController {
     private final CommentService commentService;
 
-    @PostMapping
+    @PostMapping("/{playlist-id}")
     public ResponseEntity<PlayListComment> createComment(@LoginMemberId Long memberId,
                                                          @PathVariable("playlist-id") Long playListId,
                                                          @RequestBody String content) {
+
         PlayListComment comment = commentService.createComment(memberId, playListId, content);
         return new ResponseEntity<>(comment, HttpStatus.CREATED);
     }
 
     //{playlist-id} 댓글 전체 조회
     @GetMapping("/{comment-id}")
-    public ResponseEntity<List<PlayListComment>> getCommentsByPlayListId(@PathVariable("playlist-id") Long playListId){
+    public ResponseEntity<List<PlayListComment>> getCommentsByPlayListId(@PathVariable("comment-id") Long playListId){
         List<PlayListComment> comments = commentService.getCommentsByPlaylistId(playListId);
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
