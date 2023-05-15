@@ -50,14 +50,18 @@ export const Loading = () => {
                     .then((res) => {
                         if (res.status === 200 && res.headers.authorization !== undefined) {
                             window.localStorage.setItem('access_token', res.headers.authorization);
+                            window.localStorage.setItem('refresh_token', res.headers.Refresh);
                         }
                     });
             }
         });
     } else if (location.search) {
-        const kakaocode = window.location.search.split('=')[1];
-        localStorage.setItem('access_token', kakaocode);
-        console.log(kakaocode);
+        const accesscode = window.location.search.split('=')[0];
+        const refreshcode = window.location.search.split('=')[1];
+        localStorage.setItem('access_token', accesscode);
+        localStorage.setItem('refresh_token', refreshcode);
+        window.location.href = 'http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com';
+        console.log(accesscode);
     }
     const accesscode = localStorage.getItem('access_token');
     /** 서버로  */
