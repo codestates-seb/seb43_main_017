@@ -107,8 +107,8 @@ const TrTitle = styled.div`
     font-family: 'Monoton', cursive;
     transform: translateY(30px);
     animation: movingtext 1s forwards 0.2s;
-    @media (max-width: 700px) {
-        display: none;
+    @media screen and (max-width: 800px) {
+        margin-left: 20px;
     }
 `;
 
@@ -132,6 +132,9 @@ const Item = styled.div`
             transform: translateX(0);
         }
     }
+    @media screen and (max-width: 800px) {
+        margin-left: 10px;
+    }
 `;
 
 /* 2023.05.08 MusicList Tranding (트랜딩 리스트 컨테이너) 컴포넌트 구현 - 홍혜란 */
@@ -150,21 +153,6 @@ const ItemsContainer = styled.div`
     }
     @media screen and (max-width: 1000px) {
         & ${Item}:nth-child(4) {
-            display: none;
-        }
-    }
-    @media screen and (max-width: 900px) {
-        & ${Item}:nth-child(3) {
-            display: none;
-        }
-    }
-    @media screen and (max-width: 800px) {
-        & ${Item}:nth-child(2) {
-            display: none;
-        }
-    }
-    @media screen and (max-width: 700px) {
-        & ${Item}:nth-child(1) {
             display: none;
         }
     }

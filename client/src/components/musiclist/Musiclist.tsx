@@ -158,7 +158,7 @@ const MusiclistContainer = styled.div`
     display: flex;
     align-items: center;
     flex-direction: row;
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 700px) {
         flex-direction: column;
     }
 `;
@@ -249,6 +249,10 @@ const MusicListTitle = styled.div`
     }
     @media screen and (max-width: 800px) {
         margin-left: 50px;
+        .music-inquiry > li {
+            font-size: 5px;
+            padding: 6px 8px;
+        }
     }
 `;
 
@@ -340,16 +344,19 @@ const Item = styled.ul`
             display: none;
         }
         li > img {
-            width: 30px;
-            height: 30px;
+            width: 40px;
+            height: 40px;
         }
         li:nth-child(n + 2):nth-child(-n + 3) {
-            font-size: 10px;
+            font-size: 11px;
             margin-right: 5px;
         }
         li:nth-child(1) {
             margin-right: 5px;
-            margin-left: 10px;
+            margin-left: 30px;
+        }
+        li:nth-child(9) {
+            margin-right: 20px;
         }
     }
 `;
