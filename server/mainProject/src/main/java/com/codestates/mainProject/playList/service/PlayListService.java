@@ -102,6 +102,7 @@ public class PlayListService {
 
         List<Music> musics = playList.getMusics();
         musics.add(music);
+        music.setPlayList(playList);
 
         playListRepository.save(playList);
     }
