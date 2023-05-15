@@ -10,8 +10,9 @@ function Mixing() {
                         <span className="mixing-title">MIXING</span>
                     </MixingPage>
                     <MixingTitle>
-                        <span className="mixing-subtext">Enjoy the various playlists of users</span>
+                        <span className="mixing-subtext">현재 페이지는 준비중입니다.</span>
                     </MixingTitle>
+                    <img src="./assets/Dual Ring-1s-124px.gif"></img>
                 </div>
             </MixingHeader>
         </MixingSection>

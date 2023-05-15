@@ -11,7 +11,7 @@ import KakaoBtn from './KakaoBtn';
 import NaverBtn from './NaverBtn';
 
 function Signin({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetStateAction<boolean>> }) {
-    const BaseUrl = 'https://c2fe-59-17-229-47.ngrok-free.app/members/login';
+    const BaseUrl = 'ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/login';
     const setTokenState = useSetRecoilState(accessToken);
     const [closeDisplay, setCloseDisplay] = useState<boolean>(false); // display closing 모션효과 상태
     const [errorMessage, setErrorMessage] = useState<string>('');
