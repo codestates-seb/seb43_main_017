@@ -33,7 +33,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.net.http.HttpRequest;
+
 
 import java.util.*;
 
@@ -54,6 +54,7 @@ public class MemberService {
 
     public Member createMember(Member member) {
         verifyExistEmail(member.getEmail());
+        member.setName(verifyExistName(member.getName()));   //중복되는 이름 확인 후 중복되는 이름이 있을 시 뒤에 0~9999까지 번호를 붙여서 이름 저장
 
         // (3) 추가: Password 암호화
         String encryptedPassword = passwordEncoder.encode(member.getPassword());
@@ -151,13 +152,14 @@ public class MemberService {
 //    }
 
     @Transactional
-    public Member updateMember(Member member) {
+    public Member updateMember(Long loginId, Member member) {
+
+        verifyPermission(loginId, member.getMemberId());
 
         Member findMember = findVerifiedMember(member.getMemberId());
-        Optional.ofNullable(member.getName())
-                .ifPresent(name -> findMember.setName(name));
-        Optional.ofNullable(member.getEmail())
-                .ifPresent(email -> findMember.setEmail(email));
+        if(member.getName()!=findMember.getName()){                   //수정하려는 이름과 기존 이름이 다를 경우 수정하는 이름이 중복되는지 체크후 중복시 추가숫자를 덧붙여 이름수정
+            findMember.setName(verifyExistName(member.getName()));
+        }
 
         return findMember;
     }
@@ -176,7 +178,9 @@ public class MemberService {
         return findMember;
     }
 
-    public void deleteMember(long memberId ) {
+    public void deleteMember(Long loginId,long memberId ) {
+        verifyPermission(loginId,memberId);
+
         Member findMember = findVerifiedMember(memberId);
 
         memberRepository.delete(findMember);
@@ -216,11 +220,19 @@ public class MemberService {
         Optional<Member> optionalMember = memberRepository.findByName(name);
         if(optionalMember.isPresent()){
             Random random = new Random();
-            int randomNumber = random.nextInt(1000) + 1;
+            int randomNumber = random.nextInt(10000) + 1;
             newName = name + randomNumber;
         }
 
         return newName;
+    }
+    public void verifyPermission(Long loginId, long memeberId) {
+        Member findMember = findVerifiedMember(loginId);
+        if (!findMember.getRoles().contains("ADMIN")) {
+            if (loginId != memeberId) {
+                throw new BusinessLogicException(ExceptionCode.NO_PERMISSION_EDITING_POST);
+            }
+        }
     }
 
      public String delegateAccessToken(Member member) {
@@ -238,7 +250,7 @@ public class MemberService {
         return accessToken;
     }
 
-    // (6)
+
     public String delegateRefreshToken(Member member) {
         String subject = member.getEmail();
         Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes());

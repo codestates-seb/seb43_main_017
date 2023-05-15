@@ -46,10 +46,15 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         List<String> authorities = authorityUtils.createRoles(email);
 
         Member member = buildOAuth2Member(name, email, image);
-        Member savedMember = saveMember(member);
 
-        // 리다이렉트를 하기위한 정보들을 보내줌
-        redirect(request, response, savedMember, authorities);
+        if(!memberService.existsByEmail(member.getEmail())) {
+            Member savedMember = saveMember(member);
+            redirect(request, response, savedMember, authorities); // 리다이렉트를 하기위한 정보들을 보내줌
+        } else {
+            Member findMember = memberService.findVerifiedMember(member.getEmail());
+            redirect(request, response, findMember, authorities);
+        }
+
     }
 
     private Member buildOAuth2Member(String name, String email, String image) {
@@ -123,7 +128,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
                 .host("mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com")
                 //.port(80)   -> aws로 배포했을 때 싸용
 //                .port(3000)   //-> local 테스트용
-                .path("/")
+                .path("/oauthloading")
                 .queryParams(queryParams)
                 .build()
                 .toUri();

@@ -22,7 +22,7 @@ public class PlayList extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long playListId;
 
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 

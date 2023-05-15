@@ -3,8 +3,7 @@ package com.codestates.mainProject.member.controller;
 import com.codestates.mainProject.member.dto.AuthLoginDto;
 import com.codestates.mainProject.response.DataResponseDto;
 import com.codestates.mainProject.security.auth.jwt.JwtTokenizer;
-import com.codestates.mainProject.exception.BusinessLogicException;
-import com.codestates.mainProject.exception.ExceptionCode;
+
 import com.codestates.mainProject.member.dto.MemberDto;
 import com.codestates.mainProject.member.entity.Member;
 import com.codestates.mainProject.member.mapper.MemberMapper;
@@ -106,8 +105,6 @@ public class MemberContorller {
         jwtTokenizer.addToTokenBlackList(jws);     //블랙리스트에 jws 추가, 접근 막음
 
         return ResponseEntity.ok().body("Successfully logged out");
-
-
     }
 
     @PostMapping("/image")
@@ -151,13 +148,14 @@ public class MemberContorller {
 
     @PatchMapping("/{member-id}")
     public ResponseEntity patchMember(@PathVariable("member-id") @Positive long memberId,
+                                      @LoginMemberId Long loginId,
                                       @Valid @RequestBody MemberDto.PatchDto requestBody){
-        if (memberId != requestBody.getMemberId()) {
-            throw new BusinessLogicException(ExceptionCode.NO_PERMISSION_EDITING_POST);
-        }
+
+
 
         Member member = mapper.patchToMember(requestBody);
-        Member updatedMember = memberService.updateMember(member);
+        member.setMemberId(memberId);
+        Member updatedMember = memberService.updateMember(loginId,member); //검증을 위한 메서드포함, loginId가 관리자가 아닌이상 memeberId와 다를 경우 권한없다는 오류 발생
         MemberDto.ResponseDto response = mapper.memberToResponse(updatedMember);
 
         return new ResponseEntity<>(
@@ -184,47 +182,12 @@ public class MemberContorller {
     }
 
     @DeleteMapping("/{member-id}")    //Member 삭제
-    public ResponseEntity deleteMember(@PathVariable("member-id") @Positive long memberId){
+    public ResponseEntity deleteMember(@PathVariable("member-id") @Positive long memberId,
+                                       @LoginMemberId Long loginId){
 
-        memberService.deleteMember(memberId);
+
+        memberService.deleteMember(loginId,memberId); //검증을 위한 메서드포함, loginId가 관리자가 아닌이상 memeberId와 다를 경우 권한없다는 오류 발생
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-//    @PostMapping("/oauth/signup")
-//    public ResponseEntity oAuth2Login(@RequestBody @Valid AuthLoginDto dto) {
-//        log.info("### oauth2 login start! ###");
-//        String accessToken = "";
-//        String refreshToken = "";
-//
-//        Member member = mapper.AuthLoginDtoToUser(dto);
-//        if (!memberService.existsByEmail(member.getEmail())) {
-//            member = memberService.authUserSave(member);
-//        } else {
-//            member = memberService.checkUserExist(member.getEmail());
-//        }
-//
-//        accessToken = memberService.delegateAccessToken(member);
-//        refreshToken = memberService.delegateRefreshToken(member);
-//        return ResponseEntity.ok().header("Authorization", "Bearer " + accessToken)
-//                .header("Refresh", refreshToken).build();
-//    }
-//
-//    @PostMapping("/oauth/exist")
-//    public ResponseEntity oauth2Exist(@RequestBody @Valid AuthExistDto dto) {
-//        log.info("### oauth2 Exist start! ###");
-//
-//        Member member = memberService.checkUserExist(dto.getEmail());
-//        memberService.checkGoogleAuth(member);
-//
-//        String accessToken = memberService.delegateAccessToken(member);
-//        String refreshToken = memberService.delegateRefreshToken(member);
-//
-//        return ResponseEntity.ok().header("Authorization", "Bearer " + accessToken)
-//                .header("Refresh", refreshToken).build();
-//    }
-
-
-
-
 }
