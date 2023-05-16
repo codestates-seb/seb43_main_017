@@ -8,15 +8,15 @@ export default SoundBar;
 
 const Soundbarsection = styled.div`
     position: fixed;
-    bottom: -60px;
+    bottom: -120px;
     left: 50%;
     transform: translateX(-50%);
     background-color: rgba(20, 20, 20, 1);
-    z-index: 99;
+    z-index: 3;
     width: 800px;
-    height: 60px;
+    height: 120px;
     border-radius: 30px 30px 0px 0px;
-    animation: showbar 0.5s forwards;
+    animation: showbar 1s forwards;
 
     @keyframes showbar {
         100% {
