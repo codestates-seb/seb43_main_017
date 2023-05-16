@@ -51,7 +51,7 @@ export const Loading = () => {
                     .then((res) => {
                         if (res.status === 200 && res.headers.authorization !== undefined) {
                             window.localStorage.setItem('access_token', res.headers.authorization);
-                            window.localStorage.setItem('refresh_token', res.headers.Refresh);
+                            window.localStorage.setItem('refresh_token', res.headers.refresh);
                             window.location.href = 'http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com';
                         }
                     });
@@ -76,7 +76,7 @@ export const Loading = () => {
         if (kakaocode) {
             axios
                 .post(
-                    `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=86b53da526902a3a1b6004af05a90009&redirect_uri=http://localhost:3000/oauthloading&code=${kakaocode}&client_secret=c9IiwGJ51rps4uvI0kG1vhUrDhkvo695`,
+                    `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=86b53da526902a3a1b6004af05a90009&redirect_uri=${BaseUrl}&code=${kakaocode}&client_secret=c9IiwGJ51rps4uvI0kG1vhUrDhkvo695`,
                     {
                         headers: {
                             'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
