@@ -63,6 +63,8 @@ export const Loading = () => {
         const kakaocode = window.location.search.split('=')[1];
         const googletoken = new URL(location.href).searchParams.get('access_token');
         const googlerefresh = new URL(location.href).searchParams.get('refresh_token');
+        console.log(googletoken, googlerefresh);
+        console.log(kakaocode);
 
         /** 2023/05/16 - 구글 요청인 경우 - 박수범 */
         if (googlerefresh && googletoken) {
