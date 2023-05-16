@@ -28,6 +28,7 @@ public class Music extends Auditable {
     @Column(nullable = false)
     private String artistName;
 
+    @Column
     private String albumName;
 
     @Column(nullable = false)

@@ -7,7 +7,10 @@ import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { selectIndexState, localIndexState } from 'src/recoil/Atoms';
 
-function Navigate() {
+function Navigate({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetStateAction<boolean>> }) {
+    const token = window.localStorage.getItem('access_token');
+    const userimg = window.localStorage.getItem('userimg');
+
     /**2023-05-05 선택된 아이콘 인덱스 스테이트 : 김주비*/
     const [selectIndex, setSelectIndex] = useRecoilState<number>(selectIndexState);
     const [localIndex, setLocalIndex] = useRecoilState<string | null>(localIndexState);
@@ -51,7 +54,14 @@ function Navigate() {
         <NavigateBox>
             <div className="icon-group">
                 <LogoIcon>
-                    <img src="/assets/logo_icon_012.png" alt="uncover logo image" />
+                    <Link
+                        to="/"
+                        onClick={() => {
+                            setSelectIndex(0);
+                        }}
+                    >
+                        <img src="/assets/logo_icon_012.png" alt="uncover logo image" />
+                    </Link>
                 </LogoIcon>
                 <Dotsstyle>
                     {[...Array(5)].map((_, index) => (
@@ -77,22 +87,43 @@ function Navigate() {
                         <span key={index}></span>
                     ))}
                 </Dotsstyle>
-                <ProfileIcon>
-                    <Link to="/mypage">
+                {token ? (
+                    <ProfileIcon>
+                        <Link to="/mypage">
+                            <span
+                                onClick={() => {
+                                    setClick(!click);
+                                    setSelectIndex(4);
+                                }}
+                            >
+                                <img
+                                    src="/assets/profile-icon.png"
+                                    alt="profile icon"
+                                    className={click ? 'img-active' : 'null'}
+                                />
+                            </span>
+                        </Link>
+                    </ProfileIcon>
+                ) : (
+                    <ProfileIcon onClick={() => setShowSignIn(true)}>
                         <span
                             onClick={() => {
                                 setClick(!click);
                                 setSelectIndex(4);
                             }}
                         >
-                            <img
-                                src="/assets/profile-icon.png"
-                                alt="profile icon"
-                                className={click ? 'img-active' : 'null'}
-                            />
+                            {token && userimg ? (
+                                <img src={userimg} alt="profile icon" className={click ? 'img-active' : 'null'} />
+                            ) : (
+                                <img
+                                    src="/assets/profile-icon.png"
+                                    alt="profile icon"
+                                    className={click ? 'img-active' : 'null'}
+                                />
+                            )}
                         </span>
-                    </Link>
-                </ProfileIcon>
+                    </ProfileIcon>
+                )}
             </div>
         </NavigateBox>
     );

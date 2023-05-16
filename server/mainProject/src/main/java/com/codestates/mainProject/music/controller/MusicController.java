@@ -9,6 +9,7 @@ import com.codestates.mainProject.music.dto.MusicDto;
 import com.codestates.mainProject.music.entity.Music;
 import com.codestates.mainProject.music.mapper.MusicMapper;
 import com.codestates.mainProject.music.service.MusicService;
+import com.codestates.mainProject.playList.service.PlayListService;
 import com.codestates.mainProject.response.MultiResponseDto;
 import com.codestates.mainProject.response.SingleResponseDto;
 import com.codestates.mainProject.security.auth.loginResolver.LoginMemberId;
@@ -39,6 +40,7 @@ public class MusicController {
     private final MusicMapper mapper;
     private final MemberService memberService;
     private final MemberRepository memberRepository;
+    private final PlayListService playListService;
 
     // 음악 생성
     @PostMapping
@@ -87,7 +89,16 @@ public class MusicController {
     }
 
     // 플레이리스트 안에 있는 music을 모두 조회
+    @GetMapping("/playlists/{playlist-id}")
+    public ResponseEntity<?> getPlayListMusics(@PathVariable("playlist-id") Long playListId) {
+        List<Music> musicsPage = playListService.findVerifiedPlayListMusic(playListId);
 
+        if (musicsPage.isEmpty()) {
+            return new ResponseEntity<>(new MusicDto.MessageResponseDto("플레이리스트에 음악이 없습니다."), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(musicsPage, HttpStatus.OK);
+        }
+    }
 
     // 음악 다운로드
 
@@ -105,7 +116,7 @@ public class MusicController {
 
     // 음악 삭제
     @DeleteMapping("/{music-id}")
-    public ResponseEntity<SingleResponseDto<MusicDto.DeleteSuccessDto>> deleteMusic(@PathVariable long musicId,
+    public ResponseEntity<SingleResponseDto<MusicDto.DeleteSuccessDto>> deleteMusic(@PathVariable("music-id") long musicId,
                                                                                     @LoginMemberId Long memberId) {
         musicService.deleteMusic(musicId, memberId);
         MusicDto.DeleteSuccessDto response = new MusicDto.DeleteSuccessDto("음악이 성공적으로 삭제되었습니다.");

@@ -22,7 +22,7 @@ public class PlayList extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long playListId;
 
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
@@ -52,6 +52,12 @@ public class PlayList extends Auditable {
         this.musics.add(music);
         music.setPlayList(this);
     }
+
+    // like + 1
+    public void increaseLikeCount(){likeCount++;}
+
+    // like - 1
+    public void declineLikeCount(){likeCount--;}
 
     //TODO: PlayListLike 작업 완료 후 수정
 //    public void addPlayListLikes(PlayListLike playListLike){

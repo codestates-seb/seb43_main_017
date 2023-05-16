@@ -63,12 +63,15 @@ public class MusicService {
                 Sort.by("musicId").descending()));
     }
 
+    // Playlist 안에 있는 Music을 모두 조회
+
+
     // Music 삭제
     public void deleteMusic(long musicId, Long memberId) {
         isUserAdmin(memberId);
-        findVerifiedMusic(musicId);
+        Music music = findVerifiedMusic(musicId);
 
-        musicRepository.deleteById(musicId);
+        musicRepository.delete(music);
     }
 
     // 유효한 musicId 인지 조회
@@ -89,12 +92,12 @@ public class MusicService {
     }
 
     // 현재 사용자가 admin 이 맞는지 조회
-    private void isUserAdmin(long memberId) {
+    private void isUserAdmin(Long memberId) {
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         Member findMember = optionalMember.orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
 
-        if (!findMember.getRoles().contains("admin")) {
+        if (!findMember.getRoles().contains("ADMIN")) {
             throw new BusinessLogicException(ExceptionCode.NO_PERMISSION_DELETING_MUSIC);
         }
     }

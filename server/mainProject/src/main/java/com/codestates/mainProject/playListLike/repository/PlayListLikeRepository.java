@@ -8,11 +8,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.List;
 
 @Repository
 @Transactional(readOnly = true)
 public interface PlayListLikeRepository extends JpaRepository<PlayListLike, Long> {
-    Optional<Integer> countByPlayList(PlayList playList);
-    Optional<PlayListLike> findByMemberAndPlayList(Member member, PlayList playList);
+    List<PlayListLike> findByPlayListPlayListId(Long playListId);
+    List<PlayListLike> findByMemberMemberId(Long memberId);
+    List<PlayListLike> findByMemberMemberIdAndPlayListPlayListId(Long memberId, Long playListId);
 }

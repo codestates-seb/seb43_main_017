@@ -22,5 +22,6 @@ public interface MemberMapper {
 
     List<MemberDto.ResponseDto> membersToResponses(List<Member> members);
 
+    @Mapping(source = "profileimg", target = "image")
     Member AuthLoginDtoMember(AuthLoginDto authLoginDto);
 }

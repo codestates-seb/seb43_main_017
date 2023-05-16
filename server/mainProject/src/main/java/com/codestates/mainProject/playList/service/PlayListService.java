@@ -7,6 +7,7 @@ import com.codestates.mainProject.member.repository.MemberRepository;
 import com.codestates.mainProject.member.service.MemberService;
 import com.codestates.mainProject.music.entity.Music;
 import com.codestates.mainProject.music.service.MusicService;
+import com.codestates.mainProject.playList.dto.PlayListDto;
 import com.codestates.mainProject.playList.entity.PlayList;
 import com.codestates.mainProject.playList.repository.PlayListRepository;
 import lombok.RequiredArgsConstructor;
@@ -64,11 +65,22 @@ public class PlayListService {
         //TODO: 각 맴버가 가진 플레이리스트 조회기능 만들기
     }
 
-    public PlayList updatePlayList(PlayList playList){
-        PlayList findPlayList = findVerifiedPlayList(playList.getPlayListId());
-        Optional.ofNullable(playList.getTitle()).ifPresent(findPlayList::setTitle);
-        Optional.ofNullable(playList.getBody()).ifPresent(findPlayList::setBody);
-        return playListRepository.save(findPlayList);
+    public PlayList updatePlayList(Long playListId, Long memberId, PlayListDto.PatchDto requestBody){
+        PlayList findPlayList = findVerifiedPlayList(playListId);
+        Member findMember = memberService.findMember(memberId);
+
+        if (!findPlayList.getMember().getMemberId().equals(findMember.getMemberId())) {
+            throw new BusinessLogicException(ExceptionCode.NO_PERMISSION_EDITING_COMMENT);
+        } else {
+            if (requestBody.getTitle() != null) {
+                findPlayList.setTitle(requestBody.getTitle());
+            }
+            if (requestBody.getBody() != null) {
+                findPlayList.setBody(requestBody.getBody());
+            }
+        }
+
+        return findPlayList;
     }
 
     public void deletePlayList(long playListId, long currentUserId){
@@ -102,6 +114,7 @@ public class PlayListService {
 
         List<Music> musics = playList.getMusics();
         musics.add(music);
+        music.setPlayList(playList);
 
         playListRepository.save(playList);
     }

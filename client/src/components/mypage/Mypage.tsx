@@ -122,10 +122,11 @@ export default Mypage;
 
 const MypageContainer = styled.div`
     width: 100%;
-    min-height: 100vh;
+    height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: auto;
 `;
 
 /**2023-05-06 ScaleOver 되는 백그라운드 애니메이션 - 김주비 */
@@ -163,6 +164,10 @@ const UserProfile = styled.div`
             height: 175px;
             border-radius: 50%;
         }
+    }
+    @media screen and (max-width: 1000px) {
+        margin-left: 0;
+        margin-top: 700px;
     }
 `;
 
@@ -215,20 +220,28 @@ const UserContainer = styled.div`
             margin: 10px 0px 10px 25px;
         }
     }
+    @media screen and (max-width: 1000px) {
+        margin-left: 0;
+        margin-top: 20px;
+    }
 `;
 
 const MusicInfor = styled.div`
+    position: relative;
     display: flex;
+    align-items: center;
+    flex-direction: row;
+    @media screen and (max-width: 1000px) {
+        flex-direction: column;
+    }
 `;
 
 const LeftContainer = styled.div`
-    align-items: center;
     width: 500px;
     height: 600px;
 `;
 
 const RightContainer = styled.div`
-    align-items: center;
     width: 500px;
     height: 600px;
 `;

@@ -8,7 +8,7 @@ function Comment() {
 
     return (
         <MusicComment>
-            <CommentBox>
+            {/* <CommentBox>
                 <div className="comment-title">
                     <h2>COMMENT</h2>
                     <button
@@ -31,7 +31,7 @@ function Comment() {
                         <span>1 hour ago</span>
                     </li>
                 </ul>
-            </CommentBox>
+            </CommentBox> */}
             <LikedBox>
                 <h2>LIKED</h2>
                 <ul className="liked-detail">
@@ -84,75 +84,76 @@ const MusicComment = styled.article`
     @media (max-width: 700px) {
         display: none;
     }
+    //
 `;
-/**2023-05-09 detailpage 코멘트 디테일 섹션 : 김주비 */
-const CommentBox = styled.div`
-    ul {
-        display: flex;
-        width: 100%;
-    }
+// /**2023-05-09 detailpage 코멘트 디테일 섹션 : 김주비 */
+// const CommentBox = styled.div`
+//     ul {
+//         display: flex;
+//         width: 100%;
+//     }
 
-    li {
-        display: flex;
-        justify-content: left;
-        align-items: center;
-        margin-right: 20px;
-    }
+//     li {
+//         display: flex;
+//         justify-content: left;
+//         align-items: center;
+//         margin-right: 20px;
+//     }
 
-    .comment-title {
-        display: flex;
-    }
-    .comment-title > button {
-        width: 40px;
-        height: 30px;
-        background: none;
-        border: none;
-        color: #ccc;
-        opacity: 0.6;
-        font-size: 20px;
-    }
-    .comment-title > button:hover {
-        opacity: 1;
-        color: rgba(199, 68, 68, 1);
-    }
-    .comment-detail {
-        width: 100%;
-    }
+//     .comment-title {
+//         display: flex;
+//     }
+//     .comment-title > button {
+//         width: 40px;
+//         height: 30px;
+//         background: none;
+//         border: none;
+//         color: #ccc;
+//         opacity: 0.6;
+//         font-size: 20px;
+//     }
+//     .comment-title > button:hover {
+//         opacity: 1;
+//         color: rgba(199, 68, 68, 1);
+//     }
+//     .comment-detail {
+//         width: 100%;
+//     }
 
-    .user-icon img {
-        width: 50px;
-        height: 50px;
-        border-radius: 60px;
-        background-size: cover;
-        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
-    }
-    .user-comment {
-        min-width: 350px;
-        font-size: 14px;
-        line-height: 150%;
-    }
-    .created-time span {
-        padding: 8px 20px;
-        background-color: rgba(199, 68, 68, 1);
-        border-radius: 20px;
-        white-space: nowrap;
-        font-size: 12px;
-        font-weight: 600;
-        text-transform: uppercase;
-    }
-    @media (max-width: 1000px) {
-        .created-time {
-            display: none;
-        }
-    }
+//     .user-icon img {
+//         width: 50px;
+//         height: 50px;
+//         border-radius: 60px;
+//         background-size: cover;
+//         box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+//     }
+//     .user-comment {
+//         min-width: 350px;
+//         font-size: 14px;
+//         line-height: 150%;
+//     }
+//     .created-time span {
+//         padding: 8px 20px;
+//         background-color: rgba(199, 68, 68, 1);
+//         border-radius: 20px;
+//         white-space: nowrap;
+//         font-size: 12px;
+//         font-weight: 600;
+//         text-transform: uppercase;
+//     }
+//     @media (max-width: 1000px) {
+//         .created-time {
+//             display: none;
+//         }
+//     }
 
-    @media (max-width: 700px) {
-        .user-comment {
-            min-width: 300px;
-            word-break: break-all;
-        }
-    }
-`;
+//     @media (max-width: 700px) {
+//         .user-comment {
+//             min-width: 300px;
+//             word-break: break-all;
+//         }
+//     }
+// `;
 /**2023-05-09 detailpage 좋아요 섹션 : 김주비 */
 const LikedBox = styled.div`
     margin-left: 20px;
