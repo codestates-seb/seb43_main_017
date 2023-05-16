@@ -90,10 +90,8 @@ public class MusicController {
 
     // 플레이리스트 안에 있는 music을 모두 조회
     @GetMapping("/playlists/{playlist-id}")
-    public ResponseEntity<?> getPlayListMusics(@PathVariable("playlist-id") Long playListId,
-                                               @Positive @RequestParam(value = "page", defaultValue = "1") int page,
-                                               @Positive @RequestParam(value = "size", defaultValue = "10") int size) {
-        Page<Music> musicsPage = musicService.findMusicByPlayListId(playListId, page - 1, size);
+    public ResponseEntity<?> getPlayListMusics(@PathVariable("playlist-id") Long playListId) {
+        List<Music> musicsPage = playListService.findVerifiedPlayListMusic(playListId);
 
         if (musicsPage.isEmpty()) {
             return new ResponseEntity<>(new MusicDto.MessageResponseDto("플레이리스트에 음악이 없습니다."), HttpStatus.OK);

@@ -101,8 +101,4 @@ public class MusicService {
             throw new BusinessLogicException(ExceptionCode.NO_PERMISSION_DELETING_MUSIC);
         }
     }
-
-    public Page<Music> findMusicByPlayListId(Long playListId, int page, int size) {
-        return musicRepository.findByPlayList_PlayListId(playListId, PageRequest.of(page, size));
-    }
 }
