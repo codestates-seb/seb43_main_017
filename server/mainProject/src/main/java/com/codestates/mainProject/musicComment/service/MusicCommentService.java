@@ -3,10 +3,8 @@ package com.codestates.mainProject.musicComment.service;
 import com.codestates.mainProject.exception.BusinessLogicException;
 import com.codestates.mainProject.exception.ExceptionCode;
 import com.codestates.mainProject.member.entity.Member;
-import com.codestates.mainProject.member.repository.MemberRepository;
 import com.codestates.mainProject.member.service.MemberService;
 import com.codestates.mainProject.music.entity.Music;
-import com.codestates.mainProject.music.repository.MusicRepository;
 import com.codestates.mainProject.music.service.MusicService;
 import com.codestates.mainProject.musicComment.entity.MusicComment;
 import com.codestates.mainProject.musicComment.repository.MusicCommentRepository;
@@ -15,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -25,8 +22,6 @@ public class MusicCommentService {
     private final MusicCommentRepository musicCommentRepository;
     private final MemberService memberService;
     private final MusicService musicService;
-    private final MusicRepository musicRepository;
-    private final MemberRepository memberRepository;
 
     // 댓글 생성
     public MusicComment createComment(Long memberId, Long musicId, String content) {
@@ -86,6 +81,5 @@ public class MusicCommentService {
             throw new BusinessLogicException(ExceptionCode.NO_PERMISSION_EDITING_COMMENT);
         }
     }
-
 }
 

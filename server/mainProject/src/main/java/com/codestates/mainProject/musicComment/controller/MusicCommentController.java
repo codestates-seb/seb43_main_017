@@ -27,7 +27,7 @@ public class MusicCommentController {
     // 댓글 생성
     @PostMapping("/musics/{music-id}")
     public ResponseEntity<MusicCommentDto> createComment(@LoginMemberId Long memberId,
-                                                         @PathVariable("music-id") Long musicId,
+                                                         @PathVariable("music-id") long musicId,
                                                          @RequestBody MusicCommentDto.PostDto postDto) {
         MusicComment comment = musicCommentService.createComment(memberId, musicId, postDto.getContent());
         MusicCommentDto commentDto = musicCommentMapper.commentToResponse(comment);
@@ -37,7 +37,7 @@ public class MusicCommentController {
 
     // 특정 음악의 댓글 전체 조회
     @GetMapping("/musics/{music-id}")
-    public ResponseEntity<List<MusicCommentDto>> getCommentsByMusicId(@PathVariable("music-id") Long musicId) {
+    public ResponseEntity<List<MusicCommentDto>> getCommentsByMusicId(@PathVariable("music-id") long musicId) {
         List<MusicComment> comments = musicCommentService.getCommentsByMusicId(musicId);
         List<MusicCommentDto> commentDtos = musicCommentMapper.commentsToResponses(comments);
 
@@ -47,7 +47,7 @@ public class MusicCommentController {
     // 댓글 수정
     @PatchMapping("/{comment-id}")
     public ResponseEntity<MusicCommentDto> updateComment(@LoginMemberId Long memberId,
-                                                         @PathVariable("comment-id") Long commentId,
+                                                         @PathVariable("comment-id") long commentId,
                                                          @RequestBody MusicCommentDto.PatchDto patchDto) {
         MusicComment updatedComment = musicCommentService.updateComment(memberId, commentId, patchDto.getContent());
         MusicCommentDto updatedCommentDto = musicCommentMapper.commentToResponse(updatedComment);
@@ -58,7 +58,7 @@ public class MusicCommentController {
     // 댓글 삭제
     @DeleteMapping("/{comment-id}")
     public ResponseEntity<Void> deleteComment(@LoginMemberId Long memberId,
-                                              @PathVariable("comment-id") Long commentId) {
+                                              @PathVariable("comment-id") long commentId) {
         musicCommentService.deleteComment(memberId, commentId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
