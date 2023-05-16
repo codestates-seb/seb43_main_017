@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import axios from 'axios';
 import { LoginPost } from '@/types/AxiosInterface';
-import { useEffect } from 'react';
 
 export const Background = styled.div`
     position: absolute;
@@ -61,20 +60,21 @@ export const Loading = () => {
     }
     /** 2023/05/16 - 로딩페이지(콜백리다이렉트)로 이동시, 카카오,구글 요청인 경우 - 박수범 */
     if (location.search) {
-        const accesstoken = window.location.search.split('=')[1];
-        const googlerefresh = window.location.search.split('=')[3];
+        const kakaocode = window.location.search.split('=')[1];
+        const googletoken = new URL(location.href).searchParams.get('access_token');
+        const googlerefresh = new URL(location.href).searchParams.get('refresh_token');
 
         /** 2023/05/16 - 구글 요청인 경우 - 박수범 */
-        if (googlerefresh) {
-            window.localStorage.setItem('access_token', accesstoken);
+        if (googlerefresh && googletoken) {
+            window.localStorage.setItem('access_token', googletoken);
             window.localStorage.setItem('refresh_token', googlerefresh);
             window.location.href = 'http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com';
         }
         /** 2023/05/16 - 카카오 요청인 경우 - 박수범 */
-        if (accesstoken) {
+        if (kakaocode) {
             axios
                 .post(
-                    `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=86b53da526902a3a1b6004af05a90009&redirect_uri=http://localhost:3000/oauthloading&code=${accesstoken}&client_secret=c9IiwGJ51rps4uvI0kG1vhUrDhkvo695`,
+                    `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=86b53da526902a3a1b6004af05a90009&redirect_uri=http://localhost:3000/oauthloading&code=${kakaocode}&client_secret=c9IiwGJ51rps4uvI0kG1vhUrDhkvo695`,
                     {
                         headers: {
                             'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
