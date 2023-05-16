@@ -40,6 +40,7 @@ function App() {
                         <ButtonStyle
                             onClick={() => {
                                 localStorage.removeItem('access_token');
+                                localStorage.removeItem('refresh_token');
                                 localStorage.removeItem('com.naver.nid.access_token');
                                 localStorage.removeItem('com.naver.nid.oauth.state_token');
                                 location.reload();
