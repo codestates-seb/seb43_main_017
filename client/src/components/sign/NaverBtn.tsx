@@ -2,8 +2,6 @@ import { SiNaver } from 'react-icons/si';
 import { OauthBtn } from './Signin';
 import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
-import { LoginPost } from '@/types/AxiosInterface';
 
 declare global {
     interface Window {
