@@ -88,7 +88,7 @@ function App() {
                 {/* Login botton End*/}
                 {/* Nav Start*/}
                 <NavSection>
-                    <Navigate />
+                    <Navigate setShowSignIn={setShowSignIn} />
                 </NavSection>
                 {/* Nav End*/}
                 {/* view Start*/}
