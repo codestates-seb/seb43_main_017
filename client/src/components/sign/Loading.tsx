@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import axios from 'axios';
 import { LoginPost } from '@/types/AxiosInterface';
+import { Link } from 'react-router-dom';
 
 export const Background = styled.div`
     position: absolute;
@@ -40,6 +41,9 @@ export const Loading = () => {
                 const userid = naverLogin.user.getEmail();
                 const username = naverLogin.user.getNickName();
                 const userimg = naverLogin.user.getProfileImage();
+                window.localStorage.setItem('useremail', userid);
+                window.localStorage.setItem('username', username);
+                window.localStorage.setItem('userimg', userimg);
                 console.log(naverLogin.user);
                 // 추출한 데이터를 백엔드 서버로 보내준다.
                 axios
@@ -52,7 +56,7 @@ export const Loading = () => {
                         if (res.status === 200 && res.headers.authorization !== undefined) {
                             window.localStorage.setItem('access_token', res.headers.authorization);
                             window.localStorage.setItem('refresh_token', res.headers.refresh);
-                            window.location.href = 'http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com';
+                            window.location.href = '/';
                         }
                     });
             }
@@ -65,12 +69,11 @@ export const Loading = () => {
         const googlerefresh = new URL(location.href).searchParams.get('refresh_token');
         console.log(googletoken, googlerefresh);
         console.log(kakaocode);
-
         /** 2023/05/16 - 구글 요청인 경우 - 박수범 */
         if (googlerefresh && googletoken) {
             window.localStorage.setItem('access_token', googletoken);
             window.localStorage.setItem('refresh_token', googlerefresh);
-            window.location.href = 'http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com';
+            window.location.href = '/';
         }
         /** 2023/05/16 - 카카오 요청인 경우 - 박수범 */
         if (kakaocode) {
@@ -96,22 +99,29 @@ export const Loading = () => {
                         .then((res) => {
                             console.log(res.data);
                             const kakaoemail = res.data.kakao_account.email;
+                            window.localStorage.setItem('useremail', kakaoemail);
                             const kakaonickname = res.data.properties.nickname;
+                            window.localStorage.setItem('username', kakaonickname);
                             const kakaoimg = res.data.properties.profile_image;
-                            axios
-                                .post<LoginPost>(`${BaseUrl}`, {
-                                    email: kakaoemail,
-                                    name: kakaonickname,
-                                    profileimg: kakaoimg,
-                                })
-                                .then((res) => {
-                                    if (res.status === 200 && res.headers.authorization !== undefined) {
-                                        window.localStorage.setItem('access_token', res.headers.authorization);
-                                        window.localStorage.setItem('refresh_token', res.headers.refresh);
-                                        window.location.href =
-                                            'http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com';
-                                    }
-                                });
+                            window.localStorage.setItem('userimg', kakaoimg);
+                            if (kakaoemail) {
+                                axios
+                                    .post<LoginPost>(`${BaseUrl}`, {
+                                        email: kakaoemail,
+                                        name: kakaonickname,
+                                        profileimg: kakaoimg,
+                                    })
+                                    .then((res) => {
+                                        if (res.status === 200 && res.headers.authorization !== undefined) {
+                                            window.localStorage.setItem('access_token', res.headers.authorization);
+                                            window.localStorage.setItem('refresh_token', res.headers.refresh);
+                                            window.location.href = '/';
+                                        }
+                                    });
+                            }
+                            localStorage.removeItem('useremail');
+                            alert('이메일 제공에 동의를 하시지 않으면 로그인이 불가능합니다.');
+                            window.location.href = '/';
                         });
                 });
         }
