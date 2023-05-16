@@ -1,6 +1,16 @@
 import styled from 'styled-components';
+import { useEffect } from 'react';
+import { useRecoilState } from 'recoil';
+import { soundbarOpenState } from 'src/recoil/Atoms';
 
 function Mixing() {
+    const [, setSoundbarOpen] = useRecoilState<boolean>(soundbarOpenState);
+
+    /** 2023.05.16 사운드바 상태 변경 -김주비 */
+    useEffect(() => {
+        setSoundbarOpen(false);
+    }, []);
+
     return (
         <MixingSection>
             <MixingBackground></MixingBackground>

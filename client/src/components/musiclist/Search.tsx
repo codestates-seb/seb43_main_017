@@ -45,8 +45,14 @@ const SearchContainer = styled.div`
     display: flex;
     justify-content: center;
     margin: 20px 20px 20px 150px;
+    @media screen and (max-width: 768px) {
+        flex-direction: row;
+        margin-left: 0;
+        margin-top: 100px;
+    }
 `;
 
+/* 2023.05.07 검색 input 컴포넌트 구현 - 홍혜란 */
 const SearchInput = styled.input`
     padding-left: 30px;
     background-image: url('./assets/search.png');

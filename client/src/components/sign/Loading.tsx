@@ -24,7 +24,7 @@ export const LoadingText = styled.div`
 
 export const Loading = () => {
     const BaseUrl = 'http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/oauth/signup';
-
+    /** 2023/05/16 - 로딩페이지(콜백리다이렉트)로 이동시, 네이버 요청인 경우 - 박수범 */
     if (location.hash) {
         const { naver } = window;
         const CLIENT_ID = process.env.REACT_APP_NAVER_CLIENT_ID;
@@ -37,15 +37,17 @@ export const Loading = () => {
         naverLogin.init();
         naverLogin.getLoginStatus(async function (status: any) {
             if (status) {
-                // 아래처럼 선택하여 추출이 가능하고,
+                // 유저 이메일,닉네임,프로필이미지 뽑아주고,
                 const userid = naverLogin.user.getEmail();
                 const username = naverLogin.user.getNickName();
-                // 정보 전체를 아래처럼 state 에 저장하여 추출하여 사용가능하다.
+                const userimg = naverLogin.user.getProfileImage();
                 console.log(naverLogin.user);
+                // 추출한 데이터를 백엔드 서버로 보내준다.
                 axios
                     .post<LoginPost>(`${BaseUrl}`, {
                         email: userid,
                         name: username,
+                        profileimg: userimg,
                     })
                     .then((res) => {
                         if (res.status === 200 && res.headers.authorization !== undefined) {
@@ -56,29 +58,62 @@ export const Loading = () => {
                     });
             }
         });
-    } else if (location.search) {
-        const accesscode = window.location.search.split('=')[0];
-        const refreshcode = window.location.search.split('=')[1];
-        localStorage.setItem('access_token', accesscode);
-        localStorage.setItem('refresh_token', refreshcode);
-        window.location.href = 'http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com';
-        console.log(accesscode);
     }
-    const accesscode = localStorage.getItem('access_token');
-    /** 서버로  */
-    axios
-        .post<LoginPost>(`${BaseUrl}`, {
-            headers: {
-                Authorization: `${accesscode}`,
-            },
-        })
-        .then((res) => {
-            if (res.status === 200 && res.headers.authorization !== undefined) {
-                window.localStorage.setItem('access_token', res.headers.authorization);
-                window.location.href = 'http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com';
-            }
-        });
+    /** 2023/05/16 - 로딩페이지(콜백리다이렉트)로 이동시, 카카오,구글 요청인 경우 - 박수범 */
+    if (location.search) {
+        const accesstoken = window.location.search.split('=')[1];
+        const googlerefresh = window.location.search.split('=')[3];
 
+        /** 2023/05/16 - 구글 요청인 경우 - 박수범 */
+        if (googlerefresh) {
+            window.localStorage.setItem('access_token', accesstoken);
+            window.localStorage.setItem('refresh_token', googlerefresh);
+            window.location.href = 'http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com';
+        }
+        /** 2023/05/16 - 카카오 요청인 경우 - 박수범 */
+        if (accesstoken) {
+            axios
+                .post(
+                    `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=86b53da526902a3a1b6004af05a90009&redirect_uri=http://localhost:3000/oauthloading&code=${accesstoken}&client_secret=c9IiwGJ51rps4uvI0kG1vhUrDhkvo695`,
+                    {
+                        headers: {
+                            'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
+                        },
+                    },
+                )
+                .then((res) => {
+                    window.localStorage.setItem('access_token', res.data.access_token);
+                    window.localStorage.setItem('refresh_token', res.data.refresh_token);
+                    console.log(res.data);
+                    axios
+                        .get(`https://kapi.kakao.com/v2/user/me`, {
+                            headers: {
+                                Authorization: `Bearer ${res.data.access_token}`,
+                            },
+                        })
+                        .then((res) => {
+                            console.log(res.data);
+                            const kakaoemail = res.data.kakao_account.email;
+                            const kakaonickname = res.data.properties.nickname;
+                            const kakaoimg = res.data.properties.profile_image;
+                            axios
+                                .post<LoginPost>(`${BaseUrl}`, {
+                                    email: kakaoemail,
+                                    name: kakaonickname,
+                                    profileimg: kakaoimg,
+                                })
+                                .then((res) => {
+                                    if (res.status === 200 && res.headers.authorization !== undefined) {
+                                        window.localStorage.setItem('access_token', res.headers.authorization);
+                                        window.localStorage.setItem('refresh_token', res.headers.Refresh);
+                                        window.location.href =
+                                            'http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com';
+                                    }
+                                });
+                        });
+                });
+        }
+    }
     return (
         <Background>
             <LoadingText>잠시만 기다려 주세요...</LoadingText>

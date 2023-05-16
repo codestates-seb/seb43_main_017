@@ -77,6 +77,7 @@ const PlayListContainer = styled.div`
     align-items: center;
     margin: 30px;
     margin-top: 40px;
+    width: 450px;
 
     .playlist-title {
         display: flex;
@@ -140,5 +141,8 @@ const PlayListContainer = styled.div`
             align-items: center;
             justify-content: center;
         }
+    }
+    @media screen and (max-width: 1000px) {
+        width: 400px;
     }
 `;
