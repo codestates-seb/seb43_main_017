@@ -10,6 +10,7 @@ import { selectIndexState, localIndexState } from 'src/recoil/Atoms';
 function Navigate({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetStateAction<boolean>> }) {
     const token = window.localStorage.getItem('access_token');
     const userimg = window.localStorage.getItem('userimg');
+    console.log(userimg);
 
     /**2023-05-05 선택된 아이콘 인덱스 스테이트 : 김주비*/
     const [selectIndex, setSelectIndex] = useRecoilState<number>(selectIndexState);
@@ -87,7 +88,7 @@ function Navigate({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetSt
                         <span key={index}></span>
                     ))}
                 </Dotsstyle>
-                {token ? (
+                {token && userimg ? (
                     <ProfileIcon>
                         <Link to="/mypage">
                             <span
@@ -96,11 +97,7 @@ function Navigate({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetSt
                                     setSelectIndex(4);
                                 }}
                             >
-                                <img
-                                    src="/assets/profile-icon.png"
-                                    alt="profile icon"
-                                    className={click ? 'img-active' : 'null'}
-                                />
+                                <img src="{userimg}" alt="profile icon" className={click ? 'img-active' : 'null'} />
                             </span>
                         </Link>
                     </ProfileIcon>
@@ -112,15 +109,11 @@ function Navigate({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetSt
                                 setSelectIndex(4);
                             }}
                         >
-                            {token && userimg ? (
-                                <img src={userimg} alt="profile icon" className={click ? 'img-active' : 'null'} />
-                            ) : (
-                                <img
-                                    src="/assets/profile-icon.png"
-                                    alt="profile icon"
-                                    className={click ? 'img-active' : 'null'}
-                                />
-                            )}
+                            <img
+                                src="/assets/profile-icon.png"
+                                alt="profile icon"
+                                className={click ? 'img-active' : 'null'}
+                            />
                         </span>
                     </ProfileIcon>
                 )}
