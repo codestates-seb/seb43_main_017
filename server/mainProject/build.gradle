@@ -39,6 +39,7 @@ dependencies {
 	runtimeOnly 'mysql:mysql-connector-java'
 	implementation 'mysql:mysql-connector-java:8.0.28'
 	implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'    //s3 관련 의존성
 }
 
 tasks.named('test') {
