@@ -63,9 +63,6 @@ public class MusicService {
                 Sort.by("musicId").descending()));
     }
 
-    // Playlist 안에 있는 Music을 모두 조회
-
-
     // Music 삭제
     public void deleteMusic(long musicId, Long memberId) {
         isUserAdmin(memberId);

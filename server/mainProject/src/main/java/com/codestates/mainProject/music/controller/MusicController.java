@@ -39,7 +39,6 @@ public class MusicController {
     private final MusicService musicService;
     private final MusicMapper mapper;
     private final MemberService memberService;
-    private final MemberRepository memberRepository;
     private final PlayListService playListService;
 
     // 음악 생성
@@ -91,15 +90,14 @@ public class MusicController {
     // 플레이리스트 안에 있는 music을 모두 조회
     @GetMapping("/playlists/{playlist-id}")
     public ResponseEntity<?> getPlayListMusics(@PathVariable("playlist-id") Long playListId) {
-        List<Music> musicsPage = playListService.findVerifiedPlayListMusic(playListId);
+        List<MusicDto.ResponseDto> musicDtos = playListService.findVerifiedPlayListMusic(playListId);
 
-        if (musicsPage.isEmpty()) {
+        if (musicDtos.isEmpty()) {
             return new ResponseEntity<>(new MusicDto.MessageResponseDto("플레이리스트에 음악이 없습니다."), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(musicsPage, HttpStatus.OK);
+            return new ResponseEntity<>(musicDtos, HttpStatus.OK);
         }
     }
-
     // 음악 다운로드
 
     // 음악 수정
