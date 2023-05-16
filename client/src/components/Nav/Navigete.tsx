@@ -10,8 +10,6 @@ import { selectIndexState, localIndexState } from 'src/recoil/Atoms';
 function Navigate({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetStateAction<boolean>> }) {
     const token = window.localStorage.getItem('access_token');
     const userimg = window.localStorage.getItem('userimg');
-    console.log(userimg);
-
     /**2023-05-05 선택된 아이콘 인덱스 스테이트 : 김주비*/
     const [selectIndex, setSelectIndex] = useRecoilState<number>(selectIndexState);
     const [localIndex, setLocalIndex] = useRecoilState<string | null>(localIndexState);
