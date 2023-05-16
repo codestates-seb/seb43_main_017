@@ -1,6 +1,8 @@
 package com.codestates.mainProject.playListComment.controller;
 
+import com.codestates.mainProject.playListComment.dto.CommentDto;
 import com.codestates.mainProject.playListComment.entity.PlayListComment;
+import com.codestates.mainProject.playListComment.mapper.CommentMapper;
 import com.codestates.mainProject.playListComment.service.CommentService;
 import com.codestates.mainProject.security.auth.loginResolver.LoginMemberId;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -19,30 +22,38 @@ import java.util.List;
 @RequestMapping("/playlist-comments")
 public class CommentController {
     private final CommentService commentService;
+    private final CommentMapper commentMapper;
 
     @PostMapping("/{playlist-id}")
-    public ResponseEntity<PlayListComment> createComment(@LoginMemberId Long memberId,
-                                                         @PathVariable("playlist-id") Long playListId,
-                                                         @RequestBody String content) {
+    public ResponseEntity<CommentDto.ResponseDto> createComment(@LoginMemberId Long memberId,
+                                                                @PathVariable("playlist-id") Long playListId,
+                                                                @Valid @RequestBody CommentDto.PostDto content) {
+        String postComment = content.getContent();
 
-        PlayListComment comment = commentService.createComment(memberId, playListId, content);
-        return new ResponseEntity<>(comment, HttpStatus.CREATED);
+        PlayListComment comment = commentService.createComment(memberId, playListId, postComment);
+        CommentDto.ResponseDto responseDto = commentMapper.playListCommentToResponse(comment);
+
+        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     //{playlist-id} 댓글 전체 조회
-    @GetMapping("/{comment-id}")
-    public ResponseEntity<List<PlayListComment>> getCommentsByPlayListId(@PathVariable("comment-id") Long playListId){
+    @GetMapping("/{playlist-id}")
+    public ResponseEntity<List<CommentDto.ResponseDto>> getCommentsByPlayListId(@PathVariable("playlist-id") Long playListId){
         List<PlayListComment> comments = commentService.getCommentsByPlaylistId(playListId);
-        return new ResponseEntity<>(comments, HttpStatus.OK);
+        List<CommentDto.ResponseDto> responseDtoList = commentMapper.playListCommentsToResponses(comments);
+        return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
     }
 
     // 수정
     @PatchMapping("/{comment-id}")
-    public ResponseEntity<PlayListComment> updateComment(@LoginMemberId Long memberId,
+    public ResponseEntity<CommentDto.ResponseDto> updateComment(@LoginMemberId Long memberId,
                                                          @PathVariable("comment-id") Long commentId,
-                                                         @RequestBody String content) {
-        PlayListComment updatedComment = commentService.updateComment(memberId, commentId, content);
-        return new ResponseEntity<>(updatedComment, HttpStatus.OK);
+                                                         @Valid @RequestBody CommentDto.PostDto content) {
+        String patchComment = content.getContent();
+
+        PlayListComment updatedComment = commentService.updateComment(memberId, commentId, patchComment);
+        CommentDto.ResponseDto responseDto = commentMapper.playListCommentToResponse(updatedComment);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     //삭제
