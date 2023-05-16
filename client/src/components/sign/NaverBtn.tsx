@@ -19,7 +19,6 @@ function NaverBtn() {
     const naverRef = useRef<HTMLInputElement>(null);
     const { naver } = window;
     const CLIENT_ID = process.env.REACT_APP_NAVER_CLIENT_ID;
-    const BaseUrl = 'http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/oauth/signup';
     /** 2023/05/11 네이버 Oauth 인증 함수 - 박수범 */
     const initializeNaverLogin = () => {
         const naverLogin = new naver.LoginWithNaverId({
