@@ -107,7 +107,7 @@ export const Loading = () => {
                                 .then((res) => {
                                     if (res.status === 200 && res.headers.authorization !== undefined) {
                                         window.localStorage.setItem('access_token', res.headers.authorization);
-                                        window.localStorage.setItem('refresh_token', res.headers.Refresh);
+                                        window.localStorage.setItem('refresh_token', res.headers.refresh);
                                         window.location.href =
                                             'http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com';
                                     }
