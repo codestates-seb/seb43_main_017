@@ -70,7 +70,6 @@ export default CommentViewer;
 /**2023-05-15 코멘트 뷰어 전체섹션 : 김주비 */
 const CommentViewerGroup = styled.div`
     box-sizing: border-box;
-    /* padding: 30px; */
     position: absolute;
     right: 0px;
     width: 400px;
@@ -79,6 +78,7 @@ const CommentViewerGroup = styled.div`
     transform: translateX(400px);
     background-color: rgba(10, 10, 10, 0.8);
     backdrop-filter: blur(15px);
+    border-radius: 30px 0px 0px 30px;
     overflow-x: hidden;
     animation: showViewr 1.5s forwards;
 

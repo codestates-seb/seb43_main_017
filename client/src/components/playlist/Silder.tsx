@@ -5,7 +5,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import { useState, useEffect, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { PlcardProps, bgimg } from 'src/types/Slider';
-
+import axios from 'axios';
 function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<string>> }) {
     const [pldata, setPldata] = useState<PlcardProps[]>([]); //플리데이터 저장 스테이트
     const [currentSlideIndex, setCurrentSlideIndex] = useState<number>(0); //포커스된 슬라이드 인덱스
@@ -21,90 +21,37 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
             setSliderPage(3);
         }
     });
-    /**2023-05-07 새로고침시 width에 따라 페이징 변환 : 김주비 */
+    /**2023-05-07 새로고침시 width에 따라 페이징 변환 + axios : 김주비 */
     useEffect(() => {
         if (width <= 1100) {
             setSliderPage(1);
         } else {
             setSliderPage(3);
         }
+
+        axios
+            .get('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists?page=1&size=5')
+            .then(function (response) {
+                // 성공적으로 요청을 보낸 경우
+                console.log(response.data.data);
+                setPldata(response.data.data);
+            })
+            .catch(function (error) {
+                // 요청 중에 오류가 발생한 경우
+                console.error(error);
+            });
     }, []);
+
+    // /**2023-05-07 커버이미지 데이터 전달 : 김주비 */
+    // useEffect(() => {
+    //     setPldata(dummydata);
+    //     setBgSrc(dummydata[currentSlideIndex].coverimg);
+    // }, [currentSlideIndex]);
+
     /**2023-05-07 플리 슬라이드 인덱스 : 김주비 */
     const handleAfterChange = (index: number) => {
         setCurrentSlideIndex(index);
     };
-    /**2023-05-07 플리 슬라이드 더미데이터 : 김주비 */
-    const dummydata: PlcardProps[] = [
-        {
-            index: 1,
-            treck: 8,
-            coverimg: '/assets/background-playlist6.jpg',
-            plname: '여름밤의 낭만 BGM',
-            plcontent: '다가오는 여름, 여행계획은 세웠나요? 노래로 해변가 여행을 떠나보는건 어떨까요.',
-            like: '2087',
-            user: 'Uncover',
-            tag: [{ tagname: '청량한' }, { tagname: '신나는' }, { tagname: '어쿠스틱' }],
-        },
-        {
-            index: 0,
-            treck: 20,
-            coverimg: '/assets/background-playlist3.jpg',
-            plname: 'PLAY LIST: 감성뿜뿜 시티팝',
-            plcontent:
-                '내 플레이 리스트를 봐 대박임. 지금까지 이런 플레이 리스트는 없었다. 플레이 리스트의 명가uncover 를 사용하세요.',
-            like: '2087',
-            user: 'Uncover',
-            tag: [{ tagname: '감성' }, { tagname: '시티팝' }],
-        },
-        {
-            index: 1,
-            treck: 8,
-            coverimg: '/assets/background-playlist.jpg',
-            plname: 'PLAY LIST: 숲속느낌 BGM',
-            plcontent:
-                '집중이 잘 안되는날. 오늘은 가사가 없는 조용한 노래를 듣고싶다구요? 이게바로 당신을 위한 플리네요.',
-            like: '2087',
-            user: 'Uncover',
-            tag: [{ tagname: '잔잔한' }, { tagname: '백색소음' }, { tagname: '차분한' }],
-        },
-        {
-            index: 2,
-            treck: 7,
-            coverimg: '/assets/background-playlist1.jpg',
-            plname: '❤ 사랑에 빠졌나봐 ❤',
-            plcontent:
-                '사랑에 빠진 기분을 느껴보고 싶으신가요? 오늘하루만큼은 달달하게. 당신을 위해 준비한 초콜렛같은 플리!',
-            like: '2087',
-            user: 'Uncover',
-            tag: [{ tagname: '달달함' }, { tagname: '로맨스' }, { tagname: '어쿠스틱' }, { tagname: '발라드' }],
-        },
-        {
-            index: 3,
-            treck: 5,
-            coverimg: '/assets/background-playlist2.jpg',
-            plname: 'PLAY LIST: 환상의 나라 BGM',
-            plcontent: '환상의 나라로 떠나보자!  ',
-            like: '2087',
-            user: 'Uncover',
-            tag: [{ tagname: '몽환적인' }, { tagname: '신비한' }],
-        },
-        {
-            index: 4,
-            treck: 12,
-            coverimg: '/assets/background-playlist5.jpg',
-            plname: 'PLAY LIST: 오늘은 신나게! BGM',
-            plcontent:
-                '내 플레이 리스트를 봐 대박임. 지금까지 이런 플레이 리스트는 없었다. 플레이 리스트의 명가uncover 를 사용하세요.',
-            like: '2087',
-            user: 'Uncover',
-            tag: [{ tagname: '클럽뮤직' }, { tagname: 'EDM' }, { tagname: '신나는' }],
-        },
-    ];
-    /**2023-05-07 커버이미지 데이터 전달 : 김주비 */
-    useEffect(() => {
-        setPldata(dummydata);
-        setBgSrc(dummydata[currentSlideIndex].coverimg);
-    }, [currentSlideIndex]);
     /**2023-05-07 슬라이드 버튼 appen : 김주비 */
     const appendDots = (dots: ReactNode) => {
         return (
@@ -117,7 +64,6 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
     const customPaging = (i: number) => {
         return <div className={`${i === currentSlideIndex ? 'dots-paging dots-active' : 'dots-paging'}`}>{i + 1}</div>;
     };
-
     /**2023-05-07 슬라이드 설정옵션 : 김주비 */
     const settings = {
         afterChange: handleAfterChange,
@@ -137,24 +83,24 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
         <SilderGroup>
             <Slider {...settings}>
                 {pldata.map((data) => (
-                    <Plcard bgImg={data.coverimg} key={data.index}>
-                        <div className="pl-treck">TRECK {data.treck}</div>
+                    <Plcard bgImg="/" key={data.playListId}>
+                        <div className="pl-treck">TRECK 10</div>
                         <Link to="/musicdetail">
                             <div className="pl-contents">
                                 <Pltag>
-                                    {data.tag.map((tag, index) => (
+                                    {/* {data.tag.map((tag, index) => (
                                         <li key={`tag-${index}`}>{tag.tagname}</li>
-                                    ))}
+                                    ))} */}
                                 </Pltag>
                                 <Pluser>
                                     <span>WTITER</span>
-                                    <span>{data.user}</span>
+                                    <span>{data.createMember}</span>
                                     <span>LIKE</span>
-                                    <span>{data.like}</span>
+                                    <span>2963</span>
                                 </Pluser>
                                 <Pltext>
-                                    <span>{data.plname}</span>
-                                    <span>{data.plcontent}</span>
+                                    <span>{data.title}</span>
+                                    <span>{data.body}</span>
                                 </Pltext>
                             </div>
                         </Link>

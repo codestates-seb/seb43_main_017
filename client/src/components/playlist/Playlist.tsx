@@ -3,6 +3,7 @@ import Slider from './Silder';
 import { useState } from 'react';
 import Taplist from './Taplist';
 import { FaBars } from 'react-icons/fa';
+
 function Playlist() {
     const [bgSrc, setBgSrc] = useState<string>('');
     const [changeTap, setChangeTap] = useState<boolean>(true);

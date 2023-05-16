@@ -35,8 +35,15 @@ export default Sidebutton;
 
 const SidebtnGroup = styled.div`
     display: flex;
+    opacity: 0;
+    animation: fadeinText2 2s forwards 3.5s;
     > * {
         margin: 40px 20px 0px 20px;
+    }
+    @keyframes fadeinText2 {
+        100% {
+            opacity: 1;
+        }
     }
 `;
 const Button = styled.div`

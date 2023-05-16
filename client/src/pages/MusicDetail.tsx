@@ -153,6 +153,7 @@ const MusicContents = styled.article`
     }
 
     @media (max-width: 700px) {
+        width: 80%;
         > div {
             justify-content: center;
             align-content: center;
@@ -168,9 +169,9 @@ const MusicTags = styled.ul`
         border: 2px solid rgba(199, 68, 68, 1);
         border-radius: 20px;
         font-size: 13px;
-        transform: scale(0.9);
+        transform: translateY(50px);
         color: rgba(199, 68, 68, 1);
-        animation: ascendText2 1s forwards 1s;
+        animation: ascendText2 2s forwards 1s;
     }
 `;
 /**2023-05-09 음원 타이틀 : 김주비 */
@@ -178,6 +179,7 @@ const MusicTitle = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
     font-size: 6.5rem;
     letter-spacing: -2px;
     text-transform: uppercase;
@@ -185,15 +187,19 @@ const MusicTitle = styled.div`
     overflow: hidden;
     span {
         transform: translateY(100px);
-        animation: ascendText 1s forwards 1.5s;
+        animation: ascendText 2s forwards 1.5s;
+    }
+    @media (max-width: 1200px) {
+        font-size: 4rem;
     }
     @media (max-width: 700px) {
-        font-size: 4rem;
+        font-size: 3rem;
     }
 `;
 /**2023-05-09 음원 정보 : 김주비 */
 const MusicInfo = styled.ul`
     display: flex;
+    width: 100%;
     justify-content: center;
     align-items: center;
     overflow: hidden;
@@ -201,7 +207,7 @@ const MusicInfo = styled.ul`
     li {
         margin-right: 20px;
         transform: translateY(20px);
-        animation: ascendText 1s forwards 2s;
+        animation: ascendText 1s forwards 2.5s;
     }
     li:nth-child(2n-1) {
         font-weight: 600;
@@ -211,6 +217,7 @@ const MusicInfo = styled.ul`
     }
 
     @media (max-width: 700px) {
+        font-size: 0.8rem;
     }
 `;
 /**2023-05-09 사이드 텍스트 : 김주비 */
@@ -223,7 +230,7 @@ const MusicText = styled.div`
     overflow-x: hidden;
     padding-right: 30px;
     opacity: 0;
-    animation: fadeinText 1s forwards 2.5s;
+    animation: fadeinText 2s forwards 3s;
     @media (max-width: 1000px) {
         width: 100%;
     }
