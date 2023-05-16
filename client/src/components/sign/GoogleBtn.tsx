@@ -1,7 +1,5 @@
 import { FcGoogle } from 'react-icons/fc';
 import { OauthBtn } from './Signin';
-import axios from 'axios';
-
 const GoogleBtn = () => {
     const googleSocialLogin = () => {
         window.location.href =
