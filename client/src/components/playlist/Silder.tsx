@@ -33,7 +33,7 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
             .get('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists?page=1&size=5')
             .then(function (response) {
                 // 성공적으로 요청을 보낸 경우
-                console.log(response.data.data);
+                // console.log(response.data.data);
                 setPldata(response.data.data);
             })
             .catch(function (error) {
@@ -85,7 +85,7 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
                 {pldata.map((data) => (
                     <Plcard bgImg="/" key={data.playListId}>
                         <div className="pl-treck">TRECK 10</div>
-                        <Link to="/musicdetail">
+                        <Link to={`/musicdetail/${data.playListId}`}>
                             <div className="pl-contents">
                                 <Pltag>
                                     {/* {data.tag.map((tag, index) => (

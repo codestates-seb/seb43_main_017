@@ -3,11 +3,13 @@ import { useState, useEffect } from 'react';
 import { HiOutlineHeart, HiHeart } from 'react-icons/hi';
 import { PlcardProps } from 'src/types/Slider';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 function Taplist() {
     const [pldata, setPldata] = useState<PlcardProps[]>([]); //플리데이터 저장 스테이트
     const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
     const [totalPages, setTotalPages] = useState<number>(0); // 전체 페이지 수
+    const buttonArray = [];
 
     useEffect(() => {
         axios
@@ -16,7 +18,7 @@ function Taplist() {
             )
             .then(function (response) {
                 // 성공적으로 요청을 보낸 경우
-                console.log(response.data.pageInfo.totalPages);
+                // console.log(response.data.pageInfo.totalPages);
                 setPldata(response.data.data);
                 setTotalPages(response.data.pageInfo.totalPages);
             })
@@ -26,16 +28,7 @@ function Taplist() {
             });
     }, [currentPage]);
 
-    const handleNextPage = () => {
-        setCurrentPage(currentPage + 1);
-    };
-
-    const handlePrevPage = () => {
-        setCurrentPage(currentPage - 1);
-    };
-
-    //전체 페이지 수 만큼 버튼 생성
-    const buttonArray = [];
+    /** 2023.05.17 전체 페이지 수 만큼 버튼 생성 - 김주비*/
     for (let i = 1; i <= totalPages; i++) {
         buttonArray.push(
             <button
@@ -49,6 +42,12 @@ function Taplist() {
             </button>,
         );
     }
+    const handleNextPage = () => {
+        setCurrentPage(currentPage + 1);
+    };
+    const handlePrevPage = () => {
+        setCurrentPage(currentPage - 1);
+    };
 
     return (
         <TapGroup>
@@ -60,7 +59,9 @@ function Taplist() {
                             <img src="/" alt="playlist cover image" />
                         </div>
                         <div className="pl-title">
-                            <p>{data.title.slice(0, 20)}…</p>
+                            <p>
+                                <Link to={`/musicdetail/${data.playListId}`}>{data.title.slice(0, 20)}</Link>
+                            </p>
                             <p>{data.createMember}</p>
                         </div>
                         <ul className="pl-tag">
@@ -197,6 +198,10 @@ const TapList = styled.li`
         color: #666;
         margin: 0px 10px;
     }
+    .pl-title a {
+        color: #ccc;
+        text-decoration: none;
+    }
 
     .pl-tag {
         display: flex;
@@ -256,6 +261,7 @@ const Pagination = styled.div`
         border-radius: 5px;
         margin: 40px 3px;
         transition: 0.2s ease-in-out;
+        cursor: pointer;
     }
     button:hover {
         color: #ccc;
@@ -266,6 +272,10 @@ const Pagination = styled.div`
     button:disabled {
         border: 1px solid #5a5a5a;
         color: #5a5a5a;
+    }
+    button:disabled:hover {
+        background: none;
+        cursor: default;
     }
 
     .page-focused {

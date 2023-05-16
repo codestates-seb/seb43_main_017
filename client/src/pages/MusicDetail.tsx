@@ -1,15 +1,41 @@
 import styled from 'styled-components';
-import CommentViewer from 'src/components/musicdetail/CommentViewer';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { commentOpenState, soundbarOpenState } from 'src/recoil/Atoms';
-import { useEffect } from 'react';
+import { PlcardProps } from 'src/types/Slider';
+import CommentViewer from 'src/components/musicdetail/CommentViewer';
 import Sidebutton from 'src/components/musicdetail/SideButton';
+
 function MusicDetail() {
+    const plId = useParams();
+    const [plDetailData, setPlDetailData] = useState<PlcardProps>({
+        playListId: 0,
+        memberId: 0,
+        createMember: '',
+        title: '',
+        body: '',
+        createdAt: '',
+        modifiedAt: '',
+    });
+    console.log(plDetailData);
     const [commentOpen] = useRecoilState<boolean>(commentOpenState);
     const [, setSoundbarOpen] = useRecoilState<boolean>(soundbarOpenState);
 
     useEffect(() => {
         setSoundbarOpen(true);
+        axios
+            .get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/${plId.plId}`)
+            .then(function (response) {
+                // 성공적으로 요청을 보낸 경우
+                // console.log(response.data.pageInfo.totalPages);
+                setPlDetailData(response.data.data);
+            })
+            .catch(function (error) {
+                // 요청 중에 오류가 발생한 경우
+                console.error(error);
+            });
     }, []);
 
     return (
@@ -31,19 +57,16 @@ function MusicDetail() {
                         <li>즐거운</li>
                     </MusicTags>
                     <MusicTitle>
-                        <span>Cheeky Chops</span>
+                        <span>{plDetailData.title}</span>
                     </MusicTitle>
                     <MusicInfo>
                         <li>CREATE</li>
-                        <li>All Good Folks</li>
+                        <li>{plDetailData.createMember}</li>
                         <li>ALBUM</li>
-                        <li>Cheeky Chops</li>
+                        <li>정보없음</li>
                     </MusicInfo>
                     <MusicText>
-                        <span>
-                            A London-based collective of producers and composers. Masters of urban beats and high-end
-                            music for creators looking to take their content to the next level.
-                        </span>
+                        <span>{plDetailData.body}</span>
                     </MusicText>
                 </MusicContents>
                 <Sidebutton />
@@ -108,7 +131,7 @@ const AlbumRecode = styled.div`
     top: -250px;
     width: 500px;
     height: 500px;
-    background: url('./assets/background-detail-recode.png');
+    background: url('/assets/background-detail-recode.png');
     background-size: cover;
     opacity: 0.6;
     animation: roundingrecode 10s infinite linear;
@@ -180,7 +203,7 @@ const MusicTitle = styled.div`
     justify-content: center;
     align-items: center;
     width: 100%;
-    font-size: 6.5rem;
+    font-size: 5.5rem;
     letter-spacing: -2px;
     text-transform: uppercase;
     font-weight: 700;
