@@ -1,35 +1,43 @@
 import styled from 'styled-components';
-import Comment from 'src/components/musicdetail/Comment';
-// import MusicSpectrum from 'src/components/musicdetail/MusicSpectrum';
 import CommentViewer from 'src/components/musicdetail/CommentViewer';
 import { useRecoilState } from 'recoil';
-import { commentOpenState } from 'src/recoil/Atoms';
+import { commentOpenState, soundbarOpenState } from 'src/recoil/Atoms';
+import { useEffect } from 'react';
+import Sidebutton from 'src/components/musicdetail/SideButton';
 function MusicDetail() {
     const [commentOpen] = useRecoilState<boolean>(commentOpenState);
+    const [, setSoundbarOpen] = useRecoilState<boolean>(soundbarOpenState);
+
+    useEffect(() => {
+        setSoundbarOpen(true);
+    }, []);
 
     return (
         <DetailGroup>
             {commentOpen ? <CommentViewer></CommentViewer> : null}
             <PlaylistBackground
-                url={'https://musicvine.imgix.net/images/yeti-music-avatar-v1.jpg?auto=compress&w=388&h=388'}
+                url={
+                    'https://musicvine.imgix.net/images/all-good-folks-avatar-v1_4282299045668081.jpg?auto=compress&w=388&h=388'
+                }
             ></PlaylistBackground>
+            <AlbumRecode>
+                <img src="https://musicvine.imgix.net/images/all-good-folks-avatar-v1_4282299045668081.jpg?auto=compress&w=388&h=388" />
+            </AlbumRecode>
             <DetailSection>
                 <MusicContents>
+                    <MusicTags>
+                        <li>귀여운</li>
+                        <li>발랄한</li>
+                        <li>즐거운</li>
+                    </MusicTags>
                     <MusicTitle>
-                        <span>Track Name</span>
+                        <span>Cheeky Chops</span>
                     </MusicTitle>
                     <MusicInfo>
-                        <ul className="music-producer">
-                            <li>CREATE</li>
-                            <li>Uncover</li>
-                            <li>ALBUM</li>
-                            <li>albumname</li>
-                        </ul>
-                        <ul className="music-tag">
-                            <li>신나는</li>
-                            <li>EDM</li>
-                            <li>클럽음악</li>
-                        </ul>
+                        <li>CREATE</li>
+                        <li>All Good Folks</li>
+                        <li>ALBUM</li>
+                        <li>Cheeky Chops</li>
                     </MusicInfo>
                     <MusicText>
                         <span>
@@ -38,18 +46,7 @@ function MusicDetail() {
                         </span>
                     </MusicText>
                 </MusicContents>
-                <MusicCover>
-                    <AlbumDesign
-                        url={'https://musicvine.imgix.net/images/yeti-music-avatar-v1.jpg?auto=compress&w=388&h=388'}
-                    >
-                        <div className="album-recode">
-                            <div className="recode-img"></div>
-                        </div>
-                        <div className="cover-img"></div>
-                    </AlbumDesign>
-                    {/* <MusicSpectrum /> */}
-                </MusicCover>
-                <Comment />
+                <Sidebutton />
             </DetailSection>
         </DetailGroup>
     );
@@ -59,12 +56,15 @@ export default MusicDetail;
 
 /**2023-05-09 detailpage 전체 섹션 : 김주비 */
 const DetailGroup = styled.section`
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
+    width: 100%;
     height: 100vh;
     color: #ccc;
+    overflow-x: hidden;
 `;
 interface url {
     url: string;
@@ -95,24 +95,46 @@ const DetailSection = styled.div`
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
-    margin-left: 300px;
-    width: calc(100% - 300px);
+    width: 100%;
     height: 100%;
     z-index: 2;
-    @media (max-width: 1000px) {
-        margin-left: 200px;
+`;
+/**2023-05-09 rotate 레코드 : 김주비 */
+const AlbumRecode = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: -250px;
+    width: 500px;
+    height: 500px;
+    background: url('./assets/background-detail-recode.png');
+    background-size: cover;
+    opacity: 0.6;
+    animation: roundingrecode 10s infinite linear;
+    img {
+        width: 200px;
+        height: 200px;
+        border-radius: 200px;
     }
-    @media (max-width: 700px) {
-        margin-left: 0;
-        width: 80%;
-        margin-top: 100px;
+    @keyframes roundingrecode {
+        100% {
+            transform: rotate(360deg);
+        }
     }
 `;
 /**2023-05-09 detailpage 컨텐츠 섹션 + 키프레임 애니메이션 : 김주비 */
 const MusicContents = styled.article`
     display: flex;
+    justify-content: center;
+    align-items: center;
     flex-direction: column;
-    width: 100%;
+    width: 70%;
+    text-align: center;
+
+    > * {
+        margin: 10px 0px;
+    }
     @keyframes ascendText {
         100% {
             transform: translateY(0px);
@@ -137,70 +159,61 @@ const MusicContents = styled.article`
         }
     }
 `;
-/**2023-05-09 음원정보 - 타이틀 : 김주비 */
-const MusicTitle = styled.div`
+/**2023-05-16 음원 태그 : 김주비 */
+const MusicTags = styled.ul`
     display: flex;
-    font-size: 2.5rem;
-    text-transform: uppercase;
-    font-weight: 700;
     overflow: hidden;
-    span {
-        transform: translateY(40px);
-        animation: ascendText 1s forwards 1s;
-    }
-`;
-/**2023-05-09 음원정보 - 앨범 / 태그 : 김주비 */
-const MusicInfo = styled.div`
-    display: flex;
-    margin: 10px 0px 30px 0px;
-    ul {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-    }
-    ul > li {
-        transform: translateY(20px);
-        animation: ascendText 1s forwards 1.5s;
-    }
-
-    .music-producer li {
-        margin-right: 20px;
-    }
-    .music-producer li:nth-child(2n-1) {
-        font-weight: 600;
-    }
-    .music-producer li:nth-child(2n) {
-        opacity: 0.6;
-    }
-    .music-tag li {
+    li {
         padding: 5px 20px;
         border: 2px solid rgba(199, 68, 68, 1);
         border-radius: 20px;
         font-size: 13px;
-        transform: translateY(30px);
+        transform: scale(0.9);
         color: rgba(199, 68, 68, 1);
-        animation: ascendText2 1s forwards 1.8s;
+        animation: ascendText2 1s forwards 1s;
+    }
+`;
+/**2023-05-09 음원 타이틀 : 김주비 */
+const MusicTitle = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 6.5rem;
+    letter-spacing: -2px;
+    text-transform: uppercase;
+    font-weight: 700;
+    overflow: hidden;
+    span {
+        transform: translateY(100px);
+        animation: ascendText 1s forwards 1.5s;
+    }
+    @media (max-width: 700px) {
+        font-size: 4rem;
+    }
+`;
+/**2023-05-09 음원 정보 : 김주비 */
+const MusicInfo = styled.ul`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+
+    li {
+        margin-right: 20px;
+        transform: translateY(20px);
+        animation: ascendText 1s forwards 2s;
+    }
+    li:nth-child(2n-1) {
+        font-weight: 600;
+    }
+    li:nth-child(2n) {
+        opacity: 0.6;
     }
 
     @media (max-width: 700px) {
-        justify-content: center;
-        align-items: center;
-        .music-tag {
-            margin-top: 30px;
-        }
-    }
-    @media (max-width: 1000px) {
-        flex-direction: column;
-        justify-content: left;
-
-        ul {
-            margin-bottom: 10px;
-            justify-content: left;
-        }
     }
 `;
-/**2023-05-09 음원정보 - 사이드 텍스트 : 김주비 */
+/**2023-05-09 사이드 텍스트 : 김주비 */
 const MusicText = styled.div`
     display: flex;
     font-size: 13px;
@@ -210,91 +223,11 @@ const MusicText = styled.div`
     overflow-x: hidden;
     padding-right: 30px;
     opacity: 0;
-    animation: fadeinText 1s forwards 2s;
+    animation: fadeinText 1s forwards 2.5s;
     @media (max-width: 1000px) {
         width: 100%;
     }
     @media (max-width: 700px) {
         text-align: center;
-    }
-`;
-/**2023-05-09 detailpage 앨범커버 섹션 : 김주비 */
-const MusicCover = styled.article`
-    display: flex;
-    width: 100%;
-    margin-top: 50px;
-    opacity: 0;
-    animation: fadeInSection 2s forwards 2.5s;
-
-    @keyframes fadeInSection {
-        100% {
-            opacity: 1;
-        }
-    }
-`;
-/**2023-05-09 detailpage 앨범커버 / 레코드 : 김주비 */
-const AlbumDesign = styled.div<url>`
-    position: relative;
-    width: 400px;
-    height: 400px;
-    .cover-img {
-        position: absolute;
-        width: 400px;
-        height: 400px;
-        background-color: #111;
-        background: url(${(props) => props.url});
-        background-size: cover;
-        box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.4);
-    }
-    .album-recode {
-        position: absolute;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        top: 0;
-        left: 250px;
-        min-width: 400px;
-        min-height: 400px;
-        background: url('./assets/background-detail-recode.png');
-        background-size: cover;
-        animation: roundingrecode 10s infinite linear;
-    }
-
-    .recode-img {
-        width: 150px;
-        height: 150px;
-        border-radius: 100%;
-        background: url(${(props) => props.url});
-        background-size: cover;
-    }
-
-    @keyframes roundingrecode {
-        100% {
-            transform: rotate(360deg);
-        }
-    }
-    @media (max-width: 700px) {
-        /* width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        transform: scale(0.8);
-        .album-recode {
-            position: relative;
-        }
-        .cover-img {
-            display: none;
-        } */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        .cover-img {
-            width: 300px;
-            height: 300px;
-            border-radius: 30px;
-        }
-        .album-recode {
-            display: none;
-        }
     }
 `;

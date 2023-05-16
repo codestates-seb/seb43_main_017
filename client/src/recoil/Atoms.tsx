@@ -59,3 +59,9 @@ export const commentOpenState = atom<boolean>({
     key: 'commentOpenState',
     default: false,
 });
+
+/* 2023.05.15 하단사운드바 open 상태 관리 - 김주비 */
+export const soundbarOpenState = atom<boolean>({
+    key: 'soundbarOpenState',
+    default: false,
+});

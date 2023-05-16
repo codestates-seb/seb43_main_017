@@ -9,12 +9,16 @@ import Signup from 'src/components/sign/Signup';
 import RoutingPages from 'src/pages/Routingpages';
 import { RiProfileFill } from 'react-icons/ri';
 import { MdFaceRetouchingNatural } from 'react-icons/md';
+import SoundBar from 'src/components/soundbar/SoundBar';
+import { useRecoilState } from 'recoil';
+import { soundbarOpenState } from 'src/recoil/Atoms';
 
 function App() {
     /**2023-05-05 로그인 모달오픈 여부 스테이트 : 김주비*/
     const [showSignIn, setShowSignIn] = useState<boolean>(false);
     /**2023-05-05 회원가입 모달오픈 여부 스테이트 : 김주비*/
     const [showSignUp, setShowSignUp] = useState<boolean>(false);
+    const [soundbar] = useRecoilState<boolean>(soundbarOpenState);
     const token = localStorage.getItem('access_token'); // 로컬스토리지에 담긴 토큰 정보를 가져옵니다.
 
     return (
@@ -92,6 +96,7 @@ function App() {
                 </RouterSection>
                 {/* view Start*/}
             </MainSection>
+            {soundbar ? <SoundBar /> : null}
         </BrowserRouter>
     );
 }
@@ -111,7 +116,7 @@ const NavSection = styled.section`
     align-items: center;
     position: absolute;
     left: -150px;
-    width: 150px;
+    width: 100px;
     height: 100vh;
     background: linear-gradient(90deg, rgb(0, 0, 0), rgb(0, 0, 0, 0));
     animation: sildeNav 2s forwards;
