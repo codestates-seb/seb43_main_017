@@ -110,7 +110,7 @@ const CategoryContainer = styled.div`
     @media screen and (max-width: 768px) {
         flex-direction: row;
         margin-left: 0;
-        margin-top: 30px;
+        margin-top: 0;
     }
 `;
 
@@ -154,9 +154,11 @@ const SubCategoryItem = styled.li`
     cursor: pointer;
 `;
 
+/* 2023.05.10 태그 박스 컴포넌트 구현 - 홍혜란 */
 const TagBox = styled.div`
     position: absolute;
     right: -35px;
+    border: 1px solid red;
 `;
 
 /* 2023.05.10 태그 컴포넌트 구현 - 홍혜란 */
