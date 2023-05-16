@@ -14,8 +14,7 @@ import com.codestates.mainProject.security.auth.loginResolver.LoginMemberId;
 import com.codestates.mainProject.utils.UriCreator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -23,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import java.io.IOException;
+
 import java.net.URI;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -109,22 +108,13 @@ public class MemberContorller {
 
     @PostMapping("/image")
     public ResponseEntity postImage(@LoginMemberId Long memberId,
-                                    @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
+                                    @RequestParam("imageFile") MultipartFile imageFile) {
         Member savedMember = memberService.uploadImage(memberId, imageFile);
         MemberDto.ResponseDto response = mapper.memberToResponse(savedMember);
 
         return new ResponseEntity<>((response),HttpStatus.OK);
     }
 
-    @GetMapping("/image/{member-id}")
-    @ResponseBody
-    public ResponseEntity<Resource> getImageFile(@PathVariable("member-id") @Positive long memberId){
-        Resource file = memberService.findImage(memberId);
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
-                .header(HttpHeaders.CONTENT_DISPOSITION,"inline; filename=\"" + file.getFilename() + "\"")
-                .body(file);
-    }
 
     @GetMapping("/{member-id}")
     public ResponseEntity getMember(@PathVariable("member-id") @Positive long memberId){

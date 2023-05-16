@@ -30,7 +30,7 @@ public class Member extends Auditable {
     @Column(length = 100)
     private String password;
 
-    @Column(name = "image")
+    @Column
     private String image="";
 
     @Enumerated(value = EnumType.STRING)

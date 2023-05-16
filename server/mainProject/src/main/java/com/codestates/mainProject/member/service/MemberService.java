@@ -19,7 +19,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -70,10 +70,10 @@ public class MemberService {
         return savedMember;
     }
 
-    public Member uploadImage(long memberId, MultipartFile imageFile) throws IOException {
+    public Member uploadImage(long memberId, MultipartFile imageFile) {
         Member findMember = findVerifiedMember(memberId);
-        String filename = fileStorageService.storeFile(imageFile);
-        findMember.setImage(filename);
+        String fileUrl = fileStorageService.storeFile(imageFile);
+        findMember.setImage(fileUrl);
 
         return memberRepository.save(findMember);
     }
@@ -120,14 +120,6 @@ public class MemberService {
         return new NaverUserInfo(email, nickname);
     }
 
-
-    public Resource findImage(long  memberId){
-        Member findMember = findVerifiedMember(memberId);
-        String filename = findMember.getImage();
-        Resource file = fileStorageService.loadFileAsResource(filename);
-
-        return file;
-    }
 
     public Member findMember(long memberId) {
         return findVerifiedMember(memberId);
