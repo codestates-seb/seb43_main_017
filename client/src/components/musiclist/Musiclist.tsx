@@ -222,7 +222,7 @@ const SongContainer = styled.div`
     align-items: center;
     flex-direction: column;
     width: 100%;
-    height: 500px;
+    height: 400px;
 `;
 
 /* 2023.05.08 MusicList (뮤직리스트의 아이템 전체) 컴포넌트 구현 - 홍혜란 */
