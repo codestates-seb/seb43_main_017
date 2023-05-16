@@ -118,10 +118,11 @@ export const Loading = () => {
                                             window.location.href = '/';
                                         }
                                     });
+                            } else if (!kakaoemail) {
+                                localStorage.removeItem('useremail');
+                                alert('이메일 제공에 동의를 하시지 않으면 로그인이 불가능합니다.');
+                                window.location.href = '/';
                             }
-                            localStorage.removeItem('useremail');
-                            alert('이메일 제공에 동의를 하시지 않으면 로그인이 불가능합니다.');
-                            window.location.href = '/';
                         });
                 });
         }
