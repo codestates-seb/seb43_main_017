@@ -56,8 +56,8 @@ const PlaylistSection = styled.section`
     align-items: center;
     color: #ccc;
     /* overflow: hidden; */
-    @media (max-height: 800px) {
-        padding-top: 100px;
+    @media (max-height: 700px) {
+        padding-top: 70px;
     }
 `;
 interface url {
@@ -187,7 +187,7 @@ const Pltap = styled.div`
 const PlaylistContents = styled.article`
     display: flex;
     flex-direction: column;
-    height: 450px;
+    min-height: 400px;
     /* border: 1px solid red; */
     /* justify-content: center; */
     align-items: center;
