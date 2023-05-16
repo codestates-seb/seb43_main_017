@@ -53,6 +53,12 @@ public class PlayList extends Auditable {
         music.setPlayList(this);
     }
 
+    // like + 1
+    public void increaseLikeCount(){likeCount++;}
+
+    // like - 1
+    public void declineLikeCount(){likeCount--;}
+
     //TODO: PlayListLike 작업 완료 후 수정
 //    public void addPlayListLikes(PlayListLike playListLike){
 //        this.playListLikes.add(playListLike);

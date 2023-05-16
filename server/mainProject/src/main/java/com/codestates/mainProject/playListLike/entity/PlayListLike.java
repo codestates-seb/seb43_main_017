@@ -18,16 +18,11 @@ public class PlayListLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long playListLikeId;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private PlayList playList;
-
-    public PlayListLike(PlayList playList, Member member){
-        this.playList = playList;
-        this.member = member;
-    }
 }

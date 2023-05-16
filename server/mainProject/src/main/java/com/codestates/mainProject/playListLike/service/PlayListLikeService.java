@@ -1,8 +1,13 @@
 package com.codestates.mainProject.playListLike.service;
 
+import com.codestates.mainProject.exception.BusinessLogicException;
+import com.codestates.mainProject.exception.ExceptionCode;
 import com.codestates.mainProject.member.entity.Member;
 import com.codestates.mainProject.member.service.MemberService;
+import com.codestates.mainProject.playList.dto.PlayListDto;
 import com.codestates.mainProject.playList.entity.PlayList;
+import com.codestates.mainProject.playList.mapper.PlayListMapper;
+import com.codestates.mainProject.playList.repository.PlayListRepository;
 import com.codestates.mainProject.playList.service.PlayListService;
 import com.codestates.mainProject.playListLike.entity.PlayListLike;
 import com.codestates.mainProject.playListLike.repository.PlayListLikeRepository;
@@ -10,56 +15,94 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class PlayListLikeService {
     private final PlayListLikeRepository playListLikeRepository;
-    private final PlayListService playListService;
     private final MemberService memberService;
+    private final PlayListService playListService;
+    private final PlayListMapper playListMapper;
+    private final PlayListRepository playListRepository;
 
 
-    // 좋아요 누르기
-    public boolean addLike(Member member, long playListId){
+    public PlayListLike addLike(Long memberId, Long playListId){
+        Member member = memberService.findMember(memberId);
         PlayList playList = playListService.findVerifiedPlayList(playListId);
 
-        if(isNotAlreadyLike(member, playList)){
-            playListLikeRepository.save(new PlayListLike(playList, member));
-            return true;
-        }
-        return false;
+        PlayListLike like = new PlayListLike();
+        like.setMember(member);
+        like.setPlayList(playList);
+
+        return playListLikeRepository.save(like);
     }
+
 
     // 좋아요 삭제
-    public void cancelLike(Member member, long playListId){
+    public void cancelLike(Long memberId, Long playListId){
+        Member member = memberService.findMember(memberId);
         PlayList playList = playListService.findVerifiedPlayList(playListId);
-        PlayListLike playListLike = playListLikeRepository.findByMemberAndPlayList(member, playList).orElseThrow();
-        playListLikeRepository.delete(playListLike);
-    }
+        List<PlayListLike> likes = getAllLikesForMemberAndPlayList(memberId, playListId);
 
-    public List<String> count(long playListId, Member loginMemberId){
-        // 좋아요를 count할 대상 playList를 가져옴
-        PlayList playList = playListService.findVerifiedPlayList(playListId);
-
-        // 가져온 playList로 like테이블에 쿼리한 결과를 list에 담음
-        Integer playListLikeCount = playListLikeRepository.countByPlayList(playList).orElse(0);
-        List<String> resultData = new ArrayList<>(Arrays.asList(String.valueOf(playListLikeCount)));
-
-        // 현재 로그인한 유저가 이미 좋아요를 눌렀는지 검사하고 결과를 List에 담아 반환
-        if (Objects.nonNull(loginMemberId)){
-            resultData.add(String.valueOf(isNotAlreadyLike(loginMemberId, playList)));
-            return resultData;
+        for (PlayListLike like : likes) {
+            if (!member.getMemberId().equals(like.getMember().getMemberId()) && !member.getRoles().contains("admin")) {
+                throw new BusinessLogicException(ExceptionCode.NO_PERMISSION_EDITING_COMMENT);
+            }
+            playListLikeRepository.delete(like);
         }
-        return resultData;
     }
 
-    // 유저가 이미 좋아요 한 게시물인지 체크
-    private boolean isNotAlreadyLike(Member member, PlayList playList){
-        return playListLikeRepository.findByMemberAndPlayList(member, playList).isEmpty();
+//    public void cancelLike(Long memberId, Long memberId){
+//        PlayListLike likeId = getLike(id);
+//        Member member = memberService.findMember(memberId);
+//
+//        if (!member.getMemberId().equals(likeId.getMember().getMemberId()) && !member.getRoles().contains("admin")){
+//            throw new BusinessLogicException(ExceptionCode.NO_PERMISSION_EDITING_COMMENT);
+//        }
+//
+//        playListLikeRepository.delete(likeId);
+//    }
+
+    // 조회
+    public PlayListLike getLike(long likeId){
+        return playListLikeRepository.findById(likeId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.PlAYLIST_LIKE_NOT_FOUND));
+    }
+
+    // 모든 멤버, 플리 아이디 조회
+    public List<PlayListLike> getAllLikesForMemberAndPlayList(Long memberId, Long playListId) {
+        return playListLikeRepository.findByMemberMemberIdAndPlayListPlayListId(memberId, playListId);
+    }
+
+     // 이미 좋아요를 눌렀는지 조회
+    public List<PlayListLike> isAlreadyLiked(Long memberId){
+        return playListLikeRepository.findByMemberMemberId(memberId);
+    }
+
+    // {playlist-id} like 전체 조회
+    public List<PlayListLike> getLikesByPlayListId(Long playListId){
+        return playListLikeRepository.findByPlayListPlayListId(playListId);
+    }
+
+    // playList의 likeCount + 1
+    public PlayListDto.ResponseDto increaseLikeCount(Long playListId) {
+        PlayList playList = playListService.findVerifiedPlayList(playListId);
+
+        playList.increaseLikeCount();
+
+        PlayList updatedPlayList = playListRepository.save(playList);
+        return playListMapper.playListToResponse(updatedPlayList);
+    }
+
+    // playList의 likeCount -1
+    public PlayListDto.ResponseDto declineLikeCount(Long playListId) {
+        PlayList playList = playListService.findVerifiedPlayList(playListId);
+
+        playList.declineLikeCount();
+
+        PlayList updatedPlayList = playListRepository.save(playList);
+        return playListMapper.playListToResponse(updatedPlayList);
     }
 }
