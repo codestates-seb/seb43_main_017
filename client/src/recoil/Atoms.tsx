@@ -83,3 +83,9 @@ export const musicDataListState = atom<MusicData[]>({
     key: 'musicDataListState',
     default: [],
 });
+
+/* 2023.05.16 마이플레이리스트 메뉴 모달 창 상태관리 - 홍혜란 */
+export const showSearch = atom<boolean>({
+    key: 'showSearch',
+    default: false,
+});

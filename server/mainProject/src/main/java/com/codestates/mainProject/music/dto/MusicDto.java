@@ -24,7 +24,6 @@ public class MusicDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class PatchDto {
-        private long musicId;
         private String musicName;
         private String artistName;
         private String albumName;
