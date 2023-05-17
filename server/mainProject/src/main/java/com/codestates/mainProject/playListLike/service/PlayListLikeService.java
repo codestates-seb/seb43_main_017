@@ -34,6 +34,8 @@ public class PlayListLikeService {
         like.setMember(member);
         like.setPlayList(playList);
 
+        playList.addPlayListLike(like);
+
         return playListLikeRepository.save(like);
     }
 

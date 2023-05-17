@@ -5,6 +5,8 @@ import com.codestates.mainProject.exception.ExceptionCode;
 import com.codestates.mainProject.member.entity.Member;
 import com.codestates.mainProject.member.repository.MemberRepository;
 import com.codestates.mainProject.member.service.MemberService;
+import com.codestates.mainProject.memberMusic.entity.MemberMusic;
+import com.codestates.mainProject.memberMusic.service.MemberMusicService;
 import com.codestates.mainProject.music.entity.Music;
 import com.codestates.mainProject.music.service.MusicService;
 import com.codestates.mainProject.musicLike.entity.MusicLike;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,19 +29,44 @@ public class MusicLikeService {
     private final MemberService memberService;
     private final MusicService musicService;
     private final MemberRepository memberRepository;
+    private final MemberMusicService memberMusicService;
 
     // 음악 좋아요 생성
     public MusicLike createMusicLike(long memberId, long musicId) {
-        Member member = memberService.findVerifiedMember(memberId);
-        Music music = musicService.findMusicById(musicId);
+        MemberMusic memberMusic =memberMusicService.createMemberMusic(memberId, musicId);
+        Member member = memberMusic.getMember();
+        Music music = memberMusic.getMusic();
+
+        member.addMemberMusic(memberMusic);
+        music.addMemberMusic(memberMusic);
 
         MusicLike musicLike = new MusicLike(member, music);
+        music.addMusicLike(musicLike);
         return musicLikeRepository.save(musicLike);
     }
 
-    // 음악 좋아요 취소(삭제)
-    public void deleteMusicLike(long musicLikeId, long memberId) {
+//     음악 좋아요 취소(삭제)
+    public void deleteMusicLike(long musicLikeId, Long memberId) {
+
+
         MusicLike musicLike = findVerifiedMusicLike(musicLikeId);
+        Music music = musicLike.getMusic();
+        long musicId =music.getMusicId();
+
+        MemberMusic findMemberMusic = memberMusicService.findVerifiedMemberMusic(memberId, musicId);
+        Member member = findMemberMusic.getMember();
+        List<MusicLike> musicLikes = musicLike.getMusic().getMusicLikes();
+
+        Optional<MusicLike> optionalMusicLike = musicLikes.stream()
+                .filter(musiclike -> musiclike.getMember().getMemberId().equals(memberId))
+                .findFirst();
+        if(optionalMusicLike.isPresent()){
+            music.removeMusicLike(optionalMusicLike.orElse(null));
+            member.removeMemberMusic(findMemberMusic);
+            music.removeMemberMusic(findMemberMusic);
+            memberMusicService.deleteMemberMusic(memberId,musicId);
+        }
+
         validateMusicLikeAuthorOrAdmin(memberId, musicLike);
 
         musicLikeRepository.delete(musicLike);
