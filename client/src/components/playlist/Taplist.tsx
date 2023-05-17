@@ -60,7 +60,7 @@ function Taplist() {
                         </div>
                         <div className="pl-title">
                             <p>
-                                <Link to={`/musicdetail/${data.playListId}`}>{data.title.slice(0, 20)}</Link>
+                                <Link to={`/playlsit/${data.playListId}`}>{data.title.slice(0, 20)}</Link>
                             </p>
                             <p>{data.createMember}</p>
                         </div>

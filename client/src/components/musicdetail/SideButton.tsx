@@ -1,14 +1,16 @@
 import styled from 'styled-components';
 import { BiMessageSquareAdd } from 'react-icons/bi';
 import { HiOutlineHeart, HiHeart } from 'react-icons/hi';
+import { RiDownload2Fill } from 'react-icons/ri';
 import { useRecoilState } from 'recoil';
-import { commentOpenState } from 'src/recoil/Atoms';
+import { commentOpenState, downloadLink } from 'src/recoil/Atoms';
 import { useState } from 'react';
 
 function Sidebutton() {
     const [commentOpen, setCommentOpen] = useRecoilState<boolean>(commentOpenState);
     const [like, setLike] = useState<boolean>(false);
-
+    const [download] = useRecoilState<string>(downloadLink);
+    console.log(download);
     return (
         <SidebtnGroup>
             <Button
@@ -27,6 +29,12 @@ function Sidebutton() {
                 <BiMessageSquareAdd />
                 <span>COMMENT</span>
             </Button>
+            <Button>
+                <a href="/assets/music/Happy Feet - Soundroll.mp3" download="Happy Feet - Soundroll.mp3">
+                    <RiDownload2Fill />
+                    <span>DOWNLOAD</span>
+                </a>
+            </Button>
         </SidebtnGroup>
     );
 }
@@ -38,7 +46,7 @@ const SidebtnGroup = styled.div`
     opacity: 0;
     animation: fadeinText2 2s forwards 3.5s;
     > * {
-        margin: 40px 20px 0px 20px;
+        margin: 20px 20px 0px 20px;
     }
     @keyframes fadeinText2 {
         100% {
@@ -57,5 +65,13 @@ const Button = styled.div`
     }
     span {
         margin-left: 10px;
+    }
+
+    a {
+        color: #ccc;
+        text-decoration: none;
+    }
+    a:hover {
+        color: rgba(199, 68, 68, 1);
     }
 `;

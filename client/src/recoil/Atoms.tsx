@@ -65,3 +65,8 @@ export const soundbarOpenState = atom<boolean>({
     key: 'soundbarOpenState',
     default: false,
 });
+
+export const downloadLink = atom<string>({
+    key: 'downloadLink',
+    default: '',
+});

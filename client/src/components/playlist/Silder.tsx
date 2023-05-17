@@ -85,7 +85,7 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
                 {pldata.map((data) => (
                     <Plcard bgImg="/" key={data.playListId}>
                         <div className="pl-treck">TRECK 10</div>
-                        <Link to={`/musicdetail/${data.playListId}`}>
+                        <Link to={`/playlsit/${data.playListId}`}>
                             <div className="pl-contents">
                                 <Pltag>
                                     {/* {data.tag.map((tag, index) => (

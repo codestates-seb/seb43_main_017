@@ -8,6 +8,18 @@ export interface PlcardProps {
     modifiedAt: string;
 }
 
+export interface musicdetail {
+    musicId: number;
+    musicName: string;
+    artistName: string;
+    albumName: string;
+    musicTime: number;
+    albumCoverImg: string;
+    musicUri: string;
+    createdAt: string;
+    modifiedAt: string;
+}
+
 export interface bgimg {
     bgImg: string;
 }
