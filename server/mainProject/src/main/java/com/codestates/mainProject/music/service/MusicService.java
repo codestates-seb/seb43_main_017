@@ -93,9 +93,9 @@ public class MusicService {
     }
 
     // musicName, artistName, albumName 중 검색어를 포함하는 music을 조회
-//    public List<Music> searchMusic(String keyword) {
-//        return musicRepository.findByMusic_musicNameContainingOrMusic_artistNameContainingOrMusic_albumNameContaining(keyword, keyword, keyword);
-//    }
+    public List<Music> findMusicByKeyword(String keyword) {
+        return musicRepository.findMusicByKeyword(keyword);
+    }
 
     // 유효한 musicId 인지 조회
     private Music findVerifiedMusic(long musicId) {
