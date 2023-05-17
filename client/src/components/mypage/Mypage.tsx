@@ -60,34 +60,32 @@ function Mypage() {
     useEffect(() => {
         return () => {
             const userData: UserData = { name, intro };
-            axios.patch('https://c2fe-59-17-229-47.ngrok-free.app/members/{member-id}', userData);
+            axios.patch('members/{member-id}', userData);
         };
     }, [name, intro]);
 
     /* 2023.05.16 마이페이지 유저 정보 상태관리 - 홍혜란 */
-    const userInfoState = atom<UserInfo | null>({
-        key: 'userInfoState',
-        default: null,
-    });
+    // const userInfoState = atom<UserInfo | null>({
+    //     key: 'userInfoState',
+    //     default: null,
+    // });
 
     /* 2023.05.16 로그인 했을 시 유저 정보 데이터 불러오기 - 홍혜란 */
-    const [userInfo, setUserInfo] = useRecoilState<UserInfo | null>(userInfoState);
+    // const [userInfo, setUserInfo] = useRecoilState<UserInfo | null>(userInfoState);
 
-    useEffect(() => {
-        const fetchUserInfo = async () => {
-            try {
-                const response = await fetch(
-                    'http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/{member-id}',
-                );
-                const userData = await response.json();
-                setUserInfo(userData);
-            } catch (error) {
-                console.error('Failed to fetch user information:', error);
-            }
-        };
+    // useEffect(() => {
+    //     const fetchUserInfo = async () => {
+    //         try {
+    //             const response = await fetch('members/{member-id}');
+    //             const userData = await response.json();
+    //             setUserInfo(userData);
+    //         } catch (error) {
+    //             console.error('Failed to fetch user information:', error);
+    //         }
+    //     };
 
-        fetchUserInfo();
-    }, [setUserInfo]);
+    //     fetchUserInfo();
+    // }, [setUserInfo]);
 
     return (
         <div>
@@ -95,48 +93,48 @@ function Mypage() {
             <MypageContainer>
                 <MypageListContainer>
                     <UserProfile>
-                        {userInfo ? (
-                            <>
-                                <div className="user-profile">
-                                    <img src={userInfo.image} alt="userimg" />
+                        {/* {userInfo ? ( */}
+                        <>
+                            <div className="user-profile">
+                                <img src="./assets/ditto.png" alt="userimg" />
+                            </div>
+                            <UserContainer>
+                                {/* 사용자의 이름 출력 및 수정 */}
+                                <div className="user-name-container">
+                                    {editingName ? (
+                                        <input
+                                            type="text"
+                                            value={name}
+                                            onChange={handleNameChange}
+                                            onBlur={handleNameBlur}
+                                        />
+                                    ) : (
+                                        <div className="user-name" onClick={handleNameClick} contentEditable>
+                                            {name}
+                                        </div>
+                                    )}
                                 </div>
-                                <UserContainer>
-                                    {/* 사용자의 이름 출력 및 수정 */}
-                                    <div className="user-name-container">
-                                        {editingName ? (
-                                            <input
-                                                type="text"
-                                                value={name}
-                                                onChange={handleNameChange}
-                                                onBlur={handleNameBlur}
-                                            />
-                                        ) : (
-                                            <div className="user-name" onClick={handleNameClick} contentEditable>
-                                                {userInfo.name}
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div className="user-email">{userInfo.email}</div>
-                                    {/* 사용자의 자기소개 출력 및 수정 */}
-                                    <div className="user-coment-container">
-                                        {editingIntro ? (
-                                            <input
-                                                type="text"
-                                                value={intro}
-                                                onChange={handleIntroChange}
-                                                onBlur={handleIntroBlur}
-                                            />
-                                        ) : (
-                                            <div className="user-coment" onClick={handleIntroClick} contentEditable>
-                                                {intro}
-                                            </div>
-                                        )}
-                                    </div>
-                                </UserContainer>
-                            </>
-                        ) : (
+                                <div className="user-email">undefinded@naver.com</div>
+                                {/* 사용자의 자기소개 출력 및 수정 */}
+                                <div className="user-coment-container">
+                                    {editingIntro ? (
+                                        <input
+                                            type="text"
+                                            value={intro}
+                                            onChange={handleIntroChange}
+                                            onBlur={handleIntroBlur}
+                                        />
+                                    ) : (
+                                        <div className="user-coment" onClick={handleIntroClick} contentEditable>
+                                            {intro}
+                                        </div>
+                                    )}
+                                </div>
+                            </UserContainer>
+                        </>
+                        {/* ) : (
                             <p>Loading user information...</p>
-                        )}
+                        )} */}
                     </UserProfile>
 
                     <MusicInfor>

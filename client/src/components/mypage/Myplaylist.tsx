@@ -5,6 +5,8 @@ import { BsMusicPlayer, BsPlayCircle } from 'react-icons/bs';
 import { CiMenuKebab } from 'react-icons/ci';
 import { modalState } from 'src/recoil/Atoms';
 import { useState } from 'react';
+import { atom } from 'recoil';
+import axios from 'axios';
 
 /* 2023.05.10 마이플레이스트 타입 선언 */
 type PlayData = {
@@ -40,12 +42,35 @@ const MyPlay: PlayData[] = [
     },
 ];
 
+// const playlistState = atom<PlayData[]>({
+//     key: 'playlistState',
+//     default: [],
+// });
+
 const Myplaylist = () => {
     const playlistData = MyPlay;
 
     /* 2023.05.16 마이플레이리스트 메뉴 버튼 클릭시 수정, 삭제 버튼 모달 */
     const [showModal, setShowModal] = useRecoilState<boolean>(modalState);
     const [selectedPlaylistId, setSelectedPlaylistId] = useState<number | null>(null);
+
+    /* 2023.05.16 마이플레이리스트 메뉴 버튼 클릭시 삭제 버튼 요청 */
+    // const [playlist, setPlaylist] = useRecoilState(playlistState);
+
+    // const handleDelete = (playlistId: number) => {
+    //     const updatedPlaylist = playlist.filter((data) => data.playListId !== playlistId);
+    //     setPlaylist(updatedPlaylist);
+
+    //     axios
+    //         .delete(`/playlists/${playlistId}`)
+    //         .then(() => {
+    //             console.log('플레이리스트 아이템이 성공적으로 삭제되었습니다.');
+    //         })
+    //         .catch((error) => {
+    //             console.error('플레이리스트 아이템 삭제 중 오류가 발생했습니다:', error);
+    //             setPlaylist(playlist);
+    //         });
+    // };
 
     return (
         <PlayListContainer>
@@ -79,6 +104,7 @@ const Myplaylist = () => {
                         {selectedPlaylistId === data.playListId && showModal && (
                             <ModalContainer>
                                 <ModalButtons>
+                                    {/* <Button onClick={() => handleDelete(data.playListId)}>수정</Button> */}
                                     <Button>수정</Button>
                                     <Button>삭제</Button>
                                 </ModalButtons>
