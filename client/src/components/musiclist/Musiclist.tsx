@@ -1,12 +1,14 @@
 import styled from 'styled-components';
-import Search from './Search';
 import Categories from './Categories';
 import Trending from './Tranding';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import axios from 'axios';
 import { atom } from 'recoil';
+import { showSearch } from 'src/recoil/Atoms';
 import Sideicon from 'src/components/musiclist/SideIcon';
+import { BiSearch } from 'react-icons/bi';
+import { Link } from 'react-router-dom';
 
 /* 2023.05.08 MusicList MusicList 타입 선언 - 홍혜란 */
 interface MusicData {
@@ -43,6 +45,8 @@ const Musiclist = () => {
     const [musicDataList, setMusicDataList] = useRecoilState(musicDataListState);
     const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
     const [totalPages, setTotalPages] = useState<number>(0); // 전체 페이지 수
+    const [openSearch, setOpenSearch] = useRecoilState<boolean>(showSearch);
+    const [tapClick, setTapClick] = useState<number>(0);
     const buttonArray = [];
 
     useEffect(() => {
@@ -80,21 +84,50 @@ const Musiclist = () => {
         setCurrentPage(currentPage - 1);
     };
 
+    const formatSecondsToTime = (time: number) => {
+        const minutes = Math.floor(time / 60);
+        const remainingSeconds = time % 60;
+        const formattedMinutes = String(minutes).padStart(2, '0');
+        const formattedSeconds = String(remainingSeconds).padStart(2, '0');
+        return `${formattedMinutes}:${formattedSeconds}`;
+    };
+
     return (
         <Container>
             <BackgroundCover></BackgroundCover>
             <MusiclistContainer>
-                <TagContainer>
-                    <Search />
+                <TagContainer className={openSearch ? 'open-search' : ''}>
                     <Categories />
                 </TagContainer>
                 <RightContainer>
+                    <SearchOpen
+                        onClick={() => {
+                            setOpenSearch(true);
+                        }}
+                    >
+                        <BiSearch />
+                        SEARCH
+                    </SearchOpen>
                     <Trending />
                     <MusicListTitle>
                         <div className="musicList-title">Music List</div>
                         <div className="music-inquiry">
-                            <li>최신순</li>
-                            <li>좋아요순</li>
+                            <li
+                                className={tapClick === 0 ? 'active' : ''}
+                                onClick={() => {
+                                    setTapClick(0);
+                                }}
+                            >
+                                최신순
+                            </li>
+                            <li
+                                className={tapClick === 1 ? 'active' : ''}
+                                onClick={() => {
+                                    setTapClick(1);
+                                }}
+                            >
+                                좋아요순
+                            </li>
                         </div>
                     </MusicListTitle>
                     <SongContainer>
@@ -103,10 +136,14 @@ const Musiclist = () => {
                                 <li className="music-image">
                                     <img src={musicData.albumCoverImg} alt={musicData.musicName} />
                                 </li>
-                                <li className="music-name">{musicData.musicName}</li>
+                                <li className="music-name">
+                                    <Link to={`/musiclist/${musicData.musicId}`}>{musicData.musicName}</Link>
+                                </li>
                                 <li className="music-artist color-gray">{musicData.artistName}</li>
                                 <li className="music-album color-gray">{musicData.albumName}</li>
-                                <li className="music-time color-gray">{musicData.musicTime}</li>
+                                <li className="music-time color-gray">
+                                    {formatSecondsToTime(Number(musicData.musicTime))}
+                                </li>
                                 <Sideicon />
                             </Item>
                         ))}
@@ -140,21 +177,36 @@ const MusiclistContainer = styled.div`
     display: flex;
     align-items: center;
     flex-direction: row;
+    height: 100vh;
     @media screen and (max-width: 700px) {
-        flex-direction: column;
+        padding-top: 100px;
     }
 `;
 
 /* 2023.05.08 MusicList (검색,카테고리 컨테이너) 컴포넌트 구현 - 홍혜란 */
 const TagContainer = styled.div`
-    width: 500px;
+    width: 450px;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.4);
     display: flex;
     flex-direction: column;
     @media screen and (max-width: 700px) {
-        width: 350px;
-        height: auto;
+        /* display: none; */
+        position: absolute;
+        display: none;
+        top: 0px;
+        width: 0%;
+        z-index: 3;
+        animation: openSearch 1s forwards;
+        overflow: hidden;
+    }
+
+    &.open-search {
+        display: block;
+    }
+    @keyframes openSearch {
+        100% {
+            width: 100%;
+        }
     }
 `;
 
@@ -187,8 +239,7 @@ const RightContainer = styled.div`
     height: 100vh;
     margin: 0px 5%;
     @media screen and (max-width: 700px) {
-        margin-left: 0;
-        margin-top: 30px;
+        width: 90%;
     }
 `;
 
@@ -208,21 +259,22 @@ const MusicListTitle = styled.div`
     .music-inquiry {
         display: flex;
         border: 2px solid rgba(255, 255, 255, 0.4);
-        border-radius: 10px;
+        border-radius: 5px;
+        cursor: pointer;
     }
-    .music-inquiry li {
+    li {
         font-size: 12px;
-        color: rgba(255, 255, 255, 0.4);
+        color: rgba(255, 255, 255, 0.2);
         padding: 8px 12px;
         align-items: center;
         height: 100%;
     }
-    .music-inquiry li:hover {
-        color: rgba(255, 255, 255, 0.8);
-        background-color: rgba(255, 255, 255, 0.1);
-    }
-    .music-inquiry li:nth-child(2) {
+    li:nth-child(2) {
         border-left: 2px solid rgba(255, 255, 255, 0.4);
+    }
+    .active {
+        color: rgba(255, 255, 255, 0.6);
+        background-color: rgba(255, 255, 255, 0.1);
     }
 `;
 
@@ -276,6 +328,10 @@ const Item = styled.ul`
         border-top: 1px solid rgba(255, 255, 255, 0.2);
     }
 
+    .music-name a {
+        color: #ccc;
+        text-decoration: none;
+    }
     .music-image {
         width: 70px;
         height: 50px;
@@ -290,6 +346,14 @@ const Item = styled.ul`
     .color-gray {
         color: #999;
     }
+    @media (max-width: 1200px) {
+        .music-time {
+            display: none;
+        }
+        .music-album {
+            display: none;
+        }
+    }
 `;
 
 const Pagination = styled.div`
@@ -297,7 +361,7 @@ const Pagination = styled.div`
         color: #ccc;
         background: none;
         border: 1px solid #5a5a5a;
-        border-radius: 5px;
+        border-radius: 3px;
         margin: 40px 3px;
         transition: 0.2s ease-in-out;
         cursor: pointer;
@@ -321,5 +385,27 @@ const Pagination = styled.div`
         color: #ccc;
         border-color: #ccc;
         background: rgba(255, 255, 255, 0.2);
+    }
+`;
+
+const SearchOpen = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 20px;
+    border-radius: 20px;
+    border: 2px solid #ccc;
+    color: #ccc;
+    font-size: 0.8rem;
+    transition: 0.2s ease-in-out;
+    > * {
+        margin-right: 5px;
+    }
+    :hover {
+        border: 2px solid rgba(199, 68, 68, 1);
+        color: rgba(199, 68, 68, 1);
+    }
+    @media (min-width: 700px) {
+        display: none;
     }
 `;

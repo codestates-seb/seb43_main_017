@@ -76,7 +76,7 @@ const Trending = () => {
 
     useEffect(() => {
         axios
-            .get('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics?&size=5')
+            .get('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics?&size=6')
             .then((response) => {
                 setTranding(response.data.data);
             })
@@ -114,6 +114,9 @@ const Container = styled.div`
     padding: 16px 0;
     width: 100%;
     margin-top: 40px;
+    @media (max-width: 700px) {
+        margin-top: 0px;
+    }
 `;
 
 /* 2023.05.08 MusicList Tranding (타이틀 컨테이너) 컴포넌트 구현 - 홍혜란 */
@@ -185,6 +188,10 @@ const Image = styled.img`
     height: 130px;
     border-radius: 10%;
     object-fit: cover;
+    @media screen and (max-width: 700px) {
+        width: 100px;
+        height: 100px;
+    }
 `;
 
 /* 2023.05.08 MusicList Tranding (노래 제목) 컴포넌트 구현 - 홍혜란 */

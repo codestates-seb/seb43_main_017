@@ -17,12 +17,14 @@ function Sideicon() {
                     onClick={() => {
                         setLike(!like);
                     }}
+                    className="color-red like-action"
                 />
             ) : (
                 <HiOutlineHeart
                     onClick={() => {
                         setLike(!like);
                     }}
+                    className="color-red"
                 />
             )}
         </MusicIconGroup>
@@ -33,16 +35,33 @@ export default Sideicon;
 
 const MusicIconGroup = styled.li`
     > * {
-        margin: 0px 10px;
+        margin: 0px 20px;
         font-size: 1rem;
     }
     .color-blue {
         color: #6e9cff;
         font-size: 1.5rem;
-        transition: 0.5s ease-in-out;
+        transition: 0.2s ease-in-out;
     }
-    :hover .color-blue {
-        transform: rotate(360deg);
-        font-size: 2rem;
+    .color-blue:hover {
+        color: #a3c0ff;
+    }
+
+    .color-red {
+        color: rgba(199, 68, 68, 1);
+    }
+    .like-action {
+        animation: likeaction 0.5s forwards;
+    }
+    @keyframes likeaction {
+        50% {
+            transform: scale(1.5);
+            color: #ff7777;
+        }
+    }
+    @media (max-width: 1200px) {
+        > * {
+            margin: 0px 10px;
+        }
     }
 `;
