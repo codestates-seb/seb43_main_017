@@ -100,12 +100,12 @@ public class MusicController {
     }
 
     // musicName, artistName, albumName 중 검색어를 포함하는 music을 조회
-//    @GetMapping("/search")
-//    public ResponseEntity<List<Music>> searchMusic(@RequestParam String keyword) {
-//        List<Music> musics = musicService.searchMusic(keyword);
-//
-//        return ResponseEntity.ok(musics);
-//    }
+    @GetMapping("/search")
+    public ResponseEntity<List<Music>> findMusicByKeyword(@RequestParam String keyword) {
+        List<Music> musics = musicService.findMusicByKeyword(keyword);
+
+        return ResponseEntity.ok(musics);
+    }
 
     // 음악 수정
     @PatchMapping("/{music-id}")
