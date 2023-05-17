@@ -56,27 +56,29 @@ function Mypage() {
         setIntro(event.target.value);
     };
 
-    /* 2023.05.06 수정된 이름과 자기소개 데이터를 서버에 저장 */
-    useEffect(() => {
-        return () => {
-            const userData: UserData = { name, intro };
-            axios.patch('members/{member-id}', userData);
-        };
-    }, [name, intro]);
+    // /* 2023.05.06 수정된 이름과 자기소개 데이터를 서버에 저장 */
+    // useEffect(() => {
+    //     return () => {
+    //         const userData: UserData = { name, intro };
+    //         axios.patch('members/{member-id}', userData);
+    //     };
+    // }, [name, intro]);
 
-    /* 2023.05.16 마이페이지 유저 정보 상태관리 - 홍혜란 */
+    // /* 2023.05.16 마이페이지 유저 정보 상태관리 - 홍혜란 */
     // const userInfoState = atom<UserInfo | null>({
     //     key: 'userInfoState',
     //     default: null,
     // });
 
-    /* 2023.05.16 로그인 했을 시 유저 정보 데이터 불러오기 - 홍혜란 */
+    // /* 2023.05.16 로그인 했을 시 유저 정보 데이터 불러오기 - 홍혜란 */
     // const [userInfo, setUserInfo] = useRecoilState<UserInfo | null>(userInfoState);
 
     // useEffect(() => {
     //     const fetchUserInfo = async () => {
     //         try {
-    //             const response = await fetch('members/{member-id}');
+    //             const response = await fetch(
+    //                 'http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/{member-id}',
+    //             );
     //             const userData = await response.json();
     //             setUserInfo(userData);
     //         } catch (error) {

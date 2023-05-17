@@ -42,10 +42,10 @@ const MyPlay: PlayData[] = [
     },
 ];
 
-// const playlistState = atom<PlayData[]>({
-//     key: 'playlistState',
-//     default: [],
-// });
+const playlistState = atom<PlayData[]>({
+    key: 'playlistState',
+    default: [],
+});
 
 const Myplaylist = () => {
     const playlistData = MyPlay;
@@ -55,22 +55,22 @@ const Myplaylist = () => {
     const [selectedPlaylistId, setSelectedPlaylistId] = useState<number | null>(null);
 
     /* 2023.05.16 마이플레이리스트 메뉴 버튼 클릭시 삭제 버튼 요청 */
-    // const [playlist, setPlaylist] = useRecoilState(playlistState);
+    const [playlist, setPlaylist] = useRecoilState(playlistState);
 
-    // const handleDelete = (playlistId: number) => {
-    //     const updatedPlaylist = playlist.filter((data) => data.playListId !== playlistId);
-    //     setPlaylist(updatedPlaylist);
+    const handleDelete = (playlistId: number) => {
+        const updatedPlaylist = playlist.filter((data) => data.playListId !== playlistId);
+        setPlaylist(updatedPlaylist);
 
-    //     axios
-    //         .delete(`/playlists/${playlistId}`)
-    //         .then(() => {
-    //             console.log('플레이리스트 아이템이 성공적으로 삭제되었습니다.');
-    //         })
-    //         .catch((error) => {
-    //             console.error('플레이리스트 아이템 삭제 중 오류가 발생했습니다:', error);
-    //             setPlaylist(playlist);
-    //         });
-    // };
+        axios
+            .delete(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/members/{member-id}`)
+            .then(() => {
+                console.log('플레이리스트 아이템이 성공적으로 삭제되었습니다.');
+            })
+            .catch((error) => {
+                console.error('플레이리스트 아이템 삭제 중 오류가 발생했습니다:', error);
+                setPlaylist(playlist);
+            });
+    };
 
     return (
         <PlayListContainer>
@@ -104,9 +104,9 @@ const Myplaylist = () => {
                         {selectedPlaylistId === data.playListId && showModal && (
                             <ModalContainer>
                                 <ModalButtons>
-                                    {/* <Button onClick={() => handleDelete(data.playListId)}>수정</Button> */}
                                     <Button>수정</Button>
-                                    <Button>삭제</Button>
+
+                                    <Button onClick={() => handleDelete(data.playListId)}>삭제</Button>
                                 </ModalButtons>
                             </ModalContainer>
                         )}
