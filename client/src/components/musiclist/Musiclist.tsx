@@ -4,44 +4,14 @@ import Trending from './Tranding';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import axios from 'axios';
-import { atom } from 'recoil';
 import { showSearch } from 'src/recoil/Atoms';
 import Sideicon from 'src/components/musiclist/SideIcon';
 import { BiSearch } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
-
-/* 2023.05.08 MusicList MusicList 타입 선언 - 홍혜란 */
-interface MusicData {
-    musicId: number;
-    musicName: string;
-    artistName: string;
-    albumName: string;
-    musicTime: number; // musicTime 속성을 숫자(number) 타입으로 수정합니다.
-    albumCoverImg: string;
-    musicUri: string;
-    createdAt: string;
-    modifiedAt: string;
-}
-
-interface MusicDataResponse {
-    data: MusicData[];
-    pageInfo: {
-        page: number;
-        size: number;
-        totalElements: number;
-        totalPages: number;
-    };
-}
-
-/* 2023.05.16 뮤직리스트 출력 상태 관리 - 홍혜란 */
-const musicDataListState = atom<MusicData[]>({
-    key: 'musicDataListState',
-    default: [],
-});
+import { MusicDataResponse } from 'src/types/Musiclist';
+import { musicDataListState } from 'src/recoil/Atoms';
 
 const Musiclist = () => {
-    // const msList = MusicList;
-
     const [musicDataList, setMusicDataList] = useRecoilState(musicDataListState);
     const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
     const [totalPages, setTotalPages] = useState<number>(0); // 전체 페이지 수
@@ -91,14 +61,6 @@ const Musiclist = () => {
         const formattedSeconds = String(remainingSeconds).padStart(2, '0');
         return `${formattedMinutes}:${formattedSeconds}`;
     };
-
-    // const formatSecondsToTime = (time) => {
-    //     const minutes = Math.floor(time / 60);
-    //     const remainingSeconds = time % 60;
-    //     const formattedMinutes = String(minutes).padStart(2, '0');
-    //     const formattedSeconds = String(remainingSeconds).padStart(2, '0');
-    //     return `${formattedMinutes}:${formattedSeconds}`;
-    // };
 
     return (
         <Container>
