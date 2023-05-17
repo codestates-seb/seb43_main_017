@@ -2,13 +2,11 @@ import styled from 'styled-components';
 import Search from './Search';
 import Categories from './Categories';
 import Trending from './Tranding';
-import { FiPlayCircle, FiFolderPlus } from 'react-icons/fi';
-import { BsBoxArrowInDown } from 'react-icons/bs';
-import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import axios from 'axios';
 import { atom } from 'recoil';
+import Sideicon from 'src/components/musiclist/SideIcon';
 
 /* 2023.05.08 MusicList MusicList 타입 선언 - 홍혜란 */
 interface MusicData {
@@ -43,18 +41,44 @@ const Musiclist = () => {
     // const msList = MusicList;
 
     const [musicDataList, setMusicDataList] = useRecoilState(musicDataListState);
+    const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
+    const [totalPages, setTotalPages] = useState<number>(0); // 전체 페이지 수
+    const buttonArray = [];
 
-    console.log(musicDataList);
     useEffect(() => {
         axios
-            .get<MusicDataResponse>('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics')
+            .get<MusicDataResponse>(
+                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics?&page=${currentPage}&size=5`,
+            )
             .then((response) => {
                 setMusicDataList(response.data.data);
+                setTotalPages(response.data.pageInfo.totalPages);
             })
             .catch((error) => {
                 console.error(error);
             });
-    }, [setMusicDataList]);
+    }, [setMusicDataList, currentPage]);
+
+    /** 2023.05.17 전체 페이지 수 만큼 버튼 생성 - 김주비*/
+    for (let i = 1; i <= totalPages; i++) {
+        buttonArray.push(
+            <button
+                key={i}
+                className={i === currentPage ? 'page-focused' : ''}
+                onClick={() => {
+                    setCurrentPage(i);
+                }}
+            >
+                {i}
+            </button>,
+        );
+    }
+    const handleNextPage = () => {
+        setCurrentPage(currentPage + 1);
+    };
+    const handlePrevPage = () => {
+        setCurrentPage(currentPage - 1);
+    };
 
     return (
         <Container>
@@ -67,7 +91,7 @@ const Musiclist = () => {
                 <RightContainer>
                     <Trending />
                     <MusicListTitle>
-                        <div className="musicList-title">MUSIC LIST</div>
+                        <div className="musicList-title">Music List</div>
                         <div className="music-inquiry">
                             <li>최신순</li>
                             <li>좋아요순</li>
@@ -76,28 +100,26 @@ const Musiclist = () => {
                     <SongContainer>
                         {musicDataList.map((musicData) => (
                             <Item key={musicData.musicId}>
-                                <li>
+                                <li className="music-image">
                                     <img src={musicData.albumCoverImg} alt={musicData.musicName} />
                                 </li>
-                                <li>{musicData.musicName}</li>
-                                <li>{musicData.artistName}</li>
-                                <li>{musicData.albumName}</li>
-                                <li>{musicData.musicTime}</li>
-                                <li>
-                                    <FiPlayCircle />
-                                </li>
-                                <li>
-                                    <FiFolderPlus />
-                                </li>
-                                <li>
-                                    <BsBoxArrowInDown />
-                                </li>
-                                <li>
-                                    <AiOutlineHeart />
-                                </li>
+                                <li className="music-name">{musicData.musicName}</li>
+                                <li className="music-artist color-gray">{musicData.artistName}</li>
+                                <li className="music-album color-gray">{musicData.albumName}</li>
+                                <li className="music-time color-gray">{musicData.musicTime}</li>
+                                <Sideicon />
                             </Item>
                         ))}
                     </SongContainer>
+                    <Pagination>
+                        <button disabled={currentPage === 1} onClick={handlePrevPage}>
+                            Prev
+                        </button>
+                        {buttonArray}
+                        <button disabled={currentPage === totalPages} onClick={handleNextPage}>
+                            Next
+                        </button>
+                    </Pagination>
                 </RightContainer>
             </MusiclistContainer>
         </Container>
@@ -127,7 +149,7 @@ const MusiclistContainer = styled.div`
 const TagContainer = styled.div`
     width: 500px;
     height: 100vh;
-    background: rgba(0, 0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.4);
     display: flex;
     flex-direction: column;
     @media screen and (max-width: 700px) {
@@ -163,7 +185,7 @@ const RightContainer = styled.div`
     flex-direction: column;
     width: 100%;
     height: 100vh;
-    margin-left: 100px;
+    margin: 0px 5%;
     @media screen and (max-width: 700px) {
         margin-left: 0;
         margin-top: 30px;
@@ -176,53 +198,40 @@ const MusicListTitle = styled.div`
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    margin-bottom: 10px;
+    height: 80px;
 
     .musicList-title {
-        font-size: 30px;
+        font-size: 1.5rem;
+        font-weight: 700;
         color: hsl(0, 0%, 100%);
-        margin: 20px 0px 20px 0px;
-        font-family: 'Monoton';
-        transform: translateY(30px);
-        animation: movingtext 1s forwards 0.2s;
     }
-
     .music-inquiry {
         display: flex;
-        margin: 20px 80px 0px 30px;
-        border: 1px solid white;
-        border-radius: 20px;
-        transform: translateY(30px);
-        animation: movingtext 1s forwards 0.2s;
-
-        li {
-            font-size: 12px;
-            color: hsl(0, 0%, 100%);
-            padding: 8px 12px;
-            align-items: center;
-            height: 100%;
-        }
-
-        li:nth-child(2) {
-            border-left: 1px solid white;
-        }
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        border-radius: 10px;
     }
-    @media screen and (max-width: 800px) {
-        margin-left: 50px;
-        .music-inquiry > li {
-            font-size: 5px;
-            padding: 6px 8px;
-        }
+    .music-inquiry li {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.4);
+        padding: 8px 12px;
+        align-items: center;
+        height: 100%;
+    }
+    .music-inquiry li:hover {
+        color: rgba(255, 255, 255, 0.8);
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+    .music-inquiry li:nth-child(2) {
+        border-left: 2px solid rgba(255, 255, 255, 0.4);
     }
 `;
 
 /* 2023.05.08 MusicList (뮤직리스트) 컴포넌트 구현 - 홍혜란 */
 const SongContainer = styled.div`
     display: flex;
-    align-items: center;
+    align-items: left;
     flex-direction: column;
     width: 100%;
-    height: 400px;
 `;
 
 /* 2023.05.08 MusicList (뮤직리스트의 아이템 전체) 컴포넌트 구현 - 홍혜란 */
@@ -230,14 +239,17 @@ const Item = styled.ul`
     display: flex;
     flex-direction: row;
     align-items: center;
-    flex: 1;
     width: 100%;
+    height: 50px;
+    padding: 10px 0px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     color: hsl(0, 0%, 100%);
+    transition: 0.3s ease-in-out;
+    opacity: 0;
+    animation: fadeIn 1s ease-in-out forwards;
     &:hover {
         background-color: hsl(0, 0%, 46%, 0.5);
     }
-    opacity: 0;
-    animation: fadeIn 1s ease-in-out forwards;
 
     @keyframes fadeIn {
         from {
@@ -251,72 +263,63 @@ const Item = styled.ul`
     }
 
     li {
-        font-size: 12px;
-        height: 50px;
-        width: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
+        font-size: 0.8rem;
+        height: 20px;
+        width: 100%;
+        font-family: 'Rajdhani', sans-serif;
     }
 
-    li:nth-child(n + 2):nth-child(-n + 5) {
-        margin-right: 100px;
+    :nth-child(1) {
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
     }
 
-    li:nth-child(n + 3):nth-child(-n + 5) {
-        color: hsl(0, 0%, 72%);
+    .music-image {
+        width: 70px;
+        height: 50px;
     }
-
-    li:nth-child(n + 6):nth-child(-n + 9) {
-        font-size: 18px;
-    }
-
-    li:nth-child(1) {
-        margin-right: 50px;
-    }
-
-    li:nth-child(2) {
-        font-weight: bold;
-    }
-
-    li:nth-child(6) {
-        color: hsl(207, 100%, 52%);
-    }
-
-    li:nth-child(9) {
-        color: rgb(245, 109, 109);
-        margin-right: 45px;
-    }
-
-    li > img {
+    .music-image img {
         width: 50px;
         height: 50px;
-        border-radius: 10%;
+        border-radius: 5px;
+        margin: 0px 10px;
     }
-    @media screen and (max-width: 1200px) {
-        li:nth-child(n + 2):nth-child(-n + 5) {
-            font-size: 10px;
-            margin-right: 5px;
-        }
+
+    .color-gray {
+        color: #999;
     }
-    @media screen and (max-width: 800px) {
-        li:nth-child(n + 4):nth-child(-n + 5) {
-            display: none;
-        }
-        li > img {
-            width: 40px;
-            height: 40px;
-        }
-        li:nth-child(n + 2):nth-child(-n + 3) {
-            font-size: 11px;
-            margin-right: 5px;
-        }
-        li:nth-child(1) {
-            margin-right: 5px;
-            margin-left: 30px;
-        }
-        li:nth-child(9) {
-            margin-right: 20px;
-        }
+`;
+
+const Pagination = styled.div`
+    button {
+        color: #ccc;
+        background: none;
+        border: 1px solid #5a5a5a;
+        border-radius: 5px;
+        margin: 40px 3px;
+        transition: 0.2s ease-in-out;
+        cursor: pointer;
+    }
+    button:hover {
+        color: #ccc;
+        border-color: #ccc;
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    button:disabled {
+        border: 1px solid #5a5a5a;
+        color: #5a5a5a;
+    }
+    button:disabled:hover {
+        background: none;
+        cursor: default;
+    }
+
+    .page-focused {
+        color: #ccc;
+        border-color: #ccc;
+        background: rgba(255, 255, 255, 0.2);
     }
 `;
