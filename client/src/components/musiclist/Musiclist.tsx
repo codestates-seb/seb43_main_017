@@ -16,7 +16,7 @@ interface MusicData {
     musicName: string;
     artistName: string;
     albumName: string;
-    musicTime: number; // musicTime 속성을 숫자(number) 타입으로 수정합니다.
+    musicTime: number;
     albumCoverImg: string;
     musicUri: string;
     createdAt: string;
@@ -55,6 +55,14 @@ const Musiclist = () => {
                 console.error(error);
             });
     }, [setMusicDataList]);
+
+    // const formatSecondsToTime = (time) => {
+    //     const minutes = Math.floor(time / 60);
+    //     const remainingSeconds = time % 60;
+    //     const formattedMinutes = String(minutes).padStart(2, '0');
+    //     const formattedSeconds = String(remainingSeconds).padStart(2, '0');
+    //     return `${formattedMinutes}:${formattedSeconds}`;
+    // };
 
     return (
         <Container>

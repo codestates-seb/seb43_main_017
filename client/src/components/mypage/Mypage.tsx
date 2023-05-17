@@ -77,7 +77,7 @@ function Mypage() {
         const fetchUserInfo = async () => {
             try {
                 const response = await fetch(
-                    'http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/{member-id}/info',
+                    'http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/{member-id}',
                 );
                 const userData = await response.json();
                 setUserInfo(userData);
