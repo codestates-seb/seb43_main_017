@@ -36,9 +36,6 @@ public class PlayListLikeController {
             PlayListLike like = playListLikeService.addLike(memberId, playListId);
             LikeDto responseDto = playListLikeMapper.playListLikeToResponse(like);
 
-            // 플레이리스트의 likeCount 증가
-            PlayListDto.ResponseDto playListResponseDto = playListLikeService.increaseLikeCount(playListId);
-
             return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -56,9 +53,6 @@ public class PlayListLikeController {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         } else {
             playListLikeService.cancelLike(memberId, playListId);
-
-            // 플레이리스트의 likeCount 감소
-            PlayListDto.ResponseDto updatedPlayList = playListLikeService.declineLikeCount(playListId);
 
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
