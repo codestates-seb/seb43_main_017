@@ -4,10 +4,10 @@ import com.codestates.mainProject.audit.Auditable;
 import com.codestates.mainProject.member.entity.Member;
 import com.codestates.mainProject.music.entity.Music;
 import com.codestates.mainProject.playListLike.entity.PlayListLike;
+import com.codestates.mainProject.playlListMusic.entity.PlayListMusic;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -29,38 +29,49 @@ public class PlayList extends Auditable {
     @Column(nullable = false)
     private String createMember;
 
-//    @Column(nullable = false)
-//    private String playListTags;
     @Column(nullable = false)
     private String title;
+
     @Column(nullable = false)
     private String body;
 
+    private String coverImg;
+
+    private String playListTags;
+
     @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
     private List<PlayListLike> playListLikes = new ArrayList<>();
+
     @Column(nullable = false)
-    private int likeCount = 0;
+    private int likeCount = this.playListLikes.size();
+
     @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
-    private List<Music> musics = new ArrayList<>();
+    private List<PlayListMusic> playlistMusics = new ArrayList<>();
 
-    public void addPlayListLike(PlayListLike playListLike){
-        this.playListLikes.add(playListLike);
-        playListLike.setPlayList(this);
+    public List<Music> getMusics() {
+        List<Music> musics = new ArrayList<>();
+        for (PlayListMusic playListMusic : playlistMusics) {
+            musics.add(playListMusic.getMusic());
+        }
+        return musics;
     }
 
-    public void addMusic(Music music){
-        this.musics.add(music);
-        music.setPlayList(this);
+    public void removePlayListLike(PlayListLike playListLike) {
+        this.playListLikes.remove(playListLike);
+        if(playListLike.getPlayList() != this) {
+            playListLike.setPlayList(this);
+        }
     }
 
-    // like + 1
-    public void increaseLikeCount(){likeCount++;}
+    public void addPlayListMusic(PlayListMusic playlistMusic) {
+            this.playlistMusics.add(playlistMusic);
+            playlistMusic.setPlayList(this);
+    }
 
-    // like - 1
-    public void declineLikeCount(){likeCount--;}
-
-    //TODO: PlayListLike 작업 완료 후 수정
-//    public void addPlayListLikes(PlayListLike playListLike){
-//        this.playListLikes.add(playListLike);
-//    }
+    public void removePlayListMusic(PlayListMusic playlistMusic) {
+        this.playlistMusics.remove(playlistMusic);
+        if(playlistMusic.getPlayList() != this) {
+            playlistMusic.setPlayList(this);
+        }
+    }
 }

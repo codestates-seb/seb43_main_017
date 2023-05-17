@@ -76,3 +76,9 @@ export const modalState = atom<boolean>({
     key: 'modalState',
     default: false,
 });
+
+/* 2023.05.16 마이플레이리스트 메뉴 모달 창 상태관리 - 홍혜란 */
+export const showSearch = atom<boolean>({
+    key: 'showSearch',
+    default: false,
+});

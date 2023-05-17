@@ -8,13 +8,13 @@ export default SoundBar;
 
 const Soundbarsection = styled.div`
     position: fixed;
-    bottom: -120px;
+    bottom: -60px;
     left: 50%;
     transform: translateX(-50%);
     background-color: rgba(20, 20, 20, 1);
     z-index: 3;
     width: 800px;
-    height: 120px;
+    height: 60px;
     border-radius: 30px 30px 0px 0px;
     animation: showbar 1s forwards;
 

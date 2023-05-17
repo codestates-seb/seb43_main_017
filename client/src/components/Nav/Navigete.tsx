@@ -10,8 +10,6 @@ import { selectIndexState, localIndexState } from 'src/recoil/Atoms';
 function Navigate({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetStateAction<boolean>> }) {
     const token = window.localStorage.getItem('access_token');
     const userimg = window.localStorage.getItem('userimg');
-    console.log(userimg);
-
     /**2023-05-05 선택된 아이콘 인덱스 스테이트 : 김주비*/
     const [selectIndex, setSelectIndex] = useRecoilState<number>(selectIndexState);
     const [localIndex, setLocalIndex] = useRecoilState<string | null>(localIndexState);
@@ -70,18 +68,42 @@ function Navigate({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetSt
                     ))}
                 </Dotsstyle>
                 <MenuIcon>
-                    {menuIconlist.map((el, index) => (
-                        <Link to={el.link} key={el.index}>
-                            <li
-                                onClick={() => {
-                                    setSelectIndex(el.index);
-                                }}
-                                className={localIndex === String(index) ? 'click-icon' : 'null'}
-                            >
-                                {el.name}
-                            </li>
-                        </Link>
-                    ))}
+                    {token
+                        ? menuIconlist.map((el, index) => (
+                              <Link to={el.link} key={el.index}>
+                                  <li
+                                      onClick={() => {
+                                          setSelectIndex(el.index);
+                                      }}
+                                      className={localIndex === String(index) ? 'click-icon' : 'null'}
+                                  >
+                                      {el.name}
+                                  </li>
+                              </Link>
+                          ))
+                        : menuIconlist.map((el, index) =>
+                              el.index !== 3 ? (
+                                  <Link to={el.link} key={el.index}>
+                                      <li
+                                          onClick={() => {
+                                              setSelectIndex(el.index);
+                                          }}
+                                          className={localIndex === String(index) ? 'click-icon' : 'null'}
+                                      >
+                                          {el.name}
+                                      </li>
+                                  </Link>
+                              ) : (
+                                  <li
+                                      onClick={() => {
+                                          setShowSignIn(true);
+                                      }}
+                                      className={localIndex === String(index) ? 'click-icon' : 'null'}
+                                  >
+                                      {el.name}
+                                  </li>
+                              ),
+                          )}
                 </MenuIcon>
                 <Dotsstyle>
                     {[...Array(5)].map((_, index) => (

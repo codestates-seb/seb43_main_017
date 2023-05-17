@@ -258,7 +258,7 @@ const Pagination = styled.div`
         color: #ccc;
         background: none;
         border: 1px solid #5a5a5a;
-        border-radius: 5px;
+        border-radius: 3px;
         margin: 40px 3px;
         transition: 0.2s ease-in-out;
         cursor: pointer;
