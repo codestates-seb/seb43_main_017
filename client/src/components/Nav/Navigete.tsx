@@ -68,18 +68,42 @@ function Navigate({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetSt
                     ))}
                 </Dotsstyle>
                 <MenuIcon>
-                    {menuIconlist.map((el, index) => (
-                        <Link to={el.link} key={el.index}>
-                            <li
-                                onClick={() => {
-                                    setSelectIndex(el.index);
-                                }}
-                                className={localIndex === String(index) ? 'click-icon' : 'null'}
-                            >
-                                {el.name}
-                            </li>
-                        </Link>
-                    ))}
+                    {token
+                        ? menuIconlist.map((el, index) => (
+                              <Link to={el.link} key={el.index}>
+                                  <li
+                                      onClick={() => {
+                                          setSelectIndex(el.index);
+                                      }}
+                                      className={localIndex === String(index) ? 'click-icon' : 'null'}
+                                  >
+                                      {el.name}
+                                  </li>
+                              </Link>
+                          ))
+                        : menuIconlist.map((el, index) =>
+                              el.index !== 3 ? (
+                                  <Link to={el.link} key={el.index}>
+                                      <li
+                                          onClick={() => {
+                                              setSelectIndex(el.index);
+                                          }}
+                                          className={localIndex === String(index) ? 'click-icon' : 'null'}
+                                      >
+                                          {el.name}
+                                      </li>
+                                  </Link>
+                              ) : (
+                                  <li
+                                      onClick={() => {
+                                          setShowSignIn(true);
+                                      }}
+                                      className={localIndex === String(index) ? 'click-icon' : 'null'}
+                                  >
+                                      {el.name}
+                                  </li>
+                              ),
+                          )}
                 </MenuIcon>
                 <Dotsstyle>
                     {[...Array(5)].map((_, index) => (
