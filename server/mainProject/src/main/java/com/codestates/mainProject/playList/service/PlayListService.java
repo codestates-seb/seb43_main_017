@@ -147,7 +147,7 @@ public class PlayListService {
                     music.getCreatedAt().toString(),
                     music.getModifiedAt().toString(),
                     new ArrayList<>(music.getTags()),
-                    music.getMember() != null ? music.getMember().getMemberId() : null,
+                    playList.getMember().getMemberId(),
                     music.getPlayList() != null ? music.getPlayList().getPlayListId() : null
             );
             musicDtos.add(musicDto);

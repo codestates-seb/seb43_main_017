@@ -98,14 +98,21 @@ public class MusicController {
             return new ResponseEntity<>(musicDtos, HttpStatus.OK);
         }
     }
-    // 음악 다운로드
+
+    // musicName, artistName, albumName 중 검색어를 포함하는 music을 조회
+//    @GetMapping("/search")
+//    public ResponseEntity<List<Music>> searchMusic(@RequestParam String keyword) {
+//        List<Music> musics = musicService.searchMusic(keyword);
+//
+//        return ResponseEntity.ok(musics);
+//    }
 
     // 음악 수정
     @PatchMapping("/{music-id}")
     public ResponseEntity patchMusic(@PathVariable("music-id") @Positive long musicId,
-                                      @Valid @RequestBody MusicDto.PatchDto patchDto){
-        Music music = mapper.patchToMusic(patchDto);
-        Music updatedMusic = musicService.updateMusic(music);
+                                      @Valid @RequestBody MusicDto.PatchDto patchDto,
+                                     @LoginMemberId Long memberId){
+        Music updatedMusic = musicService.updateMusic(patchDto, musicId, memberId);
         MusicDto.ResponseDto response = mapper.musicToResponse(updatedMusic);
 
         return new ResponseEntity<>(
