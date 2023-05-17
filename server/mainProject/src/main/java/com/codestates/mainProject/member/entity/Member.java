@@ -1,6 +1,7 @@
 package com.codestates.mainProject.member.entity;
 
 import com.codestates.mainProject.audit.Auditable;
+import com.codestates.mainProject.memberMusic.entity.MemberMusic;
 import com.codestates.mainProject.music.entity.Music;
 import com.codestates.mainProject.playList.entity.PlayList;
 import lombok.*;
@@ -41,7 +42,7 @@ public class Member extends Auditable {
     private List<String> roles = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
-    private List<Music> musics = new ArrayList<>();  // 음악에 like를 누르면 musics에 포함
+    private List<MemberMusic> memberMusics = new ArrayList<>();  // 음악에 like를 누르면 musics에 포함
 
     @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
     private List<PlayList> playLists = new ArrayList<>(); //playlist를 새로 생성하거나, 기존의 playlist 추가시 playlists에 추가
@@ -49,9 +50,16 @@ public class Member extends Auditable {
     @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
     private List<PlayList> likedPlayLists = new ArrayList<>();
 
-    public void addMusic(Music music){
-        this.musics.add(music);
-        music.setMember(this);
+    public void addMemberMusic(MemberMusic memberMusic){
+        this.memberMusics.add(memberMusic);
+        memberMusic.setMember(this);
+    }
+
+    public void removeMemberMusic(MemberMusic memberMusic) {
+        this.memberMusics.remove(memberMusic);
+        if(memberMusic.getMember() != this) {
+            memberMusic.setMember(this);
+        }
     }
 
     public void addPlayList(PlayList playList){
@@ -59,17 +67,25 @@ public class Member extends Auditable {
         playList.setMember(this);
     }
 
-    public void addLikedPlaylists(PlayList playList){
+    public void removePlayList(PlayList playList) {
+        this.playLists.remove(playList);
+        if(playList.getMember() != this) {
+            playList.setMember(this);
+        }
+    }
+
+    public void addLikedPlayLists(PlayList playList){
         this.likedPlayLists.add(playList);
         playList.setMember(this);
     }
 
-    public List<Music> getReverseMusics(){
-        List<Music> reversedList = new ArrayList<>(this.musics);
-        Collections.reverse(reversedList);
-
-        return reversedList;
+    public void removeLikedPlayLists(PlayList playList) {
+        this.likedPlayLists.remove(playList);
+        if(playList.getMember() != this) {
+            playList.setMember(this);
+        }
     }
+
 
     public Member(String email) {
         this.email = email;

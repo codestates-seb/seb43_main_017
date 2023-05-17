@@ -11,6 +11,8 @@ import com.codestates.mainProject.music.service.MusicService;
 import com.codestates.mainProject.playList.dto.PlayListDto;
 import com.codestates.mainProject.playList.entity.PlayList;
 import com.codestates.mainProject.playList.repository.PlayListRepository;
+import com.codestates.mainProject.playlListMusic.entity.PlayListMusic;
+import com.codestates.mainProject.playlListMusic.service.PlayListMusicService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +39,7 @@ public class PlayListService {
     private final PlayListRepository playListRepository;
     private final MemberService memberService;
     private final MusicService musicService;
+    private final PlayListMusicService playListMusicService;
 
     public PlayList createPlayList(PlayList playList) {
         try {
@@ -93,33 +96,40 @@ public class PlayListService {
 
     // 플리 안에 있는 음악 하나 삭제
     public void deleteMusicFromPlayList(long playListId, long musicId){
-        PlayList playList = findVerifiedPlayList(playListId);
+
+        PlayListMusic playListMusic = playListMusicService.findVerifiedPlayListMusic(playListId, musicId);
+        Music findMusic = playListMusic.getMusic();
+        PlayList findPlayList = playListMusic.getPlayList();
+
 
         //TODO: 인증된 사용자 정보 가져오기
 
-        List<Music> musics = playList.getMusics();
+        List<Music> musics = findPlayList.getMusics();
         // 음악 찾고 삭제
         Optional<Music> optionalMusic = musics.stream()
                 .filter(music -> music.getMusicId().equals(musicId))
                 .findFirst();
         if (optionalMusic.isPresent()) {
-            Music musicToRemove = optionalMusic.get();
-            musics.remove(musicToRemove);
-            playListRepository.save(playList);
+
+            findMusic.removePlayListMusic(playListMusic);
+            findPlayList.removePlayListMusic(playListMusic);
+            playListMusicService.deleteMemberMusic(playListId,musicId);
+
         } else throw new BusinessLogicException(ExceptionCode.MUSIC_NOT_FOUND);
     }
 
     // 만들어진 플리에 음악 추가
-    public void addMusicToPlayList(long playListId, long musicId){
-        PlayList playList = findVerifiedPlayList(playListId);
-        Music music = musicService.findMusicById(musicId);
+    public void addMusicToPlayList(long playListId, long musicId) {
+        PlayListMusic playListMusic = playListMusicService.createPlayListMusic(this, playListId, musicId);
 
-        List<Music> musics = playList.getMusics();
-        musics.add(music);
-        music.setPlayList(playList);
 
-        playListRepository.save(playList);
-    }
+        PlayList playList = playListMusic.getPlayList();
+        Music music = playListMusic.getMusic();
+
+        playList.addPlayListMusic(playListMusic);
+        music.addPlayListMusic(playListMusic);
+        }
+
 
     public PlayList findVerifiedPlayList(long playListId) {
         Optional<PlayList> optionalPlayList = playListRepository.findById(playListId);
@@ -147,9 +157,10 @@ public class PlayListService {
                     music.getCreatedAt().toString(),
                     music.getModifiedAt().toString(),
                     new ArrayList<>(music.getTags()),
-                    playList.getMember().getMemberId(),
-                    music.getPlayList() != null ? music.getPlayList().getPlayListId() : null
+                    playList.getMember().getMemberId()
+
             );
+
             musicDtos.add(musicDto);
         }
 

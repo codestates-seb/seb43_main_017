@@ -48,8 +48,7 @@ public class MusicDto {
         private String createdAt;
         private String modifiedAt;
         private List<String> tags;
-        private Long memberId;
-        private Long playListId;
+        private long memberId;
     }
 
     @Data
