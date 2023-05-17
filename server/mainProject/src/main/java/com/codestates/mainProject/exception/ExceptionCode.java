@@ -33,6 +33,7 @@ public enum ExceptionCode {
     MEMBER_MUSIC_NOT_FOUND(404, "멤버 뮤직을 찾을 수 없습니다"),
     PLAYLIST_MUSIC_NOT_FOUND(404, "플레이리스트 뮤직을 찾을 수 없습니다"),
     PLAYLIST_MUSIC_EXISTS(404, "플레이리스트 뮤직이 이미 존재합니다"),
+
     TAG_NOT_FOUND(404, "태그를 찾을 수 없습니다");
     @Getter
     private int status;
