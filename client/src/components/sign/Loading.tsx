@@ -26,9 +26,8 @@ export const Loading = () => {
     /** 2023/05/16 - 로딩페이지(콜백리다이렉트)로 이동시, 네이버 요청인 경우 - 박수범 */
     if (location.hash) {
         const { naver } = window;
-        const CLIENT_ID = process.env.REACT_APP_NAVER_CLIENT_ID;
         const naverLogin = new naver.LoginWithNaverId({
-            clientId: CLIENT_ID,
+            clientId: process.env.REACT_APP_NAVER_CLIENT_ID,
             callbackUrl: process.env.REDIRECT_URI,
             isPopup: false,
             callbackHandle: false,
@@ -73,6 +72,7 @@ export const Loading = () => {
         }
         /** 2023/05/16 - 카카오 요청인 경우 - 박수범 */
         if (kakaocode) {
+            // 카카오 인가코드를 통해 엑세스 토큰을 요청
             axios
                 .post(
                     `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${process.env.REACT_APP_KAKAO_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&code=${kakaocode}&client_secret=${process.env.REACT_APP_KAKAO_CLIENT_SECRET}`,
@@ -85,7 +85,7 @@ export const Loading = () => {
                 .then((res) => {
                     window.localStorage.setItem('access_token', res.data.access_token);
                     window.localStorage.setItem('refresh_token', res.data.refresh_token);
-                    console.log(res.data);
+                    // 카카오 엑세스토큰을 이용하여 유저정보를 요청
                     axios
                         .get(`https://kapi.kakao.com/v2/user/me`, {
                             headers: {
@@ -93,12 +93,12 @@ export const Loading = () => {
                             },
                         })
                         .then((res) => {
-                            console.log(res.data);
                             const kakaoemail = res.data.kakao_account.email;
                             const kakaonickname = res.data.properties.nickname;
                             const kakaoimg = res.data.properties.profile_image;
                             window.localStorage.setItem('userimg', kakaoimg);
                             if (kakaoemail) {
+                                // 카카오에서 받아온 유저정보를 백엔드 서버로 보내주고 토큰을 요청
                                 axios
                                     .post<LoginPost>(`${BaseUrl}`, {
                                         email: kakaoemail,
@@ -112,6 +112,7 @@ export const Loading = () => {
                                             window.location.href = '/';
                                         }
                                     });
+                                // 만약 카카오 정보제공동의를 하지 않은 경우에는. 알림창이뜨며 메인창으로 리다이렉트된다.
                             } else if (!kakaoemail) {
                                 localStorage.removeItem('useremail');
                                 alert('이메일 제공에 동의를 하시지 않으면 로그인이 불가능합니다.');

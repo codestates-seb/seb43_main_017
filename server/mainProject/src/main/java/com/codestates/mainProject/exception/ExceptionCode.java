@@ -10,6 +10,7 @@ public enum ExceptionCode {
 
     MUSIC_EXISTS(409, "이미 등록된 음악입니다"),
     MUSIC_NOT_FOUND(404, "음악을 찾을 수 없습니다"),
+    NO_PERMISSION_EDITTING_MUSIC(403, "관리자만 수정할 수 있습니다"),
     NO_PERMISSION_DELETING_MUSIC(403, "관리자만 삭제할 수 있습니다"),
 
     COMMENT_NOT_FOUND(404, "댓글을 찾을 수 없습니다"),
