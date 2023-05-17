@@ -66,6 +66,11 @@ export const soundbarOpenState = atom<boolean>({
     default: false,
 });
 
+export const downloadLink = atom<string>({
+    key: 'downloadLink',
+    default: '',
+});
+
 /* 2023.05.16 마이플레이리스트 메뉴 모달 창 상태관리 - 홍혜란 */
 export const modalState = atom<boolean>({
     key: 'modalState',
