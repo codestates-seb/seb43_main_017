@@ -205,6 +205,7 @@ const UserProfile = styled.div`
     @media screen and (max-width: 1000px) {
         margin-left: 0;
         margin-top: 700px;
+        width: 400px;
     }
 `;
 

@@ -79,11 +79,14 @@ export default LikeMusic;
 
 /* 2023.05.10 Like Music 전체 박스 컴포넌트 - 홍혜란 */
 const LikeContainer = styled.div`
-    width: 450px;
+    width: 400px;
     align-items: center;
     margin: 30px;
     @media screen and (max-width: 1000px) {
         width: 400px;
+        margin: 0;
+        margin-top: 50px;
+        margin-left: 30px;
     }
 `;
 
