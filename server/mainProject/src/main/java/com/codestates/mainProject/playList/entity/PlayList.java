@@ -29,17 +29,22 @@ public class PlayList extends Auditable {
     @Column(nullable = false)
     private String createMember;
 
-//    @Column(nullable = false)
-//    private String playListTags;
     @Column(nullable = false)
     private String title;
+
     @Column(nullable = false)
     private String body;
 
+    private String coverImg;
+
+    private String playListTags;
+
     @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
     private List<PlayListLike> playListLikes = new ArrayList<>();
+
     @Column(nullable = false)
-    private int likeCount = playListLikes.size();
+    private int likeCount = this.playListLikes.size();
+
     @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
     private List<PlayListMusic> playlistMusics = new ArrayList<>();
 
@@ -51,11 +56,6 @@ public class PlayList extends Auditable {
         return musics;
     }
 
-    public void addPlayListLike(PlayListLike playListLike){
-        this.playListLikes.add(playListLike);
-        playListLike.setPlayList(this);
-    }
-
     public void removePlayListLike(PlayListLike playListLike) {
         this.playListLikes.remove(playListLike);
         if(playListLike.getPlayList() != this) {
@@ -64,10 +64,8 @@ public class PlayList extends Auditable {
     }
 
     public void addPlayListMusic(PlayListMusic playlistMusic) {
-
             this.playlistMusics.add(playlistMusic);
             playlistMusic.setPlayList(this);
-
     }
 
     public void removePlayListMusic(PlayListMusic playlistMusic) {
@@ -76,10 +74,4 @@ public class PlayList extends Auditable {
             playlistMusic.setPlayList(this);
         }
     }
-
-
-    //TODO: PlayListLike 작업 완료 후 수정
-//    public void addPlayListLikes(PlayListLike playListLike){
-//        this.playListLikes.add(playListLike);
-//    }
 }
