@@ -9,7 +9,6 @@ import com.codestates.mainProject.playList.service.PlayListService;
 import com.codestates.mainProject.playListComment.entity.PlayListComment;
 import com.codestates.mainProject.playListComment.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

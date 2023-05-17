@@ -1,67 +1,46 @@
 package com.codestates.mainProject.image;
 
+
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.codestates.mainProject.exception.BusinessLogicException;
 import com.codestates.mainProject.exception.ExceptionCode;
-import com.codestates.mainProject.image.FileStorageProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 
 
 
 @Service
 public class FileStorageService {
-    private final Path fileStorageLocation;
+
+    private final String bucketName = "cordjg-image-bucket";
 
     @Autowired
-    public FileStorageService(FileStorageProperties fileStorageProperties) {
-        this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir())
-                .toAbsolutePath().normalize();
+    private AmazonS3 amazonS3;
 
-        try {
-            Files.createDirectories(this.fileStorageLocation);
-        } catch (Exception ex) {
-            throw new BusinessLogicException(ExceptionCode.IMAGE_URL_ERROR);
-        }
-    }
 
     public String storeFile(MultipartFile file) {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        Path targetLocation = this.fileStorageLocation.resolve(fileName);
+        // 이전 코드 생략
 
         try {
-            if (fileName.contains("..")) {
-                throw new BusinessLogicException(ExceptionCode.IMAGE_URL_ERROR);
-            }
-
-                Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-            } catch (IOException e) {
+            // S3 버킷에 파일 업로드
+            amazonS3.putObject(new PutObjectRequest(bucketName, fileName, file.getInputStream(), null)
+                    .withCannedAcl(CannedAccessControlList.PublicRead));
+        } catch (IOException e) {
             throw new BusinessLogicException(ExceptionCode.IMAGE_URL_ERROR);
         }
-        return fileName;
-    }
 
-    public Resource loadFileAsResource(String fileName) {
-        try {
-            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
-            Resource resource = new UrlResource(filePath.toUri());
-            if (resource.exists()) {
-                return resource;
-            } else {
-                throw new BusinessLogicException(ExceptionCode.FILE_NOT_FOUND);
-            }
-        } catch (MalformedURLException ex) {
-            throw new BusinessLogicException(ExceptionCode.FILE_NOT_FOUND);
-        }
+        // S3에 업로드된 파일의 URI 생성
+        String fileUrl = "https://" + bucketName + ".s3.ap-northeast-2.amazonaws.com/" + fileName;
+
+
+        return fileUrl;
     }
 }
+
+

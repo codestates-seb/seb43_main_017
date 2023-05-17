@@ -16,6 +16,8 @@ public enum ExceptionCode {
     NO_PERMISSION_EDITING_COMMENT(403, "작성자만 수정할 수 있습니다"),
     NO_PERMISSION_DELETING_COMMENT(403, "작성자만 삭제할 수 있습니다"),
 
+    NO_PERMISSION_DELETING_MUSIC_LIKE(403, "작성자만 취소할 수 있습니다"),
+
     MUSIC_LIKE_NOT_FOUND(404, "음악 추천을 찾을 수 없습니다"),
 
     PLAYLIST_NOT_FOUND(404, "플레이리스트를 찾을 수 없습니다"),

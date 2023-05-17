@@ -5,8 +5,10 @@ import com.codestates.mainProject.exception.ExceptionCode;
 import com.codestates.mainProject.member.entity.Member;
 import com.codestates.mainProject.member.repository.MemberRepository;
 import com.codestates.mainProject.member.service.MemberService;
+import com.codestates.mainProject.music.dto.MusicDto;
 import com.codestates.mainProject.music.entity.Music;
 import com.codestates.mainProject.music.service.MusicService;
+import com.codestates.mainProject.playList.dto.PlayListDto;
 import com.codestates.mainProject.playList.entity.PlayList;
 import com.codestates.mainProject.playList.repository.PlayListRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,11 +67,22 @@ public class PlayListService {
         //TODO: 각 맴버가 가진 플레이리스트 조회기능 만들기
     }
 
-    public PlayList updatePlayList(PlayList playList){
-        PlayList findPlayList = findVerifiedPlayList(playList.getPlayListId());
-        Optional.ofNullable(playList.getTitle()).ifPresent(findPlayList::setTitle);
-        Optional.ofNullable(playList.getBody()).ifPresent(findPlayList::setBody);
-        return playListRepository.save(findPlayList);
+    public PlayList updatePlayList(Long playListId, Long memberId, PlayListDto.PatchDto requestBody){
+        PlayList findPlayList = findVerifiedPlayList(playListId);
+        Member findMember = memberService.findMember(memberId);
+
+        if (!findPlayList.getMember().getMemberId().equals(findMember.getMemberId())) {
+            throw new BusinessLogicException(ExceptionCode.NO_PERMISSION_EDITING_COMMENT);
+        } else {
+            if (requestBody.getTitle() != null) {
+                findPlayList.setTitle(requestBody.getTitle());
+            }
+            if (requestBody.getBody() != null) {
+                findPlayList.setBody(requestBody.getBody());
+            }
+        }
+
+        return findPlayList;
     }
 
     public void deletePlayList(long playListId, long currentUserId){
@@ -116,9 +130,29 @@ public class PlayListService {
     }
 
     // 플리 안에 있는 음악 조회
-    public List<Music> findVerifiedPlayListMusic(long playListId) {
+    public List<MusicDto.ResponseDto> findVerifiedPlayListMusic(long playListId) {
         PlayList playList = findVerifiedPlayList(playListId);
-        return playList.getMusics();
-    }
+        List<Music> musics = playList.getMusics();
+        List<MusicDto.ResponseDto> musicDtos = new ArrayList<>();
 
+        for (Music music : musics) {
+            MusicDto.ResponseDto musicDto = new MusicDto.ResponseDto(
+                    music.getMusicId(),
+                    music.getMusicName(),
+                    music.getArtistName(),
+                    music.getAlbumName(),
+                    music.getMusicTime(),
+                    music.getAlbumCoverImg(),
+                    music.getMusicUri(),
+                    music.getCreatedAt().toString(),
+                    music.getModifiedAt().toString(),
+                    new ArrayList<>(music.getTags()),
+                    music.getMember() != null ? music.getMember().getMemberId() : null,
+                    music.getPlayList() != null ? music.getPlayList().getPlayListId() : null
+            );
+            musicDtos.add(musicDto);
+        }
+
+        return musicDtos;
+    }
 }

@@ -6,30 +6,37 @@ import axios from 'axios';
 import LikeMusic from './LIkeMusic';
 import Myplaylist from './Myplaylist';
 import ModifyPlaylist from './ModifyPlaylist';
+import { atom } from 'recoil';
 
 type UserData = {
     name: string;
     intro: string;
 };
 
+type UserInfo = {
+    image: string;
+    name: string;
+    email: string;
+};
+
 function Mypage() {
-    /* 2023.05.06 유저의 name과 intro부분을 클릭했을 시 수정할 수 있는 상태관리 - 홍혜란 */
+    /* 2023.05.06 유저의 name과 intro부분을 클릭했을 시 수정할 수 있는 상태관리 */
     const [name, setName] = useRecoilState(nameState);
     const [intro, setIntro] = useRecoilState(introState);
     const [editingName, setEditingName] = useState(false);
     const [editingIntro, setEditingIntro] = useState(false);
 
-    /* 2023.05.06 사용자가 이름을 클릭했을 때 호출되는 함수 , 이름이 편집 모드로 전환 - 홍혜란 */
+    /* 2023.05.06 사용자가 이름을 클릭했을 때 호출되는 함수 , 이름이 편집 모드로 전환  */
     const handleNameClick = () => {
         setEditingName(true);
     };
 
-    /* 2023.05.06 사용자가 이름 입력 폼에서 포커스를 벗어났을 때 호출되는 함수 , 이름이 편집 모드에서 보기 모드로 전환 - 홍혜란 */
+    /* 2023.05.06 사용자가 이름 입력 폼에서 포커스를 벗어났을 때 호출되는 함수 , 이름이 편집 모드에서 보기 모드로 전환  */
     const handleNameBlur = () => {
         setEditingName(false);
     };
 
-    /* 2023.05.06 사용자가 이름 입력 폼에서 값을 변경할 때마다 호출되는 함수 , 입력 폼에 입력된 값으로 name 상태가 업데이트 - 홍혜란 */
+    /* 2023.05.06 사용자가 이름 입력 폼에서 값을 변경할 때마다 호출되는 함수 , 입력 폼에 입력된 값으로 name 상태가 업데이트 */
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
     };
@@ -39,17 +46,17 @@ function Mypage() {
         setEditingIntro(true);
     };
 
-    /* 2023.05.06 사용자가 자기소개 입력 폼에서 포커스를 벗어났을 때 호출되는 함수 , 자기소개가 편집 모드에서 보기 모드로 전환 - 홍혜란 */
+    /* 2023.05.06 사용자가 자기소개 입력 폼에서 포커스를 벗어났을 때 호출되는 함수 , 자기소개가 편집 모드에서 보기 모드로 전환  */
     const handleIntroBlur = () => {
         setEditingIntro(false);
     };
 
-    /* 2023.05.06 사용자가 자기소개 입력 폼에서 값을 변경할 때마다 호출되는 함수 , 입력 폼에 입력된 값으로 intro 상태가 업데이트 - 홍혜란 */
+    /* 2023.05.06 사용자가 자기소개 입력 폼에서 값을 변경할 때마다 호출되는 함수 , 입력 폼에 입력된 값으로 intro 상태가 업데이트 */
     const handleIntroChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIntro(event.target.value);
     };
 
-    /* 2023.05.06 수정된 이름과 자기소개 데이터를 서버에 저장 - 홍혜란 */
+    /* 2023.05.06 수정된 이름과 자기소개 데이터를 서버에 저장 */
     useEffect(() => {
         return () => {
             const userData: UserData = { name, intro };
@@ -57,49 +64,79 @@ function Mypage() {
         };
     }, [name, intro]);
 
-    /* 2023.05.06 수정된 이름과 자기소개 데이터를 서버에 저장 - 홍혜란 */
+    /* 2023.05.16 마이페이지 유저 정보 상태관리 - 홍혜란 */
+    const userInfoState = atom<UserInfo | null>({
+        key: 'userInfoState',
+        default: null,
+    });
+
+    /* 2023.05.16 로그인 했을 시 유저 정보 데이터 불러오기 - 홍혜란 */
+    const [userInfo, setUserInfo] = useRecoilState<UserInfo | null>(userInfoState);
+
+    useEffect(() => {
+        const fetchUserInfo = async () => {
+            try {
+                const response = await fetch(
+                    'http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/{member-id}/info',
+                );
+                const userData = await response.json();
+                setUserInfo(userData);
+            } catch (error) {
+                console.error('Failed to fetch user information:', error);
+            }
+        };
+
+        fetchUserInfo();
+    }, [setUserInfo]);
+
     return (
         <div>
             <BackgroundCover></BackgroundCover>
             <MypageContainer>
                 <MypageListContainer>
                     <UserProfile>
-                        <div className="user-profile">
-                            <img src="./assets/ditto.png" alt="userimg" />
-                        </div>
-                        <UserContainer>
-                            {/* 사용자의 이름 출력 및 수정 */}
-                            <div className="user-name-container">
-                                {editingName ? (
-                                    <input
-                                        type="text"
-                                        value={name}
-                                        onChange={handleNameChange}
-                                        onBlur={handleNameBlur}
-                                    />
-                                ) : (
-                                    <div className="user-name" onClick={handleNameClick} contentEditable>
-                                        {name}
+                        {userInfo ? (
+                            <>
+                                <div className="user-profile">
+                                    <img src={userInfo.image} alt="userimg" />
+                                </div>
+                                <UserContainer>
+                                    {/* 사용자의 이름 출력 및 수정 */}
+                                    <div className="user-name-container">
+                                        {editingName ? (
+                                            <input
+                                                type="text"
+                                                value={name}
+                                                onChange={handleNameChange}
+                                                onBlur={handleNameBlur}
+                                            />
+                                        ) : (
+                                            <div className="user-name" onClick={handleNameClick} contentEditable>
+                                                {userInfo.name}
+                                            </div>
+                                        )}
                                     </div>
-                                )}
-                            </div>
-                            <div className="user-email">undefined@gmail.com</div>
-                            {/* 사용자의 자기소개 출력 및 수정 */}
-                            <div className="user-coment-container">
-                                {editingIntro ? (
-                                    <input
-                                        type="text"
-                                        value={intro}
-                                        onChange={handleIntroChange}
-                                        onBlur={handleIntroBlur}
-                                    />
-                                ) : (
-                                    <div className="user-coment" onClick={handleIntroClick} contentEditable>
-                                        {intro}
+                                    <div className="user-email">{userInfo.email}</div>
+                                    {/* 사용자의 자기소개 출력 및 수정 */}
+                                    <div className="user-coment-container">
+                                        {editingIntro ? (
+                                            <input
+                                                type="text"
+                                                value={intro}
+                                                onChange={handleIntroChange}
+                                                onBlur={handleIntroBlur}
+                                            />
+                                        ) : (
+                                            <div className="user-coment" onClick={handleIntroClick} contentEditable>
+                                                {intro}
+                                            </div>
+                                        )}
                                     </div>
-                                )}
-                            </div>
-                        </UserContainer>
+                                </UserContainer>
+                            </>
+                        ) : (
+                            <p>Loading user information...</p>
+                        )}
                     </UserProfile>
 
                     <MusicInfor>

@@ -2,8 +2,6 @@ import { SiNaver } from 'react-icons/si';
 import { OauthBtn } from './Signin';
 import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
-import { LoginPost } from '@/types/AxiosInterface';
 
 declare global {
     interface Window {
@@ -18,12 +16,11 @@ const NaverIdLogin = styled.div`
 function NaverBtn() {
     const naverRef = useRef<HTMLInputElement>(null);
     const { naver } = window;
-    const CLIENT_ID = process.env.REACT_APP_NAVER_CLIENT_ID;
     /** 2023/05/11 네이버 Oauth 인증 함수 - 박수범 */
     const initializeNaverLogin = () => {
         const naverLogin = new naver.LoginWithNaverId({
-            clientId: CLIENT_ID,
-            callbackUrl: 'http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com/oauthloading',
+            clientId: process.env.REACT_APP_NAVER_CLIENT_ID,
+            callbackUrl: process.env.REACT_APP_NAVER_CLIENT_ID,
             isPopup: false,
             loginButton: { color: 'green', type: 3, height: 45 },
             callbackHandle: false,

@@ -1,9 +1,11 @@
+import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { AiFillHeart } from 'react-icons/ai';
 import { BsMusicPlayer, BsPlayCircle } from 'react-icons/bs';
 import { CiMenuKebab } from 'react-icons/ci';
+import { modalState } from 'src/recoil/Atoms';
 
-/* 2023.05.10 Like Music 타입 선언 - 홍혜란 */
+/* 2023.05.10 마이플레이스트 타입 선언 - 홍혜란 */
 type PlayData = {
     id: number;
     imgSrc: string;
@@ -12,7 +14,7 @@ type PlayData = {
     vote: number;
 };
 
-/* 2023.05.10 Like Music 더미데이터(임시) - 홍혜란 */
+/* 2023.05.10 마이플레이스트 더미데이터(임시) - 홍혜란 */
 const MyPlay: PlayData[] = [
     {
         id: 0,
@@ -40,6 +42,9 @@ const MyPlay: PlayData[] = [
 const Myplaylist = () => {
     const playlistData = MyPlay;
 
+    /* 2023.05.16 마이플레이리스트 메뉴 버튼 클릭시 수정, 삭제 버튼 모달 - 홍혜란 */
+    const [showModal, setShowModal] = useRecoilState<boolean>(modalState);
+
     return (
         <PlayListContainer>
             <div className="playlist-title">
@@ -61,8 +66,21 @@ const Myplaylist = () => {
                     <div className="playlist-button">
                         <BsPlayCircle />
                     </div>
-                    <div className="playlist-menu">
+                    <div
+                        className="playlist-menu"
+                        onClick={() => {
+                            setShowModal(!showModal);
+                        }}
+                    >
                         <CiMenuKebab />
+                        {showModal && (
+                            <ModalContainer>
+                                <ModalButtons>
+                                    <Button>수정</Button>
+                                    <Button>삭제</Button>
+                                </ModalButtons>
+                            </ModalContainer>
+                        )}
                     </div>
                 </div>
             ))}
@@ -145,4 +163,31 @@ const PlayListContainer = styled.div`
     @media screen and (max-width: 1000px) {
         width: 400px;
     }
+`;
+
+/* 2023.05.16 마이플레이리스트 메뉴 모달 컴포넌트 - 홍혜란 */
+const ModalContainer = styled.div`
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 30px;
+`;
+
+/* 2023.05.16 마이플레이리스트 메뉴 모달 버튼 컴포넌트 - 홍혜란 */
+const ModalButtons = styled.div`
+    display: flex;
+    flex-direction: column;
+`;
+
+/* 2023.05.16 마이플레이리스트 메뉴 모달 버튼 컴포넌트 - 홍혜란 */
+const Button = styled.button`
+    margin-left: 10px;
+    background-color: rgba(43, 43, 43, 0.8);
+    border: none;
+    color: white;
+    font-size: 10px;
+    padding: 5px;
 `;

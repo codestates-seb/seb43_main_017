@@ -5,6 +5,7 @@ import com.codestates.mainProject.member.dto.MemberDto;
 import com.codestates.mainProject.member.entity.Member;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
@@ -21,5 +22,6 @@ public interface MemberMapper {
 
     List<MemberDto.ResponseDto> membersToResponses(List<Member> members);
 
+    @Mapping(source = "profileimg", target = "image")
     Member AuthLoginDtoMember(AuthLoginDto authLoginDto);
 }
