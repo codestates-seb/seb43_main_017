@@ -24,8 +24,6 @@ public class PlayListLikeService {
     private final PlayListLikeRepository playListLikeRepository;
     private final MemberService memberService;
     private final PlayListService playListService;
-    private final PlayListMapper playListMapper;
-    private final PlayListRepository playListRepository;
 
 
     public PlayListLike addLike(Long memberId, Long playListId){
@@ -47,7 +45,7 @@ public class PlayListLikeService {
         List<PlayListLike> likes = getAllLikesForMemberAndPlayList(memberId, playListId);
 
         for (PlayListLike like : likes) {
-            if (member.getMemberId().equals(like.getMember().getMemberId()) || member.getRoles().contains("admin")) {
+            if (member.getMemberId().equals(like.getMember().getMemberId()) || member.getRoles().contains("ADMIN")) {
                 playListLikeRepository.delete(like);
             } else throw new BusinessLogicException(ExceptionCode.NO_PERMISSION_EDITING_COMMENT);
         }

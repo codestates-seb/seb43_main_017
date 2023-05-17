@@ -3,7 +3,6 @@ package com.codestates.mainProject.playList.service;
 import com.codestates.mainProject.exception.BusinessLogicException;
 import com.codestates.mainProject.exception.ExceptionCode;
 import com.codestates.mainProject.member.entity.Member;
-import com.codestates.mainProject.member.repository.MemberRepository;
 import com.codestates.mainProject.member.service.MemberService;
 import com.codestates.mainProject.music.dto.MusicDto;
 import com.codestates.mainProject.music.entity.Music;
@@ -14,7 +13,6 @@ import com.codestates.mainProject.playList.repository.PlayListRepository;
 import com.codestates.mainProject.playlListMusic.entity.PlayListMusic;
 import com.codestates.mainProject.playlListMusic.service.PlayListMusicService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -38,7 +36,6 @@ public class PlayListService {
 
     private final PlayListRepository playListRepository;
     private final MemberService memberService;
-    private final MusicService musicService;
     private final PlayListMusicService playListMusicService;
 
     public PlayList createPlayList(PlayList playList) {
@@ -88,10 +85,14 @@ public class PlayListService {
         return findPlayList;
     }
 
-    public void deletePlayList(long playListId, long currentUserId){
-        //TODO: 어드민, 유저 구분해서 삭제 기능
-        PlayList findPlayList = findVerifiedPlayList(playListId);
-        playListRepository.delete(findPlayList);
+    public void deletePlayList(long playListId, long memberId){
+        PlayList playList = findPlayList(playListId);
+        Member member = memberService.findMember(memberId);
+
+        if (!member.getMemberId().equals(playList.getMember().getMemberId()) || !member.getRoles().contains("ADMIN")) {
+            throw new BusinessLogicException(ExceptionCode.NO_PERMISSION_EDITING_COMMENT);
+        }
+        playListRepository.delete(playList);
     }
 
     // 플리 안에 있는 음악 하나 삭제
