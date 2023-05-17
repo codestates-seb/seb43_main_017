@@ -3,8 +3,10 @@ package com.codestates.mainProject.music.entity;
 import com.codestates.mainProject.audit.Auditable;
 import com.codestates.mainProject.member.entity.Member;
 import com.codestates.mainProject.memberMusic.entity.MemberMusic;
+import com.codestates.mainProject.musicLike.entity.MusicLike;
 import com.codestates.mainProject.playList.entity.PlayList;
 import com.codestates.mainProject.playlListMusic.entity.PlayListMusic;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,6 +19,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
 public class Music extends Auditable {
 
     @Id
@@ -40,22 +43,38 @@ public class Music extends Auditable {
     @Column(nullable = false, unique = true)
     private String musicUri = "";
 
+    @OneToMany(mappedBy = "music", cascade = {CascadeType.ALL})
+    private List<MusicLike> musicLikes = new ArrayList<>();
+
+    @Column(nullable = false)
+    private int musicLikeCount = this.musicLikes.size();
+
     @ElementCollection(fetch = FetchType.LAZY)
     private List<String> tags = new ArrayList<>();
 
-//    @ManyToOne
-//    @JoinColumn(name = "MEMBER_ID")
-//    private Member member;
-//
-//    @ManyToOne
-//    @JoinColumn(name= "PLAYLIST_ID")
-//    private PlayList playList;
 
     @OneToMany(mappedBy = "music", cascade = {CascadeType.ALL})
     private List<MemberMusic> memberMusics = new ArrayList<>();
 
     @OneToMany(mappedBy = "music", cascade = {CascadeType.ALL})
     private List<PlayListMusic> playListMusics = new ArrayList<>();
+
+
+
+    public void addMusicLike(MusicLike musicLike) {
+        this.musicLikes.add(musicLike);
+        musicLike.setMusic(this);
+        this.musicLikeCount = this.musicLikes.size();
+
+    }
+
+    public void removeMusicLike(MusicLike musicLike){
+        this.musicLikes.remove(musicLike);
+        if(musicLike.getMusic() != this) {
+            musicLike.setMusic(this);
+        }
+        this.musicLikeCount = this.musicLikes.size();
+    }
 
     public void addMemberMusic(MemberMusic memberMusic){
         this.memberMusics.add(memberMusic);

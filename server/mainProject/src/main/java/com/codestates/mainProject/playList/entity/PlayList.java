@@ -56,11 +56,18 @@ public class PlayList extends Auditable {
         return musics;
     }
 
+    public void addPlayListLike(PlayListLike playListLike) {
+        this.playListLikes.add(playListLike);
+        playListLike.setPlayList(this);
+        this.likeCount = this.playListLikes.size();
+    }
+
     public void removePlayListLike(PlayListLike playListLike) {
         this.playListLikes.remove(playListLike);
         if(playListLike.getPlayList() != this) {
             playListLike.setPlayList(this);
         }
+        this.likeCount = this.playListLikes.size();
     }
 
     public void addPlayListMusic(PlayListMusic playlistMusic) {
