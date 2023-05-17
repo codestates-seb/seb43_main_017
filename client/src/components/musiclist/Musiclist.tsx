@@ -8,36 +8,9 @@ import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import axios from 'axios';
-import { atom } from 'recoil';
-
-/* 2023.05.08 MusicList MusicList 타입 선언 - 홍혜란 */
-interface MusicData {
-    musicId: number;
-    musicName: string;
-    artistName: string;
-    albumName: string;
-    musicTime: number;
-    albumCoverImg: string;
-    musicUri: string;
-    createdAt: string;
-    modifiedAt: string;
-}
-
-interface MusicDataResponse {
-    data: MusicData[];
-    pageInfo: {
-        page: number;
-        size: number;
-        totalElements: number;
-        totalPages: number;
-    };
-}
-
-/* 2023.05.16 뮤직리스트 출력 상태 관리 - 홍혜란 */
-const musicDataListState = atom<MusicData[]>({
-    key: 'musicDataListState',
-    default: [],
-});
+import { Link } from 'react-router-dom';
+import { musicDataListState } from 'src/recoil/Atoms';
+import { MusicDataResponse } from 'src/types/Musiclist';
 
 const Musiclist = () => {
     // const msList = MusicList;
@@ -87,12 +60,16 @@ const Musiclist = () => {
                                 <li>
                                     <img src={musicData.albumCoverImg} alt={musicData.musicName} />
                                 </li>
-                                <li>{musicData.musicName}</li>
+                                <li>
+                                    <Link to={`/musiclist/${musicData.musicId}`}>{musicData.musicName}</Link>
+                                </li>
                                 <li>{musicData.artistName}</li>
                                 <li>{musicData.albumName}</li>
                                 <li>{musicData.musicTime}</li>
                                 <li>
-                                    <FiPlayCircle />
+                                    <Link to={`/musiclist/${musicData.musicId}`}>
+                                        <FiPlayCircle />
+                                    </Link>
                                 </li>
                                 <li>
                                     <FiFolderPlus />

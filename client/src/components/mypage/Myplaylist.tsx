@@ -4,34 +4,35 @@ import { AiFillHeart } from 'react-icons/ai';
 import { BsMusicPlayer, BsPlayCircle } from 'react-icons/bs';
 import { CiMenuKebab } from 'react-icons/ci';
 import { modalState } from 'src/recoil/Atoms';
+import { useState } from 'react';
 
-/* 2023.05.10 마이플레이스트 타입 선언 - 홍혜란 */
+/* 2023.05.10 마이플레이스트 타입 선언 */
 type PlayData = {
-    id: number;
+    playListId: number;
     imgSrc: string;
     name: string;
     time: string;
     vote: number;
 };
 
-/* 2023.05.10 마이플레이스트 더미데이터(임시) - 홍혜란 */
+/* 2023.05.10 마이플레이스트 더미데이터(임시) */
 const MyPlay: PlayData[] = [
     {
-        id: 0,
+        playListId: 0,
         imgSrc: './assets/ditto.png',
         name: '나만의 플레이리스트',
         time: '2023.05.04',
         vote: 13,
     },
     {
-        id: 1,
+        playListId: 1,
         imgSrc: './assets/ditto.png',
         name: '나만의 플레이리스트',
         time: '2023.05.04',
         vote: 13,
     },
     {
-        id: 2,
+        playListId: 2,
         imgSrc: './assets/ditto.png',
         name: '나만의 플레이리스트',
         time: '2023.05.04',
@@ -42,8 +43,9 @@ const MyPlay: PlayData[] = [
 const Myplaylist = () => {
     const playlistData = MyPlay;
 
-    /* 2023.05.16 마이플레이리스트 메뉴 버튼 클릭시 수정, 삭제 버튼 모달 - 홍혜란 */
+    /* 2023.05.16 마이플레이리스트 메뉴 버튼 클릭시 수정, 삭제 버튼 모달 */
     const [showModal, setShowModal] = useRecoilState<boolean>(modalState);
+    const [selectedPlaylistId, setSelectedPlaylistId] = useState<number | null>(null);
 
     return (
         <PlayListContainer>
@@ -69,11 +71,12 @@ const Myplaylist = () => {
                     <div
                         className="playlist-menu"
                         onClick={() => {
+                            setSelectedPlaylistId(data.playListId);
                             setShowModal(!showModal);
                         }}
                     >
                         <CiMenuKebab />
-                        {showModal && (
+                        {selectedPlaylistId === data.playListId && showModal && (
                             <ModalContainer>
                                 <ModalButtons>
                                     <Button>수정</Button>

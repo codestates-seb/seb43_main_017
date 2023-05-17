@@ -1,4 +1,5 @@
 import { atom } from 'recoil';
+import { MusicData } from 'src/types/Musiclist';
 
 /* 2023.05.06 사용자의 이름을 nameState라는 새로운 상태를 정의 - 홍혜란 */
 export const nameState = atom({
@@ -75,4 +76,10 @@ export const downloadLink = atom<string>({
 export const modalState = atom<boolean>({
     key: 'modalState',
     default: false,
+});
+
+/* 2023.05.16 뮤직리스트 출력 상태 관리 - 홍혜란 */
+export const musicDataListState = atom<MusicData[]>({
+    key: 'musicDataListState',
+    default: [],
 });
