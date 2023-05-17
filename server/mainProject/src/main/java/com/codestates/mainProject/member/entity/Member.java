@@ -4,6 +4,7 @@ import com.codestates.mainProject.audit.Auditable;
 import com.codestates.mainProject.memberMusic.entity.MemberMusic;
 import com.codestates.mainProject.music.entity.Music;
 import com.codestates.mainProject.playList.entity.PlayList;
+import com.codestates.mainProject.playlListMusic.entity.PlayListMusic;
 import lombok.*;
 
 import javax.persistence.*;
@@ -49,6 +50,14 @@ public class Member extends Auditable {
 
     @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
     private List<PlayList> likedPlayLists = new ArrayList<>();
+
+    public List<Music> getMusics() {
+        List<Music> musics = new ArrayList<>();
+        for (MemberMusic memberMusic : memberMusics) {
+            musics.add(memberMusic.getMusic());
+        }
+        return musics;
+    }
 
     public void addMemberMusic(MemberMusic memberMusic){
         this.memberMusics.add(memberMusic);

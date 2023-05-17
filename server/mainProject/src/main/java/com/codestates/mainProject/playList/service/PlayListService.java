@@ -91,6 +91,8 @@ public class PlayListService {
     public void deletePlayList(long playListId, long currentUserId){
         //TODO: 어드민, 유저 구분해서 삭제 기능
         PlayList findPlayList = findVerifiedPlayList(playListId);
+        Member findMember = memberService.findVerifiedMember(currentUserId);
+        findMember.removePlayList(findPlayList);
         playListRepository.delete(findPlayList);
     }
 
@@ -154,6 +156,7 @@ public class PlayListService {
                     music.getMusicTime(),
                     music.getAlbumCoverImg(),
                     music.getMusicUri(),
+                    music.getMusicLikeCount(),
                     music.getCreatedAt().toString(),
                     music.getModifiedAt().toString(),
                     new ArrayList<>(music.getTags()),
