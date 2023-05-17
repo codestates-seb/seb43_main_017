@@ -5,6 +5,7 @@ export interface MusicData {
     artistName: string;
     albumName: string;
     musicTime: number;
+    tags: string;
     albumCoverImg: string;
     musicUri: string;
     createdAt: string;

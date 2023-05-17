@@ -111,6 +111,7 @@ const Musiclist = () => {
                                 </li>
                                 <li className="music-artist color-gray">{musicData.artistName}</li>
                                 <li className="music-album color-gray">{musicData.albumName}</li>
+                                <li>{musicData.tags}</li>
                                 <li className="music-time color-gray">
                                     {formatSecondsToTime(Number(musicData.musicTime))}
                                 </li>
