@@ -92,6 +92,7 @@ public class MusicController {
     public ResponseEntity<?> getPlayListMusics(@PathVariable("playlist-id") Long playListId) {
         List<MusicDto.ResponseDto> musicDtos = playListService.findVerifiedPlayListMusic(playListId);
 
+
         if (musicDtos.isEmpty()) {
             return new ResponseEntity<>(new MusicDto.MessageResponseDto("플레이리스트에 음악이 없습니다."), HttpStatus.OK);
         } else {
