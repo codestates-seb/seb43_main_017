@@ -107,7 +107,6 @@ public class MusicController {
 
         return ResponseEntity.ok(musics);
     }
-
     // 음악 수정
     @PatchMapping("/{music-id}")
     public ResponseEntity patchMusic(@PathVariable("music-id") @Positive long musicId,
