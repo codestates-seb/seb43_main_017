@@ -7,7 +7,7 @@ import VideoUploader from './VideoUpdate';
 
 function Mixing() {
     const [, setSoundbarOpen] = useRecoilState<boolean>(soundbarOpenState);
-    const [videoupload, setVideoUpload] = useState<boolean>(true);
+    const [videoupload, setVideoUpload] = useState<boolean>(false);
 
     /** 2023.05.16 사운드바 상태 변경 -김주비 */
     useEffect(() => {
@@ -24,7 +24,7 @@ function Mixing() {
                     </MixingPage>
                 </div>
             </MixingHeader>
-            {videoupload ? (
+            {!videoupload ? (
                 <VideoPlayer
                     videoUrl={
                         'https://user-images.githubusercontent.com/104641096/238908019-9e100d42-2f01-4c0b-88be-25c36f30ce02.mp4'
