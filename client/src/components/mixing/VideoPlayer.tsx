@@ -7,9 +7,15 @@ interface VideoPlayerProps {
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl }) => {
     return (
-        <div>
-            <ReactPlayer url={videoUrl} width="1200px" height="600px" controls={true} />
-        </div>
+        <VideoContainer>
+            <ReactPlayer url={videoUrl} width="800px" height="400px" controls={true} />
+        </VideoContainer>
     );
 };
+
+const VideoContainer = styled.div`
+    margin-top: 30px;
+    display: block;
+`;
+
 export default VideoPlayer;
