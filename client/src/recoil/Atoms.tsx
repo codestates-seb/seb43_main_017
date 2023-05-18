@@ -77,8 +77,14 @@ export const modalState = atom<boolean>({
     default: false,
 });
 
+
+/* 2023.05.18 비디오 업로드 여부 상태관리 - 박수범 */
+export const videouploadState = atom<boolean>({
+    key: 'videoupload',
+          default: false,
+});
+
 /* 2023.05.16 마이플레이리스트 메뉴 모달 창 상태관리 - 홍혜란 */
 export const showSearch = atom<boolean>({
     key: 'showSearch',
-    default: false,
-});
+
