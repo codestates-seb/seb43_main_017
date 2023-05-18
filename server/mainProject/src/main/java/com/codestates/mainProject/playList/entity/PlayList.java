@@ -4,6 +4,7 @@ import com.codestates.mainProject.audit.Auditable;
 import com.codestates.mainProject.member.entity.Member;
 import com.codestates.mainProject.music.entity.Music;
 import com.codestates.mainProject.playListLike.entity.PlayListLike;
+import com.codestates.mainProject.playListTag.entity.PlayListTag;
 import com.codestates.mainProject.playlListMusic.entity.PlayListMusic;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,7 +38,11 @@ public class PlayList extends Auditable {
 
     private String coverImg;
 
-    private String playListTags;
+    @ElementCollection(fetch = FetchType.LAZY)
+    private List<String> tags = new ArrayList<>();
+
+    @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
+    private List<PlayListTag> playListTags;
 
     @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
     private List<PlayListLike> playListLikes = new ArrayList<>();
@@ -55,13 +60,22 @@ public class PlayList extends Auditable {
         }
         return musics;
     }
+    public void addPlayListMusic(PlayListMusic playlistMusic) {
+        this.playlistMusics.add(playlistMusic);
+        playlistMusic.setPlayList(this);
+    }
+    public void removePlayListMusic(PlayListMusic playlistMusic) {
+        this.playlistMusics.remove(playlistMusic);
+        if(playlistMusic.getPlayList() != this) {
+            playlistMusic.setPlayList(this);
+        }
+    }
 
     public void addPlayListLike(PlayListLike playListLike) {
         this.playListLikes.add(playListLike);
         playListLike.setPlayList(this);
         this.likeCount = this.playListLikes.size();
     }
-
     public void removePlayListLike(PlayListLike playListLike) {
         this.playListLikes.remove(playListLike);
         if(playListLike.getPlayList() != this) {
@@ -70,15 +84,14 @@ public class PlayList extends Auditable {
         this.likeCount = this.playListLikes.size();
     }
 
-    public void addPlayListMusic(PlayListMusic playlistMusic) {
-            this.playlistMusics.add(playlistMusic);
-            playlistMusic.setPlayList(this);
+    public void addPlayListTag(PlayListTag playListTag){
+        this.playListTags.add(playListTag);
+        this.tags.add(playListTag.getTag().getName());
+        playListTag.setPlayList(this);
     }
-
-    public void removePlayListMusic(PlayListMusic playlistMusic) {
-        this.playlistMusics.remove(playlistMusic);
-        if(playlistMusic.getPlayList() != this) {
-            playlistMusic.setPlayList(this);
-        }
+    public void removePlayListTag(PlayListTag playListTag) {
+        this.playListTags.remove(playListTag);
+        this.tags.remove(playListTag.getTag().getName());
+        if (playListTag.getPlayList() != this) playListTag.setPlayList(this);
     }
 }

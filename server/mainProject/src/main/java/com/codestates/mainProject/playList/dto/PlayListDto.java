@@ -19,7 +19,7 @@ public class PlayListDto {
 
         private String coverImg;
 
-        private String playListTags;
+        private List<String> tags;
 
     }
 
@@ -31,6 +31,8 @@ public class PlayListDto {
         private String title;
         @NotBlank
         private String body;
+        private String coverImg;
+        private List<String> tags;
     }
 
     @Getter
@@ -43,7 +45,7 @@ public class PlayListDto {
         private String title;
         private String body;
         private String coverImg;
-        private String playListTags;
+        private List<String> tags;
         private int likeCount;
         private String createdAt;
         private String modifiedAt;

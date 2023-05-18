@@ -23,15 +23,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 @Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class PlayListService {
-    private static final Logger logger = LoggerFactory.getLogger(PlayListService.class);
 
     private final PlayListRepository playListRepository;
     private final MemberService memberService;
@@ -48,22 +44,22 @@ public class PlayListService {
             return playListRepository.save(playList);
         } catch (Exception e){
             // 예외를 로그에 기록
-            logger.error("!!!!!!!!!플레이리스트를 만드는 동안 오류 발생 끄아악!!!!!!!!!!!", e);
+            log.error("!!!!!!!!!플레이리스트를 만드는 동안 오류 발생 끄아악!!!!!!!!!!!", e);
             // 예외를 다시 던져서 상위로 전파하거나 적절한 응답을 반환할 수 있습니다.
             throw new RuntimeException("플레이리스트 못만들어따!!! 살려줘!!!!!!", e);
         }
     }
 
-    public PlayList findPlayList(long playListId){
-        return findVerifiedPlayList(playListId);
-    }
+    // 유저 플레이리스트 조회
+//    public Page<PlayList> findPlayList(Long memberId, int page, int size) {
+//        Member member = memberService.findMember(memberId);
+//
+//        if (!member.getMemberId().equals())
+//    }
 
     public Page<PlayList> findPlayLists(int page, int size){
-        // 모든 플리 조회 기능
         return playListRepository.findAll(PageRequest.of(
                 page, size, Sort.by("playListId").descending()));
-
-        //TODO: 각 맴버가 가진 플레이리스트 조회기능 만들기
     }
 
     public PlayList updatePlayList(Long playListId, Long memberId, PlayListDto.PatchDto requestBody){
@@ -85,12 +81,15 @@ public class PlayListService {
     }
 
     public void deletePlayList(long playListId, long memberId){
-        PlayList playList = findPlayList(playListId);
+        PlayList playList = findVerifiedPlayList(playListId);
         Member member = memberService.findMember(memberId);
 
-        if (!member.getMemberId().equals(playList.getMember().getMemberId()) || !member.getRoles().contains("ADMIN")) {
-            throw new BusinessLogicException(ExceptionCode.NO_PERMISSION_EDITING_COMMENT);
+        if (!member.getRoles().contains("ADMIN")) {
+            if (!member.getMemberId().equals(playList.getMember().getMemberId())){
+                throw new BusinessLogicException(ExceptionCode.NO_PERMISSION_DELETING_POST);
+            }
         }
+        member.removePlayList(playList);
         playListRepository.delete(playList);
     }
 
@@ -130,15 +129,6 @@ public class PlayListService {
         music.addPlayListMusic(playListMusic);
     }
 
-
-    public PlayList findVerifiedPlayList(long playListId) {
-        Optional<PlayList> optionalPlayList = playListRepository.findById(playListId);
-        PlayList findPlayList = optionalPlayList.orElseThrow(() ->
-                new BusinessLogicException(ExceptionCode.PLAYLIST_NOT_FOUND));
-
-        return findPlayList;
-    }
-
     // 플리 안에 있는 음악 조회
     public List<MusicDto.ResponseDto> findVerifiedPlayListMusic(long playListId) {
         PlayList playList = findVerifiedPlayList(playListId);
@@ -159,12 +149,27 @@ public class PlayListService {
                     music.getModifiedAt().toString(),
                     new ArrayList<>(music.getTags()),
                     playList.getMember().getMemberId()
-
             );
-
             musicDtos.add(musicDto);
         }
-
         return musicDtos;
+    }
+
+
+    public PlayList findVerifiedPlayList(long playListId) {
+        Optional<PlayList> optionalPlayList = playListRepository.findById(playListId);
+        PlayList findPlayList = optionalPlayList.orElseThrow(() ->
+                new BusinessLogicException(ExceptionCode.PLAYLIST_NOT_FOUND));
+
+        return findPlayList;
+    }
+
+    // 플레이리스트 작성자 찾기
+    public PlayList findWriter(Long memberId, long playListId) {
+        Optional<PlayList> optionalPlayList =
+                playListRepository.findByMemberMemberIdAndPlayListId(memberId, playListId);
+        PlayList playList = optionalPlayList.orElseThrow(() ->
+                new BusinessLogicException(ExceptionCode.PLAYLIST_NOT_FOUND));
+        return playList;
     }
 }
