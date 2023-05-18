@@ -35,6 +35,7 @@ public class PlayListLikeService {
         like.setPlayList(playList);
 
         playList.addPlayListLike(like);
+        member.addLikedPlayLists(playList);
 
         return playListLikeRepository.save(like);
     }
@@ -47,8 +48,10 @@ public class PlayListLikeService {
         List<PlayListLike> likes = getAllLikesForMemberAndPlayList(memberId, playListId);
 
         for (PlayListLike like : likes) {
-            if (member.getMemberId().equals(like.getMember().getMemberId()) || member.getRoles().contains("ADMIN")) {
+            if (member.getMemberId().equals(like.getMember().getMemberId())) {
                 playListLikeRepository.delete(like);
+                playList.removePlayListLike(like);
+                member.removeLikedPlayLists(playList);
             } else throw new BusinessLogicException(ExceptionCode.NO_PERMISSION_EDITING_COMMENT);
         }
     }

@@ -55,7 +55,7 @@ public class PlayListController {
 
     @GetMapping("/{playlist-id}")
     public ResponseEntity getPlayList(@PathVariable("playlist-id")@Positive long playListId){
-        PlayList findPlayList = playListService.findPlayList(playListId);
+        PlayList findPlayList = playListService.findVerifiedPlayList(playListId);
         PlayListDto.ResponseDto response = playListMapper.playListToResponse(findPlayList);
 
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
@@ -68,8 +68,19 @@ public class PlayListController {
         List<PlayList> playLists = pagePlayList.getContent();
         List<PlayListDto.ResponseDto> response = playListMapper.playListsToResponses(playLists);
 
-        return new ResponseEntity<>(new MultiResponseDto<>(response, pagePlayList), HttpStatus.OK);
+        return ResponseEntity.ok(new MultiResponseDto<>(response, pagePlayList));
     }
+
+//    @GetMapping("/member-playlist")
+//    public ResponseEntity getMemberPlayList(@LoginMemberId Long memberId,
+//                                            @Positive @RequestParam(value = "page", defaultValue = "1") int page,
+//                                            @Positive @RequestParam(value = "size", defaultValue = "10") int size) {
+//        Page<PlayList> pagePlayList = playListService.findPlayList(memberId, page-1, size);
+//        List<PlayList> playLists = pagePlayList.getContent();
+//        List<PlayListDto.ResponseDto> response = playListMapper.playListsToResponses(playLists);
+//
+//        return ResponseEntity.ok(new MultiResponseDto<>(response, pagePlayList));
+//    }
 
     @PatchMapping("/{playlist-id}")
     public ResponseEntity updatePlayList(@PathVariable("playlist-id") @Positive long playListId,
