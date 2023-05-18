@@ -62,7 +62,7 @@
 <summary>ERD</summary>
 <div markdown="1">
 
-<img src="./img/Image20230518200815.png" alt="erdImg">
+<img src="./img/erd.png" alt="erdImg">
 
 </div>
 </details>
