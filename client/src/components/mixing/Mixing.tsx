@@ -1,7 +1,8 @@
 import styled from 'styled-components';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { soundbarOpenState } from 'src/recoil/Atoms';
+import VideoUploader from './VideoUpdate';
 
 function Mixing() {
     const [, setSoundbarOpen] = useRecoilState<boolean>(soundbarOpenState);
@@ -19,10 +20,10 @@ function Mixing() {
                     <MixingPage>
                         <span className="mixing-title">MIXING</span>
                     </MixingPage>
-                    <MixingTitle>
-                        <span className="mixing-subtext">현재 페이지는 준비중입니다.</span>
-                    </MixingTitle>
-                    <img src="./assets/Dual Ring-1s-124px.gif"></img>
+                    <Mixingtext>
+                        <p className="mixing-text">당신의 영상에 음원이 어울리는지 직접 비교해보세요.</p>
+                    </Mixingtext>
+                    <VideoUploader />
                 </div>
             </MixingHeader>
         </MixingSection>
@@ -92,7 +93,8 @@ const MixingHeader = styled.article`
         }
     }
 `;
-/**2023-05-06 슬라이드 업 되는 타이틀 애니메이션 - 타이틀 : 김주비*/
+
+/**2023-05-18 슬라이드 업 되는 타이틀 애니메이션 - 박수범*/
 const MixingPage = styled.div`
     position: relative;
     height: 70px;
@@ -103,17 +105,24 @@ const MixingPage = styled.div`
         transform: translateY(70px);
         animation: movingtext 1s forwards 0.5s;
     }
+    @media (max-width: 700px) {
+        height: 50px;
+        .pl-title {
+            font-size: 2.5rem;
+        }
+    }
 `;
-/**2023-05-06 슬라이드 업 되는 서브텍스트 애니메이션 : 김주비*/
-const MixingTitle = styled.div`
+
+/**2023-05-06 슬라이드 업 되는 서브텍스트 애니메이션 - 박수범*/
+const Mixingtext = styled.div`
     position: relative;
     height: 20px;
     margin-top: 10px;
     overflow: hidden;
-    .mixing-subtext {
+    .mixing-text {
         font-family: 'Rajdhani', sans-serif;
-        font-size: 16px;
-        transform: translateY(20px);
+        font-size: 14px;
+        transform: translateY(15px);
         animation: movingtext 1s forwards 1s;
         opacity: 0.6;
     }

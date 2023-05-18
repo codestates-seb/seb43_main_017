@@ -37,8 +37,6 @@ public class MusicLikeService {
         Member member = memberMusic.getMember();
         Music music = memberMusic.getMusic();
 
-        member.addMemberMusic(memberMusic);
-        music.addMemberMusic(memberMusic);
 
         MusicLike musicLike = new MusicLike(member, music);
         music.addMusicLike(musicLike);
@@ -53,8 +51,7 @@ public class MusicLikeService {
         Music music = musicLike.getMusic();
         long musicId =music.getMusicId();
 
-        MemberMusic findMemberMusic = memberMusicService.findVerifiedMemberMusic(memberId, musicId);
-        Member member = findMemberMusic.getMember();
+
         List<MusicLike> musicLikes = musicLike.getMusic().getMusicLikes();
 
         Optional<MusicLike> optionalMusicLike = musicLikes.stream()
@@ -62,8 +59,7 @@ public class MusicLikeService {
                 .findFirst();
         if(optionalMusicLike.isPresent()){
             music.removeMusicLike(optionalMusicLike.orElse(null));
-            member.removeMemberMusic(findMemberMusic);
-            music.removeMemberMusic(findMemberMusic);
+
             memberMusicService.deleteMemberMusic(memberId,musicId);
         }
 

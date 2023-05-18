@@ -4,6 +4,8 @@ import com.codestates.mainProject.audit.Auditable;
 import com.codestates.mainProject.member.entity.Member;
 import com.codestates.mainProject.memberMusic.entity.MemberMusic;
 import com.codestates.mainProject.musicLike.entity.MusicLike;
+import com.codestates.mainProject.musicTag.entity.MusicTag;
+import com.codestates.mainProject.musicTag.repository.MusicTagRepository;
 import com.codestates.mainProject.playList.entity.PlayList;
 import com.codestates.mainProject.playlListMusic.entity.PlayListMusic;
 import lombok.AllArgsConstructor;
@@ -59,6 +61,9 @@ public class Music extends Auditable {
     @OneToMany(mappedBy = "music", cascade = {CascadeType.ALL})
     private List<PlayListMusic> playListMusics = new ArrayList<>();
 
+    @OneToMany(mappedBy = "music", cascade = {CascadeType.ALL})
+    private List<MusicTag> musicTags = new ArrayList<>();
+
 
 
     public void addMusicLike(MusicLike musicLike) {
@@ -97,6 +102,18 @@ public class Music extends Auditable {
         this.playListMusics.remove(playListMusic);
         if(playListMusic.getMusic() != this) {
             playListMusic.setMusic(this);
+        }
+    }
+
+    public void addMusicTag(MusicTag musicTag) {
+        this.musicTags.add(musicTag);
+        musicTag.setMusic(this);
+    }
+
+    public void removeMusicTag(MusicTag musicTag) {
+        this.musicTags.remove(musicTag);
+        if(musicTag.getMusic() != this) {
+            musicTag.setMusic(this);
         }
     }
 

@@ -1,4 +1,5 @@
 ## Team. Undefined
+### [UNCOVER](http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com)
 ![uncover](./img/uncover_logo_02%20(1).png)
 
 ## Team List
@@ -62,7 +63,7 @@
 <summary>ERD</summary>
 <div markdown="1">
 
-<img src="./img/%EC%9B%B9%20%EC%BA%A1%EC%B2%98_6-5-2023_14939_.jpeg" alt="">
+<img src="./img/erd.png" alt="erdImg">
 
 </div>
 </details>
