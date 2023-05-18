@@ -1,10 +1,13 @@
 import styled from 'styled-components';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { soundbarOpenState } from 'src/recoil/Atoms';
+import VideoPlayer from './VideoPlayer';
+import VideoUploader from './VideoUpdate';
 
 function Mixing() {
     const [, setSoundbarOpen] = useRecoilState<boolean>(soundbarOpenState);
+    const [videoupload, setVideoUpload] = useState<boolean>(true);
 
     /** 2023.05.16 사운드바 상태 변경 -김주비 */
     useEffect(() => {
@@ -19,12 +22,17 @@ function Mixing() {
                     <MixingPage>
                         <span className="mixing-title">MIXING</span>
                     </MixingPage>
-                    <MixingTitle>
-                        <span className="mixing-subtext">현재 페이지는 준비중입니다.</span>
-                    </MixingTitle>
-                    <img src="./assets/Dual Ring-1s-124px.gif"></img>
                 </div>
             </MixingHeader>
+            {videoupload ? (
+                <VideoPlayer
+                    videoUrl={
+                        'https://user-images.githubusercontent.com/104641096/238908019-9e100d42-2f01-4c0b-88be-25c36f30ce02.mp4'
+                    }
+                />
+            ) : (
+                <VideoUploader />
+            )}
         </MixingSection>
     );
 }
@@ -102,19 +110,5 @@ const MixingPage = styled.div`
         font-size: 4rem;
         transform: translateY(70px);
         animation: movingtext 1s forwards 0.5s;
-    }
-`;
-/**2023-05-06 슬라이드 업 되는 서브텍스트 애니메이션 : 김주비*/
-const MixingTitle = styled.div`
-    position: relative;
-    height: 20px;
-    margin-top: 10px;
-    overflow: hidden;
-    .mixing-subtext {
-        font-family: 'Rajdhani', sans-serif;
-        font-size: 16px;
-        transform: translateY(20px);
-        animation: movingtext 1s forwards 1s;
-        opacity: 0.6;
     }
 `;
