@@ -22,7 +22,7 @@ export const LoadingText = styled.div`
 `;
 
 export const Loading = () => {
-    const BaseUrl = `${process.env.API_URL}/members/oauth/signup`;
+    const BaseUrl = `${process.env.REACT_APP_API_URL}/members/oauth/signup`;
     /** 2023/05/16 - 로딩페이지(콜백리다이렉트)로 이동시, 네이버 요청인 경우 - 박수범 */
     if (location.hash) {
         const { naver } = window;
