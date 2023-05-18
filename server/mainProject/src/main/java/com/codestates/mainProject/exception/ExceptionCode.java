@@ -36,7 +36,8 @@ public enum ExceptionCode {
     PLAYLIST_MUSIC_NOT_FOUND(404, "플레이리스트 뮤직을 찾을 수 없습니다"),
     PLAYLIST_MUSIC_EXISTS(404, "플레이리스트 뮤직이 이미 존재합니다"),
 
-    TAG_NOT_FOUND(404, "태그를 찾을 수 없습니다");
+    TAG_NOT_FOUND(404, "태그를 찾을 수 없습니다"),
+    MUSIC_TAG_EXISTS(404, "같은 음악태그가 이미 존재합니다");
     @Getter
     private int status;
 

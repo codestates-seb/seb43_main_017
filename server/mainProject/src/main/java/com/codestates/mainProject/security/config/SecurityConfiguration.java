@@ -131,7 +131,15 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.POST, "/music-like/**").hasAnyRole("USER", "ADMIN")
                         .antMatchers(HttpMethod.PATCH, "/music-like/**").hasAnyRole("USER", "ADMIN")
                         .antMatchers(HttpMethod.DELETE, "/music-like/**").hasAnyRole("USER", "ADMIN")
+
+
+                        // #tag 관련 (musicTag포함)
+                        .antMatchers(HttpMethod.GET, "/tags/**").permitAll()
+                        .antMatchers(HttpMethod.POST, "/tags/**").hasRole("ADMIN")
+                        .antMatchers(HttpMethod.PATCH, "/tags/**").hasRole("ADMIN")
+                        .antMatchers(HttpMethod.DELETE, "/tags/**").hasRole("ADMIN")
                         .anyRequest().permitAll()
+
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(new OAuth2MemberSuccessHandler(jwtTokenizer, authorityUtils, memberService))

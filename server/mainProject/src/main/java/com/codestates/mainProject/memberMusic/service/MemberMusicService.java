@@ -36,11 +36,19 @@ public class MemberMusicService {
         memberMusic.setMember(findMember);
         memberMusic.setMusic(findMusic);
 
+        findMember.addMemberMusic(memberMusic);
+        findMusic.addMemberMusic(memberMusic);
+
         return memberMusicRepository.save(memberMusic);
     }
 
     public void deleteMemberMusic(long memberId, long musicId ){
         MemberMusic findMemberMusic =findVerifiedMemberMusic(memberId, musicId);
+        Member findMember = memberService.findVerifiedMember(memberId);
+        Music findMusic = musicService.findMusicById(musicId);
+
+        findMember.removeMemberMusic(findMemberMusic);
+        findMusic.removeMemberMusic(findMemberMusic);
 
         memberMusicRepository.delete(findMemberMusic);
 
