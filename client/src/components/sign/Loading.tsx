@@ -39,8 +39,6 @@ export const Loading = () => {
                 const userid = naverLogin.user.getEmail();
                 const username = naverLogin.user.getNickName();
                 const userimg = naverLogin.user.getProfileImage();
-                window.localStorage.setItem('useremail', userid);
-                window.localStorage.setItem('username', username);
                 window.localStorage.setItem('userimg', userimg);
                 // 추출한 데이터를 백엔드 서버로 보내준다.
                 axios
