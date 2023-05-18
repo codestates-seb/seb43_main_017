@@ -66,7 +66,6 @@ public class MemberService {
 
         Member savedMember = memberRepository.save(member);
 
-
         return savedMember;
     }
 

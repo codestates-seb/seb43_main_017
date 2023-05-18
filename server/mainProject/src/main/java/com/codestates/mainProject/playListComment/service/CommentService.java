@@ -51,7 +51,7 @@ public class CommentService {
         PlayListComment comment = getComment(commentId);
         Member member = memberService.findMember(memberId);
 
-        if (!member.getMemberId().equals(comment.getMember().getMemberId()) && !member.getRoles().contains("admin")){
+        if (!member.getMemberId().equals(comment.getMember().getMemberId()) || !member.getRoles().contains("ADMIN")){
             throw new BusinessLogicException(ExceptionCode.NO_PERMISSION_EDITING_COMMENT);
         }
 
@@ -64,7 +64,7 @@ public class CommentService {
         PlayListComment comment = getComment(commentId);
         Member member = memberService.findMember(memberId);
 
-        if (!member.getMemberId().equals(comment.getMember().getMemberId()) && !member.getRoles().contains("admin")){
+        if (!member.getMemberId().equals(comment.getMember().getMemberId()) || !member.getRoles().contains("ADMIN")){
             throw new BusinessLogicException(ExceptionCode.NO_PERMISSION_EDITING_COMMENT);
         }
         commentRepository.delete(comment);
