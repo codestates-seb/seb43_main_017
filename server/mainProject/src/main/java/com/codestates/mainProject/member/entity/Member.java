@@ -4,6 +4,7 @@ import com.codestates.mainProject.audit.Auditable;
 import com.codestates.mainProject.memberMusic.entity.MemberMusic;
 import com.codestates.mainProject.music.entity.Music;
 import com.codestates.mainProject.playList.entity.PlayList;
+import com.codestates.mainProject.playListLike.entity.PlayListLike;
 import com.codestates.mainProject.playlListMusic.entity.PlayListMusic;
 import lombok.*;
 
@@ -49,7 +50,7 @@ public class Member extends Auditable {
     private List<PlayList> playLists = new ArrayList<>(); //playlist를 새로 생성하거나, 기존의 playlist 추가시 playlists에 추가
 
     @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
-    private List<PlayList> likedPlayLists = new ArrayList<>();
+    private List<PlayListLike> likedPlayLists = new ArrayList<>();
 
     public List<Music> getMusics() {
         List<Music> musics = new ArrayList<>();
@@ -57,6 +58,14 @@ public class Member extends Auditable {
             musics.add(memberMusic.getMusic());
         }
         return musics;
+    }
+
+    public List<PlayList> getLikedPlayLists(){
+        List<PlayList> LikedPlayLists = new ArrayList<>();
+        for ( PlayListLike playListLike : likedPlayLists) {
+            LikedPlayLists.add(playListLike.getPlayList());
+        }
+        return LikedPlayLists;
     }
 
     public void addMemberMusic(MemberMusic memberMusic){
@@ -83,15 +92,17 @@ public class Member extends Auditable {
         }
     }
 
-    public void addLikedPlayLists(PlayList playList){
-        this.likedPlayLists.add(playList);
-        playList.setMember(this);
+
+
+    public void addLikedPlayLists(PlayListLike playListLike){
+        this.likedPlayLists.add(playListLike);
+        playListLike.setMember(this);
     }
 
-    public void removeLikedPlayLists(PlayList playList) {
-        this.likedPlayLists.remove(playList);
-        if(playList.getMember() != this) {
-            playList.setMember(this);
+    public void removeLikedPlayLists(PlayListLike playListLike) {
+        this.likedPlayLists.remove(playListLike);
+        if(playListLike.getMember() != this) {
+            playListLike.setMember(this);
         }
     }
 
