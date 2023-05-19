@@ -70,7 +70,22 @@ export const Loading = () => {
         if (googlerefresh && googletoken) {
             window.localStorage.setItem('access_token', googletoken);
             window.localStorage.setItem('refresh_token', googlerefresh);
-            window.location.href = '/';
+            axios
+                .get(`${process.env.REACT_APP_API_URL}/members/info`, {
+                    headers: {
+                        Authorization: `Bearer ${googletoken}`,
+                    },
+                })
+                .then((res) => {
+                    console.log(res);
+                    const googleemail = res.data.data.email;
+                    const googleickname = res.data.data.name;
+                    const googleimg = res.data.data.image;
+                    window.localStorage.setItem('useremail', googleemail);
+                    window.localStorage.setItem('usernickname', googleickname);
+                    window.localStorage.setItem('userimg', googleimg);
+                    window.location.href = '/';
+                });
         }
         /** 2023/05/16 - 카카오 요청인 경우 - 박수범 */
         if (kakaocode) {
