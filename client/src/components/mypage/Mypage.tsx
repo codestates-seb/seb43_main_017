@@ -54,6 +54,8 @@ function Mypage() {
                 )
                 .then((response) => {
                     setUserInfoList(response.data.data);
+                    console.log(userInfoList);
+                    console.log(response.data);
                 })
                 .catch((error) => {
                     console.error(error);
