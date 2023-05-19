@@ -56,6 +56,8 @@ function Mypage() {
                     setUserInfoList(response.data.data);
                     console.log(userInfoList);
                     console.log(response.data.data);
+                    console.log(response.data);
+                    console.log(response);
                 })
                 .catch((error) => {
                     console.error(error);
