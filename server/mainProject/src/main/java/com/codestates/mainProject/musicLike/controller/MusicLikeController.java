@@ -22,23 +22,16 @@ public class MusicLikeController {
     private final MusicLikeService musicLikeService;
     private final MusicLikeMapper musicLikeMapper;
 
-    // 음악 좋아요 생성
-    @PostMapping
-    public ResponseEntity<MusicLikeDto.MusicLikeResponseDto> createMusicLike(@RequestBody MusicLikeDto.MusicLikePostDto musicLikePostDto,
-                                                                             @LoginMemberId Long memberId) {
-        MusicLike createdMusicLike = musicLikeService.createMusicLike(memberId, musicLikePostDto.getMusicId());
-        MusicLikeDto.MusicLikeResponseDto responseDto = musicLikeMapper.entityToResponseDto(createdMusicLike);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
-    }
-
-    // 음악 좋아요 취소(삭제)
-    @DeleteMapping("/{music-like-id}")
-    public ResponseEntity<Void> deleteMusicLike(@PathVariable("music-like-id") long musicLikeId,
-                                                @LoginMemberId Long memberId) {
-        musicLikeService.deleteMusicLike(musicLikeId, memberId);
-
-        return ResponseEntity.noContent().build();
+    // 음악 좋아요 생성/취소
+    @PostMapping("/toggle")
+    public ResponseEntity<MusicLikeDto.MusicLikeToggleResponseDto> toggleMusicLike(@RequestBody MusicLikeDto.MusicLikePostDto musicLikePostDto,
+                                                                                   @LoginMemberId Long memberId) {
+        MusicLikeDto.MusicLikeToggleResponseDto responseDto = musicLikeService.toggleMusicLike(memberId, musicLikePostDto.getMusicId());
+        if (responseDto.getMusicLikeId() != null) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+        } else {
+            return ResponseEntity.ok(responseDto);
+        }
     }
 
     // 음악 좋아요 개별 조회
