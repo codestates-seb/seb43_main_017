@@ -51,6 +51,7 @@ export const Loading = () => {
                         if (res.status === 200 && res.headers.authorization !== undefined) {
                             window.localStorage.setItem('access_token', res.headers.authorization);
                             window.localStorage.setItem('refresh_token', res.headers.refresh);
+                            window.localStorage.setItem('memberId', res.headers.memberid);
                             window.location.href = '/';
                         }
                     });
@@ -107,6 +108,7 @@ export const Loading = () => {
                                         if (res.status === 200 && res.headers.authorization !== undefined) {
                                             window.localStorage.setItem('access_token', res.headers.authorization);
                                             window.localStorage.setItem('refresh_token', res.headers.refresh);
+                                            window.localStorage.setItem('memberId', res.headers.memberid);
                                             window.location.href = '/';
                                         }
                                     });
