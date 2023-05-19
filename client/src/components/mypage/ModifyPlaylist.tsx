@@ -103,6 +103,10 @@ export default ModifyPlaylist;
 const ModifyContainer = styled.div`
     align-items: center;
     margin: 30px;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideIn 1s ease-in-out forwards;
+    width: 400px;
 
     .modify-title {
         display: flex;
@@ -119,6 +123,16 @@ const ModifyContainer = styled.div`
             font-size: 16px;
             color: #ffffff;
             margin-left: 5px;
+        }
+    }
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
         }
     }
 `;
@@ -151,6 +165,7 @@ const Plcard = styled.div`
     }
     @media screen and (max-width: 1000px) {
         width: 400px;
+        margin: 0;
     }
 `;
 
@@ -233,5 +248,6 @@ const PlyList = styled.div`
     }
     @media screen and (max-width: 1000px) {
         width: 400px;
+        margin: 0;
     }
 `;

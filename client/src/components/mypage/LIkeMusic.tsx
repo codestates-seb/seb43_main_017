@@ -1,5 +1,9 @@
 import styled from 'styled-components';
-import { AiFillHeart } from 'react-icons/ai';
+import { HiOutlineHeart, HiHeart } from 'react-icons/hi';
+// import React, { useEffect } from 'react';
+// import { useRecoilState } from 'recoil';
+// import axios from 'axios';
+// import { likedSongs } from 'src/recoil/Atoms';
 
 /* 2023.05.10 Like Music 타입 선언 - 홍혜란 */
 type MusicData = {
@@ -52,11 +56,68 @@ const VoteLike: MusicData[] = [
 const LikeMusic = () => {
     const musicData = VoteLike;
 
+    /* 
+    // 좋아요를 누른 음악 목록을 저장하는 atom
+    const likedSongs = atom<{ [memberId: number]: string[] }>({
+        key: 'likedSongs',
+        default: {},
+    });
+
+    // 음악 목록 컴포넌트
+    const SongList = ({ memberId }: { memberId: number }) => {
+        const [likedSongsList, setLikedSongsList] = useRecoilState(likedSongs);
+
+        // 좋아요를 누른 음악 목록을 서버에서 가져오는 함수
+        const fetchLikedSongs = async () => {
+            try {
+                const response = await axios.get(`/api/liked-songs/${memberId}`);
+                const data = response.data;
+                setLikedSongsList({ ...likedSongsList, [memberId]: data });
+            } catch (error) {
+                console.error('Failed to fetch liked songs:', error);
+            }
+        };
+
+        // 좋아요를 해제하는 함수
+        const handleUnlike = async (songId: string) => {
+            try {
+                await axios.delete(`/api/liked-songs/${memberId}/${songId}`);
+                const updatedLikedSongs = likedSongsList[memberId].filter((id) => id !== songId);
+                setLikedSongsList({ ...likedSongsList, [memberId]: updatedLikedSongs });
+            } catch (error) {
+                console.error('Failed to unlike song:', error);
+            }
+        };
+
+        // 컴포넌트가 마운트될 때 좋아요를 누른 음악 목록을 가져옴
+        useEffect(() => {
+            fetchLikedSongs();
+        }, [memberId]);
+
+        const isSongLiked = (songId: string) => likedSongsList[memberId]?.includes(songId);
+
+        return (
+            <div>
+                <h2>Liked Songs</h2>
+                {likedSongsList[memberId]?.map((songId) => (
+                    <div key={songId}>
+                        <span>{songId}</span>
+                        <button onClick={() => handleUnlike(songId)}>{isSongLiked(songId) ? '<HiOutlineHeart />' : '<HiHeart />'}</button>
+                    </div>
+                ))}
+            </div>
+        );
+    }; 
+
+     const memberId = parseInt(localStorage.getItem('member-id') || '');
+     <SongList memberId={memberId} />
+    */
+
     return (
         <LikeContainer>
             <LikeTitle>
                 <div className="vote-icon">
-                    <AiFillHeart />
+                    <HiHeart />
                     <p>LIKE MUSIC</p>
                 </div>
             </LikeTitle>
@@ -67,7 +128,7 @@ const LikeMusic = () => {
                     <li>{data.artist}</li>
                     <li>{data.album}</li>
                     <div className="music-icon">
-                        <AiFillHeart />
+                        <HiHeart />
                     </div>
                 </LikeList>
             ))}
@@ -79,11 +140,14 @@ export default LikeMusic;
 
 /* 2023.05.10 Like Music 전체 박스 컴포넌트 - 홍혜란 */
 const LikeContainer = styled.div`
-    width: 450px;
+    width: 400px;
     align-items: center;
     margin: 30px;
     @media screen and (max-width: 1000px) {
         width: 400px;
+        margin: 0;
+        margin-top: 50px;
+        margin-left: 30px;
     }
 `;
 
