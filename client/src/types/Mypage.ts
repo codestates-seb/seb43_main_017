@@ -3,7 +3,7 @@ export interface UserInfo {
     name: string;
     email: string;
     image: string;
-    state: string;
+    status: string;
     createdAt: string;
     modifiedAt: string;
 }
