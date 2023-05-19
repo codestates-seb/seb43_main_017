@@ -73,11 +73,14 @@ export const modalState = atom<boolean>({
     default: false,
 });
 
+
+
 /* 2023.05.16 뮤직리스트 출력 상태 관리 - 홍혜란 */
 export const musicDataListState = atom<MusicData[]>({
     key: 'musicDataListState',
     default: [],
 });
+
 
 /* 2023.05.18 비디오 업로드 여부 상태관리 - 박수범 */
 export const videouploadState = atom<boolean>({
