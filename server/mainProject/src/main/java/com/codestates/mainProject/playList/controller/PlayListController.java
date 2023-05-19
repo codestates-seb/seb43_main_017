@@ -35,7 +35,6 @@ public class PlayListController {
     private final static String PLAYLIST_DEFAULT_URL = "/playlists";
     private final PlayListService playListService;
     private final PlayListMapper playListMapper;
-    private final MemberRepository memberRepository;
     private final MemberService memberService;
 
 
@@ -54,21 +53,9 @@ public class PlayListController {
         return ResponseEntity.created(location).build();
     }
 
-    @PatchMapping("/{playlist-id}")
-    public ResponseEntity updatePlayList(@PathVariable("playlist-id") @Positive long playListId,
-                                        @Valid @RequestBody PlayListDto.PatchDto requestBody){
-        requestBody.setPlayListId(playListId);
-        PlayList playList = playListMapper.patchToPlayList(requestBody);
-
-        PlayList updatePlayList = playListService.updatePlayList(playList);
-        PlayListDto.ResponseDto response = playListMapper.playListToResponse(updatePlayList);
-
-        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
-    }
-
     @GetMapping("/{playlist-id}")
     public ResponseEntity getPlayList(@PathVariable("playlist-id")@Positive long playListId){
-        PlayList findPlayList = playListService.findPlayList(playListId);
+        PlayList findPlayList = playListService.findVerifiedPlayList(playListId);
         PlayListDto.ResponseDto response = playListMapper.playListToResponse(findPlayList);
 
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
@@ -76,35 +63,51 @@ public class PlayListController {
 
     @GetMapping
     public ResponseEntity getPlayLists(@Positive @RequestParam(value = "page", defaultValue = "1") int page,
-                                       @Positive @RequestParam(value = "size", defaultValue = "10") int size){
+                                       @Positive @RequestParam(value = "size", defaultValue = "5") int size){
         Page<PlayList> pagePlayList = playListService.findPlayLists(page-1, size);
         List<PlayList> playLists = pagePlayList.getContent();
         List<PlayListDto.ResponseDto> response = playListMapper.playListsToResponses(playLists);
 
-        return new ResponseEntity<>(new MultiResponseDto<>(response, pagePlayList), HttpStatus.OK);
+        return ResponseEntity.ok(new MultiResponseDto<>(response, pagePlayList));
     }
 
-    //TODO: 전체다 삭제 가능 수정 필요
+//    @GetMapping("/member-playlist")
+//    public ResponseEntity getMemberPlayList(@LoginMemberId Long memberId,
+//                                            @Positive @RequestParam(value = "page", defaultValue = "1") int page,
+//                                            @Positive @RequestParam(value = "size", defaultValue = "10") int size) {
+//        Page<PlayList> pagePlayList = playListService.findPlayList(memberId, page-1, size);
+//        List<PlayList> playLists = pagePlayList.getContent();
+//        List<PlayListDto.ResponseDto> response = playListMapper.playListsToResponses(playLists);
+//
+//        return ResponseEntity.ok(new MultiResponseDto<>(response, pagePlayList));
+//    }
+
+    @PatchMapping("/{playlist-id}")
+    public ResponseEntity updatePlayList(@PathVariable("playlist-id") @Positive long playListId,
+                                        @LoginMemberId Long memberId,
+                                        @Valid @RequestBody PlayListDto.PatchDto requestBody){
+        PlayList playList = playListMapper.patchToPlayList(requestBody);
+        playList.setPlayListId(playListId);
+        PlayList updatedPlayList = playListService.updatePlayList(playListId, memberId, requestBody);
+        PlayListDto.ResponseDto response = playListMapper.playListToResponse(updatedPlayList);
+
+        return ResponseEntity.ok(new SingleResponseDto<>(response));
+    }
+
     @DeleteMapping("/{playlist-id}")
-    public ResponseEntity<SingleResponseDto<PlayListDto.DeleteSuccessDto>>
-    deletePlayList(@PathVariable("playlist-id") long playListId, @AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<SingleResponseDto<PlayListDto.DeleteSuccessDto>> deletePlayList(@PathVariable("playlist-id") long playListId,
+                                                                                          @LoginMemberId Long memberId) {
 
-        Member member = memberRepository.findByEmail(userDetails.getUsername()).orElseThrow(
-                () -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND)
-        );
-        long currentUserId = member.getMemberId();
-
-        playListService.deletePlayList(playListId, currentUserId);
-        PlayListDto.DeleteSuccessDto response = new PlayListDto.DeleteSuccessDto("PlayList removed successfully.");
+        playListService.deletePlayList(playListId, memberId);
+        PlayListDto.DeleteSuccessDto response = new PlayListDto.DeleteSuccessDto("플레이리스트 삭제 완료");
 
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
-
     // 플레이리스트 음악 삭제 기능
     @DeleteMapping("/{playlist-id}/musics/{music-id}")
     public ResponseEntity deleteMusicFromPlayList(@PathVariable("playlist-id") long playListId,
-                                                          @PathVariable("music-id") long musicId) {
+                                                  @PathVariable("music-id") long musicId) {
         playListService.deleteMusicFromPlayList(playListId, musicId);
         return ResponseEntity.ok("Music removed successfully.");
     }

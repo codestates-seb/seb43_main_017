@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { userType } from 'src/types/LoginInput';
 
 function Signup({ setShowSignUp }: { setShowSignUp: React.Dispatch<React.SetStateAction<boolean>> }) {
-    const BaseUrl = 'ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/signup';
+    const BaseUrl = `${process.env.REACT_APP_API_URL}/members/signup`;
     const [closeDisplay, setCloseDisplay] = useState<boolean>(false); // display closing 모션효과 상태
     /** 에러메시지  */
     const [nameMessage, setnameMessage] = useState('');

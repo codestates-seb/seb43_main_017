@@ -1,145 +1,133 @@
 import styled from 'styled-components';
-import Search from './Search';
 import Categories from './Categories';
 import Trending from './Tranding';
-import { FiPlayCircle, FiFolderPlus } from 'react-icons/fi';
-import { BsBoxArrowInDown } from 'react-icons/bs';
-import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
+import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { isLikedState } from 'src/recoil/Atoms';
-import { useState } from 'react';
-
-/* 2023.05.08 MusicList MusicList 타입 선언 - 홍혜란 */
-interface MusicData {
-    musicId: number;
-    albumCoverImg: string;
-    musicName: string;
-    artistName: string;
-    albumName: string;
-    musicTime: string;
-    tags: string[];
-    isLiked: boolean;
-}
-
-const MusicList: MusicData[] = [
-    {
-        musicId: 0,
-        albumCoverImg: '/assets/ditto.png',
-        musicName: 'Ditto',
-        artistName: 'Newjeans',
-        albumName: 'OMG',
-        musicTime: '3:15',
-        tags: ['잔잔한', '발라드', '피아노'],
-        isLiked: false,
-    },
-    {
-        musicId: 1,
-        albumCoverImg: '/assets/ditto.png',
-        musicName: 'Stitches',
-        artistName: 'Shawn Mendes',
-        albumName: 'Handwritten',
-        musicTime: '3:26',
-        tags: ['우울한', '어쿠스틱', '기타'],
-        isLiked: false,
-    },
-    {
-        musicId: 2,
-        albumCoverImg: '/assets/ditto.png',
-        musicName: 'Attention',
-        artistName: 'Charlie Puth',
-        albumName: 'Voicenotes',
-        musicTime: '3:31',
-        tags: ['신나는', '댄스'],
-        isLiked: false,
-    },
-    {
-        musicId: 3,
-        albumCoverImg: '/assets/ditto.png',
-        musicName: 'Ditto',
-        artistName: 'Newjeans',
-        albumName: 'OMG',
-        musicTime: '3:15',
-        tags: ['잔잔한', '발라드', '피아노'],
-        isLiked: false,
-    },
-    {
-        musicId: 4,
-        albumCoverImg: '/assets/ditto.png',
-        musicName: 'Stitches',
-        artistName: 'Shawn Mendes',
-        albumName: 'Handwritten',
-        musicTime: '3:26',
-        tags: ['우울한', '어쿠스틱', '기타'],
-        isLiked: false,
-    },
-    {
-        musicId: 5,
-        albumCoverImg: '/assets/ditto.png',
-        musicName: 'Attention',
-        artistName: 'Charlie Puth',
-        albumName: 'Voicenotes',
-        musicTime: '3:31',
-        tags: ['신나는', '댄스'],
-        isLiked: false,
-    },
-];
+import axios from 'axios';
+import { showSearch } from 'src/recoil/Atoms';
+import Sideicon from 'src/components/musiclist/SideIcon';
+import { BiSearch } from 'react-icons/bi';
+import { Link } from 'react-router-dom';
+import { MusicDataResponse } from 'src/types/Musiclist';
+import { musicDataListState } from 'src/recoil/Atoms';
 
 const Musiclist = () => {
-    /* 2023.05.11 뮤직리스트 좋아요 상태 관리 - 홍혜란 */
-    const [msList, setMsList] = useState(MusicList);
-    const [isLiked, setIsLiked] = useRecoilState(isLikedState);
+    const [musicDataList, setMusicDataList] = useRecoilState(musicDataListState);
+    const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
+    const [totalPages, setTotalPages] = useState<number>(0); // 전체 페이지 수
+    const [openSearch, setOpenSearch] = useRecoilState<boolean>(showSearch);
+    const [tapClick, setTapClick] = useState<number>(0);
+    const buttonArray = [];
 
-    const handleClick = (index: number) => {
-        const updatedMusicList = [...msList];
-        updatedMusicList[index].isLiked = !updatedMusicList[index].isLiked;
-        setIsLiked(updatedMusicList[index].isLiked);
-        setMsList(updatedMusicList);
+    useEffect(() => {
+        axios
+            .get<MusicDataResponse>(
+                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics?&page=${currentPage}&size=5`,
+            )
+            .then((response) => {
+                setMusicDataList(response.data.data);
+                setTotalPages(response.data.pageInfo.totalPages);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, [setMusicDataList, currentPage]);
+
+    /** 2023.05.17 전체 페이지 수 만큼 버튼 생성 - 김주비*/
+    for (let i = 1; i <= totalPages; i++) {
+        buttonArray.push(
+            <button
+                key={i}
+                className={i === currentPage ? 'page-focused' : ''}
+                onClick={() => {
+                    setCurrentPage(i);
+                }}
+            >
+                {i}
+            </button>,
+        );
+    }
+    const handleNextPage = () => {
+        setCurrentPage(currentPage + 1);
+    };
+    const handlePrevPage = () => {
+        setCurrentPage(currentPage - 1);
+    };
+
+    const formatSecondsToTime = (time: number) => {
+        const minutes = Math.floor(time / 60);
+        const remainingSeconds = time % 60;
+        const formattedMinutes = String(minutes).padStart(2, '0');
+        const formattedSeconds = String(remainingSeconds).padStart(2, '0');
+        return `${formattedMinutes}:${formattedSeconds}`;
     };
 
     return (
         <Container>
             <BackgroundCover></BackgroundCover>
             <MusiclistContainer>
-                <TagContainer>
-                    <Search />
+                <TagContainer className={openSearch ? 'open-search' : ''}>
                     <Categories />
                 </TagContainer>
                 <RightContainer>
-                    <RightchidContainer>
-                        <Trending />
-                        <MusicListTitle>
-                            <div className="musicList-title">MUSIC LIST</div>
-                            <div className="music-inquiry">
-                                <li>최신순</li>
-                                <li>좋아요순</li>
-                            </div>
-                        </MusicListTitle>
-                        <SongContainer>
-                            {msList.map((music, index) => (
-                                <Item key={music.musicId}>
-                                    <li>
-                                        <img src={music.albumCoverImg} alt={music.musicName} />
-                                    </li>
-                                    <li>{music.musicName}</li>
-                                    <li>{music.artistName}</li>
-                                    <li>{music.albumName}</li>
-                                    <li>{music.musicTime}</li>
-                                    <li>
-                                        <FiPlayCircle />
-                                    </li>
-                                    <li>
-                                        <FiFolderPlus />
-                                    </li>
-                                    <li>
-                                        <BsBoxArrowInDown />
-                                    </li>
-                                    <li onClick={() => handleClick(music.musicId)}>
-                                        {music.isLiked ? <AiFillHeart /> : <AiOutlineHeart />}
-                                    </li>
-                                </Item>
-                            ))}
-                        </SongContainer>
-                    </RightchidContainer>
+                    <SearchOpen
+                        onClick={() => {
+                            setOpenSearch(true);
+                        }}
+                    >
+                        <BiSearch />
+                        SEARCH
+                    </SearchOpen>
+                    <Trending />
+                    <MusicListTitle>
+                        <div className="musicList-title">Music List</div>
+                        <div className="music-inquiry">
+                            <li
+                                className={tapClick === 0 ? 'active' : ''}
+                                onClick={() => {
+                                    setTapClick(0);
+                                }}
+                            >
+                                최신순
+                            </li>
+                            <li
+                                className={tapClick === 1 ? 'active' : ''}
+                                onClick={() => {
+                                    setTapClick(1);
+                                }}
+                            >
+                                좋아요순
+                            </li>
+                        </div>
+                    </MusicListTitle>
+                    <SongContainer>
+                        {musicDataList.map((musicData) => (
+                            <Item key={musicData.musicId}>
+                                <li className="music-image">
+                                    <img src={musicData.albumCoverImg} alt={musicData.musicName} />
+                                </li>
+                                <li className="music-name">
+                                    <Link to={`/musiclist/${musicData.musicId}`}>{musicData.musicName}</Link>
+                                </li>
+                                <li className="music-artist color-gray">{musicData.artistName}</li>
+                                <li className="music-album color-gray">{musicData.albumName}</li>
+                                <li>{musicData.tags}</li>
+                                <li className="music-time color-gray">
+                                    {formatSecondsToTime(Number(musicData.musicTime))}
+                                </li>
+                                <Sideicon />
+                            </Item>
+                        ))}
+                    </SongContainer>
+                    <Pagination>
+                        <button disabled={currentPage === 1} onClick={handlePrevPage}>
+                            Prev
+                        </button>
+                        {buttonArray}
+                        <button disabled={currentPage === totalPages} onClick={handleNextPage}>
+                            Next
+                        </button>
+                    </Pagination>
                 </RightContainer>
             </MusiclistContainer>
         </Container>
@@ -148,6 +136,7 @@ const Musiclist = () => {
 
 export default Musiclist;
 
+/* 2023.05.08 MusicList 컴포넌트 구현 - 홍혜란 */
 const Container = styled.div`
     height: 100vh;
     overflow-x: hidden;
@@ -159,15 +148,37 @@ const MusiclistContainer = styled.div`
     display: flex;
     align-items: center;
     flex-direction: row;
+    height: 100vh;
+    @media screen and (max-width: 700px) {
+        padding-top: 100px;
+    }
 `;
 
 /* 2023.05.08 MusicList (검색,카테고리 컨테이너) 컴포넌트 구현 - 홍혜란 */
 const TagContainer = styled.div`
-    width: 500px;
+    width: 450px;
     height: 100vh;
-    background: rgba(0, 0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
+    @media screen and (max-width: 700px) {
+        /* display: none; */
+        position: absolute;
+        display: none;
+        top: 0px;
+        width: 0%;
+        z-index: 3;
+        animation: openSearch 1s forwards;
+        overflow: hidden;
+    }
+
+    &.open-search {
+        display: block;
+    }
+    @keyframes openSearch {
+        100% {
+            width: 100%;
+        }
+    }
 `;
 
 /**2023-05-06 ScaleOver 되는 백그라운드 애니메이션 - 김주비 */
@@ -190,17 +201,17 @@ const BackgroundCover = styled.div`
     }
 `;
 
+/* 2023.05.08 MusicList (뮤직리스트 오른쪽 컨테이너) 컴포넌트 구현 - 홍혜란 */
 const RightContainer = styled.div`
     display: flex;
     align-items: center;
     flex-direction: column;
     width: 100%;
     height: 100vh;
-`;
-
-const RightchidContainer = styled.div`
-    width: 1300px;
-    height: 100vh;
+    margin: 0px 5%;
+    @media screen and (max-width: 700px) {
+        width: 90%;
+    }
 `;
 
 /* 2023.05.08 MusicList (뮤직리스트 출력 타이틀) 컴포넌트 구현 - 홍혜란 */
@@ -209,46 +220,41 @@ const MusicListTitle = styled.div`
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    margin-bottom: 10px;
+    height: 80px;
 
     .musicList-title {
-        font-size: 30px;
+        font-size: 1.5rem;
+        font-weight: 700;
         color: hsl(0, 0%, 100%);
-        margin: 20px 0px 20px 0px;
-        font-family: 'Monoton';
-        transform: translateY(30px);
-        animation: movingtext 1s forwards 0.2s;
     }
-
     .music-inquiry {
         display: flex;
-        margin: 20px 80px 0px 30px;
-        border: 1px solid white;
-        border-radius: 20px;
-        transform: translateY(30px);
-        animation: movingtext 1s forwards 0.2s;
-
-        li {
-            font-size: 12px;
-            color: hsl(0, 0%, 100%);
-            padding: 8px 12px;
-            align-items: center;
-            height: 100%;
-        }
-
-        li:nth-child(2) {
-            border-left: 1px solid white;
-        }
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    li {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.2);
+        padding: 8px 12px;
+        align-items: center;
+        height: 100%;
+    }
+    li:nth-child(2) {
+        border-left: 2px solid rgba(255, 255, 255, 0.4);
+    }
+    .active {
+        color: rgba(255, 255, 255, 0.6);
+        background-color: rgba(255, 255, 255, 0.1);
     }
 `;
 
 /* 2023.05.08 MusicList (뮤직리스트) 컴포넌트 구현 - 홍혜란 */
 const SongContainer = styled.div`
     display: flex;
-    align-items: center;
+    align-items: left;
     flex-direction: column;
     width: 100%;
-    height: 500px;
 `;
 
 /* 2023.05.08 MusicList (뮤직리스트의 아이템 전체) 컴포넌트 구현 - 홍혜란 */
@@ -256,14 +262,17 @@ const Item = styled.ul`
     display: flex;
     flex-direction: row;
     align-items: center;
-    flex: 1;
     width: 100%;
+    height: 50px;
+    padding: 10px 0px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     color: hsl(0, 0%, 100%);
+    transition: 0.3s ease-in-out;
+    opacity: 0;
+    animation: fadeIn 1s ease-in-out forwards;
     &:hover {
         background-color: hsl(0, 0%, 46%, 0.5);
     }
-    opacity: 0;
-    animation: fadeIn 1s ease-in-out forwards;
 
     @keyframes fadeIn {
         from {
@@ -277,60 +286,97 @@ const Item = styled.ul`
     }
 
     li {
-        font-size: 12px;
-        height: 50px;
-        width: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
+        font-size: 0.8rem;
+        height: 20px;
+        width: 100%;
+        font-family: 'Rajdhani', sans-serif;
     }
 
-    li:nth-child(n + 2):nth-child(-n + 5) {
-        margin-right: 100px;
+    :nth-child(1) {
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
     }
 
-    li:nth-child(n + 3):nth-child(-n + 5) {
-        color: hsl(0, 0%, 72%);
+    .music-name a {
+        color: #ccc;
+        text-decoration: none;
     }
-
-    li:nth-child(n + 6):nth-child(-n + 9) {
-        font-size: 18px;
+    .music-image {
+        width: 70px;
+        height: 50px;
     }
-
-    li:nth-child(1) {
-        margin-right: 50px;
-    }
-
-    li:nth-child(2) {
-        font-weight: bold;
-    }
-
-    li:nth-child(6) {
-        color: hsl(207, 100%, 52%);
-    }
-
-    li:nth-child(9) {
-        color: rgb(245, 109, 109);
-        margin-right: 45px;
-    }
-
-    li > img {
+    .music-image img {
         width: 50px;
         height: 50px;
-        border-radius: 10%;
+        border-radius: 5px;
+        margin: 0px 10px;
+    }
+
+    .color-gray {
+        color: #999;
+    }
+    @media (max-width: 1200px) {
+        .music-time {
+            display: none;
+        }
+        .music-album {
+            display: none;
+        }
     }
 `;
 
-/* 추후 음악 데이터 불러오는 코드 */
-// const fetchMusicData = async (): Promise<MusicData[]> => {
-//     const response = await fetch('/api/music');
-//     const musicData: MusicData[] = await response.json();
-//     return musicData;
-// };
-/* 추후 음악 데이터 불러오는 코드 */
-//       const [musicData, setMusicData] = useState<MusicData[]>([]);
-//   useEffect(() => {
-//     fetchMusicData().then((data) => {
-//       setMusicData(data); // 받아온 데이터를 상태에 저장합니다.
-//     });
-//   }, []);
+const Pagination = styled.div`
+    button {
+        color: #ccc;
+        background: none;
+        border: 1px solid #5a5a5a;
+        border-radius: 3px;
+        margin: 40px 3px;
+        transition: 0.2s ease-in-out;
+        cursor: pointer;
+    }
+    button:hover {
+        color: #ccc;
+        border-color: #ccc;
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    button:disabled {
+        border: 1px solid #5a5a5a;
+        color: #5a5a5a;
+    }
+    button:disabled:hover {
+        background: none;
+        cursor: default;
+    }
+
+    .page-focused {
+        color: #ccc;
+        border-color: #ccc;
+        background: rgba(255, 255, 255, 0.2);
+    }
+`;
+
+const SearchOpen = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 20px;
+    border-radius: 20px;
+    border: 2px solid #ccc;
+    color: #ccc;
+    font-size: 0.8rem;
+    transition: 0.2s ease-in-out;
+    > * {
+        margin-right: 5px;
+    }
+    :hover {
+        border: 2px solid rgba(199, 68, 68, 1);
+        color: rgba(199, 68, 68, 1);
+    }
+    @media (min-width: 700px) {
+        display: none;
+    }
+`;

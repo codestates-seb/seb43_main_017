@@ -15,11 +15,6 @@ function ModifyPlaylist() {
                 <Plcard>
                     <div className="pl-treck">TRECK 8</div>
                     <div className="pl-contents">
-                        <Pltag>
-                            <li>잔잔한</li>
-                            <li>어쿠스틱</li>
-                            <li>피아노</li>
-                        </Pltag>
                         <Pluser>
                             <span>WTITER</span>
                             <span>Undefined</span>
@@ -108,6 +103,10 @@ export default ModifyPlaylist;
 const ModifyContainer = styled.div`
     align-items: center;
     margin: 30px;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideIn 1s ease-in-out forwards;
+    width: 400px;
 
     .modify-title {
         display: flex;
@@ -126,6 +125,16 @@ const ModifyContainer = styled.div`
             margin-left: 5px;
         }
     }
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
 `;
 
 const ModiCointainer = styled.div`
@@ -136,7 +145,7 @@ const ModiCointainer = styled.div`
 /**2023-05-06 플리 슬라이드 카드 섹션 : 김주비 */
 const Plcard = styled.div`
     position: relative;
-    width: 500px;
+    width: 450px;
     height: 200px;
     border-radius: 20px 20px 0 0;
     background: url('./assets/mypage.png');
@@ -154,21 +163,12 @@ const Plcard = styled.div`
         bottom: 30px;
         left: 30px;
     }
-`;
-
-/**2023-05-06 슬라이드 태그 : 김주비 */
-const Pltag = styled.ul`
-    display: flex;
-    li {
-        word-break: keep-all;
-        border: 2px solid #ccc;
-        padding: 5px 10px;
-        margin-right: 10px;
-        border-radius: 20px;
-        font-size: 0.7rem;
-        color: rgba(255, 255, 255, 0.6);
+    @media screen and (max-width: 1000px) {
+        width: 400px;
+        margin: 0;
     }
 `;
+
 /**2023-05-06 슬라이드 유저정보 : 김주비 */
 const Pluser = styled.div`
     margin-top: 20px;
@@ -216,7 +216,7 @@ const PlyList = styled.div`
     display: flex;
     flex-direction: column;
     background-color: #272727;
-    width: 500px;
+    width: 450px;
     height: 300px;
     overflow: auto;
     border-radius: 0 0 20px 20px;
@@ -245,5 +245,9 @@ const PlyList = styled.div`
         li:nth-child(n + 3):nth-child(-n + 4) {
             color: hsl(0, 0%, 72%);
         }
+    }
+    @media screen and (max-width: 1000px) {
+        width: 400px;
+        margin: 0;
     }
 `;

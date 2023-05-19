@@ -2,7 +2,9 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { VscClose } from 'react-icons/vsc';
 import { useRecoilState } from 'recoil';
-import { selectedTagsState } from 'src/recoil/Atoms';
+import { selectedTagsState, showSearch } from 'src/recoil/Atoms';
+import { MdTransitEnterexit } from 'react-icons/md';
+import Search from './Search';
 
 /* 2023.05.07 카테고리 타입, 종류 선언 - 홍혜란 */
 export type Category = {
@@ -46,6 +48,8 @@ const Categories = () => {
     /* 2023.05.10 subCategory 클릭 시 태그 생성 - 홍혜란 */
     const [selectedTags, setSelectedTags] = useRecoilState(selectedTagsState);
 
+    const [, setShowSearch] = useRecoilState<boolean>(showSearch);
+
     const handleSubCategoryClick = (subCategory: string) => {
         // 이미 선택된 태그가 있는지 확인
         const tagAlreadySelected = selectedTags.includes(subCategory);
@@ -59,6 +63,7 @@ const Categories = () => {
     return (
         <CateTagContainer>
             <CategoryContainer>
+                <Search />
                 {/* 2023.05.07 큰 카테고리에서 작은 카테고리를 보여주는 CategoryContainer - 홍혜란 */}
                 {categories.map((category, i) => (
                     <div key={category.name}>
@@ -89,6 +94,13 @@ const Categories = () => {
                     </TagContainer>
                 ))}
             </TagBox>
+            <Xbox
+                onClick={() => {
+                    setShowSearch(false);
+                }}
+            >
+                <MdTransitEnterexit />
+            </Xbox>
         </CateTagContainer>
     );
 };
@@ -100,17 +112,27 @@ const CateTagContainer = styled.div`
     display: flex;
     flex-direction: row;
     position: relative;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    @media screen and (max-width: 700px) {
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
+    }
 `;
 
 /* 2023.05.07 카테고리 컴포넌트 구현 - 홍혜란 */
 const CategoryContainer = styled.div`
+    position: absolute;
+    right: 0px;
     display: flex;
     flex-direction: column;
-    margin-left: 180px;
-    @media screen and (max-width: 768px) {
-        flex-direction: row;
-        margin-left: 0;
-        margin-top: 30px;
+    width: 200px;
+    @media screen and (max-width: 700px) {
+        position: relative;
+        width: 80%;
+        left: 50%;
+        transform: translateX(-50%);
     }
 `;
 
@@ -154,9 +176,14 @@ const SubCategoryItem = styled.li`
     cursor: pointer;
 `;
 
+/* 2023.05.10 태그 박스 컴포넌트 구현 - 홍혜란 */
 const TagBox = styled.div`
     position: absolute;
     right: -35px;
+    top: 100px;
+    @media screen and (max-width: 700px) {
+        right: 35px;
+    }
 `;
 
 /* 2023.05.10 태그 컴포넌트 구현 - 홍혜란 */
@@ -200,5 +227,27 @@ const TagContainer = styled.div`
         display: flex;
         align-items: center;
         color: white;
+    }
+`;
+
+const Xbox = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 50px;
+    height: 50px;
+    font-size: 2rem;
+    color: #666;
+    text-align: center;
+    border: 2px solid #666;
+    :hover {
+        color: #ccc;
+        border-color: #ccc;
+    }
+    @media screen and (min-width: 700px) {
+        display: none;
     }
 `;

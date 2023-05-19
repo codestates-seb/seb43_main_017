@@ -4,6 +4,7 @@ import com.codestates.mainProject.exception.BusinessLogicException;
 import com.codestates.mainProject.exception.ExceptionCode;
 import com.codestates.mainProject.member.entity.Member;
 import com.codestates.mainProject.member.repository.MemberRepository;
+import com.codestates.mainProject.music.dto.MusicDto;
 import com.codestates.mainProject.music.entity.Music;
 import com.codestates.mainProject.music.repository.MusicRepository;
 import org.springframework.data.domain.Page;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,18 +41,34 @@ public class MusicService {
     }
 
     // Music 수정
-    public Music updateMusic(Music music) {
-        Music findMusic = findVerifiedMusic(music.getMusicId());
+    public Music updateMusic(MusicDto.PatchDto patchDto, long musicId, Long memberId) {
+        isUserAdmin(memberId);
 
-        Optional.ofNullable(music.getArtistName())
-                .ifPresent(name -> findMusic.setArtistName(name));
-        Optional.ofNullable(music.getAlbumName())
-                .ifPresent(name -> findMusic.setAlbumName(name));
-        Optional.ofNullable(music.getMusicTime())
-                .ifPresent(time -> findMusic.setMusicTime(time));
+        Music music = findVerifiedMusic(musicId);
 
-        return findMusic;
+        if (patchDto.getMusicName() != null) {
+            music.setMusicName(patchDto.getMusicName());
+        }
+        if (patchDto.getArtistName() != null) {
+            music.setArtistName(patchDto.getArtistName());
+        }
+        if (patchDto.getAlbumName() != null) {
+            music.setAlbumName(patchDto.getAlbumName());
+        }
+        if (patchDto.getMusicTime() != 0) {
+            music.setMusicTime(patchDto.getMusicTime());
+        }
+        if (patchDto.getAlbumCoverImg() != null) {
+            music.setAlbumCoverImg(patchDto.getAlbumCoverImg());
+        }
+        if (patchDto.getMusicUri() != null) {
+            music.setMusicUri(patchDto.getMusicUri());
+        }
+        musicRepository.save(music);
+        return music;
     }
+
+
 
     // musicId 로 Music 조회
     public Music findMusicById(long musicId) {
@@ -66,9 +84,14 @@ public class MusicService {
     // Music 삭제
     public void deleteMusic(long musicId, Long memberId) {
         isUserAdmin(memberId);
-        findVerifiedMusic(musicId);
+        Music music = findVerifiedMusic(musicId);
 
-        musicRepository.deleteById(musicId);
+        musicRepository.delete(music);
+    }
+
+    // musicName, artistName, albumName 중 검색어를 포함하는 music을 조회
+    public List<Music> findMusicByKeyword(String keyword) {
+        return musicRepository.findMusicByKeyword(keyword);
     }
 
     // 유효한 musicId 인지 조회
@@ -89,12 +112,12 @@ public class MusicService {
     }
 
     // 현재 사용자가 admin 이 맞는지 조회
-    private void isUserAdmin(long memberId) {
+    private void isUserAdmin(Long memberId) {
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         Member findMember = optionalMember.orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
 
-        if (!findMember.getRoles().contains("admin")) {
+        if (!findMember.getRoles().contains("ADMIN")) {
             throw new BusinessLogicException(ExceptionCode.NO_PERMISSION_DELETING_MUSIC);
         }
     }

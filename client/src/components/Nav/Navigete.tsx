@@ -7,7 +7,9 @@ import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { selectIndexState, localIndexState } from 'src/recoil/Atoms';
 
-function Navigate() {
+function Navigate({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetStateAction<boolean>> }) {
+    const token = window.localStorage.getItem('access_token');
+    const userimg = window.localStorage.getItem('userimg');
     /**2023-05-05 선택된 아이콘 인덱스 스테이트 : 김주비*/
     const [selectIndex, setSelectIndex] = useRecoilState<number>(selectIndexState);
     const [localIndex, setLocalIndex] = useRecoilState<string | null>(localIndexState);
@@ -51,7 +53,14 @@ function Navigate() {
         <NavigateBox>
             <div className="icon-group">
                 <LogoIcon>
-                    <img src="/assets/logo_icon_012.png" alt="uncover logo image" />
+                    <Link
+                        to="/"
+                        onClick={() => {
+                            setSelectIndex(0);
+                        }}
+                    >
+                        <img src="/assets/logo_icon_012.png" alt="uncover logo image" />
+                    </Link>
                 </LogoIcon>
                 <Dotsstyle>
                     {[...Array(5)].map((_, index) => (
@@ -59,26 +68,71 @@ function Navigate() {
                     ))}
                 </Dotsstyle>
                 <MenuIcon>
-                    {menuIconlist.map((el, index) => (
-                        <Link to={el.link} key={el.index}>
-                            <li
-                                onClick={() => {
-                                    setSelectIndex(el.index);
-                                }}
-                                className={localIndex === String(index) ? 'click-icon' : 'null'}
-                            >
-                                {el.name}
-                            </li>
-                        </Link>
-                    ))}
+                    {token
+                        ? menuIconlist.map((el, index) => (
+                              <Link to={el.link} key={el.index}>
+                                  <li
+                                      onClick={() => {
+                                          setSelectIndex(el.index);
+                                      }}
+                                      className={localIndex === String(index) ? 'click-icon' : 'null'}
+                                  >
+                                      {el.name}
+                                  </li>
+                              </Link>
+                          ))
+                        : menuIconlist.map((el, index) =>
+                              el.index !== 3 ? (
+                                  <Link to={el.link} key={el.index}>
+                                      <li
+                                          onClick={() => {
+                                              setSelectIndex(el.index);
+                                          }}
+                                          className={localIndex === String(index) ? 'click-icon' : 'null'}
+                                      >
+                                          {el.name}
+                                      </li>
+                                  </Link>
+                              ) : (
+                                  <li
+                                      onClick={() => {
+                                          setShowSignIn(true);
+                                      }}
+                                      className={localIndex === String(index) ? 'click-icon' : 'null'}
+                                  >
+                                      {el.name}
+                                  </li>
+                              ),
+                          )}
                 </MenuIcon>
                 <Dotsstyle>
                     {[...Array(5)].map((_, index) => (
                         <span key={index}></span>
                     ))}
                 </Dotsstyle>
-                <ProfileIcon>
-                    <Link to="/mypage">
+                {token ? (
+                    <ProfileIcon>
+                        <Link to="/mypage">
+                            <span
+                                onClick={() => {
+                                    setClick(!click);
+                                    setSelectIndex(4);
+                                }}
+                            >
+                                {userimg ? (
+                                    <img src={userimg} alt="profile icon" className={click ? 'img-active' : 'null'} />
+                                ) : (
+                                    <img
+                                        src="/assets/profile-icon.png"
+                                        alt="profile icon"
+                                        className={click ? 'img-active' : 'null'}
+                                    />
+                                )}
+                            </span>
+                        </Link>
+                    </ProfileIcon>
+                ) : (
+                    <ProfileIcon onClick={() => setShowSignIn(true)}>
                         <span
                             onClick={() => {
                                 setClick(!click);
@@ -91,8 +145,8 @@ function Navigate() {
                                 className={click ? 'img-active' : 'null'}
                             />
                         </span>
-                    </Link>
-                </ProfileIcon>
+                    </ProfileIcon>
+                )}
             </div>
         </NavigateBox>
     );

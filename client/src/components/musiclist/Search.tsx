@@ -12,7 +12,7 @@ function Search() {
     };
 
     const handleSearch = async () => {
-        const response = await fetch(`/api/songs?searchItem=${searchItem}`);
+        const response = await fetch(``);
         const result = await response.json();
         // 검색 결과를 전역 recoil 상태에 저장
         useSetRecoilState(searchResultState)(result);
@@ -44,24 +44,29 @@ const SearchContainer = styled.div`
     position: relative;
     display: flex;
     justify-content: center;
-    margin: 20px 20px 20px 150px;
+    margin: 30px 10px 30px 0px;
 `;
 
+/* 2023.05.07 검색 input 컴포넌트 구현 - 홍혜란 */
 const SearchInput = styled.input`
     padding-left: 30px;
     background-image: url('./assets/search.png');
     background-repeat: no-repeat;
-    background-size: 20px;
-    background-position: 5px center;
+    background-size: 15px;
+    background-position: 10px center;
     background-color: transparent;
-    border: 1px solid hsl(0, 0%, 34%);
+    border: 2px solid hsl(0, 0%, 34%);
     border-radius: 30px;
     outline: none;
-    color: white;
+    color: #ccc;
     width: 100%;
     height: 30px;
     &:focus {
-        box-shadow: 0px 0px 0px 2px hsl(0, 0%, 43%);
-        border-color: hsl(0, 0%, 63%);
+        /* box-shadow: 0px 0px 0px 2px hsl(0, 0%, 43%); */
+        border: 2px solid hsl(0, 0%, 63%);
+    }
+
+    &::placeholder {
+        color: #666;
     }
 `;
