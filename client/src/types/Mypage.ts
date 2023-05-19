@@ -1,5 +1,5 @@
 export interface UserInfo {
-    musicId: number;
+    memberId: number;
     name: string;
     email: string;
     image: string;
