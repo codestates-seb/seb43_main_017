@@ -8,7 +8,9 @@ import com.codestates.mainProject.member.service.MemberService;
 import com.codestates.mainProject.memberMusic.entity.MemberMusic;
 import com.codestates.mainProject.memberMusic.service.MemberMusicService;
 import com.codestates.mainProject.music.entity.Music;
+import com.codestates.mainProject.music.repository.MusicRepository;
 import com.codestates.mainProject.music.service.MusicService;
+import com.codestates.mainProject.musicLike.dto.MusicLikeDto;
 import com.codestates.mainProject.musicLike.entity.MusicLike;
 import com.codestates.mainProject.musicLike.repository.MusicLikeRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,46 +28,48 @@ import java.util.Optional;
 public class MusicLikeService {
 
     private final MusicLikeRepository musicLikeRepository;
+    private final MusicRepository musicRepository;
     private final MemberService memberService;
-    private final MusicService musicService;
     private final MemberRepository memberRepository;
-    private final MemberMusicService memberMusicService;
 
-    // 음악 좋아요 생성
-    public MusicLike createMusicLike(long memberId, long musicId) {
-        MemberMusic memberMusic =memberMusicService.createMemberMusic(memberId, musicId);
-        Member member = memberMusic.getMember();
-        Music music = memberMusic.getMusic();
+    // 음악 좋아요 생성/취소
+    public MusicLikeDto.MusicLikeToggleResponseDto toggleMusicLike(Long memberId, long musicId) {
 
+        Member member = memberService.findVerifiedMember(memberId);
+        Music music = musicRepository.findById(musicId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MUSIC_NOT_FOUND));
 
-        MusicLike musicLike = new MusicLike(member, music);
-        music.addMusicLike(musicLike);
-        return musicLikeRepository.save(musicLike);
-    }
+        List<MusicLike> musicLikes = music.getMusicLikes();
 
-//     음악 좋아요 취소(삭제)
-    public void deleteMusicLike(long musicLikeId, Long memberId) {
-
-
-        MusicLike musicLike = findVerifiedMusicLike(musicLikeId);
-        Music music = musicLike.getMusic();
-        long musicId =music.getMusicId();
-
-
-        List<MusicLike> musicLikes = musicLike.getMusic().getMusicLikes();
 
         Optional<MusicLike> optionalMusicLike = musicLikes.stream()
                 .filter(musiclike -> musiclike.getMember().getMemberId().equals(memberId))
                 .findFirst();
-        if(optionalMusicLike.isPresent()){
-            music.removeMusicLike(optionalMusicLike.orElse(null));
 
-            memberMusicService.deleteMemberMusic(memberId,musicId);
+
+        MusicLikeDto.MusicLikeToggleResponseDto responseDto = new MusicLikeDto.MusicLikeToggleResponseDto();
+        responseDto.setMemberId(memberId);
+        responseDto.setMusicId(musicId);
+
+        if (optionalMusicLike.isPresent()) {
+            MusicLike musicLike = optionalMusicLike.get();
+
+            validateMusicLikeAuthorOrAdmin(memberId, musicLike);
+            music.removeMusicLike(musicLike);
+            musicLikeRepository.delete(musicLike);
+//            music.removeMusicLike(musicLike);   // 좋아요 취소 후 Music 엔티티와의 관계를 삭제
+
+            responseDto.setMessage("좋아요가 취소되었습니다.");
+        } else {
+            MusicLike musicLike = new MusicLike(member, music);
+            music.addMusicLike(musicLike);
+            MusicLike savedMusicLike = musicLikeRepository.save(musicLike);
+
+            responseDto.setMusicLikeId(savedMusicLike.getMusicLikeId());
+            responseDto.setMessage("좋아요가 생성되었습니다.");
         }
 
-        validateMusicLikeAuthorOrAdmin(memberId, musicLike);
-
-        musicLikeRepository.delete(musicLike);
+            return responseDto;
     }
 
     // 음악 좋아요 조회
