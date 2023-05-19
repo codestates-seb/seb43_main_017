@@ -1,5 +1,6 @@
 import { atom } from 'recoil';
 import { MusicData } from 'src/types/Musiclist';
+import { UserInfo } from 'src/types/Mypage';
 
 /* 2023.05.06 사용자의 이름을 nameState라는 새로운 상태를 정의 - 홍혜란 */
 export const nameState = atom({
@@ -88,4 +89,10 @@ export const musicDataListState = atom<MusicData[]>({
 export const showSearch = atom<boolean>({
     key: 'showSearch',
     default: false,
+});
+
+/* 2023.05.19 마이페이지 유저정보 출력 상태 관리 - 홍혜란 */
+export const userInfoState = atom<UserInfo[]>({
+    key: 'userInfoState',
+    default: [],
 });

@@ -6,17 +6,13 @@ import axios from 'axios';
 import LikeMusic from './LIkeMusic';
 import Myplaylist from './Myplaylist';
 import ModifyPlaylist from './ModifyPlaylist';
-import { atom } from 'recoil';
+import { UserInfoResponse } from 'src/types/Mypage';
+import { userInfoState } from 'src/recoil/Atoms';
 
 type UserData = {
+    memberId: number;
     name: string;
     intro: string;
-};
-
-type UserInfo = {
-    image: string;
-    name: string;
-    email: string;
 };
 
 function Mypage() {
@@ -64,48 +60,67 @@ function Mypage() {
     //     };
     // }, [name, intro]);
 
+    const [userInfoList, setUserInfoList] = useRecoilState(userInfoState);
+
+    useEffect(() => {
+        axios
+            .get<UserInfoResponse>(
+                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/{member-id}`,
+            )
+            .then((response) => {
+                setUserInfoList(response.data.data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, []);
+
     return (
         <div>
             <BackgroundCover></BackgroundCover>
             <MypageContainer>
                 <MypageListContainer>
                     <UserProfile>
-                        <div className="user-profile">
-                            <img src="./assets/ditto.png" alt="userimg" />
-                        </div>
-                        <UserContainer>
-                            {/* 사용자의 이름 출력 및 수정 */}
-                            <div className="user-name-container">
-                                {editingName ? (
-                                    <input
-                                        type="text"
-                                        value={name}
-                                        onChange={handleNameChange}
-                                        onBlur={handleNameBlur}
-                                    />
-                                ) : (
-                                    <div className="user-name" onClick={handleNameClick} contentEditable>
-                                        {name}
+                        {userInfoList.map((userData) => (
+                            <div key={userData.musicId}>
+                                <div className="user-profile">
+                                    <img src={userData.image} alt={userData.name} />
+                                </div>
+                                <UserContainer>
+                                    {/* 사용자의 이름 출력 및 수정 */}
+                                    <div className="user-name-container">
+                                        {editingName ? (
+                                            <input
+                                                type="text"
+                                                value={name}
+                                                onChange={handleNameChange}
+                                                onBlur={handleNameBlur}
+                                            />
+                                        ) : (
+                                            <div className="user-name" onClick={handleNameClick} contentEditable>
+                                                {userData.name}
+                                            </div>
+                                        )}
                                     </div>
-                                )}
-                            </div>
-                            <div className="user-email">undefinded@naver.com</div>
-                            {/* 사용자의 자기소개 출력 및 수정 */}
-                            <div className="user-coment-container">
-                                {editingIntro ? (
-                                    <input
-                                        type="text"
-                                        value={intro}
-                                        onChange={handleIntroChange}
-                                        onBlur={handleIntroBlur}
-                                    />
-                                ) : (
-                                    <div className="user-coment" onClick={handleIntroClick} contentEditable>
-                                        {intro}
+                                    <div className="user-email">{userData.email}</div>
+                                    {/* 사용자의 자기소개 출력 및 수정 */}
+                                    <div className="user-coment-container">
+                                        {editingIntro ? (
+                                            <input
+                                                type="text"
+                                                value={intro}
+                                                onChange={handleIntroChange}
+                                                onBlur={handleIntroBlur}
+                                            />
+                                        ) : (
+                                            <div className="user-coment" onClick={handleIntroClick} contentEditable>
+                                                {intro}
+                                            </div>
+                                        )}
                                     </div>
-                                )}
+                                </UserContainer>
                             </div>
-                        </UserContainer>
+                        ))}
                     </UserProfile>
 
                     <MusicInfor>
