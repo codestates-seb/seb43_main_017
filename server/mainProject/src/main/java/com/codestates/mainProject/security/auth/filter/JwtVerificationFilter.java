@@ -41,7 +41,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
 
     // 만약 request에 전달받은 authorization이 없으면 해당 필터는 실행안함
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    protected boolean shouldNotFilter(HttpServletRequest request) {
         String authorization = request.getHeader("Authorization");
 
         return authorization == null || !authorization.startsWith("Bearer");
@@ -63,7 +63,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
 
         String email = (String) claims.get("sub");
         Long id = Long.valueOf((Integer) claims.get("memberId"));
-        List<GrantedAuthority> authorities = authorityUtils.createAuthorities((List)claims.get("roles"));
+        List<GrantedAuthority> authorities = authorityUtils.createAuthorities((List<String>)claims.get("roles"));
 
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(new TokenPrincipalDto(id, email), null, authorities);
