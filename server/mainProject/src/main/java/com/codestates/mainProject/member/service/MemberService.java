@@ -5,6 +5,8 @@ import com.codestates.mainProject.music.entity.Music;
 import com.codestates.mainProject.musicLike.entity.MusicLike;
 import com.codestates.mainProject.musicLike.repository.MusicLikeRepository;
 import com.codestates.mainProject.playList.entity.PlayList;
+import com.codestates.mainProject.playListLike.entity.PlayListLike;
+import com.codestates.mainProject.playListLike.repository.PlayListLikeRepository;
 import com.codestates.mainProject.security.auth.jwt.JwtTokenizer;
 import com.codestates.mainProject.security.auth.utils.CustomAuthorityUtils;
 import com.codestates.mainProject.exception.BusinessLogicException;

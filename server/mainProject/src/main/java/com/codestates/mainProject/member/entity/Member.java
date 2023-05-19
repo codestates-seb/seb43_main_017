@@ -61,11 +61,11 @@ public class Member extends Auditable {
     }
 
     public List<PlayList> getLikedPlayLists(){
-        List<PlayList> plyaLists = new ArrayList<>();
+        List<PlayList> LikedPlayLists = new ArrayList<>();
         for ( PlayListLike playListLike : likedPlayLists) {
-            plyaLists.add(playListLike.getPlayList());
+            LikedPlayLists.add(playListLike.getPlayList());
         }
-        return playLists;
+        return LikedPlayLists;
     }
 
     public void addMemberMusic(MemberMusic memberMusic){

@@ -14,6 +14,7 @@ import com.codestates.mainProject.playlListMusic.service.PlayListMusicService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -50,13 +51,35 @@ public class PlayListService {
         }
     }
 
-    // 유저 플레이리스트 조회
-//    public Page<PlayList> findPlayList(Long memberId, int page, int size) {
-//        Member member = memberService.findMember(memberId);
-//
-//        if (!member.getMemberId().equals())
-//    }
+    // 좋아요 플레이리스트 조회
+    public Page<PlayList> findLikedPlayLists(Long memberId, int page, int size) {
+        Member member = memberService.findMember(memberId);
+        List<PlayList> playLists = member.getLikedPlayLists();
 
+        int start = page * size;
+        int end = Math.min(start + size, playLists.size());
+
+        if (start >= playLists.size()) return Page.empty();
+
+        List<PlayList> pagePlayLists = playLists.subList(start, end);
+        return new PageImpl<>(pagePlayLists, PageRequest.of(page, size), playLists.size());
+    }
+
+    // 멤버 플레이리스트 조회
+    public Page<PlayList> findMemberPlayLists(Long memberId, int page, int size) {
+        Member member = memberService.findMember(memberId);
+        List<PlayList> playLists = member.getPlayLists();
+
+        int start = page * size;
+        int end = Math.min(start + size, playLists.size());
+
+        if (start >= playLists.size()) return Page.empty();
+
+        List<PlayList> pagePlayLists = playLists.subList(start, end);
+        return new PageImpl<>(pagePlayLists, PageRequest.of(page, size), playLists.size());
+    }
+
+    // 전체 플레이리스트 조회
     public Page<PlayList> findPlayLists(int page, int size){
         return playListRepository.findAll(PageRequest.of(
                 page, size, Sort.by("playListId").descending()));
