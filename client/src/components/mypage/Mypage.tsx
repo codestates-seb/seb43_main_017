@@ -38,7 +38,7 @@ function Mypage() {
     // /* 2023.05.06 수정된 이름과 자기소개 데이터를 서버에 저장 */
     // useEffect(() => {
     //     return () => {
-    //         const userData: UserData = { name, intro };
+    //         const userData: UserData = { name };
     //         axios.patch('members/{member-id}', userData);
     //     };
     // }, [name, intro]);
@@ -53,9 +53,11 @@ function Mypage() {
                     `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/${memberId}`,
                 )
                 .then((response) => {
-                    setUserInfoList(response.data.data);
+                    setUserInfoList([response.data.data]);
                     console.log(userInfoList);
                     console.log(response.data.data);
+                    console.log(response.data);
+                    console.log(response);
                 })
                 .catch((error) => {
                     console.error(error);
@@ -80,7 +82,7 @@ function Mypage() {
                                         {editingName ? (
                                             <input
                                                 type="text"
-                                                value={name}
+                                                value={userData.name}
                                                 onChange={handleNameChange}
                                                 onBlur={handleNameBlur}
                                             />
@@ -148,15 +150,22 @@ const MypageListContainer = styled.div`
     z-index: 2;
 `;
 
+/* 2023.05.06 유저 프로필사진 컴포넌트 - 홍헤란 */
 const UserProfile = styled.div`
     display: flex;
-    padding: 20px;
+    align-items: flex-start;
+    margin-top: 100px;
+
+    div {
+        display: flex;
+    }
 
     .user-profile {
         img {
             width: 175px;
             height: 175px;
             border-radius: 50%;
+            border: 3px solid linear-gradient(to right, #ff00bf, blue) 1;
         }
     }
     @media screen and (max-width: 1000px) {
@@ -166,7 +175,7 @@ const UserProfile = styled.div`
     }
 `;
 
-/* 2023.05.06 유저의 이름 / 이메일 / 자기소개 컴포넌트 구현 -홍혜란 */
+/* 2023.05.06 유저의 이름 / 이메일 컴포넌트 구현 - 홍혜란 */
 const UserContainer = styled.div`
     align-items: flex-start;
     display: flex;

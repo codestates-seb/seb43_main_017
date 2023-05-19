@@ -32,5 +32,16 @@ public class MusicLikeDto {
         private Long memberId;
         private Long musicId;
     }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class MusicLikeToggleResponseDto {
+        private Long musicLikeId;
+        private Long memberId;
+        private Long musicId;
+        private String message;
+    }
 }
 

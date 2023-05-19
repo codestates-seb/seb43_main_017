@@ -64,9 +64,6 @@ public class MusicService {
         if (patchDto.getMusicUri() != null) {
             music.setMusicUri(patchDto.getMusicUri());
         }
-        if (patchDto.getTags() != null) {
-            music.setTags(patchDto.getTags());
-        }
         musicRepository.save(music);
         return music;
     }

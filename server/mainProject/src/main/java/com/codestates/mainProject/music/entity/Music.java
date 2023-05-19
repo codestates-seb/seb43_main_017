@@ -40,6 +40,7 @@ public class Music extends Auditable {
     @Column(nullable = false)
     private Long musicTime;
 
+    @Column
     private String albumCoverImg;
 
     @Column(nullable = false, unique = true)
@@ -54,7 +55,6 @@ public class Music extends Auditable {
     @ElementCollection(fetch = FetchType.LAZY)
     private List<String> tags = new ArrayList<>();
 
-
     @OneToMany(mappedBy = "music", cascade = {CascadeType.ALL})
     private List<MemberMusic> memberMusics = new ArrayList<>();
 
@@ -64,13 +64,10 @@ public class Music extends Auditable {
     @OneToMany(mappedBy = "music", cascade = {CascadeType.ALL})
     private List<MusicTag> musicTags = new ArrayList<>();
 
-
-
     public void addMusicLike(MusicLike musicLike) {
         this.musicLikes.add(musicLike);
         musicLike.setMusic(this);
         this.musicLikeCount = this.musicLikes.size();
-
     }
 
     public void removeMusicLike(MusicLike musicLike){
@@ -117,6 +114,11 @@ public class Music extends Auditable {
         }
     }
 
-
-
+    public List<String> getTagsName() {
+        List<String> musicTagName = new ArrayList<>();
+        for (MusicTag musicTag : musicTags) {
+            musicTagName.add(musicTag.getName());
+        }
+        return musicTagName;
+    }
 }
