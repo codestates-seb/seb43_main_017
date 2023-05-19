@@ -40,8 +40,7 @@ function Signin({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetStat
                 .then((res) => {
                     if (res.status === 200 && res.headers.authorization !== undefined) {
                         window.localStorage.setItem('access_token', res.headers.authorization);
-                        window.localStorage.setItem('refresh_token', res.headers.Refresh);
-                        setTokenState(localStorage.getItem('access_token'));
+                        window.localStorage.setItem('refresh_token', res.headers.refresh);
                         setCloseDisplay(!closeDisplay);
                         setTimeout(() => {
                             setShowSignIn(false);

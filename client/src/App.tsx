@@ -43,6 +43,9 @@ function App() {
                                 localStorage.removeItem('refresh_token');
                                 localStorage.removeItem('com.naver.nid.access_token');
                                 localStorage.removeItem('com.naver.nid.oauth.state_token');
+                                localStorage.removeItem('memberId');
+                                localStorage.removeItem('userimg');
+                                localStorage.removeItem('username');
                                 location.reload();
                             }}
                         >
