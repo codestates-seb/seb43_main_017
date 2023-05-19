@@ -153,6 +153,8 @@ const MypageListContainer = styled.div`
 /* 2023.05.06 유저 프로필사진 컴포넌트 - 홍헤란 */
 const UserProfile = styled.div`
     display: flex;
+    align-items: flex-start;
+    margin-top: 100px;
 
     div {
         display: flex;
@@ -195,7 +197,7 @@ const UserContainer = styled.div`
             font-size: 30px;
             font-weight: bold;
             color: hsl(0, 0%, 100%);
-            margin: 30px 0px 0px 25px;
+            margin: 10px 0px 10px 25px;
         }
     }
 
