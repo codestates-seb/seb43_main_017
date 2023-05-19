@@ -110,7 +110,7 @@ function Navigate({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetSt
                         <span key={index}></span>
                     ))}
                 </Dotsstyle>
-                {token && userimg ? (
+                {token ? (
                     <ProfileIcon>
                         <Link to="/mypage">
                             <span
@@ -119,7 +119,15 @@ function Navigate({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetSt
                                     setSelectIndex(4);
                                 }}
                             >
-                                <img src={userimg} alt="profile icon" className={click ? 'img-active' : 'null'} />
+                                {userimg ? (
+                                    <img src={userimg} alt="profile icon" className={click ? 'img-active' : 'null'} />
+                                ) : (
+                                    <img
+                                        src="/assets/profile-icon.png"
+                                        alt="profile icon"
+                                        className={click ? 'img-active' : 'null'}
+                                    />
+                                )}
                             </span>
                         </Link>
                     </ProfileIcon>
