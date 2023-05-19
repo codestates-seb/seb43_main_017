@@ -56,7 +56,7 @@ public class MemberContorller {
         log.info("### oauth2 login start! ###");
         String accessToken = "";
         String refreshToken = "";
-
+        String memberId = "";
         Member member = mapper.AuthLoginDtoMember(requesBody);
         if(!memberService.existsByEmail(member.getEmail())) {
             member = memberService.createMemberOAuth2(member);
@@ -66,8 +66,10 @@ public class MemberContorller {
 
         accessToken = memberService.delegateAccessToken(member);
         refreshToken = memberService.delegateRefreshToken(member);
+        memberId = String.valueOf(member.getMemberId());
         return ResponseEntity.ok().header("Authorization", "Bearer " + accessToken)
-                .header("Refresh", refreshToken).build();
+                .header("Refresh", refreshToken)
+                .header("MemberId", memberId).build();
     }
 
     // 토큰을 이용해 사용자의 정보를 가져와 회원가입을 하고 받아오는 방식
@@ -86,7 +88,7 @@ public class MemberContorller {
 //    }
 
 
-    @GetMapping("/token")
+    @GetMapping("/info")
     public ResponseEntity getMemberInfo(@LoginMemberId Long memberId){
         Member findMember = memberService.findMember(memberId);
         MemberDto.ResponseDto response = mapper.memberToResponse(findMember);
