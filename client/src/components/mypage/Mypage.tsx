@@ -1,20 +1,14 @@
 import styled from 'styled-components';
-import { useRecoilState } from 'recoil';
-import { nameState } from 'src/recoil/Atoms';
 import React, { useState } from 'react';
 import LikeMusic from './LIkeMusic';
 import Myplaylist from './Myplaylist';
 import ModifyPlaylist from './ModifyPlaylist';
-
-type UserData = {
-    memberId: number;
-    name: string;
-    email: string;
-};
+import { useRecoilState } from 'recoil';
+import { usernicknameState } from 'src/recoil/Atoms';
 
 function Mypage() {
-    /* 2023.05.06 유저의 name과 intro부분을 클릭했을 시 수정할 수 있는 상태관리 */
-    const [username, setUserName] = useRecoilState(nameState);
+    /* 2023.05.06 유저의 name을 클릭했을 시 수정할 수 있는 상태관리 */
+    const [userNickname, setUsernickname] = useRecoilState(usernicknameState);
     const [editingName, setEditingName] = useState(false);
 
     /* 2023.05.06 사용자가 이름을 클릭했을 때 호출되는 함수 , 이름이 편집 모드로 전환  */
@@ -25,20 +19,35 @@ function Mypage() {
     /* 2023.05.06 사용자가 이름 입력 폼에서 포커스를 벗어났을 때 호출되는 함수 , 이름이 편집 모드에서 보기 모드로 전환  */
     const handleNameBlur = () => {
         setEditingName(false);
+        // sendUpdatedData(userNickname);
     };
 
-    /* 2023.05.06 사용자가 이름 입력 폼에서 값을 변경할 때마다 호출되는 함수 , 입력 폼에 입력된 값으로 name 상태가 업데이트 */
-    const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setUserName(event.target.value);
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setUsernickname(event.target.value);
     };
 
-    // /* 2023.05.06 수정된 이름과 자기소개 데이터를 서버에 저장 */
-    // useEffect(() => {
-    //     return () => {
-    //         const userData: UserData = { name };
-    //         axios.patch('members/{member-id}', userData);
-    //     };
-    // }, [name, intro]);
+    // const sendUpdatedData = async (updatedData: string) => {
+    //     try {
+    //         const response = await fetch(
+    //             'http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/{member-id}',
+    //             {
+    //                 method: 'POST',
+    //                 body: JSON.stringify({ usernickname: updatedData }),
+    //                 headers: {
+    //                     'Content-Type': 'application/json',
+    //                 },
+    //             },
+    //         );
+
+    //         if (response.ok) {
+    //             console.log('데이터 전송 성공!');
+    //         } else {
+    //             console.log('데이터 전송 실패!');
+    //         }
+    //     } catch (error) {
+    //         console.error('데이터 전송 중 오류 발생:', error);
+    //     }
+    // };
 
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
     const userimg: string | undefined = window.localStorage.getItem('userimg') || undefined;
@@ -62,9 +71,9 @@ function Mypage() {
                                         {editingName ? (
                                             <input
                                                 type="text"
-                                                value={usernickname ?? undefined}
-                                                onChange={handleNameChange}
+                                                value={usernickname}
                                                 onBlur={handleNameBlur}
+                                                onChange={handleChange}
                                             />
                                         ) : (
                                             <div className="user-name" onClick={handleNameClick} contentEditable>
