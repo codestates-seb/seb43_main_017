@@ -38,7 +38,7 @@ function Mypage() {
     // /* 2023.05.06 수정된 이름과 자기소개 데이터를 서버에 저장 */
     // useEffect(() => {
     //     return () => {
-    //         const userData: UserData = { name, intro };
+    //         const userData: UserData = { name };
     //         axios.patch('members/{member-id}', userData);
     //     };
     // }, [name, intro]);
@@ -53,7 +53,7 @@ function Mypage() {
                     `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/${memberId}`,
                 )
                 .then((response) => {
-                    setUserInfoList(response.data.data);
+                    setUserInfoList([response.data.data]);
                     console.log(userInfoList);
                     console.log(response.data.data);
                     console.log(response.data);
@@ -82,7 +82,7 @@ function Mypage() {
                                         {editingName ? (
                                             <input
                                                 type="text"
-                                                value={name}
+                                                value={userData.name}
                                                 onChange={handleNameChange}
                                                 onBlur={handleNameBlur}
                                             />
@@ -152,7 +152,10 @@ const MypageListContainer = styled.div`
 
 const UserProfile = styled.div`
     display: flex;
-    padding: 20px;
+
+    div {
+        display: flex;
+    }
 
     .user-profile {
         img {

@@ -9,5 +9,5 @@ export interface UserInfo {
 }
 
 export interface UserInfoResponse {
-    data: UserInfo[];
+    data: UserInfo;
 }
