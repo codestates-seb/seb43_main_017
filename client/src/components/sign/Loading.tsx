@@ -39,6 +39,9 @@ export const Loading = () => {
                 const userid = naverLogin.user.getEmail();
                 const username = naverLogin.user.getNickName();
                 const userimg = naverLogin.user.getProfileImage();
+                // 유저정보 로컬스토리지에 저장.
+                window.localStorage.setItem('useremail', userid);
+                window.localStorage.setItem('usernickname', username);
                 window.localStorage.setItem('userimg', userimg);
                 // 추출한 데이터를 백엔드 서버로 보내준다.
                 axios
@@ -92,9 +95,13 @@ export const Loading = () => {
                             },
                         })
                         .then((res) => {
+                            // 유저 이메일,닉네임,프로필이미지 뽑아주고,
                             const kakaoemail = res.data.kakao_account.email;
                             const kakaonickname = res.data.properties.nickname;
                             const kakaoimg = res.data.properties.profile_image;
+                            // 유저정보 로컬스토리지에 저장.
+                            window.localStorage.setItem('useremail', kakaoemail);
+                            window.localStorage.setItem('usernickname', kakaonickname);
                             window.localStorage.setItem('userimg', kakaoimg);
                             if (kakaoemail) {
                                 // 카카오에서 받아온 유저정보를 백엔드 서버로 보내주고 토큰을 요청
