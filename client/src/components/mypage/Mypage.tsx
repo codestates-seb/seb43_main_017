@@ -19,34 +19,35 @@ function Mypage() {
     /* 2023.05.06 사용자가 이름 입력 폼에서 포커스를 벗어났을 때 호출되는 함수 , 이름이 편집 모드에서 보기 모드로 전환  */
     const handleNameBlur = () => {
         setEditingName(false);
-        sendUpdatedData(userNickname);
+        // sendUpdatedData(userNickname);
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setUsernickname(event.target.value);
     };
 
-    const sendUpdatedData = async (updatedData: string) => {
-        try {
-            // 서버 API 주소로 수정한 데이터를 전송합니다.
-            const response = await fetch('서버 API 주소', {
-                method: 'POST',
-                body: JSON.stringify({ usernickname: updatedData }),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
+    // const sendUpdatedData = async (updatedData: string) => {
+    //     try {
+    //         const response = await fetch(
+    //             'http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/{member-id}',
+    //             {
+    //                 method: 'POST',
+    //                 body: JSON.stringify({ usernickname: updatedData }),
+    //                 headers: {
+    //                     'Content-Type': 'application/json',
+    //                 },
+    //             },
+    //         );
 
-            // 서버 응답을 확인하고 필요한 처리를 수행합니다.
-            if (response.ok) {
-                console.log('데이터 전송 성공!');
-            } else {
-                console.log('데이터 전송 실패!');
-            }
-        } catch (error) {
-            console.error('데이터 전송 중 오류 발생:', error);
-        }
-    };
+    //         if (response.ok) {
+    //             console.log('데이터 전송 성공!');
+    //         } else {
+    //             console.log('데이터 전송 실패!');
+    //         }
+    //     } catch (error) {
+    //         console.error('데이터 전송 중 오류 발생:', error);
+    //     }
+    // };
 
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
     const userimg: string | undefined = window.localStorage.getItem('userimg') || undefined;
