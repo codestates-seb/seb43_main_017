@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 import { MusicData } from 'src/types/Musiclist';
-import { UserInfo } from 'src/types/Mypage';
+import { UserInfo } from 'src/types/UserInfo';
 
 /* 2023.05.06 사용자의 이름을 nameState라는 새로운 상태를 정의 - 홍혜란 */
 export const nameState = atom({
