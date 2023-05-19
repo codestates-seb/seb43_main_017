@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
-import { nameState, introState } from 'src/recoil/Atoms';
+import { nameState } from 'src/recoil/Atoms';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import LikeMusic from './LIkeMusic';
@@ -12,15 +12,13 @@ import { userInfoState } from 'src/recoil/Atoms';
 type UserData = {
     memberId: number;
     name: string;
-    intro: string;
+    email: string;
 };
 
 function Mypage() {
     /* 2023.05.06 유저의 name과 intro부분을 클릭했을 시 수정할 수 있는 상태관리 */
     const [name, setName] = useRecoilState(nameState);
-    const [intro, setIntro] = useRecoilState(introState);
     const [editingName, setEditingName] = useState(false);
-    const [editingIntro, setEditingIntro] = useState(false);
 
     /* 2023.05.06 사용자가 이름을 클릭했을 때 호출되는 함수 , 이름이 편집 모드로 전환  */
     const handleNameClick = () => {
@@ -37,21 +35,6 @@ function Mypage() {
         setName(event.target.value);
     };
 
-    /* 2023.05.06 사용자가 자기소개를 클릭했을 때 호출되는 함수 , 자기소개가 편집 모드로 전환 - 홍혜란 */
-    const handleIntroClick = () => {
-        setEditingIntro(true);
-    };
-
-    /* 2023.05.06 사용자가 자기소개 입력 폼에서 포커스를 벗어났을 때 호출되는 함수 , 자기소개가 편집 모드에서 보기 모드로 전환  */
-    const handleIntroBlur = () => {
-        setEditingIntro(false);
-    };
-
-    /* 2023.05.06 사용자가 자기소개 입력 폼에서 값을 변경할 때마다 호출되는 함수 , 입력 폼에 입력된 값으로 intro 상태가 업데이트 */
-    const handleIntroChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setIntro(event.target.value);
-    };
-
     // /* 2023.05.06 수정된 이름과 자기소개 데이터를 서버에 저장 */
     // useEffect(() => {
     //     return () => {
@@ -63,16 +46,19 @@ function Mypage() {
     const [userInfoList, setUserInfoList] = useRecoilState(userInfoState);
 
     useEffect(() => {
-        axios
-            .get<UserInfoResponse>(
-                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/{member-id}`,
-            )
-            .then((response) => {
-                setUserInfoList(response.data.data);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+        const memberId = localStorage.getItem('memberId');
+        if (memberId) {
+            axios
+                .get<UserInfoResponse>(
+                    `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/${memberId}`,
+                )
+                .then((response) => {
+                    setUserInfoList(response.data.data);
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        }
     }, []);
 
     return (
@@ -82,7 +68,7 @@ function Mypage() {
                 <MypageListContainer>
                     <UserProfile>
                         {userInfoList.map((userData) => (
-                            <div key={userData.musicId}>
+                            <div key={userData.memberId}>
                                 <div className="user-profile">
                                     <img src={userData.image} alt={userData.name} />
                                 </div>
@@ -103,21 +89,6 @@ function Mypage() {
                                         )}
                                     </div>
                                     <div className="user-email">{userData.email}</div>
-                                    {/* 사용자의 자기소개 출력 및 수정 */}
-                                    <div className="user-coment-container">
-                                        {editingIntro ? (
-                                            <input
-                                                type="text"
-                                                value={intro}
-                                                onChange={handleIntroChange}
-                                                onBlur={handleIntroBlur}
-                                            />
-                                        ) : (
-                                            <div className="user-coment" onClick={handleIntroClick} contentEditable>
-                                                {intro}
-                                            </div>
-                                        )}
-                                    </div>
                                 </UserContainer>
                             </div>
                         ))}
@@ -225,23 +196,6 @@ const UserContainer = styled.div`
         margin: 10px 0px 15px 25px;
     }
 
-    .user-coment-container {
-        input {
-            font-size: 15px;
-            color: hsl(0, 0%, 100%);
-            width: 250px;
-            height: 20px;
-            background-color: black;
-            border: none;
-            margin: 10px 0px 10px 25px;
-        }
-
-        .user-coment {
-            font-size: 15px;
-            color: hsl(0, 0%, 100%);
-            margin: 10px 0px 10px 25px;
-        }
-    }
     @media screen and (max-width: 1000px) {
         margin-left: 0;
         margin-top: 20px;
