@@ -45,11 +45,11 @@ public class MusicDto {
         private long musicTime;
         private String albumCoverImg;
         private String musicUri;
+        private int musicLikeCount;
         private String createdAt;
         private String modifiedAt;
         private List<String> tags;
-        private Long memberId;
-        private Long playListId;
+        private long memberId;
     }
 
     @Data

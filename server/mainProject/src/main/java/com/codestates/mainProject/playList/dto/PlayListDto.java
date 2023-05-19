@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
+import java.util.List;
 
 public class PlayListDto {
     @Getter
@@ -16,6 +17,10 @@ public class PlayListDto {
         @NotBlank
         private String body;
 
+        private String coverImg;
+
+        private List<String> tags;
+
     }
 
     @Getter
@@ -26,6 +31,8 @@ public class PlayListDto {
         private String title;
         @NotBlank
         private String body;
+        private String coverImg;
+        private List<String> tags;
     }
 
     @Getter
@@ -37,8 +44,9 @@ public class PlayListDto {
         private String createMember;
         private String title;
         private String body;
+        private String coverImg;
+        private List<String> tags;
         private int likeCount;
-//        private String playListTags;
         private String createdAt;
         private String modifiedAt;
 

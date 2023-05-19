@@ -24,8 +24,6 @@ public class PlayListLikeService {
     private final PlayListLikeRepository playListLikeRepository;
     private final MemberService memberService;
     private final PlayListService playListService;
-    private final PlayListMapper playListMapper;
-    private final PlayListRepository playListRepository;
 
 
     public PlayListLike addLike(Long memberId, Long playListId){
@@ -35,6 +33,9 @@ public class PlayListLikeService {
         PlayListLike like = new PlayListLike();
         like.setMember(member);
         like.setPlayList(playList);
+
+        playList.addPlayListLike(like);
+        member.addLikedPlayLists(playList);
 
         return playListLikeRepository.save(like);
     }
@@ -47,23 +48,13 @@ public class PlayListLikeService {
         List<PlayListLike> likes = getAllLikesForMemberAndPlayList(memberId, playListId);
 
         for (PlayListLike like : likes) {
-            if (!member.getMemberId().equals(like.getMember().getMemberId()) && !member.getRoles().contains("admin")) {
-                throw new BusinessLogicException(ExceptionCode.NO_PERMISSION_EDITING_COMMENT);
-            }
-            playListLikeRepository.delete(like);
+            if (member.getMemberId().equals(like.getMember().getMemberId())) {
+                playListLikeRepository.delete(like);
+                playList.removePlayListLike(like);
+                member.removeLikedPlayLists(playList);
+            } else throw new BusinessLogicException(ExceptionCode.NO_PERMISSION_EDITING_COMMENT);
         }
     }
-
-//    public void cancelLike(Long memberId, Long memberId){
-//        PlayListLike likeId = getLike(id);
-//        Member member = memberService.findMember(memberId);
-//
-//        if (!member.getMemberId().equals(likeId.getMember().getMemberId()) && !member.getRoles().contains("admin")){
-//            throw new BusinessLogicException(ExceptionCode.NO_PERMISSION_EDITING_COMMENT);
-//        }
-//
-//        playListLikeRepository.delete(likeId);
-//    }
 
     // 조회
     public PlayListLike getLike(long likeId){
@@ -84,25 +75,5 @@ public class PlayListLikeService {
     // {playlist-id} like 전체 조회
     public List<PlayListLike> getLikesByPlayListId(Long playListId){
         return playListLikeRepository.findByPlayListPlayListId(playListId);
-    }
-
-    // playList의 likeCount + 1
-    public PlayListDto.ResponseDto increaseLikeCount(Long playListId) {
-        PlayList playList = playListService.findVerifiedPlayList(playListId);
-
-        playList.increaseLikeCount();
-
-        PlayList updatedPlayList = playListRepository.save(playList);
-        return playListMapper.playListToResponse(updatedPlayList);
-    }
-
-    // playList의 likeCount -1
-    public PlayListDto.ResponseDto declineLikeCount(Long playListId) {
-        PlayList playList = playListService.findVerifiedPlayList(playListId);
-
-        playList.declineLikeCount();
-
-        PlayList updatedPlayList = playListRepository.save(playList);
-        return playListMapper.playListToResponse(updatedPlayList);
     }
 }

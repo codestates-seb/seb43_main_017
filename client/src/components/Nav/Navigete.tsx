@@ -119,7 +119,7 @@ function Navigate({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetSt
                                     setSelectIndex(4);
                                 }}
                             >
-                                <img src="{userimg}" alt="profile icon" className={click ? 'img-active' : 'null'} />
+                                <img src={userimg} alt="profile icon" className={click ? 'img-active' : 'null'} />
                             </span>
                         </Link>
                     </ProfileIcon>

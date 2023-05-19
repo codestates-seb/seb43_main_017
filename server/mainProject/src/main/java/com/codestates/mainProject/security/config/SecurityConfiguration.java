@@ -93,7 +93,7 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.POST, "/members/login").permitAll()
                         .antMatchers(HttpMethod.POST, "/members/logout").hasRole("USER")
                         .antMatchers(HttpMethod.POST, "/members/image/**").hasAnyRole("USER", "ADMIN")
-                        .antMatchers(HttpMethod.GET, "/members/token").hasAnyRole("USER", "ADMIN")
+                        .antMatchers(HttpMethod.GET, "/members/info").hasAnyRole("USER", "ADMIN")
                         .antMatchers(HttpMethod.GET, "/members/**").permitAll()
                         .antMatchers(HttpMethod.PATCH, "/members/status/**").hasAnyRole( "ADMIN")
                         .antMatchers(HttpMethod.PATCH, "/members/**").hasAnyRole("USER", "ADMIN")
@@ -111,7 +111,35 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.PATCH, "/playlists/**").hasAnyRole("USER", "ADMIN")
                         .antMatchers(HttpMethod.DELETE, "/playlists/**").hasAnyRole("USER", "ADMIN")
 
+
+                        // #playlistcomment 관련
+                        .antMatchers(HttpMethod.GET, "/playlist-comments/**").permitAll()
+                        .antMatchers(HttpMethod.POST, "/playlist-comments/**").hasAnyRole("USER", "ADMIN")
+                        .antMatchers(HttpMethod.PATCH, "/playlist-comments/**").hasAnyRole("USER", "ADMIN")
+                        .antMatchers(HttpMethod.DELETE, "/playlist-comments/**").hasAnyRole("USER", "ADMIN")
+
+
+                        // #musicComment 관련
+                        .antMatchers(HttpMethod.GET, "/music-comments/**").permitAll()
+                        .antMatchers(HttpMethod.POST, "/music-comments/**").hasAnyRole("USER", "ADMIN")
+                        .antMatchers(HttpMethod.PATCH, "/music-comments/**").hasAnyRole("USER", "ADMIN")
+                        .antMatchers(HttpMethod.DELETE, "/music-comments/**").hasAnyRole("USER", "ADMIN")
+
+
+                        // #musicLike 관련
+                        .antMatchers(HttpMethod.GET, "/music-like/**").permitAll()
+                        .antMatchers(HttpMethod.POST, "/music-like/**").hasAnyRole("USER", "ADMIN")
+                        .antMatchers(HttpMethod.PATCH, "/music-like/**").hasAnyRole("USER", "ADMIN")
+                        .antMatchers(HttpMethod.DELETE, "/music-like/**").hasAnyRole("USER", "ADMIN")
+
+
+                        // #tag 관련 (musicTag포함)
+                        .antMatchers(HttpMethod.GET, "/tags/**").permitAll()
+                        .antMatchers(HttpMethod.POST, "/tags/**").hasRole("ADMIN")
+                        .antMatchers(HttpMethod.PATCH, "/tags/**").hasRole("ADMIN")
+                        .antMatchers(HttpMethod.DELETE, "/tags/**").hasRole("ADMIN")
                         .anyRequest().permitAll()
+
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(new OAuth2MemberSuccessHandler(jwtTokenizer, authorityUtils, memberService))
