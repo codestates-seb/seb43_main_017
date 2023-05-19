@@ -150,6 +150,7 @@ const MypageListContainer = styled.div`
     z-index: 2;
 `;
 
+/* 2023.05.06 유저 프로필사진 컴포넌트 - 홍헤란 */
 const UserProfile = styled.div`
     display: flex;
 
@@ -162,6 +163,7 @@ const UserProfile = styled.div`
             width: 175px;
             height: 175px;
             border-radius: 50%;
+            border: 3px solid linear-gradient(to right, #ff00bf, blue) 1;
         }
     }
     @media screen and (max-width: 1000px) {
@@ -171,7 +173,7 @@ const UserProfile = styled.div`
     }
 `;
 
-/* 2023.05.06 유저의 이름 / 이메일 / 자기소개 컴포넌트 구현 -홍혜란 */
+/* 2023.05.06 유저의 이름 / 이메일 컴포넌트 구현 - 홍혜란 */
 const UserContainer = styled.div`
     align-items: flex-start;
     display: flex;
@@ -193,7 +195,7 @@ const UserContainer = styled.div`
             font-size: 30px;
             font-weight: bold;
             color: hsl(0, 0%, 100%);
-            margin: 10px 0px 10px 25px;
+            margin: 30px 0px 0px 25px;
         }
     }
 
