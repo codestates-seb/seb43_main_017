@@ -32,12 +32,6 @@ export const searchResultState = atom({
     default: [],
 });
 
-/* 2023.05.11 뮤직리스트 좋아요 상태 관리 - 홍혜란 */
-export const isLikedState = atom<boolean>({
-    key: 'isLikedState',
-    default: false,
-});
-
 /* 2023.05.10 로그인이 발급받는 엑세스토큰 상태 관리 - 박수범 */
 export const accessToken = atom<string | null>({
     key: 'accessToken',
@@ -88,6 +82,11 @@ export const musicDataListState = atom<MusicData[]>({
 /* 2023.05.18 비디오 업로드 여부 상태관리 - 박수범 */
 export const videouploadState = atom<boolean>({
     key: 'videoupload',
+    default: false,
+});
+
+export const showSearch = atom<boolean>({
+    key: 'showSearch',
     default: false,
 });
 
