@@ -6,17 +6,13 @@ import axios from 'axios';
 import LikeMusic from './LIkeMusic';
 import Myplaylist from './Myplaylist';
 import ModifyPlaylist from './ModifyPlaylist';
-import { atom } from 'recoil';
+import { UserInfoResponse } from 'src/types/Mypage';
+import { userInfoState } from 'src/recoil/Atoms';
 
 type UserData = {
+    memberId: number;
     name: string;
     intro: string;
-};
-
-type UserInfo = {
-    image: string;
-    name: string;
-    email: string;
 };
 
 function Mypage() {
@@ -56,38 +52,28 @@ function Mypage() {
         setIntro(event.target.value);
     };
 
-    /* 2023.05.06 수정된 이름과 자기소개 데이터를 서버에 저장 */
-    useEffect(() => {
-        return () => {
-            const userData: UserData = { name, intro };
-            axios.patch('https://c2fe-59-17-229-47.ngrok-free.app/members/{member-id}', userData);
-        };
-    }, [name, intro]);
+    // /* 2023.05.06 수정된 이름과 자기소개 데이터를 서버에 저장 */
+    // useEffect(() => {
+    //     return () => {
+    //         const userData: UserData = { name, intro };
+    //         axios.patch('members/{member-id}', userData);
+    //     };
+    // }, [name, intro]);
 
-    /* 2023.05.16 마이페이지 유저 정보 상태관리 - 홍혜란 */
-    const userInfoState = atom<UserInfo | null>({
-        key: 'userInfoState',
-        default: null,
-    });
-
-    /* 2023.05.16 로그인 했을 시 유저 정보 데이터 불러오기 - 홍혜란 */
-    const [userInfo, setUserInfo] = useRecoilState<UserInfo | null>(userInfoState);
+    const [userInfoList, setUserInfoList] = useRecoilState(userInfoState);
 
     useEffect(() => {
-        const fetchUserInfo = async () => {
-            try {
-                const response = await fetch(
-                    'http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/{member-id}/info',
-                );
-                const userData = await response.json();
-                setUserInfo(userData);
-            } catch (error) {
-                console.error('Failed to fetch user information:', error);
-            }
-        };
-
-        fetchUserInfo();
-    }, [setUserInfo]);
+        axios
+            .get<UserInfoResponse>(
+                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/{member-id}`,
+            )
+            .then((response) => {
+                setUserInfoList(response.data.data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, []);
 
     return (
         <div>
@@ -95,10 +81,10 @@ function Mypage() {
             <MypageContainer>
                 <MypageListContainer>
                     <UserProfile>
-                        {userInfo ? (
-                            <>
+                        {userInfoList.map((userData) => (
+                            <div key={userData.musicId}>
                                 <div className="user-profile">
-                                    <img src={userInfo.image} alt="userimg" />
+                                    <img src={userData.image} alt={userData.name} />
                                 </div>
                                 <UserContainer>
                                     {/* 사용자의 이름 출력 및 수정 */}
@@ -112,11 +98,11 @@ function Mypage() {
                                             />
                                         ) : (
                                             <div className="user-name" onClick={handleNameClick} contentEditable>
-                                                {userInfo.name}
+                                                {userData.name}
                                             </div>
                                         )}
                                     </div>
-                                    <div className="user-email">{userInfo.email}</div>
+                                    <div className="user-email">{userData.email}</div>
                                     {/* 사용자의 자기소개 출력 및 수정 */}
                                     <div className="user-coment-container">
                                         {editingIntro ? (
@@ -133,10 +119,8 @@ function Mypage() {
                                         )}
                                     </div>
                                 </UserContainer>
-                            </>
-                        ) : (
-                            <p>Loading user information...</p>
-                        )}
+                            </div>
+                        ))}
                     </UserProfile>
 
                     <MusicInfor>
@@ -205,6 +189,7 @@ const UserProfile = styled.div`
     @media screen and (max-width: 1000px) {
         margin-left: 0;
         margin-top: 700px;
+        width: 400px;
     }
 `;
 

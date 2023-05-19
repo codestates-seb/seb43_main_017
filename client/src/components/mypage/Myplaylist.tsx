@@ -4,34 +4,37 @@ import { AiFillHeart } from 'react-icons/ai';
 import { BsMusicPlayer, BsPlayCircle } from 'react-icons/bs';
 import { CiMenuKebab } from 'react-icons/ci';
 import { modalState } from 'src/recoil/Atoms';
+import { useState } from 'react';
+import { atom } from 'recoil';
+import axios from 'axios';
 
-/* 2023.05.10 마이플레이스트 타입 선언 - 홍혜란 */
+/* 2023.05.10 마이플레이스트 타입 선언 */
 type PlayData = {
-    id: number;
+    playListId: number;
     imgSrc: string;
     name: string;
     time: string;
     vote: number;
 };
 
-/* 2023.05.10 마이플레이스트 더미데이터(임시) - 홍혜란 */
+/* 2023.05.10 마이플레이스트 더미데이터(임시) */
 const MyPlay: PlayData[] = [
     {
-        id: 0,
+        playListId: 0,
         imgSrc: './assets/ditto.png',
         name: '나만의 플레이리스트',
         time: '2023.05.04',
         vote: 13,
     },
     {
-        id: 1,
+        playListId: 1,
         imgSrc: './assets/ditto.png',
         name: '나만의 플레이리스트',
         time: '2023.05.04',
         vote: 13,
     },
     {
-        id: 2,
+        playListId: 2,
         imgSrc: './assets/ditto.png',
         name: '나만의 플레이리스트',
         time: '2023.05.04',
@@ -39,11 +42,35 @@ const MyPlay: PlayData[] = [
     },
 ];
 
+const playlistState = atom<PlayData[]>({
+    key: 'playlistState',
+    default: [],
+});
+
 const Myplaylist = () => {
     const playlistData = MyPlay;
 
-    /* 2023.05.16 마이플레이리스트 메뉴 버튼 클릭시 수정, 삭제 버튼 모달 - 홍혜란 */
+    /* 2023.05.16 마이플레이리스트 메뉴 버튼 클릭시 수정, 삭제 버튼 모달 */
     const [showModal, setShowModal] = useRecoilState<boolean>(modalState);
+    const [selectedPlaylistId, setSelectedPlaylistId] = useState<number | null>(null);
+
+    /* 2023.05.16 마이플레이리스트 메뉴 버튼 클릭시 삭제 버튼 요청 */
+    const [playlist, setPlaylist] = useRecoilState(playlistState);
+
+    const handleDelete = (playlistId: number) => {
+        const updatedPlaylist = playlist.filter((data) => data.playListId !== playlistId);
+        setPlaylist(updatedPlaylist);
+
+        axios
+            .delete(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/members/{member-id}`)
+            .then(() => {
+                console.log('플레이리스트 아이템이 성공적으로 삭제되었습니다.');
+            })
+            .catch((error) => {
+                console.error('플레이리스트 아이템 삭제 중 오류가 발생했습니다:', error);
+                setPlaylist(playlist);
+            });
+    };
 
     return (
         <PlayListContainer>
@@ -69,15 +96,17 @@ const Myplaylist = () => {
                     <div
                         className="playlist-menu"
                         onClick={() => {
+                            setSelectedPlaylistId(data.playListId);
                             setShowModal(!showModal);
                         }}
                     >
                         <CiMenuKebab />
-                        {showModal && (
+                        {selectedPlaylistId === data.playListId && showModal && (
                             <ModalContainer>
                                 <ModalButtons>
                                     <Button>수정</Button>
-                                    <Button>삭제</Button>
+
+                                    <Button onClick={() => handleDelete(data.playListId)}>삭제</Button>
                                 </ModalButtons>
                             </ModalContainer>
                         )}
@@ -95,7 +124,7 @@ const PlayListContainer = styled.div`
     align-items: center;
     margin: 30px;
     margin-top: 40px;
-    width: 450px;
+    width: 400px;
 
     .playlist-title {
         display: flex;
@@ -162,6 +191,9 @@ const PlayListContainer = styled.div`
     }
     @media screen and (max-width: 1000px) {
         width: 400px;
+        margin: 0;
+        margin-top: 50px;
+        margin-left: 30px;
     }
 `;
 
