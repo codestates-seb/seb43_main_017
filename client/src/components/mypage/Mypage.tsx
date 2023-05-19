@@ -1,20 +1,11 @@
 import styled from 'styled-components';
-import { useRecoilState } from 'recoil';
-import { nameState } from 'src/recoil/Atoms';
 import React, { useState } from 'react';
 import LikeMusic from './LIkeMusic';
 import Myplaylist from './Myplaylist';
 import ModifyPlaylist from './ModifyPlaylist';
 
-type UserData = {
-    memberId: number;
-    name: string;
-    email: string;
-};
-
 function Mypage() {
-    /* 2023.05.06 유저의 name과 intro부분을 클릭했을 시 수정할 수 있는 상태관리 */
-    const [username, setUserName] = useRecoilState(nameState);
+    /* 2023.05.06 유저의 name을 클릭했을 시 수정할 수 있는 상태관리 */
     const [editingName, setEditingName] = useState(false);
 
     /* 2023.05.06 사용자가 이름을 클릭했을 때 호출되는 함수 , 이름이 편집 모드로 전환  */
@@ -26,19 +17,6 @@ function Mypage() {
     const handleNameBlur = () => {
         setEditingName(false);
     };
-
-    /* 2023.05.06 사용자가 이름 입력 폼에서 값을 변경할 때마다 호출되는 함수 , 입력 폼에 입력된 값으로 name 상태가 업데이트 */
-    const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setUserName(event.target.value);
-    };
-
-    // /* 2023.05.06 수정된 이름과 자기소개 데이터를 서버에 저장 */
-    // useEffect(() => {
-    //     return () => {
-    //         const userData: UserData = { name };
-    //         axios.patch('members/{member-id}', userData);
-    //     };
-    // }, [name, intro]);
 
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
     const userimg: string | undefined = window.localStorage.getItem('userimg') || undefined;
@@ -60,12 +38,7 @@ function Mypage() {
                                     {/* 사용자의 이름 출력 및 수정 */}
                                     <div className="user-name-container">
                                         {editingName ? (
-                                            <input
-                                                type="text"
-                                                value={usernickname ?? undefined}
-                                                onChange={handleNameChange}
-                                                onBlur={handleNameBlur}
-                                            />
+                                            <input type="text" value={usernickname} onBlur={handleNameBlur} />
                                         ) : (
                                             <div className="user-name" onClick={handleNameClick} contentEditable>
                                                 {usernickname}
