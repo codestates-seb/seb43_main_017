@@ -15,6 +15,7 @@ function Mixing() {
     return (
         <MixingSection>
             <MixingBackground></MixingBackground>
+            요기
             <MixingHeader>
                 <div className="flex-center">
                     <MixingPage>
@@ -35,7 +36,7 @@ export default Mixing;
 /**2023-05-05 플레이리스트 전체섹션 : 김주비*/
 const MixingSection = styled.section`
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     position: relative;
     width: 100vw;
     min-height: 100vh;
@@ -122,7 +123,7 @@ const Mixingtext = styled.div`
     .mixing-text {
         font-family: 'Rajdhani', sans-serif;
         font-size: 14px;
-        transform: translateY(15px);
+        transform: translateY(20px);
         animation: movingtext 1s forwards 1s;
         opacity: 0.6;
     }
