@@ -15,6 +15,28 @@ function Mypage() {
 
     /* 2023.05.06 사용자가 이름 입력 폼에서 포커스를 벗어났을 때 호출되는 함수 , 이름이 편집 모드에서 보기 모드로 전환  */
     const handleNameBlur = () => {
+        if (editingName) {
+            const updatedData = {
+                nickname: usernickname,
+            };
+
+            fetch('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/{member-id}', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(updatedData),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log(data);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        }
+
         setEditingName(false);
     };
 
