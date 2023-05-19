@@ -7,27 +7,28 @@ import com.codestates.mainProject.member.repository.MemberRepository;
 import com.codestates.mainProject.music.dto.MusicDto;
 import com.codestates.mainProject.music.entity.Music;
 import com.codestates.mainProject.music.repository.MusicRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class MusicService {
 
     private final MusicRepository musicRepository;
     private final MemberRepository memberRepository;
-
-    public MusicService(MusicRepository musicRepository,
-                        MemberRepository memberRepository) {
-        this.musicRepository = musicRepository;
-        this.memberRepository = memberRepository;
-    }
+    private boolean isDescendingOrder = true;
 
     // Music 생성(등록)
     public Music createMusic(Music music) {
@@ -68,8 +69,6 @@ public class MusicService {
         return music;
     }
 
-
-
     // musicId 로 Music 조회
     public Music findMusicById(long musicId) {
         return findVerifiedMusic(musicId);
@@ -81,17 +80,37 @@ public class MusicService {
                 Sort.by("musicId").descending()));
     }
 
+    // 좋아요 수 기준 오름차순/내림차순 정렬
+    public List<MusicDto.OrderResponseDto> toggleLikeCountOrder() {
+        List<Music> musicList = musicRepository.findAll();
+        List<MusicDto.OrderResponseDto> dtoList = new ArrayList<>();
+
+        if (isDescendingOrder) {
+            musicList = musicList.stream()
+                    .sorted(Comparator.comparingInt(Music::getMusicLikeCount).reversed())
+                    .collect(Collectors.toList());
+        } else {
+            musicList = musicList.stream()
+                    .sorted(Comparator.comparingInt(Music::getMusicLikeCount))
+                    .collect(Collectors.toList());
+        }
+
+        for (Music music : musicList) {
+            MusicDto.OrderResponseDto dto = new MusicDto.OrderResponseDto();
+            BeanUtils.copyProperties(music, dto);
+            dtoList.add(dto);
+        }
+        isDescendingOrder = !isDescendingOrder;
+
+        return dtoList;
+    }
+
     // Music 삭제
     public void deleteMusic(long musicId, Long memberId) {
         isUserAdmin(memberId);
         Music music = findVerifiedMusic(musicId);
 
         musicRepository.delete(music);
-    }
-
-    // musicName, artistName, albumName 중 검색어를 포함하는 music을 조회
-    public List<Music> findMusicByKeyword(String keyword) {
-        return musicRepository.findMusicByKeyword(keyword);
     }
 
     // 유효한 musicId 인지 조회

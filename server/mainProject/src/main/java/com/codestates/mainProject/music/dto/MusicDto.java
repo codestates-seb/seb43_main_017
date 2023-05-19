@@ -68,4 +68,22 @@ public class MusicDto {
             this.message = message;
         }
     }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class OrderResponseDto {
+        private long musicId;
+        private String musicName;
+        private String artistName;
+        private String albumName;
+        private long musicTime;
+        private String albumCoverImg;
+        private String musicUri;
+        private int musicLikeCount;
+        private String createdAt;
+        private String modifiedAt;
+        private List<String> musicTagName;
+    }
 }
