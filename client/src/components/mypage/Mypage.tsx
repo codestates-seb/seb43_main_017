@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
 import { nameState } from 'src/recoil/Atoms';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import LikeMusic from './LIkeMusic';
 import Myplaylist from './Myplaylist';
 import ModifyPlaylist from './ModifyPlaylist';
@@ -40,22 +40,10 @@ function Mypage() {
     //     };
     // }, [name, intro]);
 
-    const [token, setToken] = useState<string | null>('');
-    const [userImg, setUserImg] = useState<string | null>('');
-    const [name, setName] = useState<string | null>('');
-    const [email, setEmail] = useState<string | null>('');
-
-    useEffect(() => {
-        const storedToken = window.localStorage.getItem('access_token');
-        const storedUserImg = window.localStorage.getItem('userimg');
-        const storedName = window.localStorage.getItem('name');
-        const storedEmail = window.localStorage.getItem('email');
-
-        setToken(storedToken);
-        setUserImg(storedUserImg);
-        setName(storedName);
-        setEmail(storedEmail);
-    }, []);
+    const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
+    const userimg: string | undefined = window.localStorage.getItem('userimg') || undefined;
+    const usernickname: string | undefined = window.localStorage.getItem('usernickname') || undefined;
+    const useremail: string | undefined = window.localStorage.getItem('useremail') || undefined;
 
     return (
         <div>
@@ -66,7 +54,7 @@ function Mypage() {
                         {token ? (
                             <div>
                                 <div className="user-profile">
-                                    <img src={userImg ?? undefined} alt={name ?? undefined} />
+                                    <img src={userimg} alt={usernickname} />
                                 </div>
                                 <UserContainer>
                                     {/* 사용자의 이름 출력 및 수정 */}
@@ -74,21 +62,31 @@ function Mypage() {
                                         {editingName ? (
                                             <input
                                                 type="text"
-                                                value={username}
+                                                value={usernickname ?? undefined}
                                                 onChange={handleNameChange}
                                                 onBlur={handleNameBlur}
                                             />
                                         ) : (
                                             <div className="user-name" onClick={handleNameClick} contentEditable>
-                                                {name}
+                                                {usernickname}
                                             </div>
                                         )}
                                     </div>
-                                    <div className="user-email">{email}</div>
+                                    <div className="user-email">{useremail}</div>
                                 </UserContainer>
                             </div>
                         ) : (
-                            <div>No user data available</div>
+                            <div>
+                                <div className="user-profile">
+                                    <img src="./assets/ditto.png" alt="userImg" />
+                                </div>
+                                <UserContainer>
+                                    <div className="user-name-container">
+                                        <div className="user-name">Undefined</div>
+                                    </div>
+                                    <div className="user-email">undefined@naver.com</div>
+                                </UserContainer>
+                            </div>
                         )}
                     </UserProfile>
 
