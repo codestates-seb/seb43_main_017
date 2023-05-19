@@ -47,6 +47,7 @@ function App() {
                                 localStorage.removeItem('userimg');
                                 localStorage.removeItem('username');
                                 location.reload();
+                                window.location.href = '/';
                             }}
                         >
                             Logout
