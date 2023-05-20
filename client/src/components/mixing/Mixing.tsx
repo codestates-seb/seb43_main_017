@@ -15,7 +15,7 @@ function Mixing() {
     return (
         <MixingSection>
             <MixingBackground></MixingBackground>
-            요기
+            <div>여기</div>
             <MixingHeader>
                 <div className="flex-center">
                     <MixingPage>
@@ -116,6 +116,21 @@ const MixingPage = styled.div`
 
 /**2023-05-06 슬라이드 업 되는 서브텍스트 애니메이션 - 박수범*/
 const Mixingtext = styled.div`
+    position: relative;
+    height: 20px;
+    margin-top: 10px;
+    overflow: hidden;
+    .mixing-text {
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 14px;
+        transform: translateY(20px);
+        animation: movingtext 1s forwards 1s;
+        opacity: 0.6;
+    }
+`;
+
+/**2023-05-06 슬라이드 업 되는 서브텍스트 애니메이션 - 박수범*/
+const MusicList = styled.div`
     position: relative;
     height: 20px;
     margin-top: 10px;

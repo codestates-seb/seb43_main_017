@@ -46,6 +46,8 @@ function App() {
                                 localStorage.removeItem('memberId');
                                 localStorage.removeItem('userimg');
                                 localStorage.removeItem('username');
+                                localStorage.removeItem('useremail');
+                                localStorage.removeItem('usernickname');
                                 location.reload();
                                 window.location.href = '/';
                             }}
