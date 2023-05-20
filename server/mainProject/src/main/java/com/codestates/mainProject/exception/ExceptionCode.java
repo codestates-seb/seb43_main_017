@@ -39,7 +39,9 @@ public enum ExceptionCode {
     TAG_NOT_FOUND(404, "태그를 찾을 수 없습니다"),
     MUSIC_TAG_EXISTS(404, "같은 음악태그가 이미 존재합니다"),
     PLAYLIST_TAG_EXISTS(404, "같은 플레이리스트태그가 이미 존재합니다"),
-    MAX_PLAYLIST_LIMIT_REACHED(403, "태그를 더 이상 추가할 수 없습니다");
+    MAX_PLAYLIST_LIMIT_REACHED(403, "태그를 더 이상 추가할 수 없습니다"),
+    MEMBER_MUSIC_TAG_EXISTS(404, "유저 플레이리스트 태그가 이미 존재합니다"),
+    MEMBER_MUSIC_TAG_NOT_FOUND(404, "유저 뮤직 태그를 찾을 수 없습니다");
     @Getter
     private int status;
 
