@@ -12,46 +12,45 @@ function CommentViewer() {
     const [musicId] = useRecoilState(musicIdState);
     const [commentText, setCommentText] = useState<string>('');
     const [playlistComment] = useRecoilState<boolean>(playlistCommentState);
-    let url: string;
-
-    if (playlistComment) {
-        url = `/playlist-comments/`;
-    } else {
-        url = `/music-comments/musics/`;
-    }
 
     const token = localStorage.getItem('access_token');
     const memberId = localStorage.getItem('memberId');
+    const url: string = playlistComment ? `/playlist-comments/` : `/music-comments/musics/`;
 
     const handelCommentWriting = () => {
-        axios
-            .post(
-                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080${url}${musicId}`,
-                {
-                    content: commentText,
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                },
-            )
-            .then(function (response) {
-                console.log(response);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+        if (token) {
+            if (commentText.length === 0) {
+                alert('내용을 작성해주세요.');
+            } else {
+                axios
+                    .post(
+                        `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080${url}${musicId}`,
+                        {
+                            content: commentText,
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        },
+                    )
+                    .then(function (response) {
+                        console.log(response);
+                        setCommentText('');
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+        } else {
+            alert('로그인을 먼저 진행해주시기 바랍니다.');
+        }
     };
 
     const handleCommentDelete = (index: number) => {
         // console.log(index);
-        let delurl: string;
-        if (playlistComment) {
-            delurl = `/playlist-comments/`;
-        } else {
-            delurl = `/music-comments/`;
-        }
+        const delurl: string = playlistComment ? `/playlist-comments/` : `/music-comments/`;
+
         axios
             .delete(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080${delurl}${index}`, {
                 headers: {
