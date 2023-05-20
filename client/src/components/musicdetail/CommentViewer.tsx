@@ -44,7 +44,7 @@ function CommentViewer() {
             .catch((error) => {
                 console.error(error);
             });
-    }, [comment]);
+    }, [comment, nullImage]);
 
     return (
         <CommentViewerGroup>
@@ -68,11 +68,11 @@ function CommentViewer() {
                                     src={comment.image}
                                     alt="profile icon"
                                     onError={() => {
-                                        setNullImage(false);
+                                        setNullImage(true);
                                     }}
                                 />
                             ) : (
-                                <img src="./assets/profile-icon.png" alt="profile icon" />
+                                <img src="/assets/profile-icon.png" alt="profile icon" />
                             )}
                             <div className="comment-contents">
                                 <span className="comment-user">{comment.name}</span>
