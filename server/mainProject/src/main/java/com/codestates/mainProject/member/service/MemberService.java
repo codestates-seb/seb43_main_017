@@ -271,7 +271,7 @@ public class MemberService {
 
         Member member = findMember(loginId);
 
-        if(member.getMemberMusicTags().size()!=0) {
+        if(member.getMemberMusicTags().size()!=0) {            //유저가 좋아요를 하나도 안 누른 상태가 아니면 추천
             // 멤버가 가진 모든 태그의 출현 빈도 계산
             for (MemberMusicTag memberMusicTag : member.getMemberMusicTags()) {
                 for (MusicTag musicTag : memberMusicTag.getMusicTag().getMusic().getMusicTags()) {
@@ -302,7 +302,7 @@ public class MemberService {
 
             return recommendedMusics;
         }else{
-            List<Music> musics = musicRepository.findTop6ByOrderByMusicLikeCountDesc();    //좋아요한 노래가 하나도 없으면 하트수 많은 노래순으로 5개출력
+            List<Music> musics = musicRepository.findTop6ByOrderByMusicLikeCountDesc();    //좋아요한 노래가 하나도 없으면 하트수 많은 노래순으로 6개출력
             return musics;
         }
     }
