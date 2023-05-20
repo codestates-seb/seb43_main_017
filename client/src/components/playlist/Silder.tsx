@@ -42,10 +42,9 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
             });
     }, []);
 
-    // /**2023-05-07 커버이미지 데이터 전달 : 김주비 */
+    /**2023-05-07 커버이미지 데이터 전달 : 김주비 */
     // useEffect(() => {
-    //     setPldata(dummydata);
-    //     setBgSrc(dummydata[currentSlideIndex].coverimg);
+    //     setBgSrc(pldata[currentSlideIndex].coverImg);
     // }, [currentSlideIndex]);
 
     /**2023-05-07 플리 슬라이드 인덱스 : 김주비 */
@@ -83,20 +82,20 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
         <SilderGroup>
             <Slider {...settings}>
                 {pldata.map((data) => (
-                    <Plcard bgImg="/" key={data.playListId}>
+                    <Plcard bgImg={data.coverImg} key={data.playListId}>
                         <div className="pl-treck">TRECK 10</div>
                         <Link to={`/playlsit/${data.playListId}`}>
                             <div className="pl-contents">
                                 <Pltag>
-                                    {/* {data.tag.map((tag, index) => (
-                                        <li key={`tag-${index}`}>{tag.tagname}</li>
-                                    ))} */}
+                                    {data.tags.map((tag, index) => (
+                                        <li key={`tag-${index}`}></li>
+                                    ))}
                                 </Pltag>
                                 <Pluser>
                                     <span>WTITER</span>
                                     <span>{data.createMember}</span>
                                     <span>LIKE</span>
-                                    <span>2963</span>
+                                    <span>{data.likeCount}</span>
                                 </Pluser>
                                 <Pltext>
                                     <span>{data.title}</span>
