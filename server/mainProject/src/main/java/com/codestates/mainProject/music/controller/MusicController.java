@@ -1,9 +1,5 @@
 package com.codestates.mainProject.music.controller;
 
-import com.codestates.mainProject.exception.BusinessLogicException;
-import com.codestates.mainProject.exception.ExceptionCode;
-import com.codestates.mainProject.member.entity.Member;
-import com.codestates.mainProject.member.repository.MemberRepository;
 import com.codestates.mainProject.member.service.MemberService;
 import com.codestates.mainProject.music.dto.MusicDto;
 import com.codestates.mainProject.music.entity.Music;
@@ -19,8 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
