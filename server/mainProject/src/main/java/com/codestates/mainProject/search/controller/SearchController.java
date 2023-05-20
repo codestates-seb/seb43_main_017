@@ -2,6 +2,7 @@ package com.codestates.mainProject.search.controller;
 
 import com.codestates.mainProject.music.dto.MusicDto;
 import com.codestates.mainProject.music.entity.Music;
+import com.codestates.mainProject.playList.dto.PlayListDto;
 import com.codestates.mainProject.search.service.SearchService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,15 @@ public class SearchController {
         return ResponseEntity.ok(musics);
     }
 
+    // playListName 이 검색어와 일치하는 playList를 조회
+    @GetMapping("/playlists/search-by-title")
+    public ResponseEntity<List<PlayListDto.ResponseDto>> findPlayListByTitle(@RequestParam String title) {
+        List<PlayListDto.ResponseDto> musics = searchService.findPlayListByTitle(title);
+
+        return ResponseEntity.ok(musics);
+    }
+
+    // 사용자 선택한 태그를 가진 music을 조회
     @GetMapping("/musics/search-by-tags")
     public ResponseEntity<List<MusicDto.ResponseDto>> getMusicByTags(@RequestParam List<String> tags) {
         List<MusicDto.ResponseDto> musics = searchService.findMusicByTags(tags);
