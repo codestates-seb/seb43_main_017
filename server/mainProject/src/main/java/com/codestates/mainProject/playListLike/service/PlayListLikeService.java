@@ -67,11 +67,6 @@ public class PlayListLikeService {
         return playListLikeRepository.findByMemberMemberIdAndPlayListPlayListId(memberId, playListId);
     }
 
-     // 이미 좋아요를 눌렀는지 조회
-    public List<PlayListLike> isAlreadyLiked(Long memberId){
-        return playListLikeRepository.findByMemberMemberId(memberId);
-    }
-
     // {playlist-id} like 전체 조회
     public List<PlayListLike> getLikesByPlayListId(Long playListId){
         return playListLikeRepository.findByPlayListPlayListId(playListId);

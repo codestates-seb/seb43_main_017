@@ -31,7 +31,7 @@ public class PlayListLikeController {
     public ResponseEntity<LikeDto> addLike(@LoginMemberId Long memberId,
                                            @PathVariable("playlist-id") Long playListId) {
 
-        List<PlayListLike> isAlreadyLiked = playListLikeService.isAlreadyLiked(memberId);
+        List<PlayListLike> isAlreadyLiked = playListLikeService.getAllLikesForMemberAndPlayList(memberId, playListId);
         if (isAlreadyLiked.isEmpty()) {
             PlayListLike like = playListLikeService.addLike(memberId, playListId);
             LikeDto responseDto = playListLikeMapper.playListLikeToResponse(like);
@@ -48,7 +48,7 @@ public class PlayListLikeController {
     public ResponseEntity<Void> cancelLike(@LoginMemberId Long memberId,
                                            @PathVariable("playlist-id") Long playListId) {
 
-        List<PlayListLike> isAlreadyLiked = playListLikeService.isAlreadyLiked(memberId);
+        List<PlayListLike> isAlreadyLiked = playListLikeService.getAllLikesForMemberAndPlayList(memberId, playListId);
         if (isAlreadyLiked.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         } else {
