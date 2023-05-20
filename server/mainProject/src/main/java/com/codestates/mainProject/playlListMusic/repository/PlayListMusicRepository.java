@@ -1,7 +1,6 @@
 package com.codestates.mainProject.playlListMusic.repository;
 
 
-import com.codestates.mainProject.memberMusic.entity.MemberMusic;
 import com.codestates.mainProject.playlListMusic.entity.PlayListMusic;
 import org.springframework.data.jpa.repository.JpaRepository;
 
