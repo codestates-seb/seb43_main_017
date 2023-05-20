@@ -17,8 +17,7 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId }) => {
     const [download] = useRecoilState<string>(downloadLink);
 
     const handleLike = () => {
-        const newLike = !like;
-        setLike(newLike);
+        setLike(!like);
 
         const memberId: string | undefined = window.localStorage.getItem('memberId') || undefined;
         const token: string | undefined = window.localStorage.getItem('access_token') || undefined;

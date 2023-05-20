@@ -36,7 +36,7 @@ const Trending = () => {
                 });
         } else {
             axios
-                .get('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics&size=5')
+                .get('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics?&size=6')
                 .then((response) => {
                     setTranding(response.data.data);
                 })
@@ -49,7 +49,7 @@ const Trending = () => {
     return (
         <Container>
             <TrTitleContainer>
-                <TrTitle>Trading</TrTitle>
+                <TrTitle>Trending</TrTitle>
             </TrTitleContainer>
             <ItemsContainer>
                 {tranding.map((data) => (
