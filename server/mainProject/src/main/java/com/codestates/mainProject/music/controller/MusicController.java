@@ -1,9 +1,5 @@
 package com.codestates.mainProject.music.controller;
 
-import com.codestates.mainProject.exception.BusinessLogicException;
-import com.codestates.mainProject.exception.ExceptionCode;
-import com.codestates.mainProject.member.entity.Member;
-import com.codestates.mainProject.member.repository.MemberRepository;
 import com.codestates.mainProject.member.service.MemberService;
 import com.codestates.mainProject.music.dto.MusicDto;
 import com.codestates.mainProject.music.entity.Music;
@@ -19,8 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,11 +46,13 @@ public class MusicController {
         return ResponseEntity.created(location).build();
     }
 
-    // 음악 조회
+    // 음악 개별 조회
     @GetMapping("/{music-id}")
     public ResponseEntity getMusic(@PathVariable("music-id") @Positive long musicId) {
         Music findMusic = musicService.findMusicById(musicId);
         MusicDto.ResponseDto response = mapper.musicToResponse(findMusic);
+
+        response.setMusicTagName(findMusic.getTagsName());
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(response), HttpStatus.OK);
@@ -65,7 +61,7 @@ public class MusicController {
     // 음악 전체 조회
     @GetMapping
     public ResponseEntity getMusics(@Positive @RequestParam(value = "page", defaultValue = "1") int page,
-                                     @Positive @RequestParam(value = "size", defaultValue = "20") int size){
+                                    @Positive @RequestParam(value = "size", defaultValue = "20") int size){
         Page<Music> pageMusic = musicService.findAllMusic(page - 1 , size);
         List<Music> musics = pageMusic.getContent();
         List<MusicDto.ResponseDto> response = mapper.musicsToResponses(musics);
@@ -100,17 +96,22 @@ public class MusicController {
         }
     }
 
-    // musicName, artistName, albumName 중 검색어를 포함하는 music을 조회
-    @GetMapping("/search")
-    public ResponseEntity<List<Music>> findMusicByKeyword(@RequestParam String keyword) {
-        List<Music> musics = musicService.findMusicByKeyword(keyword);
-
-        return ResponseEntity.ok(musics);
+    // 최신순 음악 조회
+    @GetMapping("/order-by-created-at")
+    public ResponseEntity<List<MusicDto.OrderResponseDto>> getMusicsOrderByCreatedAt() {
+        return ResponseEntity.ok(musicService.getMusicsOrderByCreatedAt());
     }
+
+    // 좋아요순 음악 조회
+    @GetMapping("/order-by-like-count")
+    public ResponseEntity<List<MusicDto.OrderResponseDto>> getOrderByLikeCount() {
+        return ResponseEntity.ok(musicService.toggleLikeCountOrder());
+    }
+
     // 음악 수정
     @PatchMapping("/{music-id}")
     public ResponseEntity patchMusic(@PathVariable("music-id") @Positive long musicId,
-                                      @Valid @RequestBody MusicDto.PatchDto patchDto,
+                                     @Valid @RequestBody MusicDto.PatchDto patchDto,
                                      @LoginMemberId Long memberId){
         Music updatedMusic = musicService.updateMusic(patchDto, musicId, memberId);
         MusicDto.ResponseDto response = mapper.musicToResponse(updatedMusic);

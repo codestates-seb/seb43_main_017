@@ -1,9 +1,13 @@
 package com.codestates.mainProject.member.service;
 
 import com.codestates.mainProject.member.dto.NaverUserInfo;
+import com.codestates.mainProject.memberMusicTag.entity.MemberMusicTag;
 import com.codestates.mainProject.music.entity.Music;
+import com.codestates.mainProject.music.repository.MusicRepository;
 import com.codestates.mainProject.musicLike.entity.MusicLike;
 import com.codestates.mainProject.musicLike.repository.MusicLikeRepository;
+import com.codestates.mainProject.musicTag.entity.MusicTag;
+import com.codestates.mainProject.musicTag.repository.MusicTagRepository;
 import com.codestates.mainProject.playList.entity.PlayList;
 import com.codestates.mainProject.playListLike.entity.PlayListLike;
 import com.codestates.mainProject.playListLike.repository.PlayListLikeRepository;
@@ -39,6 +43,7 @@ import java.io.IOException;
 
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -54,6 +59,10 @@ public class MemberService {
     @Autowired
     private final JwtTokenizer jwtTokenizer;
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+    private final MusicTagRepository musicTagRepository;
+    private final MusicRepository musicRepository;
+
 
     public Member createMember(Member member) {
         verifyExistEmail(member.getEmail());
@@ -253,5 +262,48 @@ public class MemberService {
         String refreshToken = jwtTokenizer.generateRefreshToken(subject, expiration, base64EncodedSecretKey);
 
         return refreshToken;
+    }
+
+    public List<Music> getRecommendMusics(Long loginId) {
+        List<Music> recommendedMusics = new ArrayList<>();
+
+        Map<Long, Integer> tagCountMap = new HashMap<>();
+
+        Member member = findMember(loginId);
+
+        if(member.getMemberMusicTags().size()!=0) {            //유저가 좋아요를 하나도 안 누른 상태가 아니면 추천
+            // 멤버가 가진 모든 태그의 출현 빈도 계산
+            for (MemberMusicTag memberMusicTag : member.getMemberMusicTags()) {
+                for (MusicTag musicTag : memberMusicTag.getMusicTag().getMusic().getMusicTags()) {
+                    Long tagId = musicTag.getTag().getTagId();
+                    tagCountMap.put(tagId, tagCountMap.getOrDefault(tagId, 0) + 1);
+                }
+            }
+
+            // 태그 출현 빈도에 따라 정렬
+            List<Long> sortedTags = tagCountMap.entrySet().stream()
+                    .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                    .map(Map.Entry::getKey)
+                    .collect(Collectors.toList());
+
+            // 태그를 기반으로 음악 추천
+            for (Long tagId : sortedTags) {
+                List<MusicTag> musicTags = musicTagRepository.findByTagTagIdOrderByMusicMusicLikeCountDesc(tagId).orElse(new ArrayList<>());
+                for (MusicTag musicTag : musicTags) {
+                    recommendedMusics.add(musicTag.getMusic());
+                    if (recommendedMusics.size() >= 6) {
+                        break;
+                    }
+                }
+                if (recommendedMusics.size() >= 6) {
+                    break;
+                }
+            }
+
+            return recommendedMusics;
+        }else{
+            List<Music> musics = musicRepository.findTop6ByOrderByMusicLikeCountDesc();    //좋아요한 노래가 하나도 없으면 하트수 많은 노래순으로 6개출력
+            return musics;
+        }
     }
 }

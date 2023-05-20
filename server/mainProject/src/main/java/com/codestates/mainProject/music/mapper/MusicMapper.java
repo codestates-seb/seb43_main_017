@@ -16,4 +16,6 @@ public interface MusicMapper {
     MusicDto.ResponseDto musicToResponse(Music music);
 
     List<MusicDto.ResponseDto> musicsToResponses(List<Music> musics);
+
+    List<MusicDto.ResponseDto> musicListToDtoList(List<Music> musicList);
 }

@@ -41,6 +41,7 @@ public class PlayListService {
             playList.setCreateMember(findMember.getName());
 
             findMember.addPlayList(playList);
+            log.info("플레이리스트 생성 memberId={}, create={}", findMember.getMemberId(), findMember.getName());
 
             return playListRepository.save(playList);
         } catch (Exception e){
@@ -79,10 +80,28 @@ public class PlayListService {
         return new PageImpl<>(pagePlayLists, PageRequest.of(page, size), playLists.size());
     }
 
-    // 전체 플레이리스트 조회
+    // 플레이리스트 전체 조회
     public Page<PlayList> findPlayLists(int page, int size){
         return playListRepository.findAll(PageRequest.of(
                 page, size, Sort.by("playListId").descending()));
+    }
+
+    // 관리자 플레이리스트 전체 조회
+    public Page<PlayList> findAdminsPlayLists(Long memberId, int page, int size){
+        Member member = memberService.findMember(memberId);
+
+        if (!member.getRoles().contains("ADMIN")) {
+            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
+        }
+
+        List<PlayList> playLists = member.getPlayLists();
+
+        int start = page * size;
+        int end = Math.min(start + size, playLists.size());
+
+        if (start >= playLists.size()) return Page.empty();
+        List<PlayList> pagePlayLists = playLists.subList(start, end);
+        return new PageImpl<>(pagePlayLists, PageRequest.of(page, size), playLists.size());
     }
 
     public PlayList updatePlayList(Long playListId, Long memberId, PlayListDto.PatchDto requestBody){

@@ -16,6 +16,5 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface PlayListLikeRepository extends JpaRepository<PlayListLike, Long> {
     List<PlayListLike> findByPlayListPlayListId(Long playListId);
-    List<PlayListLike> findByMemberMemberId(Long memberId);
     List<PlayListLike> findByMemberMemberIdAndPlayListPlayListId(Long memberId, Long playListId);
 }

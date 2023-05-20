@@ -1,6 +1,9 @@
 package com.codestates.mainProject.member.controller;
 
 import com.codestates.mainProject.member.dto.AuthLoginDto;
+import com.codestates.mainProject.music.dto.MusicDto;
+import com.codestates.mainProject.music.entity.Music;
+import com.codestates.mainProject.music.mapper.MusicMapper;
 import com.codestates.mainProject.response.DataResponseDto;
 import com.codestates.mainProject.security.auth.jwt.JwtTokenizer;
 
@@ -39,6 +42,7 @@ public class MemberContorller {
     private final MemberMapper mapper;
 
     private final JwtTokenizer jwtTokenizer;
+    private final MusicMapper musicMapper;
 
 
     @PostMapping("/signup")
@@ -95,6 +99,16 @@ public class MemberContorller {
 
         return new ResponseEntity<>(
                 new DataResponseDto<>(response), HttpStatus.OK);
+    }
+
+    @GetMapping("/musics/recommend")
+    public ResponseEntity getMemberRecommendMusic(@LoginMemberId Long memberId){
+
+        List<Music> response = memberService.getRecommendMusics(memberId);
+        List<MusicDto.ResponseDto> responses= musicMapper.musicsToResponses(response);
+
+        return new ResponseEntity<>(
+                new DataResponseDto<>(responses), HttpStatus.OK);
     }
 
 

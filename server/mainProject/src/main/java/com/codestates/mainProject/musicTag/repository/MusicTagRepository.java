@@ -11,4 +11,6 @@ public interface MusicTagRepository extends JpaRepository<MusicTag, Long> {
     Optional<List<MusicTag>> findByMusicMusicId(Long musicId);
 
     Optional<MusicTag> findByTagTagIdAndMusicMusicId(Long tagId, Long musicId);
+
+    Optional<List<MusicTag>> findByTagTagIdOrderByMusicMusicLikeCountDesc(Long tagId);
 }

@@ -3,6 +3,9 @@ export interface PlcardProps {
     memberId: number;
     createMember: string;
     title: string;
+    coverImg: string;
+    tags: [];
+    likeCount: number;
     body: string;
     createdAt: string;
     modifiedAt: string;

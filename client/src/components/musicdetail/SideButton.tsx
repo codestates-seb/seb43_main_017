@@ -30,7 +30,7 @@ function Sidebutton() {
                 <span>COMMENT</span>
             </Button>
             <Button>
-                <a href={download.replaceAll('+', ' ')} download>
+                <a href={`/music/${download}`} download>
                     <RiDownload2Fill />
                     <span>DOWNLOAD</span>
                 </a>
