@@ -1,17 +1,18 @@
 import { FiPlayCircle, FiFolderPlus } from 'react-icons/fi';
 import { MdFileDownload } from 'react-icons/md';
 import { HiOutlineHeart, HiHeart } from 'react-icons/hi';
-import { useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { useRecoilState } from 'recoil';
+import { likeState } from 'src/recoil/Atoms';
 
 interface SideiconProps {
     musicId: number;
 }
 
 const Sideicon: React.FC<SideiconProps> = ({ musicId }) => {
-    const [like, setLike] = useState<boolean>(false);
+    const [like, setLike] = useRecoilState(likeState);
 
     const handleLike = () => {
         setLike(!like);
