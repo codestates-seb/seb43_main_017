@@ -1,61 +1,56 @@
 import styled from 'styled-components';
 import { HiOutlineHeart, HiHeart } from 'react-icons/hi';
-import axios from 'axios';
-import { useRecoilState } from 'recoil';
-import { likeState } from 'src/recoil/Atoms';
-import { MusicDataResponse } from 'src/types/Musiclist';
-import { musicDataListState } from 'src/recoil/Atoms';
-import { useEffect } from 'react';
 
-interface LikeProps {
-    musicId: number;
-}
+/* 2023.05.10 Like Music 타입 선언 - 홍혜란 */
+type MusicData = {
+    id: number;
+    name: string;
+    artist: string;
+    album: string;
+    imgSrc: string;
+};
 
-const [musicDataList, setMusicDataList] = useRecoilState(musicDataListState);
-const memberId: string | undefined = window.localStorage.getItem('memeberId') || undefined;
+/* 2023.05.10 Like Music 더미데이터(임시) - 홍혜란 */
+const VoteLike: MusicData[] = [
+    {
+        id: 1,
+        name: 'Ditto',
+        artist: 'Newjeans',
+        album: 'OMG',
+        imgSrc: './assets/ditto.png',
+    },
+    {
+        id: 2,
+        name: 'Ditto',
+        artist: 'Newjeans',
+        album: 'OMG',
+        imgSrc: './assets/ditto.png',
+    },
+    {
+        id: 3,
+        name: 'Ditto',
+        artist: 'Newjeans',
+        album: 'OMG',
+        imgSrc: './assets/ditto.png',
+    },
+    {
+        id: 4,
+        name: 'Ditto',
+        artist: 'Newjeans',
+        album: 'OMG',
+        imgSrc: './assets/ditto.png',
+    },
+    {
+        id: 5,
+        name: 'Ditto',
+        artist: 'Newjeans',
+        album: 'OMG',
+        imgSrc: './assets/ditto.png',
+    },
+];
 
-useEffect(() => {
-    axios
-        .get<MusicDataResponse>(
-            `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/${memberId}`,
-        )
-        .then((response) => {
-            setMusicDataList(response.data.data);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
-}, [setMusicDataList]);
-
-const LikeMusic: React.FC<LikeProps> = ({ musicId }) => {
-    const [like, setLike] = useRecoilState(likeState);
-
-    const handleLike = () => {
-        setLike(!like);
-
-        const memberId: string | undefined = window.localStorage.getItem('memberId') || undefined;
-        const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
-
-        axios
-            .post(
-                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/music-like/toggle`,
-                {
-                    memberId: memberId,
-                    musicId: musicId,
-                },
-                {
-                    headers: {
-                        Authorization: token,
-                    },
-                },
-            )
-            .then((response) => {
-                console.log(response.data);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    };
+const LikeMusic = () => {
+    const musicData = VoteLike;
 
     return (
         <LikeContainer>
@@ -65,19 +60,13 @@ const LikeMusic: React.FC<LikeProps> = ({ musicId }) => {
                     <p>LIKE MUSIC</p>
                 </div>
             </LikeTitle>
-            {musicDataList.map((data) => (
+            {musicData.map((data) => (
                 <LikeList>
-                    <img src={data.albumCoverImg} alt={data.musicName} />
-                    <li>{data.musicName}</li>
-                    <li>{data.artistName}</li>
-                    <li>{data.albumName}</li>
-                    <div className="music-icon">
-                        {like ? (
-                            <HiHeart onClick={handleLike} className="color-red like-action" />
-                        ) : (
-                            <HiOutlineHeart onClick={handleLike} className="color-red" />
-                        )}
-                    </div>
+                    <img src={data.imgSrc} alt="musicimg" />
+                    <li>{data.name}</li>
+                    <li>{data.artist}</li>
+                    <li>{data.album}</li>
+                    <div className="music-icon"></div>
                 </LikeList>
             ))}
         </LikeContainer>
