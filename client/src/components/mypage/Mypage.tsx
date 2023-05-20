@@ -32,8 +32,13 @@ function Mypage() {
                         {token ? (
                             <div>
                                 <div className="user-profile">
-                                    <img src={userimg} alt={usernickname} />
+                                    {userimg ? (
+                                        <img src={userimg} alt={usernickname} />
+                                    ) : (
+                                        <img src="./assets/ditto.png" alt="userImg" />
+                                    )}
                                 </div>
+
                                 <UserContainer>
                                     {/* 사용자의 이름 출력 및 수정 */}
                                     <div className="user-name-container">
