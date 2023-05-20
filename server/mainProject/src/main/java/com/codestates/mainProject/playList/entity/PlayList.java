@@ -42,7 +42,7 @@ public class PlayList extends Auditable {
     private List<String> tags = new ArrayList<>();
 
     @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
-    private List<PlayListTag> playListTags;
+    private List<PlayListTag> playListTags = new ArrayList<>();
 
     @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
     private List<PlayListLike> playListLikes = new ArrayList<>();
