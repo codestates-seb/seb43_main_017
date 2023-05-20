@@ -49,6 +49,7 @@ export const soundbarOpenState = atom<boolean>({
     default: false,
 });
 
+/* 2023.05.20 음원 다운로드 링크 전역관리 - 김주비 */
 export const downloadLink = atom<string>({
     key: 'downloadLink',
     default: '',
@@ -72,12 +73,20 @@ export const videouploadState = atom<boolean>({
     default: false,
 });
 
+/* 2023.05.20 뮤직리스트 서치창 전역상태관리 - 김주비 */
 export const showSearch = atom<boolean>({
     key: 'showSearch',
     default: false,
 });
 
+/* 2023.05.20 좋아요 상태 확인 - 김주비 */
 export const likeState = atom<boolean>({
     key: 'likeState',
+    default: false,
+});
+
+/* 2023.05.20 다운로드 가능상태 - 김주비 */
+export const showDownloadState = atom<boolean>({
+    key: 'ShowDownloadState',
     default: false,
 });

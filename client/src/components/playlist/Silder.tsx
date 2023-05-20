@@ -96,7 +96,7 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
                                     ))}
                                 </Pltag>
                                 <Pluser>
-                                    <span>WTITER</span>
+                                    <span>WRITER</span>
                                     <span>{data.createMember}</span>
                                     <span>LIKE</span>
                                     <span>{data.likeCount}</span>

@@ -3,11 +3,12 @@ import { BiMessageSquareAdd } from 'react-icons/bi';
 import { HiOutlineHeart, HiHeart } from 'react-icons/hi';
 import { RiDownload2Fill } from 'react-icons/ri';
 import { useRecoilState } from 'recoil';
-import { commentOpenState, downloadLink } from 'src/recoil/Atoms';
+import { commentOpenState, downloadLink, showDownloadState } from 'src/recoil/Atoms';
 import { useState } from 'react';
 
 function Sidebutton() {
     const [commentOpen, setCommentOpen] = useRecoilState<boolean>(commentOpenState);
+    const [ShowDownload] = useRecoilState<boolean>(showDownloadState);
     const [like, setLike] = useState<boolean>(false);
     const [download] = useRecoilState<string>(downloadLink);
     console.log(download);
@@ -29,12 +30,14 @@ function Sidebutton() {
                 <BiMessageSquareAdd />
                 <span>COMMENT</span>
             </Button>
-            <Button>
-                <a href={`/music/${download}`} download>
-                    <RiDownload2Fill />
-                    <span>DOWNLOAD</span>
-                </a>
-            </Button>
+            {ShowDownload ? (
+                <Button>
+                    <a href={`/music/${download}`} download>
+                        <RiDownload2Fill />
+                        <span>DOWNLOAD</span>
+                    </a>
+                </Button>
+            ) : null}
         </SidebtnGroup>
     );
 }
