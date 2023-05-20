@@ -1,5 +1,6 @@
 package com.codestates.mainProject.search.controller;
 
+import com.codestates.mainProject.music.dto.MusicDto;
 import com.codestates.mainProject.music.entity.Music;
 import com.codestates.mainProject.search.service.SearchService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping
@@ -22,16 +24,16 @@ public class SearchController {
     private final SearchService searchService;
 
     // musicName, artistName, albumName 중 검색어를 포함하는 music을 조회
-    @GetMapping("/musics/search")
-    public ResponseEntity<List<Music>> findMusicByKeyword(@RequestParam String keyword) {
-        List<Music> musics = searchService.findMusicByKeyword(keyword);
+    @GetMapping("/musics/search-by-keyword")
+    public ResponseEntity<List<MusicDto.ResponseDto>> findMusicByKeyword(@RequestParam String keyword) {
+        List<MusicDto.ResponseDto> musics = searchService.findMusicByKeyword(keyword);
 
         return ResponseEntity.ok(musics);
     }
 
-    @GetMapping("/tags/search")
-    public ResponseEntity<List<Music>> getMusicByTags(@RequestParam List<String> tags) {
-        List<Music> musics = searchService.findMusicByTags(tags);
+    @GetMapping("/musics/search-by-tags")
+    public ResponseEntity<List<MusicDto.ResponseDto>> getMusicByTags(@RequestParam List<String> tags) {
+        List<MusicDto.ResponseDto> musics = searchService.findMusicByTags(tags);
 
         return ResponseEntity.ok(musics);
     }

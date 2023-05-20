@@ -257,6 +257,7 @@ const ProfileIcon = styled.div`
     }
     img {
         width: 100%;
+        height: 100%;
         transition: 0.5s ease-in-out;
         object-fit: cover;
     }

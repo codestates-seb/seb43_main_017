@@ -77,13 +77,14 @@ export const Loading = () => {
                     },
                 })
                 .then((res) => {
-                    console.log(res);
                     const googleemail = res.data.data.email;
                     const googleickname = res.data.data.name;
                     const googleimg = res.data.data.image;
+                    const googlememberid = res.data.data.memberId;
                     window.localStorage.setItem('useremail', googleemail);
                     window.localStorage.setItem('usernickname', googleickname);
                     window.localStorage.setItem('userimg', googleimg);
+                    window.localStorage.setItem('memberId', googlememberid);
                     window.location.href = '/';
                 });
         }
