@@ -14,7 +14,6 @@ function Search() {
     const handleSearch = async () => {
         const response = await fetch(``);
         const result = await response.json();
-        // 검색 결과를 전역 recoil 상태에 저장
         useSetRecoilState(searchResultState)(result);
     };
 
