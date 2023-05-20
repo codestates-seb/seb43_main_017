@@ -2,7 +2,14 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { commentOpenState, soundbarOpenState, downloadLink, showDownloadState, musicIdState } from 'src/recoil/Atoms';
+import {
+    commentOpenState,
+    soundbarOpenState,
+    downloadLink,
+    showDownloadState,
+    musicIdState,
+    playlistCommentState,
+} from 'src/recoil/Atoms';
 import { musicdetail } from 'src/types/Slider';
 import CommentViewer from 'src/components/musicdetail/CommentViewer';
 import Sidebutton from 'src/components/musicdetail/SideButton';
@@ -23,6 +30,7 @@ function MusicDetail() {
     const [commentOpen] = useRecoilState<boolean>(commentOpenState);
     const [, setSoundbarOpen] = useRecoilState<boolean>(soundbarOpenState);
     const [, setShowDownlaod] = useRecoilState<boolean>(showDownloadState);
+    const [, setPlaylistComment] = useRecoilState<boolean>(playlistCommentState);
     const [formattedTime, setFormattedTime] = useState<number>(0);
     const [, setDownload] = useRecoilState<string>(downloadLink);
     const [, setMusicId] = useRecoilState<string | undefined>(musicIdState);
@@ -42,6 +50,7 @@ function MusicDetail() {
     useEffect(() => {
         setSoundbarOpen(true);
         setShowDownlaod(true);
+        setPlaylistComment(false);
         setMusicId(msId.msId);
         axios
             .get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/${msId.msId}`)

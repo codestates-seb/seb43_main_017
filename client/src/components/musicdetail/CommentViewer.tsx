@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { BiX } from 'react-icons/bi';
 import { useRecoilState } from 'recoil';
-import { commentOpenState, musicIdState } from 'src/recoil/Atoms';
+import { commentOpenState, musicIdState, playlistCommentState } from 'src/recoil/Atoms';
 import { useEffect, useState } from 'react';
 import { commentType } from 'src/types/Commentlist';
 import axios from 'axios';
@@ -10,15 +10,23 @@ function CommentViewer() {
     const [, setCommentOpen] = useRecoilState<boolean>(commentOpenState);
     const [comment, setComment] = useState<commentType[]>([]);
     const [musicId] = useRecoilState(musicIdState);
-    const [nullImage, setNullImage] = useState<boolean>(true);
     const [commentText, setCommentText] = useState<string>('');
+    const [playlistComment] = useRecoilState<boolean>(playlistCommentState);
+    let url: string;
+
+    if (playlistComment) {
+        url = `/playlist-comments/`;
+    } else {
+        url = `/music-comments/musics/`;
+    }
 
     const token = localStorage.getItem('access_token');
     const memberId = localStorage.getItem('memberId');
+
     const handelCommentWriting = () => {
         axios
             .post(
-                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/music-comments/musics/${musicId}`,
+                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080${url}${musicId}`,
                 {
                     content: commentText,
                 },
@@ -38,8 +46,14 @@ function CommentViewer() {
 
     const handleCommentDelete = (index: number) => {
         // console.log(index);
+        let delurl: string;
+        if (playlistComment) {
+            delurl = `/playlist-comments/`;
+        } else {
+            delurl = `/music-comments/`;
+        }
         axios
-            .delete(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/music-comments/${index}`, {
+            .delete(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080${delurl}${index}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -54,14 +68,14 @@ function CommentViewer() {
 
     useEffect(() => {
         axios
-            .get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/music-comments/musics/${musicId}`)
+            .get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080${url}${musicId}`)
             .then((response) => {
                 setComment(response.data);
             })
             .catch((error) => {
                 console.error(error);
             });
-    }, [comment, nullImage]);
+    }, [comment]);
 
     return (
         <CommentViewerGroup>
