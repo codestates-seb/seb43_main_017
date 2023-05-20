@@ -26,7 +26,7 @@ public class PlayListLikeController {
     private final PlayListLikeService playListLikeService;
     private final PlayListLikeMapper playListLikeMapper;
 
-    // 좋아요 누르기
+    // 좋아요 누르기 / 취소
     @PostMapping("/{playlist-id}/like")
     public ResponseEntity<LikeDto> addLike(@LoginMemberId Long memberId,
                                            @PathVariable("playlist-id") Long playListId) {
@@ -38,24 +38,10 @@ public class PlayListLikeController {
 
             return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
-
-    }
-
-    // 좋아요 삭제
-    @DeleteMapping("/{playlist-id}/like")
-    public ResponseEntity<Void> cancelLike(@LoginMemberId Long memberId,
-                                           @PathVariable("playlist-id") Long playListId) {
-
-        List<PlayListLike> isAlreadyLiked = playListLikeService.getAllLikesForMemberAndPlayList(memberId, playListId);
-        if (isAlreadyLiked.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        } else {
             playListLikeService.cancelLike(memberId, playListId);
-
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+
     }
 
     // 특정 좋아요 조회

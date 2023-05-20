@@ -66,7 +66,7 @@ public class PlayListController {
         return ResponseEntity.ok(new MultiResponseDto<>(response, pagePlayList));
     }
 
-    // 플레이리스트 전체 조회
+    // 플레이리스트 전체 조회 (좋아요 순)
     @GetMapping
     public ResponseEntity getPlayLists(@Positive @RequestParam(value = "page", defaultValue = "1") int page,
                                        @Positive @RequestParam(value = "size", defaultValue = "5") int size){

@@ -40,7 +40,6 @@ public class PlayListLikeService {
         return playListLikeRepository.save(like);
     }
 
-
     // 좋아요 삭제
     public void cancelLike(Long memberId, Long playListId){
         Member member = memberService.findMember(memberId);
