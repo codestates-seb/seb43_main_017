@@ -7,6 +7,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import { downloadLink } from 'src/recoil/Atoms';
 import { useRecoilState } from 'recoil';
+import { useEffect } from 'react';
 
 interface SideiconProps {
     musicId: number;
@@ -43,6 +44,34 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId }) => {
             });
     };
 
+    // axios.get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/liked-musics`);
+
+    useEffect(() => {
+        // GET 요청을 통해 musicId에 대한 좋아요 상태 가져오기
+        const fetchLikeStatus = async () => {
+            try {
+                const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
+
+                const response = await axios.get(
+                    `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/liked-musics`,
+                    {
+                        headers: {
+                            Authorization: token,
+                        },
+                    },
+                );
+
+                const { liked } = response.data;
+
+                setLike(liked);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchLikeStatus();
+    }, [musicId]);
+
     return (
         <MusicIconGroup>
             <Link to={`/musiclist/${musicId}`}>
@@ -50,7 +79,7 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId }) => {
             </Link>
             <FiFolderPlus />
             <a href={`/music/${download}`} download>
-                <MdFileDownload className="download" />
+                <MdFileDownload />
             </a>
             {like ? (
                 <HiHeart onClick={handleLike} className="color-red like-action" />
@@ -83,7 +112,8 @@ const MusicIconGroup = styled.li`
     .like-action {
         animation: likeaction 0.5s forwards;
     }
-    .download {
+    a {
+        color: inherit;
         text-decoration: none;
     }
     @keyframes likeaction {
