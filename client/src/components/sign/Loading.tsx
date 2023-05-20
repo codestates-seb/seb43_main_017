@@ -68,7 +68,7 @@ export const Loading = () => {
         const googlerefresh = new URL(location.href).searchParams.get('refresh_token');
         /** 2023/05/16 - 구글 요청인 경우 - 박수범 */
         if (googlerefresh && googletoken) {
-            window.localStorage.setItem('access_token', googletoken);
+            window.localStorage.setItem('access_token', `Bearer ${googletoken}`);
             window.localStorage.setItem('refresh_token', googlerefresh);
             axios
                 .get(`${process.env.REACT_APP_API_URL}/members/info`, {

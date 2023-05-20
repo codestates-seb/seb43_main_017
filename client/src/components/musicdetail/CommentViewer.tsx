@@ -1,55 +1,107 @@
 import styled from 'styled-components';
 import { BiX } from 'react-icons/bi';
 import { useRecoilState } from 'recoil';
-import { commentOpenState } from 'src/recoil/Atoms';
+import { commentOpenState, musicIdState } from 'src/recoil/Atoms';
+import { useEffect, useState } from 'react';
+import { commentType } from 'src/types/Commentlist';
+import axios from 'axios';
+
 function CommentViewer() {
     const [, setCommentOpen] = useRecoilState<boolean>(commentOpenState);
-    const comment = [
-        {
-            commentId: 1,
-            userName: 'Uncover',
-            userIcon: './assets/profile-icon-01.png',
-            commentText:
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras in arcu tellus. Maecenas ligula justo, ullamcorper eget ex eu, feugiat pharetra augue.',
-            createAt: '1 HOUR AGO',
-        },
-        {
-            commentId: 2,
-            userName: 'JUBEE',
-            userIcon: './assets/background-playlist1.jpg',
-            commentText: '노래 너무 잘들었습니다. 좋은 음원 공유 감사합니다.',
-            createAt: '1 HOUR AGO',
-        },
-        {
-            commentId: 3,
-            userName: 'Lalala',
-            userIcon: './assets/logo_icon_012.png',
-            commentText: 'Cras in arcu tellus. Maecenas ligula justo, ullamcorper eget ex eu, feugiat pharetra augue.',
-            createAt: '1 HOUR AGO',
-        },
-        {
-            commentId: 4,
-            userName: 'lucky letter',
-            userIcon: './assets/profile-icon.png',
-            commentText:
-                '이 코멘트는 영국에서 부터 최초로 시작되어 일년에 한바퀴를 돌면서 받는 사람에게 행운을 주었고 지금은 당신에게로 옮겨진 이 코멘트는 4일 안에 당신 곁을 떠나야 합니다. ',
-            createAt: '1 HOUR AGO',
-        },
-    ];
+    const [comment, setComment] = useState<commentType[]>([]);
+    const [musicId] = useRecoilState(musicIdState);
+    const [nullImage, setNullImage] = useState<boolean>(true);
+    const [commentText, setCommentText] = useState<string>('');
+
+    const token = localStorage.getItem('access_token');
+    const memberId = localStorage.getItem('memberId');
+    const handelCommentWriting = () => {
+        axios
+            .post(
+                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/music-comments/musics/${musicId}`,
+                {
+                    content: commentText,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                },
+            )
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    };
+
+    const handleCommentDelete = (index: number) => {
+        // console.log(index);
+        axios
+            .delete(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/music-comments/${index}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    };
+
+    useEffect(() => {
+        axios
+            .get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/music-comments/musics/${musicId}`)
+            .then((response) => {
+                setComment(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, [comment, nullImage]);
+
     return (
         <CommentViewerGroup>
             <div className="ViewerGroup">
                 <div className="comment-input">
-                    <CommentInput type="text" placeholder="코멘트를 작성해주세요" /> <button>작성</button>
+                    <CommentInput
+                        type="text"
+                        placeholder="코멘트를 작성해주세요"
+                        value={commentText}
+                        onChange={(e) => {
+                            setCommentText(e.target.value);
+                        }}
+                    />{' '}
+                    <button onClick={handelCommentWriting}>작성</button>
                 </div>
                 <CommentBox>
                     {comment.map((comment) => (
-                        <li key={comment.commentId}>
-                            <img src={comment.userIcon} alt="profile icon" />
+                        <li key={comment.id}>
+                            <img
+                                src={comment.image}
+                                alt="profile icon"
+                                onError={(e) => {
+                                    const target = e.target as HTMLImageElement;
+                                    target.src = '/assets/profile-icon.png';
+                                }}
+                            />
                             <div className="comment-contents">
-                                <span className="comment-user">{comment.userName}</span>
-                                <span className="comment-text">{comment.commentText}</span>
+                                <span className="comment-user">{comment.name}</span>
+                                <span className="comment-text">{comment.content}</span>
                             </div>
+                            {Number(memberId) === comment.memberId ? (
+                                <div
+                                    className="comment-delete"
+                                    onClick={() => {
+                                        handleCommentDelete(comment.id);
+                                    }}
+                                >
+                                    <span>DEL</span>
+                                </div>
+                            ) : null}
                         </li>
                     ))}
                 </CommentBox>
@@ -140,6 +192,7 @@ const CommentInput = styled.input`
 /**2023-05-15 작성된 코멘트 : 김주비 */
 const CommentBox = styled.ul`
     margin-top: 30px;
+    width: 100%;
     li {
         /* border: 1px solid red; */
         display: flex;
@@ -158,6 +211,8 @@ const CommentBox = styled.ul`
         font-size: 13px;
         display: flex;
         flex-direction: column;
+        /* border: 1px solid red; */
+        width: 100%;
     }
     .comment-user {
         font-weight: 700;
@@ -171,6 +226,23 @@ const CommentBox = styled.ul`
         word-break: break-all;
         opacity: 0.6;
         font-family: 'Rajdhani', 'Noto Sans KR', sans-serif;
+    }
+
+    .comment-delete {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .comment-delete span {
+        border: 2px solid #333;
+        font-size: 0.8rem;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+
+    .comment-delete span:hover {
+        border-color: #e24c4c;
     }
 `;
 /**2023-05-15 코멘트창 닫기 버튼 : 김주비 */

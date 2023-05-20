@@ -6,9 +6,6 @@ import com.codestates.mainProject.tags.dto.TagDto;
 import com.codestates.mainProject.tags.entity.Tag;
 import com.codestates.mainProject.tags.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
