@@ -85,9 +85,6 @@ const LikeMusic = () => {
                     <li>{likedata.musicName}</li>
                     <li>{likedata.artistName}</li>
                     <li>{likedata.albumName}</li>
-                    <div className="music-icon">
-                        <HiHeart />
-                    </div>
                 </LikeList>
             ))}
             <Pagination>
