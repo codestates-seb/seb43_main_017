@@ -13,6 +13,8 @@ public class MusicCommentDto {
         private Long id;
         private String content;
         private Long memberId;
+        private String name;
+        private String image;
         private Long musicId;
 
         @Getter
