@@ -189,7 +189,7 @@ public class PlayListService {
                     music.getMusicLikeCount(),
                     music.getCreatedAt().toString(),
                     music.getModifiedAt().toString(),
-                    new ArrayList<>(music.getTags()),
+                    music.getTagsName(),
                     playList.getMember().getMemberId()
             );
             musicDtos.add(musicDto);
