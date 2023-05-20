@@ -1,14 +1,11 @@
 package com.codestates.mainProject.playListLike.controller;
 
-import com.codestates.mainProject.member.entity.Member;
-import com.codestates.mainProject.playList.dto.PlayListDto;
 import com.codestates.mainProject.playListLike.dto.LikeDto;
 import com.codestates.mainProject.playListLike.entity.PlayListLike;
 import com.codestates.mainProject.playListLike.mapper.PlayListLikeMapper;
 import com.codestates.mainProject.playListLike.service.PlayListLikeService;
 import com.codestates.mainProject.security.auth.loginResolver.LoginMemberId;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -16,11 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
 @RequiredArgsConstructor
 @RestController
 @Validated
@@ -44,7 +39,6 @@ public class PlayListLikeController {
             playListLikeService.cancelLike(memberId, playListId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-
     }
 
     // 특정 좋아요 조회
