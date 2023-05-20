@@ -81,9 +81,11 @@ export const Loading = () => {
                     const googleemail = res.data.data.email;
                     const googleickname = res.data.data.name;
                     const googleimg = res.data.data.image;
+                    const googlememberid = res.data.data.memberid;
                     window.localStorage.setItem('useremail', googleemail);
                     window.localStorage.setItem('usernickname', googleickname);
                     window.localStorage.setItem('userimg', googleimg);
+                    window.localStorage.setItem('memberId', googlememberid);
                     window.location.href = '/';
                 });
         }
