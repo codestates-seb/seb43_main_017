@@ -16,12 +16,13 @@ interface SideiconProps {
 const Sideicon: React.FC<SideiconProps> = ({ musicId }) => {
     const [like, setLike] = useState<boolean>(false);
     const [download] = useRecoilState<string>(downloadLink);
+    const [memberLike, setMemberLike] = useState<number>(0);
+
+    const memberId: string | undefined = window.localStorage.getItem('memberId') || undefined;
+    const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
 
     const handleLike = () => {
         setLike(!like);
-
-        const memberId: string | undefined = window.localStorage.getItem('memberId') || undefined;
-        const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
 
         axios
             .post(
@@ -44,7 +45,22 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId }) => {
             });
     };
 
-    // axios.get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/liked-musics`);
+    useEffect(() => {
+        axios
+            .get('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/liked-musics', {
+                headers: {
+                    Authorization:
+                        'Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sIm1lbWJlcklkIjozNSwic3ViIjoiaG9uZ0BuYXZlci5jb20iLCJpYXQiOjE2ODQ1ODc3OTksImV4cCI6MTY4NDU4OTU5OX0.G0D0E-scDM_Ovy1kUGJWKXwoZCCtEINirFqXGr9GMrU',
+                },
+            })
+            .then((response) => {
+                const data = response.data.data;
+                console.log(data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, []);
 
     return (
         <MusicIconGroup>
@@ -55,7 +71,7 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId }) => {
             <a href={`/music/${download}`} download>
                 <MdFileDownload />
             </a>
-            {like ? (
+            {memberLike ? (
                 <HiHeart onClick={handleLike} className="color-red like-action" />
             ) : (
                 <HiOutlineHeart onClick={handleLike} className="color-red" />

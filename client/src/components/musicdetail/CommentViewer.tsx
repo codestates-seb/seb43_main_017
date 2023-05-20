@@ -14,6 +14,7 @@ function CommentViewer() {
     const [commentText, setCommentText] = useState<string>('');
 
     const token = localStorage.getItem('access_token');
+    const memberId = localStorage.getItem('memberId');
     const handelCommentWriting = () => {
         axios
             .post(
@@ -35,6 +36,22 @@ function CommentViewer() {
             });
     };
 
+    const handleCommentDelete = (index: number) => {
+        // console.log(index);
+        axios
+            .delete(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/music-comments/${index}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    };
+
     useEffect(() => {
         axios
             .get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/music-comments/musics/${musicId}`)
@@ -44,7 +61,7 @@ function CommentViewer() {
             .catch((error) => {
                 console.error(error);
             });
-    }, [comment]);
+    }, [comment, nullImage]);
 
     return (
         <CommentViewerGroup>
@@ -68,16 +85,26 @@ function CommentViewer() {
                                     src={comment.image}
                                     alt="profile icon"
                                     onError={() => {
-                                        setNullImage(false);
+                                        setNullImage(true);
                                     }}
                                 />
                             ) : (
-                                <img src="./assets/profile-icon.png" alt="profile icon" />
+                                <img src="/assets/profile-icon.png" alt="profile icon" />
                             )}
                             <div className="comment-contents">
                                 <span className="comment-user">{comment.name}</span>
                                 <span className="comment-text">{comment.content}</span>
                             </div>
+                            {Number(memberId) === comment.memberId ? (
+                                <div
+                                    className="comment-delete"
+                                    onClick={() => {
+                                        handleCommentDelete(comment.id);
+                                    }}
+                                >
+                                    <span>DEL</span>
+                                </div>
+                            ) : null}
                         </li>
                     ))}
                 </CommentBox>
@@ -187,6 +214,8 @@ const CommentBox = styled.ul`
         font-size: 13px;
         display: flex;
         flex-direction: column;
+        /* border: 1px solid red; */
+        width: 100%;
     }
     .comment-user {
         font-weight: 700;
@@ -200,6 +229,23 @@ const CommentBox = styled.ul`
         word-break: break-all;
         opacity: 0.6;
         font-family: 'Rajdhani', 'Noto Sans KR', sans-serif;
+    }
+
+    .comment-delete {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .comment-delete span {
+        border: 2px solid #333;
+        font-size: 0.8rem;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+
+    .comment-delete span:hover {
+        border-color: #e24c4c;
     }
 `;
 /**2023-05-15 코멘트창 닫기 버튼 : 김주비 */
