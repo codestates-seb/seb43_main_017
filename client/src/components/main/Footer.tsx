@@ -14,7 +14,7 @@ function Footer() {
                         <span className="ani-2 ctg_title">you!</span>
                     </div>
                 </div>
-                <span className="sub-text color-gray">©2023 Team Undefind. All Rights Reserved.</span>
+                <span className="sub-text color-gray">©2023 Team Undefined. All Rights Reserved.</span>
                 <span className="sub-text">
                     Do you like our service?
                     <span>
