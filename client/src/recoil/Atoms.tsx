@@ -79,12 +79,6 @@ export const showSearch = atom<boolean>({
     default: false,
 });
 
-export const createLikeStateAtom = (musicId: number) =>
-    atom<boolean>({
-        key: `likeStateAtom_${musicId}`,
-        default: false,
-    });
-
 /* 2023.05.20 좋아요 상태 확인 - 김주비 */
 export const likeState = atom<boolean>({
     key: 'likeState',

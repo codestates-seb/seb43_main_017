@@ -4,15 +4,17 @@ import { HiOutlineHeart, HiHeart } from 'react-icons/hi';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { useState } from 'react';
+import { downloadLink } from 'src/recoil/Atoms';
 import { useRecoilState } from 'recoil';
-import { createLikeStateAtom } from 'src/recoil/Atoms';
 
 interface SideiconProps {
     musicId: number;
 }
 
 const Sideicon: React.FC<SideiconProps> = ({ musicId }) => {
-    const [like, setLike] = useRecoilState(createLikeStateAtom(musicId));
+    const [like, setLike] = useState<boolean>(false);
+    const [download] = useRecoilState<string>(downloadLink);
 
     const handleLike = () => {
         setLike(!like);
@@ -47,7 +49,9 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId }) => {
                 <FiPlayCircle className="color-blue" />
             </Link>
             <FiFolderPlus />
-            <MdFileDownload />
+            <a href={`/music/${download}`} download>
+                <MdFileDownload />
+            </a>
             {like ? (
                 <HiHeart onClick={handleLike} className="color-red like-action" />
             ) : (

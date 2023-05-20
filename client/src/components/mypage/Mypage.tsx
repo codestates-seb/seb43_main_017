@@ -1,23 +1,9 @@
 import styled from 'styled-components';
-import { useState } from 'react';
 import LikeMusic from './LIkeMusic';
 import Myplaylist from './Myplaylist';
 import ModifyPlaylist from './ModifyPlaylist';
 
 function Mypage() {
-    /* 2023.05.06 유저의 name을 클릭했을 시 수정할 수 있는 상태관리 */
-    const [editingName, setEditingName] = useState(false);
-
-    /* 2023.05.06 사용자가 이름을 클릭했을 때 호출되는 함수 , 이름이 편집 모드로 전환  */
-    const handleNameClick = () => {
-        setEditingName(true);
-    };
-
-    /* 2023.05.06 사용자가 이름 입력 폼에서 포커스를 벗어났을 때 호출되는 함수 , 이름이 편집 모드에서 보기 모드로 전환  */
-    const handleNameBlur = () => {
-        setEditingName(false);
-    };
-
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
     const userimg: string | undefined = window.localStorage.getItem('userimg') || undefined;
     const usernickname: string | undefined = window.localStorage.getItem('usernickname') || undefined;
@@ -42,13 +28,7 @@ function Mypage() {
                                 <UserContainer>
                                     {/* 사용자의 이름 출력 및 수정 */}
                                     <div className="user-name-container">
-                                        {editingName ? (
-                                            <input type="text" value={usernickname} onBlur={handleNameBlur} />
-                                        ) : (
-                                            <div className="user-name" onClick={handleNameClick} contentEditable>
-                                                {usernickname}
-                                            </div>
-                                        )}
+                                        <div className="user-name">{usernickname}</div>
                                     </div>
                                     <div className="user-email">{useremail}</div>
                                 </UserContainer>
