@@ -70,7 +70,7 @@ function Mypage() {
 
                     <MusicInfor>
                         <LeftContainer>
-                            <LikeMusic /> {/* like music 파일 */}
+                            <LikeMusic musicId={0} /> {/* like music 파일 */}
                             <Myplaylist /> {/* my playlist 파일 */}
                         </LeftContainer>
 
