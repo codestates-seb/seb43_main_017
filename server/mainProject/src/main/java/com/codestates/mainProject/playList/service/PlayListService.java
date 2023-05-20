@@ -83,7 +83,7 @@ public class PlayListService {
     // 플레이리스트 전체 조회
     public Page<PlayList> findPlayLists(int page, int size){
         return playListRepository.findAll(PageRequest.of(
-                page, size, Sort.by("playListId").descending()));
+                page, size, Sort.by("likeCount").descending()));
     }
 
     // 관리자 플레이리스트 전체 조회
