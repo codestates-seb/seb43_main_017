@@ -78,6 +78,15 @@ const LikeMusic = () => {
                     <HiHeart />
                     <p>LIKE MUSIC</p>
                 </div>
+                <Pagination>
+                    <button disabled={currentPage === 1} onClick={handlePrevPage}>
+                        Prev
+                    </button>
+                    {buttonArray}
+                    <button disabled={currentPage === totalPages} onClick={handleNextPage}>
+                        Next
+                    </button>
+                </Pagination>
             </LikeTitle>
             {likedMusic.map((likedata) => (
                 <LikeList>
@@ -87,15 +96,6 @@ const LikeMusic = () => {
                     <li>{likedata.albumName}</li>
                 </LikeList>
             ))}
-            <Pagination>
-                <button disabled={currentPage === 1} onClick={handlePrevPage}>
-                    Prev
-                </button>
-                {buttonArray}
-                <button disabled={currentPage === totalPages} onClick={handleNextPage}>
-                    Next
-                </button>
-            </Pagination>
         </LikeContainer>
     );
 };
