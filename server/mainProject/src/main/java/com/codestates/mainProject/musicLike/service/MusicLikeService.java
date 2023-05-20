@@ -44,13 +44,10 @@ public class MusicLikeService {
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MUSIC_NOT_FOUND));
 
         List<MusicLike> musicLikes = music.getMusicLikes();
-        List<MusicTag> musicTags = music.getMusicTags();
-
 
         Optional<MusicLike> optionalMusicLike = musicLikes.stream()
                 .filter(musiclike -> musiclike.getMember().getMemberId().equals(memberId))
                 .findFirst();
-
 
         MusicLikeDto.MusicLikeToggleResponseDto responseDto = new MusicLikeDto.MusicLikeToggleResponseDto();
         responseDto.setMemberId(memberId);
@@ -61,13 +58,7 @@ public class MusicLikeService {
 
             validateMusicLikeAuthorOrAdmin(memberId, musicLike);
             music.removeMusicLike(musicLike);
-
-
-            for(MusicTag musicTag : musicTags ){
-                memberMusicTagService.deleteMemberMusicTag(memberId,musicTag.getMusicTagId());  //music에 있는 musicTag들을 memberMusicTag에서 모두지움
-            }
             musicLikeRepository.delete(musicLike);
-//            music.removeMusicLike(musicLike);   // 좋아요 취소 후 Music 엔티티와의 관계를 삭제
 
             responseDto.setMessage("좋아요가 취소되었습니다.");
         } else {
@@ -75,16 +66,13 @@ public class MusicLikeService {
             music.addMusicLike(musicLike);
             MusicLike savedMusicLike = musicLikeRepository.save(musicLike);
 
-            for(MusicTag musicTag : musicTags ){
-                memberMusicTagService.createMemberMusicTag(memberId,musicTag.getMusicTagId()); //music에 있는 musicTag들을 memberMusicTag에서 모두생성
-            }
-
             responseDto.setMusicLikeId(savedMusicLike.getMusicLikeId());
             responseDto.setMessage("좋아요가 생성되었습니다.");
         }
 
-            return responseDto;
+        return responseDto;
     }
+
 
     // 음악 좋아요 조회
     public MusicLike findVerifiedMusicLike(long musicLikeId) {
