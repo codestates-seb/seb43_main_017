@@ -50,7 +50,7 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId }) => {
             </Link>
             <FiFolderPlus />
             <a href={`/music/${download}`} download>
-                <MdFileDownload />
+                <MdFileDownload className="download" />
             </a>
             {like ? (
                 <HiHeart onClick={handleLike} className="color-red like-action" />
@@ -82,6 +82,9 @@ const MusicIconGroup = styled.li`
     }
     .like-action {
         animation: likeaction 0.5s forwards;
+    }
+    .download {
+        text-decoration: none;
     }
     @keyframes likeaction {
         50% {
