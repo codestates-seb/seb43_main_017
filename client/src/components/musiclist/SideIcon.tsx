@@ -5,14 +5,18 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
-function Sideicon() {
+interface SideiconProps {
+    musicId: number;
+}
+
+const Sideicon: React.FC<SideiconProps> = ({ musicId }) => {
     const [like, setLike] = useState<boolean>(false);
 
     return (
         <MusicIconGroup>
-            {/* <Link to={`/musiclist/${musicData.musicId}`}> */}
-            <FiPlayCircle className="color-blue" />
-            {/* </Link> */}
+            <Link to={`/musiclist/${musicId}`}>
+                <FiPlayCircle className="color-blue" />
+            </Link>
             <FiFolderPlus />
             <MdFileDownload />
             {like ? (
@@ -32,7 +36,7 @@ function Sideicon() {
             )}
         </MusicIconGroup>
     );
-}
+};
 
 export default Sideicon;
 
