@@ -17,4 +17,6 @@ public interface MusicRepository extends JpaRepository<Music, Long> {
     List<Music> findMusicByKeyword(@Param("keyword") String keyword);
 
     List<Music> findTop6ByOrderByMusicLikeCountDesc();
+
+    List<Music> findAllByOrderByCreatedAtDesc();
 }

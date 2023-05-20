@@ -1,5 +1,6 @@
 package com.codestates.mainProject.music.dto;
 
+import com.codestates.mainProject.music.entity.Music;
 import lombok.*;
 
 import java.util.List;
@@ -85,5 +86,19 @@ public class MusicDto {
         private String createdAt;
         private String modifiedAt;
         private List<String> musicTagName;
+
+        public OrderResponseDto(Music music) {
+            this.musicId = music.getMusicId();
+            this.musicName = music.getMusicName();
+            this.artistName = music.getArtistName();
+            this.albumName = music.getAlbumName();
+            this.musicTime = music.getMusicTime();
+            this.albumCoverImg = music.getAlbumCoverImg();
+            this.musicUri = music.getMusicUri();
+            this.musicLikeCount = music.getMusicLikeCount();
+            this.createdAt = music.getCreatedAt();
+            this.modifiedAt = music.getModifiedAt();
+            this.musicTagName = music.getTagsName();
+        }
     }
 }

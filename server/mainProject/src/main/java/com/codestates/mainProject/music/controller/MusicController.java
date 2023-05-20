@@ -103,6 +103,10 @@ public class MusicController {
     }
 
     // 최신순 음악 조회
+    @GetMapping("/order-by-created-at")
+    public ResponseEntity<List<MusicDto.OrderResponseDto>> getMusicsOrderByCreatedAt() {
+        return ResponseEntity.ok(musicService.getMusicsOrderByCreatedAt());
+    }
 
     // 좋아요순 음악 조회
     @GetMapping("/order-by-like-count")

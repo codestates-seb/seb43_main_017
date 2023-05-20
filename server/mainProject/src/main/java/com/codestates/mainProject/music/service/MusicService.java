@@ -80,6 +80,14 @@ public class MusicService {
                 Sort.by("musicId").descending()));
     }
 
+    // 음악 생성일 기준 오름차순/내림차순 정렬
+    public List<MusicDto.OrderResponseDto> getMusicsOrderByCreatedAt() {
+        List<Music> musics = musicRepository.findAllByOrderByCreatedAtDesc();
+        return musics.stream()
+                .map(MusicDto.OrderResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
     // 좋아요 수 기준 오름차순/내림차순 정렬
     public List<MusicDto.OrderResponseDto> toggleLikeCountOrder() {
         List<Music> musicList = musicRepository.findAll();
