@@ -94,6 +94,7 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.POST, "/members/logout").hasRole("USER")
                         .antMatchers(HttpMethod.POST, "/members/image/**").hasAnyRole("USER", "ADMIN")
                         .antMatchers(HttpMethod.GET, "/members/info").hasAnyRole("USER", "ADMIN")
+                        .antMatchers(HttpMethod.GET, "/members/musics/**").hasAnyRole("USER", "ADMIN")
                         .antMatchers(HttpMethod.GET, "/members/**").permitAll()
                         .antMatchers(HttpMethod.PATCH, "/members/status/**").hasAnyRole( "ADMIN")
                         .antMatchers(HttpMethod.PATCH, "/members/**").hasAnyRole("USER", "ADMIN")

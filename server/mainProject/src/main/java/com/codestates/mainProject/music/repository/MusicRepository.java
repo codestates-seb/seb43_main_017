@@ -15,4 +15,6 @@ public interface MusicRepository extends JpaRepository<Music, Long> {
     // musicName, artistName, albumName 중 검색어를 포함하는 music을 조회
     @Query("SELECT m FROM Music m WHERE m.musicName LIKE %:keyword% OR m.artistName LIKE %:keyword% OR m.albumName LIKE %:keyword%")
     List<Music> findMusicByKeyword(@Param("keyword") String keyword);
+
+    List<Music> findTop6ByOrderByMusicLikeCountDesc();
 }
