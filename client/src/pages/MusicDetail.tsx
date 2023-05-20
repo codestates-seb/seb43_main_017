@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { commentOpenState, soundbarOpenState, downloadLink, showDownloadState } from 'src/recoil/Atoms';
+import { commentOpenState, soundbarOpenState, downloadLink, showDownloadState, musicIdState } from 'src/recoil/Atoms';
 import { musicdetail } from 'src/types/Slider';
 import CommentViewer from 'src/components/musicdetail/CommentViewer';
 import Sidebutton from 'src/components/musicdetail/SideButton';
@@ -25,6 +25,7 @@ function MusicDetail() {
     const [, setShowDownlaod] = useRecoilState<boolean>(showDownloadState);
     const [formattedTime, setFormattedTime] = useState<number>(0);
     const [, setDownload] = useRecoilState<string>(downloadLink);
+    const [, setMusicId] = useRecoilState<string | undefined>(musicIdState);
     const [msDetailData, setMsDetailData] = useState<musicdetail>({
         musicId: 0,
         musicName: '',
@@ -33,6 +34,7 @@ function MusicDetail() {
         musicTime: 0,
         albumCoverImg: '',
         musicUri: '',
+        musicTagName: [],
         createdAt: '',
         modifiedAt: '',
     });
@@ -40,6 +42,7 @@ function MusicDetail() {
     useEffect(() => {
         setSoundbarOpen(true);
         setShowDownlaod(true);
+        setMusicId(msId.msId);
         axios
             .get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/${msId.msId}`)
             .then(function (response) {
@@ -74,9 +77,9 @@ function MusicDetail() {
             <DetailSection>
                 <MusicContents>
                     <MusicTags>
-                        <li>귀여운</li>
-                        <li>발랄한</li>
-                        <li>즐거운</li>
+                        {msDetailData.musicTagName.map((tag) => (
+                            <li>{tag}</li>
+                        ))}
                     </MusicTags>
                     <MusicTitle>
                         <span>{msDetailData.musicName}</span>

@@ -18,21 +18,38 @@ const Trending = () => {
     const [tranding, setTranding] = useState<MusicData[]>([]);
     console.log(tranding);
 
+    const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
+
     useEffect(() => {
-        axios
-            .get('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics?&size=6')
-            .then((response) => {
-                setTranding(response.data.data);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+        if (token) {
+            axios
+                .get('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/musics/recommend', {
+                    headers: {
+                        Authorization: token,
+                    },
+                })
+                .then((response) => {
+                    setTranding(response.data.data);
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        } else {
+            axios
+                .get('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics?&size=6')
+                .then((response) => {
+                    setTranding(response.data.data);
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        }
     }, []);
 
     return (
         <Container>
             <TrTitleContainer>
-                <TrTitle>Tranding</TrTitle>
+                <TrTitle>Trending</TrTitle>
             </TrTitleContainer>
             <ItemsContainer>
                 {tranding.map((data) => (

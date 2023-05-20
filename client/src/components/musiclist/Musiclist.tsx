@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Categories from './Categories';
-import Trending from './Tranding';
+import Trending from './Trending';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import axios from 'axios';
