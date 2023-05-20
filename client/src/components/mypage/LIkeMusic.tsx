@@ -1,117 +1,61 @@
 import styled from 'styled-components';
 import { HiOutlineHeart, HiHeart } from 'react-icons/hi';
-// import React, { useEffect } from 'react';
-// import { useRecoilState } from 'recoil';
-// import axios from 'axios';
-// import { likedSongs } from 'src/recoil/Atoms';
+import axios from 'axios';
+import { useRecoilState } from 'recoil';
+import { likeState } from 'src/recoil/Atoms';
+import { MusicDataResponse } from 'src/types/Musiclist';
+import { musicDataListState } from 'src/recoil/Atoms';
+import { useEffect } from 'react';
 
-/* 2023.05.10 Like Music 타입 선언 - 홍혜란 */
-type MusicData = {
-    id: number;
-    name: string;
-    artist: string;
-    album: string;
-    imgSrc: string;
-};
+interface LikeProps {
+    musicId: number;
+}
 
-/* 2023.05.10 Like Music 더미데이터(임시) - 홍혜란 */
-const VoteLike: MusicData[] = [
-    {
-        id: 1,
-        name: 'Ditto',
-        artist: 'Newjeans',
-        album: 'OMG',
-        imgSrc: './assets/ditto.png',
-    },
-    {
-        id: 2,
-        name: 'Ditto',
-        artist: 'Newjeans',
-        album: 'OMG',
-        imgSrc: './assets/ditto.png',
-    },
-    {
-        id: 3,
-        name: 'Ditto',
-        artist: 'Newjeans',
-        album: 'OMG',
-        imgSrc: './assets/ditto.png',
-    },
-    {
-        id: 4,
-        name: 'Ditto',
-        artist: 'Newjeans',
-        album: 'OMG',
-        imgSrc: './assets/ditto.png',
-    },
-    {
-        id: 5,
-        name: 'Ditto',
-        artist: 'Newjeans',
-        album: 'OMG',
-        imgSrc: './assets/ditto.png',
-    },
-];
+const [musicDataList, setMusicDataList] = useRecoilState(musicDataListState);
+const memberId: string | undefined = window.localStorage.getItem('memeberId') || undefined;
 
-const LikeMusic = () => {
-    const musicData = VoteLike;
+useEffect(() => {
+    axios
+        .get<MusicDataResponse>(
+            `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/${memberId}`,
+        )
+        .then((response) => {
+            setMusicDataList(response.data.data);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+}, [setMusicDataList]);
 
-    /* 
-    // 좋아요를 누른 음악 목록을 저장하는 atom
-    const likedSongs = atom<{ [memberId: number]: string[] }>({
-        key: 'likedSongs',
-        default: {},
-    });
+const LikeMusic: React.FC<LikeProps> = ({ musicId }) => {
+    const [like, setLike] = useRecoilState(likeState);
 
-    // 음악 목록 컴포넌트
-    const SongList = ({ memberId }: { memberId: number }) => {
-        const [likedSongsList, setLikedSongsList] = useRecoilState(likedSongs);
+    const handleLike = () => {
+        setLike(!like);
 
-        // 좋아요를 누른 음악 목록을 서버에서 가져오는 함수
-        const fetchLikedSongs = async () => {
-            try {
-                const response = await axios.get(`/api/liked-songs/${memberId}`);
-                const data = response.data;
-                setLikedSongsList({ ...likedSongsList, [memberId]: data });
-            } catch (error) {
-                console.error('Failed to fetch liked songs:', error);
-            }
-        };
+        const memberId: string | undefined = window.localStorage.getItem('memberId') || undefined;
+        const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
 
-        // 좋아요를 해제하는 함수
-        const handleUnlike = async (songId: string) => {
-            try {
-                await axios.delete(`/api/liked-songs/${memberId}/${songId}`);
-                const updatedLikedSongs = likedSongsList[memberId].filter((id) => id !== songId);
-                setLikedSongsList({ ...likedSongsList, [memberId]: updatedLikedSongs });
-            } catch (error) {
-                console.error('Failed to unlike song:', error);
-            }
-        };
-
-        // 컴포넌트가 마운트될 때 좋아요를 누른 음악 목록을 가져옴
-        useEffect(() => {
-            fetchLikedSongs();
-        }, [memberId]);
-
-        const isSongLiked = (songId: string) => likedSongsList[memberId]?.includes(songId);
-
-        return (
-            <div>
-                <h2>Liked Songs</h2>
-                {likedSongsList[memberId]?.map((songId) => (
-                    <div key={songId}>
-                        <span>{songId}</span>
-                        <button onClick={() => handleUnlike(songId)}>{isSongLiked(songId) ? '<HiOutlineHeart />' : '<HiHeart />'}</button>
-                    </div>
-                ))}
-            </div>
-        );
-    }; 
-
-     const memberId = parseInt(localStorage.getItem('member-id') || '');
-     <SongList memberId={memberId} />
-    */
+        axios
+            .post(
+                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/music-like/toggle`,
+                {
+                    memberId: memberId,
+                    musicId: musicId,
+                },
+                {
+                    headers: {
+                        Authorization: token,
+                    },
+                },
+            )
+            .then((response) => {
+                console.log(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
 
     return (
         <LikeContainer>
@@ -121,14 +65,18 @@ const LikeMusic = () => {
                     <p>LIKE MUSIC</p>
                 </div>
             </LikeTitle>
-            {musicData.map((data) => (
+            {musicDataList.map((data) => (
                 <LikeList>
-                    <img src={data.imgSrc} alt="musicimg" />
-                    <li>{data.name}</li>
-                    <li>{data.artist}</li>
-                    <li>{data.album}</li>
+                    <img src={data.albumCoverImg} alt={data.musicName} />
+                    <li>{data.musicName}</li>
+                    <li>{data.artistName}</li>
+                    <li>{data.albumName}</li>
                     <div className="music-icon">
-                        <HiHeart />
+                        {like ? (
+                            <HiHeart onClick={handleLike} className="color-red like-action" />
+                        ) : (
+                            <HiOutlineHeart onClick={handleLike} className="color-red" />
+                        )}
                     </div>
                 </LikeList>
             ))}
