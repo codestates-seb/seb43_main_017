@@ -56,7 +56,7 @@ function Taplist() {
                 {pldata.map((data) => (
                     <TapList key={data.playListId}>
                         <div>
-                            <img src="/" alt="playlist cover image" />
+                            <img src={data.coverImg} alt="playlist cover image" />
                         </div>
                         <div className="pl-title">
                             <p>
@@ -65,9 +65,9 @@ function Taplist() {
                             <p>{data.createMember}</p>
                         </div>
                         <ul className="pl-tag">
-                            {/* {data.tag.slice(0, 2).map((tag, i) => (
-                                <li key={`tag-${i}`}>{tag.tagname}</li>
-                            ))} */}
+                            {data.tags.slice(0, 2).map((tag, i) => (
+                                <li key={`tag-${i}`}>{tag}</li>
+                            ))}
                         </ul>
                         <div className="pl-like">
                             <Like />

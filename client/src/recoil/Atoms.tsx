@@ -76,3 +76,8 @@ export const showSearch = atom<boolean>({
     key: 'showSearch',
     default: false,
 });
+
+export const likeState = atom<boolean>({
+    key: 'likeState',
+    default: false,
+});
