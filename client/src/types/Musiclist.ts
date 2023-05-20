@@ -21,3 +21,22 @@ export interface MusicDataResponse {
         totalPages: number;
     };
 }
+
+export interface LikeMusicList {
+    albumCoverImg: string;
+    albumName: string;
+    artistName: string;
+    createdAt: string;
+    memberId: number;
+    modifiedAt: string;
+    musicId: number;
+    musicLikeCount: number;
+    musicName: string;
+    musicTagName: string;
+    musicTime: number;
+    musicUri: string;
+}
+
+export interface LikeMusicResponse {
+    data: LikeMusicList[];
+}
