@@ -48,6 +48,7 @@ function Signin({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetStat
                                 },
                             })
                             .then((res) => {
+                                console.log(res);
                                 window.localStorage.setItem('memberId', res.data.data.memberId);
                                 window.localStorage.setItem('usernickname', res.data.data.name);
                                 window.localStorage.setItem('useremail', loginInfo.email);

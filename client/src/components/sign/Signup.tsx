@@ -79,16 +79,25 @@ function Signup({ setShowSignUp }: { setShowSignUp: React.Dispatch<React.SetStat
     const SignUpHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (isPassword && isEmail && isName && isCheck) {
-            axios.post<null>(`${BaseUrl}`, {
-                name: userInfo.name,
-                email: userInfo.email,
-                password: userInfo.password,
-            });
-            alert(`Uncover에 오신걸 환영합니다`);
-            setCloseDisplay(!closeDisplay);
-            setTimeout(() => {
-                setShowSignUp(false);
-            }, 1000);
+            axios
+                .post<null>(`${BaseUrl}`, {
+                    name: userInfo.name,
+                    email: userInfo.email,
+                    password: userInfo.password,
+                })
+                .then(() => {
+                    alert(`Uncover에 오신걸 환영합니다`);
+                    setCloseDisplay(!closeDisplay);
+                    setTimeout(() => {
+                        setShowSignUp(false);
+                    }, 1000);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    if (error.response.status === 409) {
+                        alert(error.response.data.message);
+                    }
+                });
         }
     };
 
