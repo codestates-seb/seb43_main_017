@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.codestates.mainProject.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.codestates.mainProject.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/mainProject.main.iml" filepath="$PROJECT_DIR$/.idea/modules/mainProject.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/seb43_main_017.iml" filepath="$PROJECT_DIR$/.idea/seb43_main_017.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/seb43_main_017.server.mainProject.main.iml" filepath="$PROJECT_DIR$/.idea/modules/seb43_main_017.server.mainProject.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/server.mainProject.main.iml" filepath="$PROJECT_DIR$/.idea/modules/server.mainProject.main.iml" />
     </modules>
   </component>
