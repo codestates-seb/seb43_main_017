@@ -31,11 +31,6 @@ function Playlist() {
                         <span className="pl-subtext">Enjoy the various playlists of users</span>
                     </Plsubtext>
                 </div>
-                {/* {changeTap ? null : (
-                    <div className="flex-center">
-                        <Plsearch placeholder="태그를 검색해주세요" />
-                    </div>
-                )} */}
             </PlaylistHeader>
             <PlaylistContents>{changeTap ? <Slider setBgSrc={setBgSrc} /> : <Taplist />}</PlaylistContents>
         </PlaylistSection>
