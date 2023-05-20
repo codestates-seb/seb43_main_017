@@ -43,9 +43,9 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
     }, []);
 
     /**2023-05-07 커버이미지 데이터 전달 : 김주비 */
-    // useEffect(() => {
-    //     setBgSrc(pldata[currentSlideIndex].coverImg);
-    // }, [currentSlideIndex]);
+    useEffect(() => {
+        setBgSrc(pldata[currentSlideIndex].coverImg);
+    }, [currentSlideIndex]);
 
     /**2023-05-07 플리 슬라이드 인덱스 : 김주비 */
     const handleAfterChange = (index: number) => {
