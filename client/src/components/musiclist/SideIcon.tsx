@@ -81,7 +81,7 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId }) => {
             <a href={`/music/${download}`} download>
                 <MdFileDownload />
             </a>
-            {like ? (
+            {!like ? (
                 <HiHeart onClick={handleLike} className="color-red like-action" />
             ) : (
                 <HiOutlineHeart onClick={handleLike} className="color-red" />
