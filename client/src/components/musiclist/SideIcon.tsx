@@ -4,6 +4,7 @@ import { HiOutlineHeart, HiHeart } from 'react-icons/hi';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 interface SideiconProps {
     musicId: number;
@@ -11,6 +12,26 @@ interface SideiconProps {
 
 const Sideicon: React.FC<SideiconProps> = ({ musicId }) => {
     const [like, setLike] = useState<boolean>(false);
+
+    const handleLike = () => {
+        setLike(!like);
+
+        const memberId: string | undefined = window.localStorage.getItem('memberId') || undefined;
+
+        axios
+            .get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/music-like/toggle`, {
+                params: {
+                    memberId: memberId,
+                    musicId: musicId,
+                },
+            })
+            .then((response) => {
+                console.log(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
 
     return (
         <MusicIconGroup>
@@ -20,19 +41,9 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId }) => {
             <FiFolderPlus />
             <MdFileDownload />
             {like ? (
-                <HiHeart
-                    onClick={() => {
-                        setLike(!like);
-                    }}
-                    className="color-red like-action"
-                />
+                <HiHeart onClick={handleLike} className="color-red like-action" />
             ) : (
-                <HiOutlineHeart
-                    onClick={() => {
-                        setLike(!like);
-                    }}
-                    className="color-red"
-                />
+                <HiOutlineHeart onClick={handleLike} className="color-red" />
             )}
         </MusicIconGroup>
     );
