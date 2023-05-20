@@ -10,10 +10,10 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface MusicCommentMapper {
+    @Mapping(source = "member.name", target = "name")
+    @Mapping(source = "member.image", target = "image")
     @Mapping(source = "member.memberId", target = "memberId")
     @Mapping(source = "music.musicId", target = "musicId")
     MusicCommentDto commentToResponse(MusicComment musicComment);
-    MusicComment postCommentToMusic(MusicCommentDto.PostDto postDto);
-    MusicComment patchCommentToMusic(MusicCommentDto.PatchDto patchDto);
     List<MusicCommentDto> commentsToResponses(List<MusicComment> musicComments);
 }
