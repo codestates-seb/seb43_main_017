@@ -1,77 +1,75 @@
 import styled from 'styled-components';
 import { HiHeart } from 'react-icons/hi';
-// import { MusicDataResponse } from 'src/types/Musiclist';
-// import { musicDataListState } from 'src/recoil/Atoms';
-// import { useRecoilState } from 'recoil';
-// import { useEffect } from 'react';
-// import axios from 'axios';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 
-/* 2023.05.10 Like Music 타입 선언 - 홍혜란 */
-type MusicData = {
-    id: number;
-    musicName: string;
-    artistName: string;
-    albumName: string;
+interface LikeMusicList {
     albumCoverImg: string;
-};
-
-/* 2023.05.10 Like Music 더미데이터(임시) - 홍혜란 */
-const VoteLike: MusicData[] = [
-    {
-        id: 1,
-        musicName: 'Ditto',
-        artistName: 'Newjeans',
-        albumName: 'OMG',
-        albumCoverImg: './assets/ditto.png',
-    },
-    {
-        id: 2,
-        musicName: 'Ditto',
-        artistName: 'Newjeans',
-        albumName: 'OMG',
-        albumCoverImg: './assets/ditto.png',
-    },
-    {
-        id: 3,
-        musicName: 'Ditto',
-        artistName: 'Newjeans',
-        albumName: 'OMG',
-        albumCoverImg: './assets/ditto.png',
-    },
-    {
-        id: 4,
-        musicName: 'Ditto',
-        artistName: 'Newjeans',
-        albumName: 'OMG',
-        albumCoverImg: './assets/ditto.png',
-    },
-    {
-        id: 5,
-        musicName: 'Ditto',
-        artistName: 'Newjeans',
-        albumName: 'OMG',
-        albumCoverImg: './assets/ditto.png',
-    },
-];
-
-// const [musicDataList, setMusicDataList] = useRecoilState(musicDataListState);
-// const memberId: string | undefined = window.localStorage.getItem('memberId') || undefined;
-
-// useEffect(() => {
-//     axios
-//         .get<MusicDataResponse>(
-//             `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/music-like/members/${memberId}`,
-//         )
-//         .then((response) => {
-//             setMusicDataList(response.data.data);
-//         })
-//         .catch((error) => {
-//             console.error(error);
-//         });
-// }, [setMusicDataList]);
+    albumName: string;
+    artistName: string;
+    createdAt: string;
+    memberId: number;
+    modifiedAt: string;
+    musicId: number;
+    musicLikeCount: number;
+    musicName: string;
+    musicTagName: string;
+    musicTime: number;
+    musicUri: string;
+}
 
 const LikeMusic = () => {
-    const musicData = VoteLike;
+    const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
+    const [totalPages, setTotalPages] = useState<number>(0); // 전체 페이지
+    const buttonArray = [];
+    const [likedMusic, setLikedMusic] = useState<LikeMusicList[]>([]);
+    const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
+
+    useEffect(() => {
+        const fetchLikedMusic = async () => {
+            try {
+                const response = await axios.get(
+                    `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/liked-musics?&page=${currentPage}&size=5`,
+                    {
+                        headers: {
+                            Authorization: token,
+                        },
+                    },
+                );
+                const likedMusicData: LikeMusicList[] = response.data.data.filter(
+                    (music: LikeMusicList) => music.musicLikeCount > 0,
+                );
+                setLikedMusic(likedMusicData);
+                console.log(response.data.data);
+                setTotalPages(response.data.pageInfo.totalPages);
+            } catch (error) {
+                console.error('Error fetching liked music:', error);
+            }
+        };
+
+        fetchLikedMusic();
+    }, [setLikedMusic, currentPage]);
+
+    /** 2023.05.17 전체 페이지 수 만큼 버튼 생성 - 김주비*/
+    for (let i = 1; i <= totalPages; i++) {
+        buttonArray.push(
+            <button
+                key={i}
+                className={i === currentPage ? 'page-focused' : ''}
+                onClick={() => {
+                    setCurrentPage(i);
+                }}
+            >
+                {i}
+            </button>,
+        );
+    }
+    const handleNextPage = () => {
+        setCurrentPage(currentPage + 1);
+    };
+    const handlePrevPage = () => {
+        setCurrentPage(currentPage - 1);
+    };
 
     return (
         <LikeContainer>
@@ -81,15 +79,23 @@ const LikeMusic = () => {
                     <p>LIKE MUSIC</p>
                 </div>
             </LikeTitle>
-            {musicData.map((likedata) => (
+            {likedMusic.map((likedata) => (
                 <LikeList>
                     <img src={likedata.albumCoverImg} alt={likedata.musicName} />
                     <li>{likedata.musicName}</li>
                     <li>{likedata.artistName}</li>
                     <li>{likedata.albumName}</li>
-                    <div className="music-icon"></div>
                 </LikeList>
             ))}
+            <Pagination>
+                <button disabled={currentPage === 1} onClick={handlePrevPage}>
+                    Prev
+                </button>
+                {buttonArray}
+                <button disabled={currentPage === totalPages} onClick={handleNextPage}>
+                    Next
+                </button>
+            </Pagination>
         </LikeContainer>
     );
 };
@@ -156,5 +162,37 @@ const LikeList = styled.div`
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+`;
+
+const Pagination = styled.div`
+    button {
+        color: #ccc;
+        background: none;
+        border: 1px solid #5a5a5a;
+        border-radius: 3px;
+        margin: 40px 3px;
+        transition: 0.2s ease-in-out;
+        cursor: pointer;
+    }
+    button:hover {
+        color: #ccc;
+        border-color: #ccc;
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    button:disabled {
+        border: 1px solid #5a5a5a;
+        color: #5a5a5a;
+    }
+    button:disabled:hover {
+        background: none;
+        cursor: default;
+    }
+
+    .page-focused {
+        color: #ccc;
+        border-color: #ccc;
+        background: rgba(255, 255, 255, 0.2);
     }
 `;
