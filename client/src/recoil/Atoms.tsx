@@ -77,7 +77,8 @@ export const showSearch = atom<boolean>({
     default: false,
 });
 
-export const likeState = atom<boolean>({
-    key: 'likeState',
-    default: false,
-});
+export const createLikeStateAtom = (musicId: number) =>
+    atom<boolean>({
+        key: `likeStateAtom_${musicId}`,
+        default: false,
+    });

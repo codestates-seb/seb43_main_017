@@ -5,14 +5,14 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useRecoilState } from 'recoil';
-import { likeState } from 'src/recoil/Atoms';
+import { createLikeStateAtom } from 'src/recoil/Atoms';
 
 interface SideiconProps {
     musicId: number;
 }
 
 const Sideicon: React.FC<SideiconProps> = ({ musicId }) => {
-    const [like, setLike] = useRecoilState(likeState);
+    const [like, setLike] = useRecoilState(createLikeStateAtom(musicId));
 
     const handleLike = () => {
         setLike(!like);
