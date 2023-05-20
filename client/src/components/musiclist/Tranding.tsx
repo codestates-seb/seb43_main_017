@@ -1,69 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-// import { atom } from 'recoil';
-// import { useRecoilValue } from 'recoil';
-
-/* 2023.05.08 MusicList Tranding 타입 선언 - 홍혜란 */
-// interface TrandingData {
-//     index: number;
-//     albumCover: string;
-//     songTitle: string;
-//     artistName: string;
-// }
-
-// const TrList: TrandingData[] = [
-//     {
-//         index: 1,
-//         albumCover: '/assets/ditto.png',
-//         songTitle: 'Ditto',
-//         artistName: 'Newjeans',
-//     },
-//     {
-//         index: 2,
-//         albumCover: '/assets/ditto.png',
-//         songTitle: 'Ditto',
-//         artistName: 'Newjeans',
-//     },
-//     {
-//         index: 3,
-//         albumCover: '/assets/ditto.png',
-//         songTitle: 'Ditto',
-//         artistName: 'Newjeans',
-//     },
-//     {
-//         index: 4,
-//         albumCover: '/assets/ditto.png',
-//         songTitle: 'Ditto',
-//         artistName: 'Newjeans',
-//     },
-//     {
-//         index: 5,
-//         albumCover: '/assets/ditto.png',
-//         songTitle: 'Ditto',
-//         artistName: 'Newjeans',
-//     },
-//     {
-//         index: 6,
-//         albumCover: '/assets/ditto.png',
-//         songTitle: 'Ditto',
-//         artistName: 'Newjeans',
-//     },
-// ];
-
-/* 2023.05.08 MusicList Tranding 상태관리(추후 수정) - 홍혜란 */
-// const trListState = atom<TrandingData[]>({
-//     key: 'trListState',
-//     default: [],
-// });
-// const trList = useRecoilValue<TrandingData[]>(trListState);
 
 interface MusicData {
     musicId: number;
     musicName: string;
     artistName: string;
     albumName: string;
-    musicTime: number; // musicTime 속성을 숫자(number) 타입으로 수정합니다.
+    musicTime: number;
     albumCoverImg: string;
     musicUri: string;
     createdAt: string;
