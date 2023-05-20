@@ -90,3 +90,8 @@ export const showDownloadState = atom<boolean>({
     key: 'ShowDownloadState',
     default: false,
 });
+
+export const musicIdState = atom<string | undefined>({
+    key: 'musicIdState',
+    default: '',
+});
