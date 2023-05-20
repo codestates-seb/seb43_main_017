@@ -19,10 +19,6 @@ public class PlayListTag {
     private Long playListTagId;
 
     @ManyToOne
-    @JoinColumn(name = "MEMBER_ID")
-    private Member member;
-
-    @ManyToOne
     @JoinColumn(name = "PLAYLIST_ID")
     private PlayList playList;
 

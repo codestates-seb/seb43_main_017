@@ -5,7 +5,6 @@ import com.codestates.mainProject.playListTag.service.PlayListTagService;
 import com.codestates.mainProject.response.SingleResponseDto;
 import com.codestates.mainProject.security.auth.loginResolver.LoginMemberId;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +20,8 @@ public class PlayListTagController {
 
     @PostMapping("{tag-id}/playlists/{playlist-id}")
     public ResponseEntity createPlayListTag(@PathVariable("tag-id") long tagId,
-                                            @PathVariable("playlist-id") long playListId,
-                                            @LoginMemberId Long memberId) {
-        playListTagService.createPlayListTag(tagId, playListId, memberId);
+                                            @PathVariable("playlist-id") long playListId) {
+        playListTagService.createPlayListTag(tagId, playListId);
         return ResponseEntity.ok("플레이리스트 태그 생성 완료");
     }
 
@@ -38,7 +36,7 @@ public class PlayListTagController {
                                             @PathVariable("playlist-id") long playListId,
                                             @LoginMemberId Long memberId) {
         String tagName = playListTagService.findPlayListTag(tagId, playListId).getName();
-        playListTagService.deletePlayListTag(tagId,memberId,playListId);
+        playListTagService.deletePlayListTag(tagId, memberId, playListId);
         return ResponseEntity.ok("플레이리스트의 "+tagName+" 태그가 삭제되었습니다");
     }
 }

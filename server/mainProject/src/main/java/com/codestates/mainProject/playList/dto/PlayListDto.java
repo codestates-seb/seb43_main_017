@@ -19,8 +19,6 @@ public class PlayListDto {
 
         private String coverImg;
 
-        private List<String> tags;
-
     }
 
     @Getter
@@ -32,7 +30,6 @@ public class PlayListDto {
         @NotBlank
         private String body;
         private String coverImg;
-        private List<String> tags;
     }
 
     @Getter
