@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { commentOpenState, soundbarOpenState, downloadLink } from 'src/recoil/Atoms';
+import { commentOpenState, soundbarOpenState, downloadLink, showDownloadState } from 'src/recoil/Atoms';
 import { musicdetail } from 'src/types/Slider';
 import CommentViewer from 'src/components/musicdetail/CommentViewer';
 import Sidebutton from 'src/components/musicdetail/SideButton';
@@ -22,6 +22,7 @@ function MusicDetail() {
     const msId = useParams();
     const [commentOpen] = useRecoilState<boolean>(commentOpenState);
     const [, setSoundbarOpen] = useRecoilState<boolean>(soundbarOpenState);
+    const [, setShowDownlaod] = useRecoilState<boolean>(showDownloadState);
     const [formattedTime, setFormattedTime] = useState<number>(0);
     const [, setDownload] = useRecoilState<string>(downloadLink);
     const [msDetailData, setMsDetailData] = useState<musicdetail>({
@@ -38,6 +39,7 @@ function MusicDetail() {
 
     useEffect(() => {
         setSoundbarOpen(true);
+        setShowDownlaod(true);
         axios
             .get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/${msId.msId}`)
             .then(function (response) {
