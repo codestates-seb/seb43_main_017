@@ -5,7 +5,6 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { accessToken } from '@/recoil/Atoms';
 
 interface SideiconProps {
     musicId: number;
@@ -21,11 +20,10 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId }) => {
         const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
 
         axios
-            .get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/music-like/toggle`, {
-                params: {
-                    memberId: memberId,
-                    musicId: musicId,
-                },
+            .post(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/music-like/toggle`, {
+                memberId: memberId,
+                musicId: musicId,
+
                 headers: {
                     Authorization: token,
                 },
