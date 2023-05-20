@@ -9,6 +9,8 @@ function Taplist() {
     const [pldata, setPldata] = useState<PlcardProps[]>([]); //플리데이터 저장 스테이트
     const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
     const [totalPages, setTotalPages] = useState<number>(0); // 전체 페이지 수
+    const [searchText, setSearchText] = useState<string>(''); //서치 텍스트
+    console.log(searchText);
     const buttonArray = [];
 
     useEffect(() => {
@@ -27,6 +29,27 @@ function Taplist() {
                 console.error(error);
             });
     }, [currentPage]);
+
+    const handelPlSearch = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            // 엔터 키를 누르면 실행되는 코드 작성
+            console.log('성공적으로 검색을 완료했습니다.');
+            axios
+                .get(
+                    `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/search-by-title?title=${searchText}&page=${currentPage}&size=5`,
+                )
+                .then(function (response) {
+                    // 성공적으로 요청을 보낸 경우
+                    setPldata(response.data);
+                    console.log(response.data);
+                    setTotalPages(response.data.pageInfo.totalPages);
+                })
+                .catch(function (error) {
+                    // 요청 중에 오류가 발생한 경우
+                    console.error(error);
+                });
+        }
+    };
 
     /** 2023.05.17 전체 페이지 수 만큼 버튼 생성 - 김주비*/
     for (let i = 1; i <= totalPages; i++) {
@@ -51,7 +74,14 @@ function Taplist() {
 
     return (
         <TapGroup>
-            <Plsearch placeholder="제목을 검색해주세요" />
+            <Plsearch
+                placeholder="제목을 검색해주세요"
+                value={searchText}
+                onChange={(e) => {
+                    setSearchText(e.target.value);
+                }}
+                onKeyDown={handelPlSearch}
+            />
             <ul>
                 {pldata.map((data) => (
                     <TapList key={data.playListId}>
@@ -167,7 +197,7 @@ const TapList = styled.li`
     width: 70%;
     background-color: rgba(0, 0, 0, 0.5);
     border: 1px solid #494949;
-    border-radius: 50px;
+    border-radius: 10px;
     opacity: 0;
     animation: opacity 1s forwards;
     margin-top: 10px;
@@ -180,7 +210,7 @@ const TapList = styled.li`
 
     > div img {
         margin: 10px;
-        border-radius: 50px;
+        border-radius: 5px;
         transition: 0.2s ease-in-out;
         width: 40px;
         height: 40px;
