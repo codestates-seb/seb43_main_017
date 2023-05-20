@@ -27,6 +27,7 @@ public class TagController {
         TagDto.ResponseDto responseDto = new TagDto.ResponseDto();
         responseDto.setId(createdTag.getTagId());
         responseDto.setName(createdTag.getName());
+        responseDto.setCategory(createdTag.getCategory());
 
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
@@ -35,14 +36,15 @@ public class TagController {
     public ResponseEntity<List<TagDto.ResponseDto>> getTags() {
         List<Tag> tags = tagService.getTags();
 
-        List<TagDto.ResponseDto> responseDtoList = tags.stream()
-                .map(tag -> {
-                    TagDto.ResponseDto responseDto = new TagDto.ResponseDto();
-                    responseDto.setId(tag.getTagId());
-                    responseDto.setName(tag.getName());
-                    return responseDto;
-                }) .collect(Collectors.toList());
-        return ResponseEntity.ok(responseDtoList);
+        return ResponseEntity.ok(tagService.getTagResponses(tags));
+    }
+
+    @GetMapping("/{category}")
+    public ResponseEntity<List<TagDto.ResponseDto>> getTagsByCategory(@PathVariable("category") String category ){
+        List<Tag> tags = tagService.getTagsByCategory(category);
+
+        return ResponseEntity.ok(tagService.getTagResponses(tags));
+
     }
 
     @DeleteMapping("/{tag-id}")
