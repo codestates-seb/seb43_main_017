@@ -12,6 +12,8 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
     const [silderPage, setSliderPage] = useState<number>(3); //슬라이더 페이지 갯수
     const [width, setWidth] = useState<number>(window.innerWidth); //현재 창의 width 길이
 
+    console.log(currentSlideIndex);
+
     window.addEventListener('resize', () => {
         setWidth(window.innerWidth);
         // 변화된 width 값을 이용하여 필요한 작업 수행
@@ -35,16 +37,18 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
                 // 성공적으로 요청을 보낸 경우
                 // console.log(response.data.data);
                 setPldata(response.data.data);
+                setBgSrc(response.data.data[currentSlideIndex].coverImg);
             })
             .catch(function (error) {
                 // 요청 중에 오류가 발생한 경우
                 console.error(error);
             });
-    }, []);
+    }, [currentSlideIndex]);
 
     /**2023-05-07 커버이미지 데이터 전달 : 김주비 */
     // useEffect(() => {
-    //     setBgSrc(pldata[currentSlideIndex].coverImg);
+    //     // setBgSrc(pldata[currentSlideIndex].coverImg);
+    //     console.log(pldata[currentSlideIndex].coverImg);
     // }, [currentSlideIndex]);
 
     /**2023-05-07 플리 슬라이드 인덱스 : 김주비 */
@@ -88,11 +92,11 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
                             <div className="pl-contents">
                                 <Pltag>
                                     {data.tags.map((tag, index) => (
-                                        <li key={`tag-${index}`}></li>
+                                        <li key={`tag-${index}`}>{tag}</li>
                                     ))}
                                 </Pltag>
                                 <Pluser>
-                                    <span>WTITER</span>
+                                    <span>WRITER</span>
                                     <span>{data.createMember}</span>
                                     <span>LIKE</span>
                                     <span>{data.likeCount}</span>
