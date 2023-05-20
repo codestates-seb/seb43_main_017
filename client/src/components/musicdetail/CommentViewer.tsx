@@ -80,17 +80,14 @@ function CommentViewer() {
                 <CommentBox>
                     {comment.map((comment) => (
                         <li key={comment.id}>
-                            {nullImage ? (
-                                <img
-                                    src={comment.image}
-                                    alt="profile icon"
-                                    onError={() => {
-                                        setNullImage(true);
-                                    }}
-                                />
-                            ) : (
-                                <img src="/assets/profile-icon.png" alt="profile icon" />
-                            )}
+                            <img
+                                src={comment.image}
+                                alt="profile icon"
+                                onError={(e) => {
+                                    const target = e.target as HTMLImageElement;
+                                    target.src = '/assets/profile-icon.png';
+                                }}
+                            />
                             <div className="comment-contents">
                                 <span className="comment-user">{comment.name}</span>
                                 <span className="comment-text">{comment.content}</span>
