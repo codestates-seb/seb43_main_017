@@ -1,6 +1,5 @@
 package com.codestates.mainProject.tags.entity;
 
-import com.codestates.mainProject.member.entity.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,12 +18,6 @@ public class Tag {
     @Column(nullable = false)
     private String name;
 
-
     @Column(length = 20)
     private String category;
-
-
-
-
-
 }

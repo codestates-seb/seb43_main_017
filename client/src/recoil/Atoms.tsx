@@ -91,7 +91,14 @@ export const showDownloadState = atom<boolean>({
     default: false,
 });
 
+/* 2023.05.20 musicId 전역관리 - 김주비 */
 export const musicIdState = atom<string | undefined>({
     key: 'musicIdState',
     default: '',
+});
+
+/* 2023.05.20 서버요청 playlistComment url로 변경- 김주비 */
+export const playlistCommentState = atom<boolean>({
+    key: 'playlistCommentState',
+    default: false,
 });

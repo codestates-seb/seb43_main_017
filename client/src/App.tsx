@@ -48,6 +48,7 @@ function App() {
                                 localStorage.removeItem('username');
                                 localStorage.removeItem('useremail');
                                 localStorage.removeItem('usernickname');
+                                sessionStorage.setItem('index', '0');
                                 location.reload();
                                 window.location.href = '/';
                             }}

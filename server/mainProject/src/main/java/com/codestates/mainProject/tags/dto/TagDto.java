@@ -1,6 +1,5 @@
 package com.codestates.mainProject.tags.dto;
 
-import com.codestates.mainProject.tags.entity.Tag;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

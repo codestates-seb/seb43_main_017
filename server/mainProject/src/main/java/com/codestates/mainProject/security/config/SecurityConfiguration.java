@@ -139,6 +139,13 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.POST, "/tags/**").hasRole("ADMIN")
                         .antMatchers(HttpMethod.PATCH, "/tags/**").hasRole("ADMIN")
                         .antMatchers(HttpMethod.DELETE, "/tags/**").hasRole("ADMIN")
+
+
+                        // #playListTag 관련
+                        .antMatchers(HttpMethod.GET, "/playlist-tags/**").permitAll()
+                        .antMatchers(HttpMethod.POST, "/playlist-tags/**").hasAnyRole("USER", "ADMIN")
+                        .antMatchers(HttpMethod.DELETE, "/playlist-tags/**").hasAnyRole("USER", "ADMIN")
+
                         .anyRequest().permitAll()
 
                 )
