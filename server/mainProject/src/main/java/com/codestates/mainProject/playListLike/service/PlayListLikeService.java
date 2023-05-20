@@ -12,6 +12,8 @@ import com.codestates.mainProject.playList.service.PlayListService;
 import com.codestates.mainProject.playListLike.entity.PlayListLike;
 import com.codestates.mainProject.playListLike.repository.PlayListLikeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,13 +63,19 @@ public class PlayListLikeService {
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.PlAYLIST_LIKE_NOT_FOUND));
     }
 
-    // 모든 멤버, 플리 아이디 조회
-    public List<PlayListLike> getAllLikesForMemberAndPlayList(Long memberId, Long playListId) {
-        return playListLikeRepository.findByMemberMemberIdAndPlayListPlayListId(memberId, playListId);
-    }
-
     // {playlist-id} like 전체 조회
     public List<PlayListLike> getLikesByPlayListId(Long playListId){
         return playListLikeRepository.findByPlayListPlayListId(playListId);
+    }
+
+    // 유저 좋아요 여부
+    public Page<PlayListLike> getMemberLikes(long memberId, Pageable pageable) {
+        Member member = memberService.findMember(memberId);
+        return playListLikeRepository.findAllByMember(member, pageable);
+    }
+
+    // 모든 멤버, 플리 아이디 조회
+    public List<PlayListLike> getAllLikesForMemberAndPlayList(Long memberId, Long playListId) {
+        return playListLikeRepository.findByMemberMemberIdAndPlayListPlayListId(memberId, playListId);
     }
 }

@@ -19,6 +19,7 @@ export interface musicdetail {
     musicTime: number;
     albumCoverImg: string;
     musicUri: string;
+    musicTagName: [];
     createdAt: string;
     modifiedAt: string;
 }

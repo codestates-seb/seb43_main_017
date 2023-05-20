@@ -11,7 +11,6 @@ function Sidebutton() {
     const [ShowDownload] = useRecoilState<boolean>(showDownloadState);
     const [like, setLike] = useState<boolean>(false);
     const [download] = useRecoilState<string>(downloadLink);
-    console.log(download);
     return (
         <SidebtnGroup>
             <Button

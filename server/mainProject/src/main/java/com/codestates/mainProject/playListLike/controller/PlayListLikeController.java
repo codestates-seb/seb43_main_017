@@ -9,6 +9,8 @@ import com.codestates.mainProject.playListLike.service.PlayListLikeService;
 import com.codestates.mainProject.security.auth.loginResolver.LoginMemberId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -57,5 +60,17 @@ public class PlayListLikeController {
         List<PlayListLike> likes = playListLikeService.getLikesByPlayListId(playListId);
         List<LikeDto> responseDtoList = playListLikeMapper.playListLikesToResponses(likes);
         return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
+    }
+
+    @GetMapping("/members/{member-id}/like")
+    public ResponseEntity<List<LikeDto>> getMemberLikes (@PathVariable("member-id") Long memberId,
+                                                         Pageable pageable) {
+        Page<PlayListLike> playListLikes = playListLikeService.getMemberLikes(memberId, pageable);
+        List<LikeDto> response = playListLikes.getContent()
+                .stream()
+                .map(playListLikeMapper::playListLikeToResponse)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(response);
     }
 }
