@@ -27,7 +27,7 @@ export const PlaylistBackground = styled.article<url>`
     background: url(${(props) => props.url});
     filter: blur(60px);
     background-size: cover;
-    opacity: 0.2;
+    opacity: 0.4;
     animation: bgScale 10s infinite;
     @keyframes bgScale {
         50% {
