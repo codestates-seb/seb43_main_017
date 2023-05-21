@@ -1,12 +1,59 @@
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSetRecoilState } from 'recoil';
-import { soundbarOpenState } from 'src/recoil/Atoms';
+import { soundbarOpenState, videouploadState } from 'src/recoil/Atoms';
 import VideoUploader from './VideoUpdate';
-import MixingList from './MixingList';
+import LikedList from './LikedList';
+import { FaPlay, FaPause, FaVolumeUp, FaVolumeDown, FaVideoSlash } from 'react-icons/fa';
 
 function Mixing() {
     const setSoundbarOpen = useSetRecoilState<boolean>(soundbarOpenState);
+    const setVideoUploader = useSetRecoilState<boolean>(videouploadState);
+    let audioVolume = 0.5;
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const audioRef = useRef<HTMLAudioElement>(null);
+
+    const handleVideoPlay = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.preventDefault();
+        if (audioRef.current && videoRef.current) {
+            audioRef.current.play();
+            videoRef.current.play();
+        }
+    };
+
+    const handleVideoPause = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.preventDefault();
+        if (audioRef.current && videoRef.current) {
+            audioRef.current.pause();
+            videoRef.current.pause();
+        }
+    };
+
+    const handleAudioVolumeUp = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.preventDefault();
+
+        if (audioRef.current && audioVolume < 0.9) {
+            audioVolume += 0.1;
+            audioRef.current.volume = audioVolume;
+        } else if (audioVolume === 0.9) {
+            return alert('볼륨을 더이상 키울 수 없습니다.');
+        }
+    };
+
+    const handleAudioVolumeDawn = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.preventDefault();
+        if (audioRef.current && audioVolume > 0.1) {
+            audioVolume -= 0.1;
+            audioRef.current.volume = audioVolume;
+        } else if (audioVolume === 0.1) {
+            return alert('볼륨을 더이상 줄일 수 없습니다.');
+        }
+    };
+
+    const changeVideo = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.preventDefault();
+        setVideoUploader(false);
+    };
 
     /** 2023.05.16 사운드바 상태 변경 -김주비 */
     useEffect(() => {
@@ -18,16 +65,33 @@ function Mixing() {
             <MixingBackground></MixingBackground>
             <MixingHeader>
                 <Musiclist>
-                    <MixingList />
+                    <LikedList audioRef={audioRef} />
                 </Musiclist>
                 <div className="flex-center">
                     <MixingPage>
-                        <span className="mixing-title">MIXING</span>
+                        <span className="mixing-title">FITTING &nbsp; ROOM</span>
                     </MixingPage>
                     <Mixingtext>
                         <p className="mixing-text">Directly compare whether the sound source suits your video.</p>
                     </Mixingtext>
-                    <VideoUploader />
+                    <VideoUploader videoRef={videoRef} />
+                    <VideoBtnbar>
+                        <VideoBtn onClick={handleVideoPlay}>
+                            <FaPlay />
+                        </VideoBtn>
+                        <VideoBtn onClick={handleVideoPause}>
+                            <FaPause />
+                        </VideoBtn>
+                        <VideoBtn onClick={handleAudioVolumeUp}>
+                            <FaVolumeUp />
+                        </VideoBtn>
+                        <VideoBtn onClick={handleAudioVolumeDawn}>
+                            <FaVolumeDown />
+                        </VideoBtn>
+                        <VideoBtn onClick={changeVideo}>
+                            <FaVideoSlash />
+                        </VideoBtn>
+                    </VideoBtnbar>
                 </div>
             </MixingHeader>
         </MixingSection>
@@ -140,7 +204,35 @@ const Musiclist = styled.div`
     left: 100px;
     text-align: center;
     top: 0;
-    width: 300px;
     min-height: 100vh;
-    border: solid 0.5px red;
+    background: rgba(63, 59, 59, 0.25);
+    box-shadow: 0 8px 32px 0 rgba(113, 119, 207, 0.37);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+`;
+const VideoBtnbar = styled.div`
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+    width: 700px;
+    height: 80px;
+    box-shadow: 0 8px 32px 0 rgba(113, 119, 207, 0.37);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+`;
+const VideoBtn = styled.button`
+    outline: none;
+    border: none;
+    background: none;
+    margin: 5px 10px;
+    font-size: 35px;
+    color: #eaf2f9;
+    cursor: pointer;
+    &:hover {
+        color: #acd2f3;
+    }
 `;

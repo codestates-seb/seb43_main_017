@@ -45,7 +45,7 @@ function Navigate({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetSt
         {
             index: 3,
             name: <MdOutlineVideoSettings />,
-            link: '/mixing',
+            link: '/fittingroom',
         },
     ];
 
@@ -70,26 +70,26 @@ function Navigate({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetSt
                 <MenuIcon>
                     {token
                         ? menuIconlist.map((el, index) => (
-                              <Link to={el.link} key={el.index}>
-                                  <li
-                                      onClick={() => {
-                                          setSelectIndex(el.index);
-                                      }}
-                                      className={localIndex === String(index) ? 'click-icon' : 'null'}
-                                  >
-                                      {el.name}
-                                  </li>
+                              <Link
+                                  to={el.link}
+                                  key={el.index}
+                                  onClick={() => {
+                                      setSelectIndex(el.index);
+                                  }}
+                              >
+                                  <li className={localIndex === String(index) ? 'click-icon' : 'null'}>{el.name}</li>
                               </Link>
                           ))
                         : menuIconlist.map((el, index) =>
                               el.index !== 3 ? (
-                                  <Link to={el.link} key={el.index}>
-                                      <li
-                                          onClick={() => {
-                                              setSelectIndex(el.index);
-                                          }}
-                                          className={localIndex === String(index) ? 'click-icon' : 'null'}
-                                      >
+                                  <Link
+                                      to={el.link}
+                                      key={el.index}
+                                      onClick={() => {
+                                          setSelectIndex(el.index);
+                                      }}
+                                  >
+                                      <li className={localIndex === String(index) ? 'click-icon' : 'null'}>
                                           {el.name}
                                       </li>
                                   </Link>
@@ -113,13 +113,14 @@ function Navigate({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetSt
                 </Dotsstyle>
                 {token ? (
                     <ProfileIcon>
-                        <Link to="/mypage">
-                            <span
-                                onClick={() => {
-                                    setClick(!click);
-                                    setSelectIndex(4);
-                                }}
-                            >
+                        <Link
+                            to="/mypage"
+                            onClick={() => {
+                                setClick(!click);
+                                setSelectIndex(4);
+                            }}
+                        >
+                            <span>
                                 {userimg ? (
                                     <img src={userimg} alt="profile icon" className={click ? 'img-active' : 'null'} />
                                 ) : (
@@ -216,6 +217,7 @@ const MenuIcon = styled.ul`
     a {
         color: #9b9b9b;
         transition: 0.3s ease-in-out;
+        border-radius: 40px;
     }
     a:hover {
         color: #fff;

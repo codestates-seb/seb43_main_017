@@ -83,7 +83,7 @@ function PlaylistDetail() {
                         <li>CREATE</li>
                         <li>{plDetailData.createMember}</li>
                         <li>ALBUM</li>
-                        <li>정보없음</li>
+                        <li>No album</li>
                     </MusicInfo>
                     <MusicText>
                         <span>{plDetailData.body}</span>

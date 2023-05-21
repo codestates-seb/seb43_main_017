@@ -17,7 +17,8 @@ function CommentViewer() {
     const memberId = localStorage.getItem('memberId');
     const url: string = playlistComment ? `/playlist-comments/` : `/music-comments/musics/`;
 
-    const handelCommentWriting = () => {
+    const handelCommentWriting = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
         if (token) {
             if (commentText.length === 0) {
                 alert('내용을 작성해주세요.');
@@ -79,7 +80,7 @@ function CommentViewer() {
     return (
         <CommentViewerGroup>
             <div className="ViewerGroup">
-                <div className="comment-input">
+                <form onSubmit={handelCommentWriting} className="comment-input">
                     <CommentInput
                         type="text"
                         placeholder="코멘트를 작성해주세요"
@@ -87,9 +88,10 @@ function CommentViewer() {
                         onChange={(e) => {
                             setCommentText(e.target.value);
                         }}
-                    />{' '}
-                    <button onClick={handelCommentWriting}>작성</button>
-                </div>
+                    />
+                    <button type="submit">제출</button>
+                </form>
+
                 <CommentBox>
                     {comment.map((comment) => (
                         <li key={comment.id}>
