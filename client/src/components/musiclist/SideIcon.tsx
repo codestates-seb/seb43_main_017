@@ -43,7 +43,6 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId }) => {
                 },
             )
             .then((response) => {
-                console.log(response.data);
                 const updatedMusicId = response.data.musicId;
                 setLike(updatedMusicId === musicId);
             })
