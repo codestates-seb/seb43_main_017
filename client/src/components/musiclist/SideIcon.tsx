@@ -77,7 +77,7 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId }) => {
                 <FiPlayCircle className="color-blue" />
             </Link>
             <FiFolderPlus />
-            <a href={`/music/${download}`} download>
+            <a href={`/assest/music/${download}`} download>
                 <MdFileDownload />
             </a>
             {like ? (
