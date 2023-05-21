@@ -69,7 +69,7 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId }) => {
             .catch((error) => {
                 console.error(error);
             });
-    }, [setLike]);
+    }, [like]);
 
     return (
         <MusicIconGroup>
