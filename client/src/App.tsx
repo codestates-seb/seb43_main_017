@@ -115,7 +115,7 @@ export default App;
 const MainSection = styled.section`
     width: 100%;
     min-height: 100vh;
-    background-color: #222;
+    background-color: #1b1b1b;
 `;
 /**2023-05-05 네비게이션 컴포넌트: 김주비*/
 const NavSection = styled.section`

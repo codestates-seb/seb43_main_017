@@ -4,6 +4,7 @@ import styled from 'styled-components';
 export const DetailGroup = styled.section`
     position: relative;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
@@ -24,13 +25,13 @@ export const PlaylistBackground = styled.article<url>`
     width: 100%;
     min-height: 100vh;
     background: url(${(props) => props.url});
-    filter: blur(10px);
+    filter: blur(60px);
     background-size: cover;
     opacity: 0.2;
-    animation: bgScale 20s infinite;
+    animation: bgScale 10s infinite;
     @keyframes bgScale {
         50% {
-            transform: scale(1.2);
+            transform: scale(1.4);
         }
     }
 `;
@@ -45,18 +46,28 @@ export const DetailSection = styled.div`
     height: 100%;
     z-index: 2;
 `;
+export const AlbumHeader = styled.div<url>`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    height: 200px;
+    border: 1px solid red;
+    background: url(${(props) => props.url});
+`;
 /**2023-05-09 rotate 레코드 : 김주비 */
 export const AlbumRecode = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
     position: absolute;
-    top: -250px;
-    width: 500px;
-    height: 500px;
+    top: -200px;
+    width: 400px;
+    height: 400px;
     background: url('/assets/background-detail-recode.png');
     background-size: cover;
-    opacity: 0.6;
+    opacity: 0.7;
     animation: roundingrecode 10s infinite linear;
     img {
         width: 200px;
