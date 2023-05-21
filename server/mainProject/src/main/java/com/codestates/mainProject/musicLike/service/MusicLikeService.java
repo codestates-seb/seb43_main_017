@@ -44,6 +44,7 @@ public class MusicLikeService {
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MUSIC_NOT_FOUND));
 
         List<MusicLike> musicLikes = music.getMusicLikes();
+        List<MusicTag> musicTags = music.getMusicTags();
 
         Optional<MusicLike> optionalMusicLike = musicLikes.stream()
                 .filter(musiclike -> musiclike.getMember().getMemberId().equals(memberId))
@@ -58,6 +59,11 @@ public class MusicLikeService {
 
             validateMusicLikeAuthorOrAdmin(memberId, musicLike);
             music.removeMusicLike(musicLike);
+
+            for(MusicTag musicTag : musicTags ){
+                memberMusicTagService.deleteMemberMusicTag(memberId,musicTag.getMusicTagId());  //music에 있는 musicTag들을 memberMusicTag에서 모두지움
+            }
+
             musicLikeRepository.delete(musicLike);
 
             responseDto.setMessage("좋아요가 취소되었습니다.");
@@ -65,6 +71,10 @@ public class MusicLikeService {
             MusicLike musicLike = new MusicLike(member, music);
             music.addMusicLike(musicLike);
             MusicLike savedMusicLike = musicLikeRepository.save(musicLike);
+
+            for(MusicTag musicTag : musicTags ){
+                memberMusicTagService.createMemberMusicTag(memberId,musicTag.getMusicTagId()); //music에 있는 musicTag들을 memberMusicTag에서 모두생성
+            }
 
             responseDto.setMusicLikeId(savedMusicLike.getMusicLikeId());
             responseDto.setMessage("좋아요가 생성되었습니다.");

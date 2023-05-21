@@ -290,9 +290,12 @@ public class MemberService {
             for (Long tagId : sortedTags) {
                 List<MusicTag> musicTags = musicTagRepository.findByTagTagIdOrderByMusicMusicLikeCountDesc(tagId).orElse(new ArrayList<>());
                 for (MusicTag musicTag : musicTags) {
-                    recommendedMusics.add(musicTag.getMusic());
-                    if (recommendedMusics.size() >= 6) {
-                        break;
+                    Music music = musicTag.getMusic();
+                    if(!recommendedMusics.contains(music)) {         //이미 들어가 있는 음악이 있을 경우 추가x
+                        recommendedMusics.add(music);
+                        if (recommendedMusics.size() >= 6) {
+                            break;
+                        }
                     }
                 }
                 if (recommendedMusics.size() >= 6) {
