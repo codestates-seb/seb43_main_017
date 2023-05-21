@@ -15,52 +15,50 @@ interface SideiconProps {
 const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
     const [like, setLike] = useState<boolean>(false);
 
-    const memberId: string | undefined = window.localStorage.getItem('memberId') || undefined;
+    // const memberId: string | undefined = window.localStorage.getItem('memberId') || undefined;
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
 
     const handleLike = () => {
         if (!token) {
-            return;
-        }
-
-        const updatedLike = !like; // 새로운 like 상태
-
-        setLike(updatedLike); // 먼저 상태 업데이트
-
-        axios
-            .post(
-                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/music-like/toggle`,
-                {
-                    memberId: memberId,
-                    musicId: musicId,
-                },
-                {
-                    headers: {
-                        Authorization: token,
+            console.log('로그인을 진행해주세요');
+        } else {
+            const updatedLike = !like; // 새로운 like 상태
+            setLike(updatedLike); // 먼저 상태 업데이트
+            axios
+                .post(
+                    `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/music-like/toggle`,
+                    {
+                        musicId: musicId,
                     },
-                },
-            )
-            .then((response) => {
-                const updatedMusicId = response.data.musicId;
-                setLike(updatedMusicId === musicId);
-            });
+                    {
+                        headers: {
+                            Authorization: token,
+                        },
+                    },
+                )
+                .then((response) => {
+                    setLike(response.data.musicId === musicId);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
     };
 
     useEffect(() => {
-        axios
-            .get('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/liked-musics', {
-                headers: {
-                    Authorization: token,
-                },
-            })
-            .then((response) => {
-                const data = response.data.data;
-                const likedMusicIds = data.map((item: { musicId: number }) => item.musicId);
-                setLike(likedMusicIds.includes(musicId));
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+        if (token) {
+            axios
+                .get('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/liked-musics', {
+                    headers: {
+                        Authorization: token,
+                    },
+                })
+                .then((response) => {
+                    const data = response.data.data;
+                    const likedMusicIds = data.map((item: { musicId: number }) => item.musicId);
+                    setLike(likedMusicIds.includes(musicId));
+                });
+        }
     }, [like]);
 
     return (
