@@ -107,6 +107,12 @@ public class MemberContorller {
         List<Music> response = memberService.getRecommendMusics(memberId);
         List<MusicDto.ResponseDto> responses= musicMapper.musicsToResponses(response);
 
+        for(int i=0; i< response.size(); i++) {
+            Music music = response.get(i);
+            List<String> tagName = music.getTagsName();
+            responses.get(i).setMusicTagName(tagName);
+        }
+
         return new ResponseEntity<>(
                 new DataResponseDto<>(responses), HttpStatus.OK);
     }
