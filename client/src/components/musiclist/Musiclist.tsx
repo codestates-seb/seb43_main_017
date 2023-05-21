@@ -13,6 +13,7 @@ import { musicDataListState } from 'src/recoil/Atoms';
 
 const Musiclist = () => {
     const [musicDataList, setMusicDataList] = useRecoilState(musicDataListState);
+
     const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
     const [totalPages, setTotalPages] = useState<number>(0); // 전체 페이지 수
     const [openSearch, setOpenSearch] = useRecoilState<boolean>(showSearch);
@@ -115,7 +116,7 @@ const Musiclist = () => {
                                 <li className="music-time color-gray">
                                     {formatSecondsToTime(Number(musicData.musicTime))}
                                 </li>
-                                <Sideicon />
+                                <Sideicon musicId={musicData.musicId} />
                             </Item>
                         ))}
                     </SongContainer>
