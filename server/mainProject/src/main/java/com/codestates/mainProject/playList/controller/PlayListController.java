@@ -57,10 +57,9 @@ public class PlayListController {
 
     // 관리자 플레이리스트 전체 조회
     @GetMapping("/admin")
-    public ResponseEntity findAdminsPlayLists(@LoginMemberId Long memberId,
-                                              @Positive @RequestParam(value = "page", defaultValue = "1") int page,
+    public ResponseEntity findAdminsPlayLists(@Positive @RequestParam(value = "page", defaultValue = "1") int page,
                                               @Positive @RequestParam(value = "size", defaultValue = "5") int size){
-        Page<PlayList> pagePlayList = playListService.findAdminsPlayLists(memberId, page-1, size);
+        Page<PlayList> pagePlayList = playListService.findAdminsPlayLists(1, page-1, size);
         List<PlayListDto.ResponseDto> response = playListMapper.playListsToResponses(pagePlayList.getContent());
 
         return ResponseEntity.ok(new MultiResponseDto<>(response, pagePlayList));
