@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import {
     commentOpenState,
-    soundbarOpenState,
+    // soundbarOpenState,
     downloadLink,
     showDownloadState,
     musicIdState,
@@ -24,11 +24,12 @@ import {
     MusicInfo,
     MusicText,
 } from 'src/components/musicdetail/style/DetailStyle';
+import MusicPlayer from 'src/components/soundbar/SoundBar';
 
 function MusicDetail() {
     const msId = useParams();
     const [commentOpen] = useRecoilState<boolean>(commentOpenState);
-    const [, setSoundbarOpen] = useRecoilState<boolean>(soundbarOpenState);
+    // const [, setSoundbarOpen] = useRecoilState<boolean>(soundbarOpenState);
     const [, setShowDownlaod] = useRecoilState<boolean>(showDownloadState);
     const [, setPlaylistComment] = useRecoilState<boolean>(playlistCommentState);
     const [formattedTime, setFormattedTime] = useState<number>(0);
@@ -48,7 +49,7 @@ function MusicDetail() {
     });
 
     useEffect(() => {
-        setSoundbarOpen(true);
+        // setSoundbarOpen(true);
         setShowDownlaod(true);
         setPlaylistComment(false);
         setMusicId(msId.msId);
@@ -106,6 +107,7 @@ function MusicDetail() {
                     </MusicText>
                 </MusicContents>
                 <Sidebutton />
+                <MusicPlayer />
             </DetailSection>
         </DetailGroup>
     );

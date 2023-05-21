@@ -34,7 +34,7 @@ public class SearchController {
     @GetMapping("/musics/search-by-keyword")
     public ResponseEntity<PageConverter.PageInfo<MusicDto.ResponseDto>> findMusicByKeyword(@RequestParam String keyword,
                                                                                            @Positive @RequestParam(value = "page", defaultValue = "1") int page,
-                                                                                           @Positive @RequestParam(value = "size", defaultValue = "5") int size) {
+                                                                                           @Positive @RequestParam(value = "size", defaultValue = "10") int size) {
         PageRequest pageRequest = PageRequest.of(page - 1, size);
         Page<MusicDto.ResponseDto> musics = searchService.findMusicByKeyword(keyword, pageRequest);
 
@@ -46,7 +46,7 @@ public class SearchController {
     @GetMapping("/playlists/search-by-title")
     public ResponseEntity<PageConverter.PageInfo<PlayListDto.ResponseDto>> findPlayListByTitle(@RequestParam String title,
                                                                              @Positive @RequestParam(value = "page", defaultValue = "1") int page,
-                                                                             @Positive @RequestParam(value = "size", defaultValue = "5") int size) {
+                                                                             @Positive @RequestParam(value = "size", defaultValue = "10") int size) {
         PageRequest pageRequest = PageRequest.of(page - 1, size);
         Page<PlayListDto.ResponseDto> playlists = searchService.findPlayListByTitle(title, pageRequest);
 
@@ -58,7 +58,7 @@ public class SearchController {
     @GetMapping("/musics/search-by-tags")
     public ResponseEntity<PageConverter.PageInfo<MusicDto.ResponseDto>> getMusicByTags(@RequestParam List<String> tags,
                                                                      @Positive @RequestParam(value = "page", defaultValue = "1") int page,
-                                                                     @Positive @RequestParam(value = "size", defaultValue = "5") int size) {
+                                                                     @Positive @RequestParam(value = "size", defaultValue = "10") int size) {
         PageRequest pageRequest = PageRequest.of(page - 1, size);
         Page<MusicDto.ResponseDto> musics = searchService.findMusicByTags(tags, pageRequest);
 
