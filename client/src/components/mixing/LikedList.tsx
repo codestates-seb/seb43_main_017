@@ -32,6 +32,7 @@ interface LikedListProps {
  */
 
 const LikedList = ({ audioRef }: LikedListProps) => {
+    const [MusicTitle, setMusicTitle] = useState<string>('');
     const [currentMusic, setCurrentMusic] = useState<boolean>(false);
     const [audioControl, setAudioControl] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
@@ -128,19 +129,20 @@ const LikedList = ({ audioRef }: LikedListProps) => {
                         <AddMusic
                             onClick={() => {
                                 handleSongClick(likedata.musicUri, likedata.musicName);
-                                setCurrentMusic(!currentMusic);
+                                setCurrentMusic(true);
+                                setMusicTitle(likedata.musicName);
                             }}
                         >
                             <AiOutlinePlus />
                         </AddMusic>
                     </LikeList>
-                    {currentMusic && (
-                        <CurrentMusic>
-                            현재 곡은 <span>"{likedata.musicName}"</span>입니다.
-                        </CurrentMusic>
-                    )}
                 </>
             ))}
+            {currentMusic && (
+                <CurrentMusic>
+                    현재 곡은 <span>"{MusicTitle}"</span>입니다.
+                </CurrentMusic>
+            )}
             {audioControl && (
                 <audio
                     ref={audioRef}
