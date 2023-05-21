@@ -21,7 +21,7 @@ function Mypage() {
                                     {userimg ? (
                                         <img src={userimg} alt={usernickname} />
                                     ) : (
-                                        <img src="./assets/ditto.png" alt="userImg" />
+                                        <img src="./assets/profile-icon.png" alt="userImg" />
                                     )}
                                 </div>
 
@@ -33,7 +33,7 @@ function Mypage() {
                         ) : (
                             <div>
                                 <div className="user-profile">
-                                    <img src="./assets/ditto.png" alt="userImg" />
+                                    <img src="./assets/profile-icon.png" alt="userImg" />
                                 </div>
                                 <UserContainer>
                                     <div className="user-name">Undefined</div>

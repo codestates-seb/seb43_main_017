@@ -5,6 +5,8 @@ import com.codestates.mainProject.music.dto.MusicDto;
 import com.codestates.mainProject.music.entity.Music;
 import com.codestates.mainProject.music.mapper.MusicMapper;
 import com.codestates.mainProject.music.service.MusicService;
+import com.codestates.mainProject.playList.dto.PlayListDto;
+import com.codestates.mainProject.playList.entity.PlayList;
 import com.codestates.mainProject.playList.service.PlayListService;
 import com.codestates.mainProject.response.MultiResponseDto;
 import com.codestates.mainProject.response.SingleResponseDto;
@@ -61,7 +63,7 @@ public class MusicController {
     // 음악 전체 조회
     @GetMapping
     public ResponseEntity getMusics(@Positive @RequestParam(value = "page", defaultValue = "1") int page,
-                                    @Positive @RequestParam(value = "size", defaultValue = "20") int size){
+                                    @Positive @RequestParam(value = "size", defaultValue = "10") int size){
         Page<Music> pageMusic = musicService.findAllMusic(page - 1 , size);
         List<Music> musics = pageMusic.getContent();
         List<MusicDto.ResponseDto> response = mapper.musicsToResponses(musics);
@@ -81,7 +83,7 @@ public class MusicController {
     @GetMapping("/liked-musics")
     public ResponseEntity getLikedMusics(@LoginMemberId Long memberId,
                                          @Positive @RequestParam(value = "page", defaultValue = "1") int page,
-                                         @Positive @RequestParam(value = "size", defaultValue = "20") int size) {
+                                         @Positive @RequestParam(value = "size", defaultValue = "10") int size) {
 
         Page<Music> likedMusics = memberService.findLikedMusics(memberId, page - 1, size);
         List<Music> musics = likedMusics.getContent();
@@ -112,14 +114,36 @@ public class MusicController {
 
     // 최신순 음악 조회
     @GetMapping("/order-by-created-at")
-    public ResponseEntity<List<MusicDto.OrderResponseDto>> getMusicsOrderByCreatedAt() {
-        return ResponseEntity.ok(musicService.getMusicsOrderByCreatedAt());
+    public ResponseEntity getOrderByCreatedAt(@Positive @RequestParam(value = "page", defaultValue = "1") int page,
+                                              @Positive @RequestParam(value = "size", defaultValue = "5") int size) {
+        Page<Music> pageMusics = musicService.toggleCreatedAtOrder(page - 1, size);
+        List<Music> musics = pageMusics.getContent();
+        List<MusicDto.ResponseDto> response = mapper.musicsToResponses(pageMusics.getContent());
+
+        for(int i=0; i< musics.size(); i++) {
+            Music music = musics.get(i);
+            List<String> tagName = music.getTagsName();
+            response.get(i).setMusicTagName(tagName);
+        }
+
+        return ResponseEntity.ok(new MultiResponseDto<>(response, pageMusics));
     }
 
     // 좋아요순 음악 조회
     @GetMapping("/order-by-like-count")
-    public ResponseEntity<List<MusicDto.OrderResponseDto>> getOrderByLikeCount() {
-        return ResponseEntity.ok(musicService.toggleLikeCountOrder());
+    public ResponseEntity getOrderByLikeCount(@Positive @RequestParam(value = "page", defaultValue = "1") int page,
+                                              @Positive @RequestParam(value = "size", defaultValue = "10") int size) {
+        Page<Music> pageMusics = musicService.toggleLikeCountOrder(page - 1 , size);
+        List<Music> musics = pageMusics.getContent();
+        List<MusicDto.ResponseDto> response = mapper.musicsToResponses(pageMusics.getContent());
+
+        for(int i=0; i< musics.size(); i++) {
+            Music music = musics.get(i);
+            List<String> tagName = music.getTagsName();
+            response.get(i).setMusicTagName(tagName);
+        }
+
+        return ResponseEntity.ok(new MultiResponseDto<>(response, pageMusics));
     }
 
     // 음악 수정
