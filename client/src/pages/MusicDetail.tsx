@@ -81,16 +81,15 @@ function MusicDetail() {
         <DetailGroup>
             {commentOpen ? <CommentViewer></CommentViewer> : null}
             <PlaylistBackground url={msDetailData.albumCoverImg}></PlaylistBackground>
-            <AlbumRecode>
-                <img src={msDetailData.albumCoverImg} />
-            </AlbumRecode>
             <DetailSection>
-                <MusicContents>
-                    <MusicTags>
+                <AlbumRecode url={msDetailData.albumCoverImg}>
+                    {/* <MusicTags>
                         {msDetailData.musicTagName.map((tag) => (
                             <li>{tag}</li>
                         ))}
-                    </MusicTags>
+                    </MusicTags> */}
+                </AlbumRecode>
+                <MusicContents>
                     <MusicTitle>
                         <span>{msDetailData.musicName}</span>
                     </MusicTitle>
