@@ -19,7 +19,7 @@ function RoutingPages() {
             <Route path="/playlsit/:plId" element={<PlaylistDetail />} />
             <Route path="/musiclist" element={<Musiclist />} />
             <Route path="/musiclist/:msId" element={<MusicDetail />} />
-            <Route path="/mixing" element={<Mixing />} />
+            <Route path="/fittingroom" element={<Mixing />} />
             <Route path="/mypage" element={<Mypage />} />
             <Route path="/oauthloading" element={<Loading />} />
         </Routes>
