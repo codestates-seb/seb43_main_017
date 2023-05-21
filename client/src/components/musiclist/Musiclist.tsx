@@ -10,6 +10,7 @@ import { BiSearch } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
 import { MusicDataResponse } from 'src/types/Musiclist';
 import { musicDataListState } from 'src/recoil/Atoms';
+// import { AiOutlineArrowUp, AiOutlineArrowDown } from 'react-icons/ai';
 
 const Musiclist = () => {
     const [musicDataList, setMusicDataList] = useRecoilState(musicDataListState);
@@ -20,6 +21,22 @@ const Musiclist = () => {
     const [tapClick, setTapClick] = useState<number>(0);
     const buttonArray = [];
 
+    const showSearchResult = (searchText: string) => {
+        axios
+            .get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/search-by-keyword`, {
+                params: {
+                    keyword: searchText,
+                },
+            })
+            .then((response) => {
+                setMusicDataList(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
+
+    /* 2023.05.21 뮤직리스트 출력 */
     useEffect(() => {
         axios
             .get<MusicDataResponse>(
@@ -68,7 +85,7 @@ const Musiclist = () => {
             <BackgroundCover></BackgroundCover>
             <MusiclistContainer>
                 <TagContainer className={openSearch ? 'open-search' : ''}>
-                    <Categories />
+                    <Categories showSearchResult={showSearchResult} />
                 </TagContainer>
                 <RightContainer>
                     <SearchOpen
@@ -102,6 +119,24 @@ const Musiclist = () => {
                         </div>
                     </MusicListTitle>
                     <SongContainer>
+                        {/* {searchMusic.map((musicData) => (
+                            <Item key={musicData.musicId}>
+                                <li className="music-image">
+                                    <img src={musicData.albumCoverImg} alt={musicData.musicName} />
+                                </li>
+                                <li className="music-name">
+                                    <Link to={`/musiclist/${musicData.musicId}`}>{musicData.musicName}</Link>
+                                </li>
+                                <li className="music-artist color-gray">{musicData.artistName}</li>
+                                <li className="music-album color-gray">{musicData.albumName}</li>
+                                <li>{musicData.musicTagName}</li>
+                                <li className="music-time color-gray">
+                                    {formatSecondsToTime(Number(musicData.musicTime))}
+                                </li>
+                                <Sideicon musicId={musicData.musicId} />
+                            </Item>
+                        ))} */}
+
                         {musicDataList.map((musicData) => (
                             <Item key={musicData.musicId}>
                                 <li className="music-image">
@@ -112,7 +147,7 @@ const Musiclist = () => {
                                 </li>
                                 <li className="music-artist color-gray">{musicData.artistName}</li>
                                 <li className="music-album color-gray">{musicData.albumName}</li>
-                                <li>{musicData.tags}</li>
+                                <li>{musicData.musicTagName}</li>
                                 <li className="music-time color-gray">
                                     {formatSecondsToTime(Number(musicData.musicTime))}
                                 </li>

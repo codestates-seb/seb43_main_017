@@ -25,7 +25,9 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId }) => {
             return;
         }
 
-        setLike(!like);
+        const updatedLike = !like; // 새로운 like 상태
+
+        setLike(updatedLike); // 먼저 상태 업데이트
 
         axios
             .post(
@@ -47,6 +49,7 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId }) => {
             })
             .catch((error) => {
                 console.error(error);
+                setLike(!updatedLike);
             });
     };
 

@@ -13,7 +13,6 @@ type PlayData = {
     playListId: number;
     imgSrc: string;
     name: string;
-    time: string;
     vote: number;
 };
 
@@ -23,21 +22,18 @@ const MyPlay: PlayData[] = [
         playListId: 0,
         imgSrc: './assets/ditto.png',
         name: '나만의 플레이리스트',
-        time: '2023.05.04',
         vote: 13,
     },
     {
         playListId: 1,
         imgSrc: './assets/ditto.png',
         name: '나만의 플레이리스트',
-        time: '2023.05.04',
         vote: 13,
     },
     {
         playListId: 2,
         imgSrc: './assets/ditto.png',
         name: '나만의 플레이리스트',
-        time: '2023.05.04',
         vote: 13,
     },
 ];
@@ -85,7 +81,6 @@ const Myplaylist = () => {
                 <div className="playlist-list">
                     <img src={data.imgSrc} alt="musicimg" />
                     <li>{data.name}</li>
-                    <li>{data.time}</li>
                     <div className="playlist-vote-icon">
                         <AiFillHeart />
                         {data.vote}

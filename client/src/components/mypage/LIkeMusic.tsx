@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { HiHeart } from 'react-icons/hi';
+import { HiHeart, HiOutlineHeart } from 'react-icons/hi';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 
@@ -71,6 +71,61 @@ const LikeMusic = () => {
         setCurrentPage(currentPage - 1);
     };
 
+    // const [like, setLike] = useState<boolean>(false);
+
+    // const memberId: string | undefined = window.localStorage.getItem('memberId') || undefined;
+
+    // const handleLike = () => {
+    //     if (!token) {
+    //         return;
+    //     }
+
+    //     const updatedLike = !like; // 새로운 like 상태
+
+    //     setLike(updatedLike); // 먼저 상태 업데이트
+
+    //     axios
+    //         .post(
+    //             `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/music-like/toggle`,
+    //             {
+    //                 memberId: memberId,
+    //                 musicId: musicId,
+    //             },
+    //             {
+    //                 headers: {
+    //                     Authorization: token,
+    //                 },
+    //             },
+    //         )
+    //         .then((response) => {
+    //             console.log(response.data);
+    //             const updatedMusicId = response.data.musicId;
+    //             setLike(updatedMusicId === musicId);
+    //         })
+    //         .catch((error) => {
+    //             console.error(error);
+    //             setLike(!updatedLike);
+    //         });
+    // };
+
+    // useEffect(() => {
+    //     axios
+    //         .get('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/liked-musics', {
+    //             headers: {
+    //                 Authorization: token,
+    //             },
+    //         })
+    //         .then((response) => {
+    //             const data = response.data.data;
+    //             const likedMusicIds = data.map((item: { musicId: number }) => item.musicId);
+    //             setLike(likedMusicIds.includes(musicId));
+    //             console.log(data);
+    //         })
+    //         .catch((error) => {
+    //             console.error(error);
+    //         });
+    // }, [setLike]);
+
     return (
         <LikeContainer>
             <LikeTitle>
@@ -78,6 +133,15 @@ const LikeMusic = () => {
                     <HiHeart />
                     <p>LIKE MUSIC</p>
                 </div>
+                <Pagination>
+                    <button disabled={currentPage === 1} onClick={handlePrevPage}>
+                        Prev
+                    </button>
+                    {buttonArray}
+                    <button disabled={currentPage === totalPages} onClick={handleNextPage}>
+                        Next
+                    </button>
+                </Pagination>
             </LikeTitle>
             {likedMusic.map((likedata) => (
                 <LikeList>
@@ -85,6 +149,14 @@ const LikeMusic = () => {
                     <li>{likedata.musicName}</li>
                     <li>{likedata.artistName}</li>
                     <li>{likedata.albumName}</li>
+                    <div className="music-icon">
+                        <HiHeart />
+                        {/* {like ? (
+                            <HiHeart onClick={handleLike} className="color-red like-action" />
+                        ) : (
+                            <HiOutlineHeart onClick={handleLike} className="color-red" />
+                        )} */}
+                    </div>
                 </LikeList>
             ))}
             <Pagination>
@@ -120,6 +192,7 @@ const LikeTitle = styled.div`
     display: flex;
     align-items: center;
     flex-direction: row;
+    justify-content: space-between;
     margin-bottom: 10px;
 
     .vote-icon {
@@ -171,7 +244,7 @@ const Pagination = styled.div`
         background: none;
         border: 1px solid #5a5a5a;
         border-radius: 3px;
-        margin: 40px 3px;
+        margin: 0px 3px;
         transition: 0.2s ease-in-out;
         cursor: pointer;
     }
