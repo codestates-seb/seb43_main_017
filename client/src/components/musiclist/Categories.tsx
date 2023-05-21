@@ -6,6 +6,10 @@ import { selectedTagsState, showSearch } from 'src/recoil/Atoms';
 import { MdTransitEnterexit } from 'react-icons/md';
 import Search from './Search';
 
+interface CategoryProps {
+    showSearchResult: (searchText: string) => void;
+}
+
 /* 2023.05.07 카테고리 타입, 종류 선언 - 홍혜란 */
 export type Category = {
     index: number;
@@ -31,7 +35,7 @@ export const categories: Category[] = [
     },
 ];
 
-const Categories = () => {
+const Categories = ({ showSearchResult }: CategoryProps) => {
     /* 2023.05.07 Category 클릭 시  subCategories 오픈 - 홍혜란 */
     const [openCategory, setOpenCategory] = useState('');
     const [index, setIndex] = useState(0);
@@ -63,7 +67,7 @@ const Categories = () => {
     return (
         <CateTagContainer>
             <CategoryContainer>
-                <Search />
+                <Search showSearchResult={showSearchResult} />
                 {/* 2023.05.07 큰 카테고리에서 작은 카테고리를 보여주는 CategoryContainer - 홍혜란 */}
                 {categories.map((category, i) => (
                     <div key={category.name}>

@@ -5,11 +5,13 @@ export interface MusicData {
     artistName: string;
     albumName: string;
     musicTime: number;
-    tags: string;
+    musicTagName: string[];
     albumCoverImg: string;
     musicUri: string;
     createdAt: string;
     modifiedAt: string;
+    musicLikeCount: number;
+    memberId: number;
 }
 
 export interface MusicDataResponse {
@@ -22,21 +24,17 @@ export interface MusicDataResponse {
     };
 }
 
-export interface LikeMusicList {
-    albumCoverImg: string;
-    albumName: string;
-    artistName: string;
-    createdAt: string;
-    memberId: number;
-    modifiedAt: string;
-    musicId: number;
-    musicLikeCount: number;
-    musicName: string;
-    musicTagName: string;
-    musicTime: number;
-    musicUri: string;
-}
-
-export interface LikeMusicResponse {
-    data: LikeMusicList[];
-}
+// export interface SearchResponse {
+//     musicId: number;
+//     musicName: string;
+//     artistName: string;
+//     albumName: string;
+//     musicTime: number;
+//     albumCoverImg: string;
+//     musicUri: string;
+//     musicLikeCount: number;
+//     createdAt: string;
+//     modifiedAt: string;
+//     musicTagName: string[];
+//     memberId: number;
+// }
