@@ -106,6 +106,7 @@ public class MusicService {
         for (Music music : musicList) {
             MusicDto.OrderResponseDto dto = new MusicDto.OrderResponseDto();
             BeanUtils.copyProperties(music, dto);
+            dto.setMusicTagName(music.getTagsName());
             dtoList.add(dto);
         }
         isDescendingOrder = !isDescendingOrder;

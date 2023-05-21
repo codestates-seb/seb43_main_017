@@ -1,11 +1,12 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { soundbarOpenState } from 'src/recoil/Atoms';
 import VideoUploader from './VideoUpdate';
+import MixingList from './MixingList';
 
 function Mixing() {
-    const [, setSoundbarOpen] = useRecoilState<boolean>(soundbarOpenState);
+    const setSoundbarOpen = useSetRecoilState<boolean>(soundbarOpenState);
 
     /** 2023.05.16 사운드바 상태 변경 -김주비 */
     useEffect(() => {
@@ -15,14 +16,16 @@ function Mixing() {
     return (
         <MixingSection>
             <MixingBackground></MixingBackground>
-            <div>여기</div>
             <MixingHeader>
+                <Musiclist>
+                    <MixingList />
+                </Musiclist>
                 <div className="flex-center">
                     <MixingPage>
                         <span className="mixing-title">MIXING</span>
                     </MixingPage>
                     <Mixingtext>
-                        <p className="mixing-text">당신의 영상에 음원이 어울리는지 직접 비교해보세요.</p>
+                        <p className="mixing-text">Directly compare whether the sound source suits your video.</p>
                     </Mixingtext>
                     <VideoUploader />
                 </div>
@@ -68,7 +71,7 @@ const MixingBackground = styled.article`
 /**2023-05-06 플레이리스트 상단 섹션 : 김주비 */
 const MixingHeader = styled.article`
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
     width: 60%;
@@ -130,16 +133,14 @@ const Mixingtext = styled.div`
 `;
 
 /**2023-05-06 슬라이드 업 되는 서브텍스트 애니메이션 - 박수범*/
-const MusicList = styled.div`
-    position: relative;
-    height: 20px;
-    margin-top: 10px;
-    overflow: hidden;
-    .mixing-text {
-        font-family: 'Rajdhani', sans-serif;
-        font-size: 14px;
-        transform: translateY(20px);
-        animation: movingtext 1s forwards 1s;
-        opacity: 0.6;
-    }
+const Musiclist = styled.div`
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    left: 100px;
+    text-align: center;
+    top: 0;
+    width: 300px;
+    min-height: 100vh;
+    border: solid 0.5px red;
 `;

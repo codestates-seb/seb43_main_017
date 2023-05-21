@@ -50,6 +50,7 @@ public class MusicDto {
         private List<String> musicTagName;
         private long memberId;
 
+
         public ResponseDto(Music music) {
             this.musicId = music.getMusicId();
             this.musicName = music.getMusicName();

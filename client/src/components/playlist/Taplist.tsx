@@ -10,7 +10,6 @@ function Taplist() {
     const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
     const [totalPages, setTotalPages] = useState<number>(0); // 전체 페이지 수
     const [searchText, setSearchText] = useState<string>(''); //서치 텍스트
-    console.log(searchText);
     const buttonArray = [];
 
     useEffect(() => {
@@ -32,8 +31,6 @@ function Taplist() {
 
     const handelPlSearch = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
-            // 엔터 키를 누르면 실행되는 코드 작성
-            console.log('성공적으로 검색을 완료했습니다.');
             axios
                 .get(
                     `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/search-by-title?title=${searchText}&page=${currentPage}&size=5`,
@@ -100,8 +97,8 @@ function Taplist() {
                             ))}
                         </ul>
                         <div className="pl-like">
-                            <Like />
-                            <span>503</span>
+                            <Like plId={data.playListId} />
+                            <span>{data.likeCount}</span>
                         </div>
                     </TapList>
                 ))}
@@ -119,28 +116,71 @@ function Taplist() {
     );
 }
 
-function Like() {
+function Like({ plId }: { plId: number }) {
     const [like, setLike] = useState<boolean>(false);
+    const token = localStorage.getItem('access_token');
+    const memberId = localStorage.getItem('memberId');
+
+    useEffect(() => {
+        if (token) {
+            axios
+                .get(
+                    `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/members/${memberId}/like`,
+                    {
+                        headers: {
+                            Authorization: token,
+                        },
+                    },
+                )
+                .then(function (res) {
+                    const data = res.data;
+                    const likedMusicIds = data.map((item: { playListId: number }) => item.playListId);
+                    setLike(likedMusicIds.includes(plId));
+                });
+        }
+    }, []);
+
+    const haldleLiketoggle = () => {
+        axios
+            .post(
+                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/${plId}/like`,
+                {},
+                {
+                    headers: {
+                        Authorization: token,
+                    },
+                },
+            )
+            .then(function (res) {
+                console.log(res.data);
+                setLike(res.data.playListId === plId);
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
+    };
+
     return (
-        <>
-            {like ? (
-                <HiHeart
-                    onClick={() => {
-                        setLike(!like);
-                    }}
-                />
-            ) : (
-                <HiOutlineHeart
-                    onClick={() => {
-                        setLike(!like);
-                    }}
-                />
-            )}
-        </>
+        <LikeGroup>
+            {like ? <HiHeart onClick={haldleLiketoggle} /> : <HiOutlineHeart onClick={haldleLiketoggle} />}
+        </LikeGroup>
     );
 }
 
 export default Taplist;
+
+const LikeGroup = styled.div`
+    padding: 10px 5px;
+    > * {
+        animation: bounceHeart 0.5s forwards;
+    }
+    @keyframes bounceHeart {
+        50% {
+            transform: scale(1.4);
+            color: #ffa3a3;
+        }
+    }
+`;
 
 const TapGroup = styled.div`
     width: 100%;

@@ -117,8 +117,9 @@ public class Music extends Auditable {
     public List<String> getTagsName() {
         List<String> musicTagName = new ArrayList<>();
         for (MusicTag musicTag : musicTags) {
-            musicTagName.add(musicTag.getName());
+            musicTagName.add(musicTag.getTag().getName());
         }
+
         return musicTagName;
     }
 }
