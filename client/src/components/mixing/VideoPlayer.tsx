@@ -18,7 +18,7 @@ const VideoContainer = styled.div`
     margin-top: 30px;
     display: block;
     > video {
-        width: 100%;
+        width: 800px;
         height: 400px;
     }
 `;

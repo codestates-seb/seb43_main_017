@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { soundbarOpenState } from 'src/recoil/Atoms';
 import VideoUploader from './VideoUpdate';
-import MixingList from './MixingList';
+import LikedList from './LikedList';
 
 function Mixing() {
     const setSoundbarOpen = useSetRecoilState<boolean>(soundbarOpenState);
@@ -18,11 +18,11 @@ function Mixing() {
             <MixingBackground></MixingBackground>
             <MixingHeader>
                 <Musiclist>
-                    <MixingList />
+                    <LikedList />
                 </Musiclist>
                 <div className="flex-center">
                     <MixingPage>
-                        <span className="mixing-title">MIXING</span>
+                        <span className="mixing-title">FITTING &nbsp; ROOM</span>
                     </MixingPage>
                     <Mixingtext>
                         <p className="mixing-text">Directly compare whether the sound source suits your video.</p>
@@ -140,7 +140,7 @@ const Musiclist = styled.div`
     left: 100px;
     text-align: center;
     top: 0;
-    width: 300px;
+    width: 460px;
     min-height: 100vh;
     border: solid 0.5px red;
 `;

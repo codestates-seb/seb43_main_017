@@ -45,7 +45,7 @@ function Navigate({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetSt
         {
             index: 3,
             name: <MdOutlineVideoSettings />,
-            link: '/mixing',
+            link: '/fittingroom',
         },
     ];
 
