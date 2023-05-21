@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { HiHeart } from 'react-icons/hi';
 import { AiOutlinePlus } from 'react-icons/ai';
 import axios from 'axios';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, RefObject } from 'react';
 
 interface LikeMusicList {
     albumCoverImg: string;
@@ -18,6 +18,10 @@ interface LikeMusicList {
     musicTime: number;
     musicUri: string;
 }
+
+interface LikedListProps {
+    audioRef: RefObject<HTMLAudioElement>;
+}
 /*
 1. axios.get으로 유저가 좋아요 누른 음악들만 불러온다.
 2. res.data안에 들어있는 좋아요한 음악들의 리스트를 state로 관리한다.
@@ -27,18 +31,34 @@ interface LikeMusicList {
 
  */
 
-const LikedList = () => {
+const LikedList = ({ audioRef }: LikedListProps) => {
+    const [MusicTitle, setMusicTitle] = useState<string>('');
+    const [currentMusic, setCurrentMusic] = useState<boolean>(false);
     const [audioControl, setAudioControl] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
     const [totalPages, setTotalPages] = useState<number>(0); // 전체 페이지
     const buttonArray = [];
-    const [likedMusic, setLikedMusic] = useState<LikeMusicList[]>([]);
+    const [likedMusic, setLikedMusic] = useState<LikeMusicList[]>([
+        {
+            albumCoverImg: 'https://i.ytimg.com/vi/juhyaZ8A4Ck/mqdefault.jpg',
+            albumName: 'A Hero Is Born',
+            artistName: 'Anuch',
+            createdAt: '2023-05-15 18:03:14',
+            memberId: 0,
+            modifiedAt: '2023-05-21 11:14:54',
+            musicId: 7,
+            musicLikeCount: 2,
+            musicName: 'A Hero Is Born',
+            musicTagName: 'string',
+            musicTime: 99,
+            musicUri: 'https://mainproject-uncover.s3.ap-northeast-2.amazonaws.com/music/A+Hero+Is+Born+-+Anuch.mp3',
+        },
+    ]);
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
     const [selectedSong, setSelectedSong] = useState<string>(
         'https://mainproject-uncover.s3.ap-northeast-2.amazonaws.com/music/A+Hero+Is+Born+-+Anuch.mp3',
     );
-    const videoRef = useRef<HTMLVideoElement>(null);
-    const audioRef = useRef<HTMLAudioElement>(null);
+
     useEffect(() => {
         const fetchLikedMusic = async () => {
             try {
@@ -53,53 +73,7 @@ const LikedList = () => {
                 const likedMusicData: LikeMusicList[] = response.data.data.filter(
                     (music: LikeMusicList) => music.musicLikeCount > 0,
                 );
-                setLikedMusic([
-                    {
-                        albumCoverImg: 'https://i.ytimg.com/vi/juhyaZ8A4Ck/mqdefault.jpg',
-                        albumName: 'A Hero Is Born',
-                        artistName: 'Anuch',
-                        createdAt: '2023-05-15 18:03:14',
-                        memberId: 0,
-                        modifiedAt: '2023-05-21 11:14:54',
-                        musicId: 7,
-                        musicLikeCount: 2,
-                        musicName: 'A Hero Is Born',
-                        musicTagName: 'string',
-                        musicTime: 99,
-                        musicUri:
-                            'https://mainproject-uncover.s3.ap-northeast-2.amazonaws.com/music/A+Hero+Is+Born+-+Anuch.mp3',
-                    },
-                    {
-                        albumCoverImg: 'https://i.ytimg.com/vi/juhyaZ8A4Ck/mqdefault.jpg',
-                        albumName: 'A Hero Is Born',
-                        artistName: 'Anuch',
-                        createdAt: '2023-05-15 18:03:14',
-                        memberId: 0,
-                        modifiedAt: '2023-05-21 11:14:54',
-                        musicId: 7,
-                        musicLikeCount: 2,
-                        musicName: 'A Hero Is Born',
-                        musicTagName: 'string',
-                        musicTime: 99,
-                        musicUri:
-                            'https://mainproject-uncover.s3.ap-northeast-2.amazonaws.com/music/A+Hero+Is+Born+-+Anuch.mp3',
-                    },
-                    {
-                        albumCoverImg: 'https://i.ytimg.com/vi/juhyaZ8A4Ck/mqdefault.jpg',
-                        albumName: 'A Hero Is Born',
-                        artistName: 'Anuch',
-                        createdAt: '2023-05-15 18:03:14',
-                        memberId: 0,
-                        modifiedAt: '2023-05-21 11:14:54',
-                        musicId: 7,
-                        musicLikeCount: 2,
-                        musicName: 'A Hero Is Born',
-                        musicTagName: 'string',
-                        musicTime: 99,
-                        musicUri:
-                            'https://mainproject-uncover.s3.ap-northeast-2.amazonaws.com/music/A+Hero+Is+Born+-+Anuch.mp3',
-                    },
-                ]);
+                setLikedMusic(likedMusicData);
                 console.log(response.data.data);
                 setTotalPages(response.data.pageInfo.totalPages);
             } catch (error) {
@@ -131,25 +105,13 @@ const LikedList = () => {
         setCurrentPage(currentPage - 1);
     };
 
-    const handleSongClick = (songUrl: string) => {
+    const handleSongClick = (songUrl: string, songName: string) => {
+        console.log(selectedSong);
         setSelectedSong(songUrl);
         setAudioControl(true);
-        alert(selectedSong.split('/')[4].replaceAll('+', ' ').split('-')[0] + '이 추가되었습니다.');
+        alert(songName + '이 추가되었습니다.');
     };
 
-    const handleVideoPlay = () => {
-        if (audioRef.current) {
-            audioRef.current.play();
-            // videoRef.current.play();
-        }
-    };
-
-    const handleVideoPause = () => {
-        if (audioRef.current) {
-            audioRef.current.pause();
-            //videoRef.current.pause();
-        }
-    };
     return (
         <LikeContainer>
             <LikeTitle>
@@ -159,22 +121,34 @@ const LikedList = () => {
                 </div>
             </LikeTitle>
             {likedMusic.map((likedata) => (
-                <LikeList>
-                    <img src={likedata.albumCoverImg} alt={likedata.musicName} />
-                    <li>{likedata.musicName}</li>
-                    <li>{likedata.artistName}</li>
-                    <button
-                        onClick={() =>
-                            handleSongClick(
-                                'https://mainproject-uncover.s3.ap-northeast-2.amazonaws.com/music/A+Hero+Is+Born+-+Anuch.mp3',
-                            )
-                        }
-                    >
-                        <AiOutlinePlus />
-                    </button>
-                </LikeList>
+                <>
+                    <LikeList key={likedata.musicId}>
+                        <img src={likedata.albumCoverImg} alt={likedata.musicName} />
+                        <li>{likedata.musicName}</li>
+                        <li>{likedata.artistName}</li>
+                        <AddMusic
+                            onClick={() => {
+                                handleSongClick(likedata.musicUri, likedata.musicName);
+                                setCurrentMusic(true);
+                                setMusicTitle(likedata.musicName);
+                            }}
+                        >
+                            <AiOutlinePlus />
+                        </AddMusic>
+                    </LikeList>
+                </>
             ))}
-            {audioControl && <audio src={selectedSong} controls></audio>}
+            {currentMusic && (
+                <CurrentMusic>
+                    현재 곡은 <span>"{MusicTitle}"</span>입니다.
+                </CurrentMusic>
+            )}
+            {audioControl && (
+                <audio
+                    ref={audioRef}
+                    src={`http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com/assets/music/${selectedSong}`}
+                ></audio>
+            )}
             <Pagination>
                 <button disabled={currentPage === 1} onClick={handlePrevPage}>
                     Prev
@@ -192,7 +166,7 @@ export default LikedList;
 
 /* 2023.05.10 Like Music 전체 박스 컴포넌트 - 홍혜란 */
 const LikeContainer = styled.div`
-    width: 400px;
+    width: 15rem;
     align-items: center;
     margin: 30px;
     @media screen and (max-width: 1000px) {
@@ -226,12 +200,13 @@ const LikeTitle = styled.div`
 `;
 
 /* 2023.05.10 Like Music 리스트 출력 컴포넌트 - 홍혜란 */
-const LikeList = styled.div`
+const LikeList = styled.ul`
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid hsl(0, 0%, 65%);
     padding: 8px;
+    margin-bottom: 20px;
 
     img {
         width: 30px;
@@ -252,7 +227,7 @@ const LikeList = styled.div`
         justify-content: center;
     }
 `;
-
+/* 2023.05.10 Like Music 리스트 페이지네이션 - 홍혜란 */
 const Pagination = styled.div`
     button {
         color: #ccc;
@@ -282,5 +257,27 @@ const Pagination = styled.div`
         color: #ccc;
         border-color: #ccc;
         background: rgba(255, 255, 255, 0.2);
+    }
+`;
+/* 2023.05.10 Like Music 리스트 음악 영상에 추가 - 홍혜란 */
+const AddMusic = styled.button`
+    background: none;
+    border: 0;
+    outline: 0;
+    color: aquamarine;
+    cursor: pointer;
+    font-size: 20px;
+    &:hover {
+        color: red;
+    }
+`;
+
+const CurrentMusic = styled.p`
+    margin-top: 50px;
+    font-size: 14px;
+    color: #b8b3b3;
+    > span {
+        font-weight: bold;
+        color: #feeaea;
     }
 `;

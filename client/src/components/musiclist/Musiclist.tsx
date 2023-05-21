@@ -18,25 +18,29 @@ const Musiclist = () => {
     const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
     const [totalPages, setTotalPages] = useState<number>(0); // 전체 페이지 수
     const [openSearch, setOpenSearch] = useRecoilState<boolean>(showSearch);
-    const [tapClick, setTapClick] = useState<number>(0);
+    // const [tapClick, setTapClick] = useState<number>(0);
     const buttonArray = [];
 
+    /* 2023.05.21 서치 결과에 따른 뮤직리스트 출력 */
     const showSearchResult = (searchText: string) => {
         axios
             .get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/search-by-keyword`, {
                 params: {
                     keyword: searchText,
+                    page: currentPage,
+                    size: 5,
                 },
             })
             .then((response) => {
                 setMusicDataList(response.data);
+                setTotalPages(response.data.pageInfo.totalPages);
             })
             .catch((error) => {
                 console.error(error);
             });
     };
 
-    /* 2023.05.21 뮤직리스트 출력 */
+    /* 2023.05.21 뮤직리스트 토탈 출력 */
     useEffect(() => {
         axios
             .get<MusicDataResponse>(
@@ -80,6 +84,32 @@ const Musiclist = () => {
         return `${formattedMinutes}:${formattedSeconds}`;
     };
 
+    /* 2023.05.21 뮤직리스트 최신순 조회 */
+    const showNewResult = () => {
+        axios
+            .get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/order-by-created-at`)
+            .then((response) => {
+                setMusicDataList(response.data);
+                setTotalPages(response.data.pageInfo.totalPages);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
+
+    /* 2023.05.21 뮤직리스트 좋아요순 조회 */
+    const showLikeResult = () => {
+        axios
+            .get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/order-by-like-count`)
+            .then((response) => {
+                setMusicDataList(response.data);
+                setTotalPages(response.data.pageInfo.totalPages);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
+
     return (
         <Container>
             <BackgroundCover></BackgroundCover>
@@ -100,43 +130,11 @@ const Musiclist = () => {
                     <MusicListTitle>
                         <div className="musicList-title">Music List</div>
                         <div className="music-inquiry">
-                            <li
-                                className={tapClick === 0 ? 'active' : ''}
-                                onClick={() => {
-                                    setTapClick(0);
-                                }}
-                            >
-                                최신순
-                            </li>
-                            <li
-                                className={tapClick === 1 ? 'active' : ''}
-                                onClick={() => {
-                                    setTapClick(1);
-                                }}
-                            >
-                                좋아요순
-                            </li>
+                            <li onClick={showNewResult}>최신순</li>
+                            <li onClick={showLikeResult}>좋아요순</li>
                         </div>
                     </MusicListTitle>
                     <SongContainer>
-                        {/* {searchMusic.map((musicData) => (
-                            <Item key={musicData.musicId}>
-                                <li className="music-image">
-                                    <img src={musicData.albumCoverImg} alt={musicData.musicName} />
-                                </li>
-                                <li className="music-name">
-                                    <Link to={`/musiclist/${musicData.musicId}`}>{musicData.musicName}</Link>
-                                </li>
-                                <li className="music-artist color-gray">{musicData.artistName}</li>
-                                <li className="music-album color-gray">{musicData.albumName}</li>
-                                <li>{musicData.musicTagName}</li>
-                                <li className="music-time color-gray">
-                                    {formatSecondsToTime(Number(musicData.musicTime))}
-                                </li>
-                                <Sideicon musicId={musicData.musicId} />
-                            </Item>
-                        ))} */}
-
                         {musicDataList.map((musicData) => (
                             <Item key={musicData.musicId}>
                                 <li className="music-image">
@@ -147,7 +145,12 @@ const Musiclist = () => {
                                 </li>
                                 <li className="music-artist color-gray">{musicData.artistName}</li>
                                 <li className="music-album color-gray">{musicData.albumName}</li>
-                                <li>{musicData.musicTagName}</li>
+                                {/* <li className="music-tags">{musicData.musicTagName}</li> */}
+                                <ul className="music-tags">
+                                    {musicData.musicTagName.slice(0, 2).map((tag, i) => (
+                                        <li key={`tag-${i}`}>{tag}</li>
+                                    ))}
+                                </ul>
                                 <li className="music-time color-gray">
                                     {formatSecondsToTime(Number(musicData.musicTime))}
                                 </li>
@@ -348,6 +351,24 @@ const Item = styled.ul`
         height: 50px;
         border-radius: 5px;
         margin: 0px 10px;
+    }
+
+    .music-tags {
+        display: flex;
+        flex-direction: row;
+        justify-content: right;
+        align-items: center;
+    }
+
+    .music-tags li {
+        width: 50px;
+        align-items: center;
+        border: 1px solid #ff971f;
+        padding: 2px 5px 0px 5px;
+        border-radius: 20px;
+        font-size: 12px;
+        color: #ff971f;
+        margin: 3px;
     }
 
     .color-gray {

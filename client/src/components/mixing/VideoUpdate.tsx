@@ -1,13 +1,16 @@
-import React, { useCallback, useRef, useState, forwardRef, useImperativeHandle } from 'react';
+import React, { useCallback, useRef, useState, LegacyRef } from 'react';
 import { useDropzone } from 'react-dropzone';
 import styled from 'styled-components';
 import VideoPlayer from './VideoPlayer';
 import { videouploadState } from 'src/recoil/Atoms';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
-const VideoUploader: React.FC = (prop, ref: React.RefObject<HTMLVideoElement>) => {
+interface LikedListProps {
+    videoRef: LegacyRef<HTMLVideoElement>;
+}
+const VideoUploader = ({ videoRef }: LikedListProps) => {
     const [uploadedVideo, setUploadedVideo] = useState<File | null>(null);
-    const setvideouploadState = useSetRecoilState(videouploadState);
+    const [videoState, setvideouploadState] = useRecoilState(videouploadState);
 
     const onDrop = useCallback((acceptedFiles: File[]) => {
         acceptedFiles.forEach((file: File) => {
@@ -34,13 +37,13 @@ const VideoUploader: React.FC = (prop, ref: React.RefObject<HTMLVideoElement>) =
 
     return (
         <div>
-            {!uploadedVideo ? (
+            {!uploadedVideo || !videoState ? (
                 <DropzoneStyle {...getRootProps()} onClick={handleInputClick}>
                     <input {...getInputProps({ accept: 'video/*' })} ref={fileInputRef} />
                     <p>Drag and drop your video file to upload, or click to select a file.</p>
                 </DropzoneStyle>
             ) : (
-                <VideoPlayer videoUrl={URL.createObjectURL(uploadedVideo)} />
+                <VideoPlayer videoUrl={URL.createObjectURL(uploadedVideo)} videoRef={videoRef} />
             )}
         </div>
     );
