@@ -1,45 +1,132 @@
+import React, { useRef, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import React from 'react';
-import ReactPlayer from 'react-player';
 
-function SoundBar() {
+const AudioPlayer = () => {
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+    const [currentTime, setCurrentTime] = useState(0);
+    const [volume, setVolume] = useState(1);
+    const [currentSongIndex, setCurrentSongIndex] = useState(0);
+
+    const songs = [
+        {
+            src: 'http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com/assets/music/Carefree - Kevin MacLeod.mp3',
+            duration: '300',
+        },
+        {
+            src: 'http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com/assets/music/Cheery Monday - Kevin MacLeod.mp3',
+            duration: '158',
+        },
+        {
+            src: 'http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com/assets/music/Death Of A Friend - Yeti Music.mp3',
+            duration: '285',
+        },
+        // { src: "다른 곡의 URL", duration: "곡의 길이" },
+    ];
+
+    useEffect(() => {
+        if (audioRef.current) {
+            audioRef.current.currentTime = currentTime;
+        }
+    }, [audioRef]);
+
+    const play = () => {
+        if (audioRef.current) {
+            audioRef.current.play();
+        }
+    };
+
+    const pause = () => {
+        if (audioRef.current) {
+            audioRef.current.pause();
+        }
+    };
+
+    const handleTimeUpdate = () => {
+        if (audioRef.current) {
+            setCurrentTime(audioRef.current.currentTime);
+        }
+    };
+
+    const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newVolume = parseFloat(e.target.value);
+        if (audioRef.current) {
+            audioRef.current.volume = newVolume;
+        }
+        setVolume(newVolume);
+    };
+
+    const formatSecondsToTime = (formattedTime: number) => {
+        const minutes = Math.floor(formattedTime / 60);
+        const remainingSeconds = formattedTime % 60;
+        const formattedMinutes = String(minutes).padStart(2, '0');
+        const formattedSeconds = String(remainingSeconds).padStart(2, '0');
+        return `${formattedMinutes}:${formattedSeconds}`;
+    };
+
+    const playPreviousSong = () => {
+        if (currentSongIndex === 0) {
+            setCurrentSongIndex(songs.length - 1);
+        } else {
+            setCurrentSongIndex(currentSongIndex - 1);
+        }
+        setCurrentTime(0); // 이전 곡으로 이동할 때 재생 시간 초기화
+        if (audioRef.current) {
+            audioRef.current.currentTime = 0;
+            audioRef.current.play();
+        }
+    };
+
+    const playNextSong = () => {
+        if (currentSongIndex === songs.length - 1) {
+            setCurrentSongIndex(0);
+        } else {
+            setCurrentSongIndex(currentSongIndex + 1);
+        }
+        setCurrentTime(0); // 다음 곡으로 이동할 때 재생 시간 초기화
+        if (audioRef.current) {
+            audioRef.current.currentTime = 0;
+            audioRef.current.play();
+        }
+    };
+
+    const currentSong = songs[currentSongIndex];
+
     return (
-        <Soundbarsection>
-            <ReactPlayer
-                style={playerStyle}
-                url="https://mainproject-uncover.s3.ap-northeast-2.amazonaws.com/music/600Horses-Cinco.mp3"
-                controls
-                playing
-                volume={0.5}
-                width="640  px"
-                height="360px"
+        <AudioPlayerGroup>
+            <audio ref={audioRef} src={currentSong.src} onTimeUpdate={handleTimeUpdate} autoPlay />
+
+            <div>
+                {formatSecondsToTime(Number(currentTime.toFixed(0)))} /
+                {formatSecondsToTime(Number(currentSong.duration))}
+            </div>
+
+            <button onClick={playPreviousSong}>이전 곡</button>
+            <button onClick={play}>재생</button>
+            <button onClick={pause}>일시정지</button>
+            <button onClick={playNextSong}>다음 곡</button>
+
+            <input
+                type="range"
+                min="0"
+                max={audioRef.current ? audioRef.current.duration : 0}
+                step="0.1"
+                value={currentTime}
+                onChange={(e) => setCurrentTime(Number(e.target.value))}
             />
-        </Soundbarsection>
+
+            <input type="range" min="0" max="1" step="0.01" value={volume} onChange={handleVolumeChange} />
+        </AudioPlayerGroup>
     );
-}
-
-export default SoundBar;
-
-const playerStyle = {
-    border: '2px solid #ccc',
-    borderRadius: '8px',
 };
 
-const Soundbarsection = styled.div`
-    position: fixed;
-    bottom: -60px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(20, 20, 20, 1);
-    z-index: 3;
-    width: 800px;
-    height: 500px;
-    border-radius: 30px 30px 0px 0px;
-    animation: showbar 1s forwards;
+export default AudioPlayer;
 
-    @keyframes showbar {
-        100% {
-            bottom: 0px;
-        }
-    }
+const AudioPlayerGroup = styled.section`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 600px;
+    height: 100px;
+    border: 1px solid #ccc;
+    margin: 50px;
 `;
