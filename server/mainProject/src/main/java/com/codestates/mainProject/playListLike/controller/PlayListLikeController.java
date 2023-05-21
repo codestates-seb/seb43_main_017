@@ -41,20 +41,15 @@ public class PlayListLikeController {
         }
     }
 
-    // 특정 좋아요 조회
-    @GetMapping("/likes/{like-id}")
-    public ResponseEntity<PlayListLike> getLike(@PathVariable("like-id") Long likeId) {
-        PlayListLike like = playListLikeService.getLike(likeId);
-        return new ResponseEntity<>(like, HttpStatus.OK);
-    }
 
-//    // {playlist-id} 좋아요 전체 조회
-//    @GetMapping("/{playlist-id}/likes")
-//    public ResponseEntity<List<LikeDto>> getLikesByPlayListId(@PathVariable("playlist-id") Long playListId) {
-//        List<PlayListLike> likes = playListLikeService.getLikesByPlayListId(playListId);
-//        List<LikeDto> responseDtoList = playListLikeMapper.playListLikesToResponses(likes);
-//        return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
-//    }
+
+    // {playlist-id} 좋아요 전체 조회
+    @GetMapping("/{playlist-id}/likes")
+    public ResponseEntity<List<LikeDto>> getLikesByPlayListId(@PathVariable("playlist-id") Long playListId) {
+        List<PlayListLike> likes = playListLikeService.getLikesByPlayListId(playListId);
+        List<LikeDto> responseDtoList = playListLikeMapper.playListLikesToResponses(likes);
+        return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
+    }
 
     @GetMapping("/members/{member-id}/like")
     public ResponseEntity<List<LikeDto>> getMemberLikes (@PathVariable("member-id") Long memberId,
