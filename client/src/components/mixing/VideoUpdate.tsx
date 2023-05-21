@@ -1,11 +1,11 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState, forwardRef, useImperativeHandle } from 'react';
 import { useDropzone } from 'react-dropzone';
 import styled from 'styled-components';
 import VideoPlayer from './VideoPlayer';
 import { videouploadState } from 'src/recoil/Atoms';
 import { useSetRecoilState } from 'recoil';
 
-const VideoUploader: React.FC = () => {
+const VideoUploader: React.FC = (prop, ref: React.RefObject<HTMLVideoElement>) => {
     const [uploadedVideo, setUploadedVideo] = useState<File | null>(null);
     const setvideouploadState = useSetRecoilState(videouploadState);
 
@@ -37,7 +37,7 @@ const VideoUploader: React.FC = () => {
             {!uploadedVideo ? (
                 <DropzoneStyle {...getRootProps()} onClick={handleInputClick}>
                     <input {...getInputProps({ accept: 'video/*' })} ref={fileInputRef} />
-                    <p>비디오 파일을 드래그 앤 드롭하여 업로드하거나, 클릭하여 파일을 선택하세요.</p>
+                    <p>Drag and drop your video file to upload, or click to select a file.</p>
                 </DropzoneStyle>
             ) : (
                 <VideoPlayer videoUrl={URL.createObjectURL(uploadedVideo)} />
