@@ -63,10 +63,10 @@ public class PlayListLikeService {
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.PlAYLIST_LIKE_NOT_FOUND));
     }
 
-    // {playlist-id} like 전체 조회
-    public List<PlayListLike> getLikesByPlayListId(Long playListId){
-        return playListLikeRepository.findByPlayListPlayListId(playListId);
-    }
+//    // {playlist-id} like 전체 조회
+//    public List<PlayListLike> getLikesByPlayListId(Long playListId){
+//        return playListLikeRepository.findByPlayListPlayListId(playListId);
+//    }
 
     // 유저 좋아요 여부
     public Page<PlayListLike> getMemberLikes(long memberId, Pageable pageable) {

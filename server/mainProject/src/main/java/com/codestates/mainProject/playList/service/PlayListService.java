@@ -87,12 +87,8 @@ public class PlayListService {
     }
 
     // 관리자 플레이리스트 전체 조회
-    public Page<PlayList> findAdminsPlayLists(Long memberId, int page, int size){
+    public Page<PlayList> findAdminsPlayLists(long memberId, int page, int size){
         Member member = memberService.findMember(memberId);
-
-        if (!member.getRoles().contains("ADMIN")) {
-            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
-        }
 
         List<PlayList> playLists = member.getPlayLists();
 
