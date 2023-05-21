@@ -51,8 +51,8 @@ public class MusicController {
     public ResponseEntity getMusic(@PathVariable("music-id") @Positive long musicId) {
         Music findMusic = musicService.findMusicById(musicId);
         MusicDto.ResponseDto response = mapper.musicToResponse(findMusic);
-
         response.setMusicTagName(findMusic.getTagsName());
+
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(response), HttpStatus.OK);
@@ -66,6 +66,13 @@ public class MusicController {
         List<Music> musics = pageMusic.getContent();
         List<MusicDto.ResponseDto> response = mapper.musicsToResponses(musics);
 
+        for(int i=0; i< musics.size(); i++) {
+            Music music = musics.get(i);
+            List<String> tagName = music.getTagsName();
+            response.get(i).setMusicTagName(tagName);
+        }
+
+
         return new ResponseEntity<>(
                 new MultiResponseDto<>(response, pageMusic), HttpStatus.OK);
     }
@@ -77,7 +84,14 @@ public class MusicController {
                                          @Positive @RequestParam(value = "size", defaultValue = "20") int size) {
 
         Page<Music> likedMusics = memberService.findLikedMusics(memberId, page - 1, size);
-        List<MusicDto.ResponseDto> response = mapper.musicsToResponses(likedMusics.getContent());
+        List<Music> musics = likedMusics.getContent();
+        List<MusicDto.ResponseDto> response = mapper.musicsToResponses(musics);
+
+        for(int i=0; i< musics.size(); i++) {
+            Music music = musics.get(i);
+            List<String> tagName = music.getTagsName();
+            response.get(i).setMusicTagName(tagName);
+        }
 
         return new ResponseEntity<>(
                 new MultiResponseDto<>(response, likedMusics), HttpStatus.OK);

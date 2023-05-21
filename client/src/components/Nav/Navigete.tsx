@@ -95,6 +95,7 @@ function Navigate({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetSt
                                   </Link>
                               ) : (
                                   <li
+                                      key={el.index}
                                       onClick={() => {
                                           setShowSignIn(true);
                                       }}

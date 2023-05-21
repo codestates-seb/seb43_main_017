@@ -1,4 +1,4 @@
-import ReactPlayer from 'react-player';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
 
 interface VideoPlayerProps {
@@ -6,9 +6,10 @@ interface VideoPlayerProps {
 }
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl }) => {
+    const videoRef = useRef<HTMLVideoElement>(null);
     return (
         <VideoContainer>
-            <ReactPlayer url={videoUrl} width="800px" height="400px" controls={true} />
+            <video src={videoUrl} ref={videoRef} controls={true} />
         </VideoContainer>
     );
 };
@@ -16,6 +17,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl }) => {
 const VideoContainer = styled.div`
     margin-top: 30px;
     display: block;
+    > video {
+        width: 100%;
+        height: 400px;
+    }
 `;
 
 export default VideoPlayer;

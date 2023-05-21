@@ -159,6 +159,15 @@ const LikeMusic = () => {
                     </div>
                 </LikeList>
             ))}
+            <Pagination>
+                <button disabled={currentPage === 1} onClick={handlePrevPage}>
+                    Prev
+                </button>
+                {buttonArray}
+                <button disabled={currentPage === totalPages} onClick={handleNextPage}>
+                    Next
+                </button>
+            </Pagination>
         </LikeContainer>
     );
 };

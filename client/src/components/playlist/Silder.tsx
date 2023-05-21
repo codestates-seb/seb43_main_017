@@ -12,8 +12,6 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
     const [silderPage, setSliderPage] = useState<number>(3); //슬라이더 페이지 갯수
     const [width, setWidth] = useState<number>(window.innerWidth); //현재 창의 width 길이
 
-    console.log(currentSlideIndex);
-
     window.addEventListener('resize', () => {
         setWidth(window.innerWidth);
         // 변화된 width 값을 이용하여 필요한 작업 수행
@@ -35,7 +33,6 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
             .get('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists?page=1&size=5')
             .then(function (response) {
                 // 성공적으로 요청을 보낸 경우
-                // console.log(response.data.data);
                 setPldata(response.data.data);
                 setBgSrc(response.data.data[currentSlideIndex].coverImg);
             })
@@ -44,12 +41,6 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
                 console.error(error);
             });
     }, [currentSlideIndex]);
-
-    /**2023-05-07 커버이미지 데이터 전달 : 김주비 */
-    // useEffect(() => {
-    //     // setBgSrc(pldata[currentSlideIndex].coverImg);
-    //     console.log(pldata[currentSlideIndex].coverImg);
-    // }, [currentSlideIndex]);
 
     /**2023-05-07 플리 슬라이드 인덱스 : 김주비 */
     const handleAfterChange = (index: number) => {
