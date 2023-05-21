@@ -10,16 +10,17 @@ const AudioPlayer = () => {
     const songs = [
         {
             src: 'http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com/assets/music/Carefree - Kevin MacLeod.mp3',
-            duration: '300',
+            duration: '03:28',
         },
         {
             src: 'http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com/assets/music/Cheery Monday - Kevin MacLeod.mp3',
-            duration: '158',
+            duration: '03:28',
         },
         {
             src: 'http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com/assets/music/Death Of A Friend - Yeti Music.mp3',
-            duration: '285',
+            duration: '03:28',
         },
+        // 다른 곡들도 추가할 수 있습니다
         // { src: "다른 곡의 URL", duration: "곡의 길이" },
     ];
 
@@ -96,8 +97,7 @@ const AudioPlayer = () => {
             <audio ref={audioRef} src={currentSong.src} onTimeUpdate={handleTimeUpdate} autoPlay />
 
             <div>
-                {formatSecondsToTime(Number(currentTime.toFixed(0)))} /
-                {formatSecondsToTime(Number(currentSong.duration))}
+                {formatSecondsToTime(Number(currentTime.toFixed(0)))} / {currentSong.duration}
             </div>
 
             <button onClick={playPreviousSong}>이전 곡</button>
