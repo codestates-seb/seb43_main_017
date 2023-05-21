@@ -21,6 +21,10 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId }) => {
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
 
     const handleLike = () => {
+        if (!token) {
+            return;
+        }
+
         setLike(!like);
 
         axios
@@ -62,7 +66,7 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId }) => {
             .catch((error) => {
                 console.error(error);
             });
-    }, []);
+    }, [setLike]);
 
     return (
         <MusicIconGroup>

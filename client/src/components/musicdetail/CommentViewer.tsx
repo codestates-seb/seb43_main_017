@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { BiX } from 'react-icons/bi';
 import { useRecoilState } from 'recoil';
-import { commentOpenState, musicIdState } from 'src/recoil/Atoms';
+import { commentOpenState, musicIdState, playlistCommentState } from 'src/recoil/Atoms';
 import { useEffect, useState } from 'react';
 import { commentType } from 'src/types/Commentlist';
 import axios from 'axios';
@@ -10,36 +10,49 @@ function CommentViewer() {
     const [, setCommentOpen] = useRecoilState<boolean>(commentOpenState);
     const [comment, setComment] = useState<commentType[]>([]);
     const [musicId] = useRecoilState(musicIdState);
-    const [nullImage, setNullImage] = useState<boolean>(true);
     const [commentText, setCommentText] = useState<string>('');
+    const [playlistComment] = useRecoilState<boolean>(playlistCommentState);
 
     const token = localStorage.getItem('access_token');
     const memberId = localStorage.getItem('memberId');
+    const url: string = playlistComment ? `/playlist-comments/` : `/music-comments/musics/`;
+
     const handelCommentWriting = () => {
-        axios
-            .post(
-                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/music-comments/musics/${musicId}`,
-                {
-                    content: commentText,
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                },
-            )
-            .then(function (response) {
-                console.log(response);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+        if (token) {
+            if (commentText.length === 0) {
+                alert('내용을 작성해주세요.');
+            } else {
+                axios
+                    .post(
+                        `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080${url}${musicId}`,
+                        {
+                            content: commentText,
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        },
+                    )
+                    .then(function (response) {
+                        console.log(response);
+                        setCommentText('');
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+        } else {
+            alert('로그인을 먼저 진행해주시기 바랍니다.');
+        }
     };
 
     const handleCommentDelete = (index: number) => {
         // console.log(index);
+        const delurl: string = playlistComment ? `/playlist-comments/` : `/music-comments/`;
+
         axios
-            .delete(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/music-comments/${index}`, {
+            .delete(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080${delurl}${index}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -54,14 +67,14 @@ function CommentViewer() {
 
     useEffect(() => {
         axios
-            .get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/music-comments/musics/${musicId}`)
+            .get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080${url}${musicId}`)
             .then((response) => {
                 setComment(response.data);
             })
             .catch((error) => {
                 console.error(error);
             });
-    }, [comment, nullImage]);
+    }, [comment]);
 
     return (
         <CommentViewerGroup>

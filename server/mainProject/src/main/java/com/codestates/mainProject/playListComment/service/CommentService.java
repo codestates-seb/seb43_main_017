@@ -28,9 +28,11 @@ public class CommentService {
         PlayList playList = playListService.findVerifiedPlayList(playListId);
 
         PlayListComment comment = new PlayListComment();
-        comment.setContent(content);
         comment.setMember(member);
         comment.setPlayList(playList);
+        comment.setName(member.getName());
+        comment.setImage(member.getImage());
+        comment.setContent(content);
 
         return commentRepository.save(comment);
     }

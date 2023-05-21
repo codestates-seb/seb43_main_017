@@ -26,10 +26,7 @@ function Mypage() {
                                 </div>
 
                                 <UserContainer>
-                                    {/* 사용자의 이름 출력 및 수정 */}
-                                    <div className="user-name-container">
-                                        <div className="user-name">{usernickname}</div>
-                                    </div>
+                                    <div className="user-name">{usernickname}</div>
                                     <div className="user-email">{useremail}</div>
                                 </UserContainer>
                             </div>
@@ -39,9 +36,7 @@ function Mypage() {
                                     <img src="./assets/ditto.png" alt="userImg" />
                                 </div>
                                 <UserContainer>
-                                    <div className="user-name-container">
-                                        <div className="user-name">Undefined</div>
-                                    </div>
+                                    <div className="user-name">Undefined</div>
                                     <div className="user-email">undefined@naver.com</div>
                                 </UserContainer>
                             </div>
@@ -130,25 +125,13 @@ const UserContainer = styled.div`
     align-items: flex-start;
     display: flex;
     flex-direction: column;
+    margin-top: 50px;
 
-    .user-name-container {
-        input {
-            font-size: 30px;
-            color: hsl(0, 0%, 100%);
-            font-weight: bold;
-            width: 300px;
-            height: 50px;
-            background-color: black;
-            border: none;
-            margin: 10px 0px 10px 25px;
-        }
-
-        .user-name {
-            font-size: 30px;
-            font-weight: bold;
-            color: hsl(0, 0%, 100%);
-            margin: 10px 0px 10px 25px;
-        }
+    .user-name {
+        font-size: 30px;
+        font-weight: bold;
+        color: hsl(0, 0%, 100%);
+        margin: 10px 0px 10px 25px;
     }
 
     .user-email {
