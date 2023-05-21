@@ -35,6 +35,7 @@ public class MusicLikeService {
     private final MemberService memberService;
     private final MemberRepository memberRepository;
     private final MemberMusicTagService memberMusicTagService;
+    private final MemberMusicService memberMusicService;
 
     // 음악 좋아요 생성/취소
     public MusicLikeDto.MusicLikeToggleResponseDto toggleMusicLike(Long memberId, long musicId) {
@@ -42,6 +43,8 @@ public class MusicLikeService {
         Member member = memberService.findVerifiedMember(memberId);
         Music music = musicRepository.findById(musicId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MUSIC_NOT_FOUND));
+
+
 
         List<MusicLike> musicLikes = music.getMusicLikes();
         List<MusicTag> musicTags = music.getMusicTags();
@@ -64,6 +67,8 @@ public class MusicLikeService {
                 memberMusicTagService.deleteMemberMusicTag(memberId,musicTag.getMusicTagId());  //music에 있는 musicTag들을 memberMusicTag에서 모두지움
             }
 
+            memberMusicService.deleteMemberMusic(memberId,musicId);
+
             musicLikeRepository.delete(musicLike);
 
             responseDto.setMessage("좋아요가 취소되었습니다.");
@@ -75,6 +80,8 @@ public class MusicLikeService {
             for(MusicTag musicTag : musicTags ){
                 memberMusicTagService.createMemberMusicTag(memberId,musicTag.getMusicTagId()); //music에 있는 musicTag들을 memberMusicTag에서 모두생성
             }
+
+            memberMusicService.createMemberMusic(memberId, musicId);
 
             responseDto.setMusicLikeId(savedMusicLike.getMusicLikeId());
             responseDto.setMessage("좋아요가 생성되었습니다.");
