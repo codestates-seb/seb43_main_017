@@ -5,17 +5,15 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useState } from 'react';
-import { downloadLink } from 'src/recoil/Atoms';
-import { useRecoilState } from 'recoil';
 import { useEffect } from 'react';
 
 interface SideiconProps {
     musicId: number;
+    musicUri: string;
 }
 
-const Sideicon: React.FC<SideiconProps> = ({ musicId }) => {
+const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
     const [like, setLike] = useState<boolean>(false);
-    const [download] = useRecoilState<string>(downloadLink);
 
     const memberId: string | undefined = window.localStorage.getItem('memberId') || undefined;
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
@@ -43,13 +41,8 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId }) => {
                 },
             )
             .then((response) => {
-                console.log(response.data);
                 const updatedMusicId = response.data.musicId;
                 setLike(updatedMusicId === musicId);
-            })
-            .catch((error) => {
-                console.error(error);
-                setLike(!updatedLike);
             });
     };
 
@@ -64,12 +57,11 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId }) => {
                 const data = response.data.data;
                 const likedMusicIds = data.map((item: { musicId: number }) => item.musicId);
                 setLike(likedMusicIds.includes(musicId));
-                console.log(data);
             })
             .catch((error) => {
                 console.error(error);
             });
-    }, [setLike]);
+    }, [like]);
 
     return (
         <MusicIconGroup>
@@ -77,7 +69,7 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId }) => {
                 <FiPlayCircle className="color-blue" />
             </Link>
             <FiFolderPlus />
-            <a href={`/assest/music/${download}`} download>
+            <a href={`/assets/music/${musicUri}`} download>
                 <MdFileDownload />
             </a>
             {like ? (
