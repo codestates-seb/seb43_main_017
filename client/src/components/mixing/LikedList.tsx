@@ -105,6 +105,7 @@ const LikedList = ({ audioRef }: LikedListProps) => {
     };
 
     const handleSongClick = (songUrl: string, songName: string) => {
+        console.log(selectedSong);
         setSelectedSong(songUrl);
         setAudioControl(true);
         alert(songName + '이 추가되었습니다.');
@@ -140,7 +141,12 @@ const LikedList = ({ audioRef }: LikedListProps) => {
                     )}
                 </>
             ))}
-            {audioControl && <audio ref={audioRef} src={selectedSong}></audio>}
+            {audioControl && (
+                <audio
+                    ref={audioRef}
+                    src={`http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com/assets/music/${selectedSong}`}
+                ></audio>
+            )}
             <Pagination>
                 <button disabled={currentPage === 1} onClick={handlePrevPage}>
                     Prev
