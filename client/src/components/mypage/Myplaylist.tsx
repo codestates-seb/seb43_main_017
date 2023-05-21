@@ -9,12 +9,12 @@ import { atom } from 'recoil';
 import axios from 'axios';
 
 /* 2023.05.10 마이플레이스트 타입 선언 */
-type PlayData = {
+interface PlayData {
     playListId: number;
     imgSrc: string;
     name: string;
     vote: number;
-};
+}
 
 /* 2023.05.10 마이플레이스트 더미데이터(임시) */
 const MyPlay: PlayData[] = [
