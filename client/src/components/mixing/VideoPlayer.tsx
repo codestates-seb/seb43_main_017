@@ -1,25 +1,32 @@
-import React, { useRef } from 'react';
+import React, { LegacyRef } from 'react';
 import styled from 'styled-components';
 
 interface VideoPlayerProps {
     videoUrl: string;
+    videoRef: LegacyRef<HTMLVideoElement>;
 }
 
-const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl }) => {
-    const videoRef = useRef<HTMLVideoElement>(null);
+const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, videoRef }) => {
     return (
         <VideoContainer>
-            <video src={videoUrl} ref={videoRef} controls={true} />
+            <video src={videoUrl} controls={true} ref={videoRef} />
         </VideoContainer>
     );
 };
-
+/* 2023.05.10 Video 섹션 컨테이너 - 박수범 */
 const VideoContainer = styled.div`
     margin-top: 30px;
     display: block;
     > video {
-        width: 800px;
-        height: 400px;
+        width: 700px;
+        height: 350px;
+        position: relative;
+        max-width: 100%;
+        box-shadow: 0 8px 32px 0 rgba(113, 119, 207, 0.37);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
     }
 `;
 
