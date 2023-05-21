@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 // import styled from 'styled-components';
-import NotFound from 'src/components/NotFound';
+import NotFound from 'src/pages/NotFound';
 import MainPage from './MainPage';
 import Playlist from 'src/components/playlist/Playlist';
 import Mixing from 'src/components/mixing/Mixing';

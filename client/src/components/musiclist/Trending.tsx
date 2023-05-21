@@ -16,7 +16,6 @@ interface MusicData {
 
 const Trending = () => {
     const [tranding, setTranding] = useState<MusicData[]>([]);
-    console.log(tranding);
 
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
 

@@ -31,7 +31,7 @@ function Sidebutton() {
             </Button>
             {ShowDownload ? (
                 <Button>
-                    <a href={`/assest/music/${download}`} download>
+                    <a href={`/assets/music/${download}`} download>
                         <RiDownload2Fill />
                         <span>DOWNLOAD</span>
                     </a>

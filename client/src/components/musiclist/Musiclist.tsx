@@ -18,9 +18,8 @@ const Musiclist = () => {
     const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
     const [totalPages, setTotalPages] = useState<number>(0); // 전체 페이지 수
     const [openSearch, setOpenSearch] = useRecoilState<boolean>(showSearch);
-    // const [tapClick, setTapClick] = useState<number>(0);
+    const [tapClick, setTapClick] = useState<string>('order-by-created-at');
     const buttonArray = [];
-
     /* 2023.05.21 서치 결과에 따른 뮤직리스트 출력 */
     const showSearchResult = (searchText: string) => {
         axios
@@ -32,7 +31,7 @@ const Musiclist = () => {
                 },
             })
             .then((response) => {
-                setMusicDataList(response.data);
+                setMusicDataList(response.data.content);
                 setTotalPages(response.data.pageInfo.totalPages);
             })
             .catch((error) => {
@@ -44,7 +43,7 @@ const Musiclist = () => {
     useEffect(() => {
         axios
             .get<MusicDataResponse>(
-                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics?&page=${currentPage}&size=5`,
+                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/${tapClick}?&page=${currentPage}&size=5`,
             )
             .then((response) => {
                 setMusicDataList(response.data.data);
@@ -53,7 +52,7 @@ const Musiclist = () => {
             .catch((error) => {
                 console.error(error);
             });
-    }, [setMusicDataList, currentPage]);
+    }, [currentPage, tapClick]);
 
     /** 2023.05.17 전체 페이지 수 만큼 버튼 생성 - 김주비*/
     for (let i = 1; i <= totalPages; i++) {
@@ -84,32 +83,6 @@ const Musiclist = () => {
         return `${formattedMinutes}:${formattedSeconds}`;
     };
 
-    /* 2023.05.21 뮤직리스트 최신순 조회 */
-    const showNewResult = () => {
-        axios
-            .get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/order-by-created-at`)
-            .then((response) => {
-                setMusicDataList(response.data);
-                setTotalPages(response.data.pageInfo.totalPages);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    };
-
-    /* 2023.05.21 뮤직리스트 좋아요순 조회 */
-    const showLikeResult = () => {
-        axios
-            .get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/order-by-like-count`)
-            .then((response) => {
-                setMusicDataList(response.data);
-                setTotalPages(response.data.pageInfo.totalPages);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    };
-
     return (
         <Container>
             <BackgroundCover></BackgroundCover>
@@ -130,8 +103,22 @@ const Musiclist = () => {
                     <MusicListTitle>
                         <div className="musicList-title">Music List</div>
                         <div className="music-inquiry">
-                            <li onClick={showNewResult}>최신순</li>
-                            <li onClick={showLikeResult}>좋아요순</li>
+                            <li
+                                onClick={() => {
+                                    setTapClick('order-by-created-at');
+                                }}
+                                className={tapClick === 'order-by-created-at' ? 'active' : ''}
+                            >
+                                최신순
+                            </li>
+                            <li
+                                onClick={() => {
+                                    setTapClick('order-by-like-count');
+                                }}
+                                className={tapClick === 'order-by-like-count' ? 'active' : ''}
+                            >
+                                좋아요순
+                            </li>
                         </div>
                     </MusicListTitle>
                     <SongContainer>
@@ -154,7 +141,7 @@ const Musiclist = () => {
                                 <li className="music-time color-gray">
                                     {formatSecondsToTime(Number(musicData.musicTime))}
                                 </li>
-                                <Sideicon musicId={musicData.musicId} />
+                                <Sideicon musicId={musicData.musicId} musicUri={musicData.musicUri} />
                             </Item>
                         ))}
                     </SongContainer>
@@ -354,6 +341,7 @@ const Item = styled.ul`
     }
 
     .music-tags {
+        min-width: 150px;
         display: flex;
         flex-direction: row;
         justify-content: right;
