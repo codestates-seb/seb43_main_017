@@ -16,9 +16,6 @@ const VideoUploader = ({ videoRef }: LikedListProps) => {
         acceptedFiles.forEach((file: File) => {
             const reader = new FileReader();
             reader.onload = () => {
-                const fileData = reader.result;
-                console.log('업로드된 파일:', file.name);
-                console.log('파일 데이터:', fileData);
                 setUploadedVideo(file);
                 setvideouploadState(true);
             };

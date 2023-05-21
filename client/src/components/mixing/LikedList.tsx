@@ -63,7 +63,7 @@ const LikedList = ({ audioRef }: LikedListProps) => {
         const fetchLikedMusic = async () => {
             try {
                 const response = await axios.get(
-                    `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/liked-musics?&page=${currentPage}&size=5`,
+                    `${process.env.REACT_APP_API_URL}/musics/liked-musics?&page=${currentPage}&size=8`,
                     {
                         headers: {
                             Authorization: token,
@@ -74,7 +74,7 @@ const LikedList = ({ audioRef }: LikedListProps) => {
                     (music: LikeMusicList) => music.musicLikeCount > 0,
                 );
                 setLikedMusic(likedMusicData);
-                console.log(response.data.data);
+
                 setTotalPages(response.data.pageInfo.totalPages);
             } catch (error) {
                 console.error('Error fetching liked music:', error);
@@ -106,7 +106,6 @@ const LikedList = ({ audioRef }: LikedListProps) => {
     };
 
     const handleSongClick = (songUrl: string, songName: string) => {
-        console.log(selectedSong);
         setSelectedSong(songUrl);
         setAudioControl(true);
         alert(songName + '이 추가되었습니다.');
@@ -121,22 +120,20 @@ const LikedList = ({ audioRef }: LikedListProps) => {
                 </div>
             </LikeTitle>
             {likedMusic.map((likedata) => (
-                <>
-                    <LikeList key={likedata.musicId}>
-                        <img src={likedata.albumCoverImg} alt={likedata.musicName} />
-                        <li>{likedata.musicName}</li>
-                        <li>{likedata.artistName}</li>
-                        <AddMusic
-                            onClick={() => {
-                                handleSongClick(likedata.musicUri, likedata.musicName);
-                                setCurrentMusic(true);
-                                setMusicTitle(likedata.musicName);
-                            }}
-                        >
-                            <AiOutlinePlus />
-                        </AddMusic>
-                    </LikeList>
-                </>
+                <LikeList key={likedata.musicId}>
+                    <img src={likedata.albumCoverImg} alt={likedata.musicName} />
+                    <li>{likedata.musicName}</li>
+                    <li>{likedata.artistName}</li>
+                    <AddMusic
+                        onClick={() => {
+                            handleSongClick(likedata.musicUri, likedata.musicName);
+                            setCurrentMusic(true);
+                            setMusicTitle(likedata.musicName);
+                        }}
+                    >
+                        <AiOutlinePlus />
+                    </AddMusic>
+                </LikeList>
             ))}
             {currentMusic && (
                 <CurrentMusic>
