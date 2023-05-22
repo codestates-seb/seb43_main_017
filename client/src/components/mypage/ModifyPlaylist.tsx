@@ -16,36 +16,34 @@ function ModifyPlaylist() {
                 <p>MODIFY PLAYLIST</p>
             </div>
             <ModiCointainer>
-                {myplaylistData.map((data) => (
-                    <div>
-                        <Plcard>
-                            <div className="pl-treck">TRECK 8</div>
-                            <div className="pl-contents">
-                                <Pluser>
-                                    <span>WTITER</span>
-                                    <span>{data.createMember}</span>
-                                    <span>LIKE</span>
-                                    <span>{data.likeCount}</span>
-                                </Pluser>
-                                <Pltext>
-                                    <span>{data.title}</span>
-                                    <span>{data.body}</span>
-                                </Pltext>
-                            </div>
-                        </Plcard>
-                        <PlyList>
-                            <div className="plyItem">
-                                <img src="./assets/ditto.png" alt="cover-img" />
-                                <li>Ditto</li>
-                                <li>Newjeans</li>
-                                <li>OMG</li>
-                                <li>
-                                    <VscClose />
-                                </li>
-                            </div>
-                        </PlyList>
-                    </div>
-                ))}
+                <div>
+                    <Plcard>
+                        <div className="pl-treck">TRECK 8</div>
+                        <div className="pl-contents">
+                            <Pluser>
+                                <span>WTITER</span>
+                                <span>관리자</span>
+                                <span>LIKE</span>
+                                <span>13</span>
+                            </Pluser>
+                            <Pltext>
+                                <span>나만의 플레이리스트</span>
+                                <span>나만의 플레이리스트</span>
+                            </Pltext>
+                        </div>
+                    </Plcard>
+                    <PlyList>
+                        <div className="plyItem">
+                            <img src="./assets/ditto.png" alt="cover-img" />
+                            <li>Ditto</li>
+                            <li>Newjeans</li>
+                            <li>OMG</li>
+                            <li>
+                                <VscClose />
+                            </li>
+                        </div>
+                    </PlyList>
+                </div>
             </ModiCointainer>
         </ModifyContainer>
     );

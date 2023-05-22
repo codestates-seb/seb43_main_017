@@ -1,12 +1,13 @@
 import styled from 'styled-components';
 import { useRef, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
-import { videouploadState } from 'src/recoil/Atoms';
+import { videouploadState, showSearch } from 'src/recoil/Atoms';
 import VideoUploader from './VideoUpdate';
 import LikedList from './LikedList';
 import { FaPlay, FaPause, FaVolumeUp, FaVolumeDown, FaVideoSlash } from 'react-icons/fa';
 
 function Mixing() {
+    const [openSearch, setOpenSearch] = useRecoilState<boolean>(showSearch);
     const [videoState, setvideouploadState] = useRecoilState(videouploadState);
     let audioVolume = 0.5;
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -63,10 +64,17 @@ function Mixing() {
             <MixingBackground></MixingBackground>
             <MixingHeader>
                 {!videoState ? null : (
-                    <Musiclist>
+                    <Musiclist className={openSearch ? 'open-search' : ''}>
                         <LikedList audioRef={audioRef} />
                     </Musiclist>
                 )}
+                <SearchOpen
+                    onClick={() => {
+                        setOpenSearch(true);
+                    }}
+                >
+                    SEARCH
+                </SearchOpen>
                 <div className="flex-center">
                     <MixingPage>
                         <span className="mixing-title">FITTING &nbsp; ROOM</span>
@@ -137,7 +145,7 @@ const MixingBackground = styled.article`
 /**2023-05-06 플레이리스트 상단 섹션 : 김주비 */
 const MixingHeader = styled.article`
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 60%;
@@ -175,10 +183,28 @@ const MixingPage = styled.div`
         transform: translateY(70px);
         animation: movingtext 1s forwards 0.5s;
     }
-    @media (max-width: 700px) {
+    @media (max-width: 1350px) {
         height: 50px;
-        .pl-title {
+        .mixing-title {
+            font-size: 3.2rem;
+        }
+    }
+    @media (max-width: 1000px) {
+        height: 50px;
+        .mixing-title {
+            font-size: 3rem;
+        }
+    }
+    @media (max-width: 722px) {
+        height: 50px;
+        .mixing-title {
             font-size: 2.5rem;
+        }
+    }
+    @media (max-width: 590px) {
+        height: 35px;
+        .mixing-title {
+            font-size: 2rem;
         }
     }
 `;
@@ -189,6 +215,18 @@ const Mixingtext = styled.div`
     height: 20px;
     margin-top: 10px;
     overflow: hidden;
+    @media (max-width: 700px) {
+        height: 25px;
+        margin-top: 5px;
+        overflow: hidden;
+        .mixing-text {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 10px;
+            transform: translateY(20px);
+            animation: movingtext 1s forwards 1s;
+            opacity: 0.6;
+        }
+    }
     .mixing-text {
         font-family: 'Rajdhani', sans-serif;
         font-size: 14px;
@@ -200,19 +238,42 @@ const Mixingtext = styled.div`
 
 /**2023-05-06 슬라이드 업 되는 서브텍스트 애니메이션 - 박수범*/
 const Musiclist = styled.div`
+    height: 100vh;
     position: absolute;
+    z-index: 9999;
     display: flex;
     flex-direction: column;
     left: 100px;
     text-align: center;
     top: 0;
-    min-height: 100vh;
     background: rgba(63, 59, 59, 0.25);
     box-shadow: 0 8px 32px 0 rgba(113, 119, 207, 0.37);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.18);
+    @media screen and (max-width: 1530px) {
+        /* display: none; */
+        position: absolute;
+        display: none;
+        top: 0px;
+        width: 0%;
+        z-index: 3;
+        animation: openSearch 1s forwards;
+        overflow: hidden;
+    }
+
+    &.open-search {
+        position: fixed;
+        display: block;
+    }
+    @keyframes openSearch {
+        100% {
+            z-index: 3;
+            left: 0;
+            width: 100%;
+        }
+    }
 `;
 /** 2022/05/22 - 비디오,오디오 컨트롤러 - 박수범 */
 const VideoBtnbar = styled.div`
@@ -226,6 +287,14 @@ const VideoBtnbar = styled.div`
     -webkit-backdrop-filter: blur(4px);
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.18);
+    @media (max-width: 1350px) {
+        width: 500px;
+        height: 50px;
+    }
+    @media (max-width: 722px) {
+        width: 300px;
+        height: 30px;
+    }
 `;
 /** 2022/05/22 - 비디오,오디오 버튼 컴포넌트 - 박수범 */
 const VideoBtn = styled.button`
@@ -235,6 +304,12 @@ const VideoBtn = styled.button`
     margin: 5px 10px;
     font-size: 35px;
     color: #f0f8ff;
+    @media (max-width: 1350px) {
+        font-size: 23px;
+    }
+    @media (max-width: 722px) {
+        font-size: 15px;
+    }
     cursor: pointer;
     &:hover {
         color: #cce4fa;
@@ -243,5 +318,27 @@ const VideoBtn = styled.button`
     &:focus {
         color: #6db4f3;
         font-size: 40px;
+    }
+`;
+
+const SearchOpen = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 20px;
+    border-radius: 20px;
+    border: 2px solid #ccc;
+    color: #ccc;
+    font-size: 0.8rem;
+    transition: 0.2s ease-in-out;
+    @media (min-width: 1530px) {
+        display: none;
+    }
+    > * {
+        margin-right: 5px;
+    }
+    :hover {
+        border: 2px solid rgba(199, 68, 68, 1);
+        color: rgba(199, 68, 68, 1);
     }
 `;

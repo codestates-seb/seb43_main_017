@@ -17,6 +17,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, videoRef }) => {
 const VideoContainer = styled.div`
     margin-top: 30px;
     display: block;
+    @media (max-width: 722px) {
+        width: 300px;
+        height: 150px;
+    }
     > video {
         width: 700px;
         height: 350px;
@@ -27,6 +31,14 @@ const VideoContainer = styled.div`
         -webkit-backdrop-filter: blur(4px);
         border-radius: 10px;
         border: 1px solid rgba(255, 255, 255, 0.18);
+        @media (max-width: 1350px) {
+            width: 500px;
+            height: 250px;
+        }
+        @media (max-width: 722px) {
+            width: 300px;
+            height: 150px;
+        }
     }
 `;
 

@@ -3,6 +3,9 @@ import { HiHeart } from 'react-icons/hi';
 import { AiOutlinePlus } from 'react-icons/ai';
 import axios from 'axios';
 import { useEffect, useState, RefObject } from 'react';
+import { useRecoilState } from 'recoil';
+import { showSearch } from 'src/recoil/Atoms';
+import { MdTransitEnterexit } from 'react-icons/md';
 
 interface LikeMusicList {
     albumCoverImg: string;
@@ -23,6 +26,7 @@ interface LikedListProps {
     audioRef: RefObject<HTMLAudioElement>;
 }
 const LikedList = ({ audioRef }: LikedListProps) => {
+    const [, setShowSearch] = useRecoilState<boolean>(showSearch);
     const [emptyList, setEmptyList] = useState<boolean>(false); //좋아요한 음악이 있는지 없는지 여부
     const [MusicTitle, setMusicTitle] = useState<string>(''); //현재 삽입된 오디오 제목
     const [currentMusic, setCurrentMusic] = useState<boolean>(false); // 선택된 음악인지 판단하는 값
@@ -143,6 +147,13 @@ const LikedList = ({ audioRef }: LikedListProps) => {
                     </button>
                 </Pagination>
             ) : null}
+            <Xbox
+                onClick={() => {
+                    setShowSearch(false);
+                }}
+            >
+                <MdTransitEnterexit />
+            </Xbox>
         </LikeContainer>
     );
 };
@@ -154,8 +165,9 @@ const LikeContainer = styled.div`
     width: 15rem;
     align-items: center;
     margin: 30px;
+    font-size: 1rem;
     @media screen and (max-width: 1000px) {
-        width: 400px;
+        width: 200px;
         margin: 0;
         margin-top: 50px;
         margin-left: 30px;
@@ -264,5 +276,26 @@ const CurrentMusic = styled.p`
     > span {
         font-weight: bold;
         color: #feeaea;
+    }
+`;
+const Xbox = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 50px;
+    height: 50px;
+    font-size: 2rem;
+    color: #666;
+    text-align: center;
+    border: 2px solid #666;
+    :hover {
+        color: #ccc;
+        border-color: #ccc;
+    }
+    @media screen and (min-width: 1530px) {
+        display: none;
     }
 `;
