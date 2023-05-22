@@ -40,7 +40,6 @@ const LikeMusic = () => {
                     (music: LikeMusicList) => music.musicLikeCount > 0,
                 );
                 setLikedMusic(likedMusicData);
-                console.log(response.data.data);
                 setTotalPages(response.data.pageInfo.totalPages);
             } catch (error) {
                 console.error('Error fetching liked music:', error);

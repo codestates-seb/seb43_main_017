@@ -24,9 +24,8 @@ function ModifyPlaylist() {
                     },
                 )
                 .then((response) => {
-                    setMyplaylistData(response.data.data);
+                    setMyplaylistData([response.data.data]);
                     console.log(response.data.data);
-                    console.log(response.data);
                 })
                 .catch((error) => {
                     console.error(error);
@@ -43,7 +42,7 @@ function ModifyPlaylist() {
     useEffect(() => {
         if (!isEditing) {
             // 편집이 완료되었을 때 API 요청
-            // sendRequestToServer();
+            sendRequestToServer();
         }
     }, [isEditing]);
 
@@ -55,27 +54,34 @@ function ModifyPlaylist() {
         setBody(e.target.value);
     };
 
-    // const sendRequestToServer = () => {
-    //              axios.patch(
-    //             `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/${ModifyPlaylistId}`,
-    //             {
-    //                 headers: {
-    //                     Authorization: token,
-    //                 },
-    //             },
-    //             {
-    //                 {
-    //                     title: title,
-    //                     body: body,
-    //                     // coverImg: url,
-    //                 },
-    //             },
-    //         );
-    //         console.log('서버 응답:', response.data);
-    //     } catch (error) {
-    //         console.error('API 요청 실패:', error);
-    //     }
-    // };
+    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        if (e.key === 'Enter') {
+            setIsEditing(false);
+        }
+    };
+
+    const sendRequestToServer = () => {
+        axios
+            .patch(
+                `playlists/${ModifyPlaylistId}`,
+                {
+                    title: title,
+                    body: body,
+                },
+                {
+                    headers: {
+                        Authorization: token,
+                    },
+                },
+            )
+            .then((response) => {
+                setMyplaylistData([response.data.data]);
+                console.log('서버 응답:', response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
 
     return (
         <ModifyContainer>
@@ -102,8 +108,17 @@ function ModifyPlaylist() {
                                     <Pltext>
                                         {isEditing ? (
                                             <div>
-                                                <input type="text" value={title} onChange={handleTitleChange} />
-                                                <textarea value={body} onChange={handleBodyChange} />
+                                                <input
+                                                    type="text"
+                                                    value={title}
+                                                    onChange={handleTitleChange}
+                                                    onKeyPress={handleKeyPress}
+                                                />
+                                                <textarea
+                                                    value={body}
+                                                    onChange={handleBodyChange}
+                                                    onKeyPress={handleKeyPress}
+                                                />
                                             </div>
                                         ) : (
                                             <div className="pl-name" onClick={() => setIsEditing(true)}>
