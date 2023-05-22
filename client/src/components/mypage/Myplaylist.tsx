@@ -143,7 +143,7 @@ const Myplaylist = () => {
                     </div>
                     <div className="playlist-button">
                         <Link to={`/playlsit/${data.playListId}`}>
-                            <BsPlayCircle />
+                            <BsPlayCircle className="color-blue" />
                         </Link>
                     </div>
                     <div
@@ -246,12 +246,15 @@ const PlaylistList = styled.div`
 
     .playlist-button {
         font-size: 16px;
-        color: white;
+        color: #6e9cff;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: inherit;
-        text-decoration: none;
+        .color-blue {
+            color: #6e9cff;
+            font-size: 1.2rem;
+            transition: 0.2s ease-in-out;
+        }
     }
 
     .playlist-menu {
