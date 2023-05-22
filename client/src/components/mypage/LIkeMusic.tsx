@@ -107,6 +107,7 @@ export default LikeMusic;
 /* 2023.05.10 Like Music 전체 박스 컴포넌트 - 홍혜란 */
 const LikeContainer = styled.div`
     width: 400px;
+    height: 280px;
     align-items: center;
     margin-top: 40px;
     @media screen and (max-width: 1000px) {

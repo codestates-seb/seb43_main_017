@@ -6,6 +6,7 @@ import { CiMenuKebab } from 'react-icons/ci';
 import { modalState, myplaylistState, modifyDataState, modifyClickState } from 'src/recoil/Atoms';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const Myplaylist = () => {
     /* 2023.05.16 마이플레이리스트 메뉴 버튼 클릭시 수정, 삭제 버튼 모달 */
@@ -141,7 +142,9 @@ const Myplaylist = () => {
                         {data.likeCount}
                     </div>
                     <div className="playlist-button">
-                        <BsPlayCircle />
+                        <Link to={`/playlsit/${data.playListId}`}>
+                            <BsPlayCircle />
+                        </Link>
                     </div>
                     <div
                         className="playlist-menu"
@@ -171,6 +174,7 @@ export default Myplaylist;
 
 const PlayListContainer = styled.div`
     width: 400px;
+    height: 280px;
     align-items: center;
     margin-top: 40px;
     @media screen and (max-width: 1000px) {
@@ -246,6 +250,8 @@ const PlaylistList = styled.div`
         display: flex;
         align-items: center;
         justify-content: center;
+        color: inherit;
+        text-decoration: none;
     }
 
     .playlist-menu {
