@@ -18,47 +18,24 @@ interface LikeMusicList {
     musicTime: number;
     musicUri: string;
 }
-
+/** 2022/05/22 - useRef 타입 선언 - 박수범 */
 interface LikedListProps {
     audioRef: RefObject<HTMLAudioElement>;
 }
-/*
-1. axios.get으로 유저가 좋아요 누른 음악들만 불러온다.
-2. res.data안에 들어있는 좋아요한 음악들의 리스트를 state로 관리한다.
-3. 상태값을 map으로 순회하며 <li>타이틀</li>/<li>가수</li>/<button onClick={setSelectedSong(uri)}> 뿌려준다.
-4. selectedSong는 audio src로 사용한다.
-5.최종적으로  타이틀   가수    +버튼  이런식으로 뿌려지게 한다.
-
- */
-
 const LikedList = ({ audioRef }: LikedListProps) => {
-    const [MusicTitle, setMusicTitle] = useState<string>('');
-    const [currentMusic, setCurrentMusic] = useState<boolean>(false);
-    const [audioControl, setAudioControl] = useState<boolean>(false);
+    const [emptyList, setEmptyList] = useState<boolean>(false); //좋아요한 음악이 있는지 없는지 여부
+    const [MusicTitle, setMusicTitle] = useState<string>(''); //현재 삽입된 오디오 제목
+    const [currentMusic, setCurrentMusic] = useState<boolean>(false); // 선택된 음악인지 판단하는 값
+    const [audioControl, setAudioControl] = useState<boolean>(false); //오디오 선택창 표시여부
     const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
     const [totalPages, setTotalPages] = useState<number>(0); // 전체 페이지
     const buttonArray = [];
-    const [likedMusic, setLikedMusic] = useState<LikeMusicList[]>([
-        {
-            albumCoverImg: 'https://i.ytimg.com/vi/juhyaZ8A4Ck/mqdefault.jpg',
-            albumName: 'A Hero Is Born',
-            artistName: 'Anuch',
-            createdAt: '2023-05-15 18:03:14',
-            memberId: 0,
-            modifiedAt: '2023-05-21 11:14:54',
-            musicId: 7,
-            musicLikeCount: 2,
-            musicName: 'A Hero Is Born',
-            musicTagName: 'string',
-            musicTime: 99,
-            musicUri: 'https://mainproject-uncover.s3.ap-northeast-2.amazonaws.com/music/A+Hero+Is+Born+-+Anuch.mp3',
-        },
-    ]);
+    const [likedMusic, setLikedMusic] = useState<LikeMusicList[]>([]); //좋아요한 음악 리스트
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
     const [selectedSong, setSelectedSong] = useState<string>(
         'https://mainproject-uncover.s3.ap-northeast-2.amazonaws.com/music/A+Hero+Is+Born+-+Anuch.mp3',
     );
-
+    /**2022/05/22 - 믹싱페이지 진입 시 좋아요 한 음악리스트를 받아오는 요청 - 박수범 */
     useEffect(() => {
         const fetchLikedMusic = async () => {
             try {
@@ -73,8 +50,11 @@ const LikedList = ({ audioRef }: LikedListProps) => {
                 const likedMusicData: LikeMusicList[] = response.data.data.filter(
                     (music: LikeMusicList) => music.musicLikeCount > 0,
                 );
+                if (likedMusicData.length < 1) {
+                    return setEmptyList(false);
+                }
+                setEmptyList(true);
                 setLikedMusic(likedMusicData);
-
                 setTotalPages(response.data.pageInfo.totalPages);
             } catch (error) {
                 console.error('Error fetching liked music:', error);
@@ -98,13 +78,15 @@ const LikedList = ({ audioRef }: LikedListProps) => {
             </button>,
         );
     }
+    /** 2022/05/22 -  다음 음원목록으로 이동하는 함수 - 박수범*/
     const handleNextPage = () => {
         setCurrentPage(currentPage + 1);
     };
+    /** 2022/05/22 - 이전 음원목록으로 이동하는 함수 - 박수범*/
     const handlePrevPage = () => {
         setCurrentPage(currentPage - 1);
     };
-
+    /** 2022/05/22 - 현재 선택한 음악의 url을 저장하고, 오디오 컨트롤러 상태를 변경해준다. 현재곡이 추가됐다는 알림이 뜨게 해주는 함수 -박수범 */
     const handleSongClick = (songUrl: string, songName: string) => {
         setSelectedSong(songUrl);
         setAudioControl(true);
@@ -119,22 +101,26 @@ const LikedList = ({ audioRef }: LikedListProps) => {
                     <p>LIKE MUSIC</p>
                 </div>
             </LikeTitle>
-            {likedMusic.map((likedata) => (
-                <LikeList key={likedata.musicId}>
-                    <img src={likedata.albumCoverImg} alt={likedata.musicName} />
-                    <li>{likedata.musicName}</li>
-                    <li>{likedata.artistName}</li>
-                    <AddMusic
-                        onClick={() => {
-                            handleSongClick(likedata.musicUri, likedata.musicName);
-                            setCurrentMusic(true);
-                            setMusicTitle(likedata.musicName);
-                        }}
-                    >
-                        <AiOutlinePlus />
-                    </AddMusic>
-                </LikeList>
-            ))}
+            {emptyList ? (
+                likedMusic.map((likedata) => (
+                    <LikeList key={likedata.musicId}>
+                        <img src={likedata.albumCoverImg} alt={likedata.musicName} />
+                        <li>{likedata.musicName}</li>
+                        <li>{likedata.artistName}</li>
+                        <AddMusic
+                            onClick={() => {
+                                handleSongClick(likedata.musicUri, likedata.musicName);
+                                setCurrentMusic(true);
+                                setMusicTitle(likedata.musicName);
+                            }}
+                        >
+                            <AiOutlinePlus />
+                        </AddMusic>
+                    </LikeList>
+                ))
+            ) : (
+                <li>좋아요한 음악이 없습니다.</li>
+            )}
             {currentMusic && (
                 <CurrentMusic>
                     현재 곡은 <span>"{MusicTitle}"</span>입니다.
@@ -146,15 +132,17 @@ const LikedList = ({ audioRef }: LikedListProps) => {
                     src={`http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com/assets/music/${selectedSong}`}
                 ></audio>
             )}
-            <Pagination>
-                <button disabled={currentPage === 1} onClick={handlePrevPage}>
-                    Prev
-                </button>
-                {buttonArray}
-                <button disabled={currentPage === totalPages} onClick={handleNextPage}>
-                    Next
-                </button>
-            </Pagination>
+            {emptyList ? (
+                <Pagination>
+                    <button disabled={currentPage === 1} onClick={handlePrevPage}>
+                        Prev
+                    </button>
+                    {buttonArray}
+                    <button disabled={currentPage === totalPages} onClick={handleNextPage}>
+                        Next
+                    </button>
+                </Pagination>
+            ) : null}
         </LikeContainer>
     );
 };

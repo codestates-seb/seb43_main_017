@@ -1,18 +1,17 @@
 import styled from 'styled-components';
-import { useEffect, useRef } from 'react';
-import { useSetRecoilState } from 'recoil';
-import { soundbarOpenState, videouploadState } from 'src/recoil/Atoms';
+import { useRef, useEffect } from 'react';
+import { useRecoilState } from 'recoil';
+import { videouploadState } from 'src/recoil/Atoms';
 import VideoUploader from './VideoUpdate';
 import LikedList from './LikedList';
 import { FaPlay, FaPause, FaVolumeUp, FaVolumeDown, FaVideoSlash } from 'react-icons/fa';
 
 function Mixing() {
-    const setSoundbarOpen = useSetRecoilState<boolean>(soundbarOpenState);
-    const setVideoUploader = useSetRecoilState<boolean>(videouploadState);
+    const [videoState, setvideouploadState] = useRecoilState(videouploadState);
     let audioVolume = 0.5;
     const videoRef = useRef<HTMLVideoElement>(null);
     const audioRef = useRef<HTMLAudioElement>(null);
-
+    /**2022/05/22 - 현재 재생중인 비디오와 오디로를 재생하는 함수 - 박수범 */
     const handleVideoPlay = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
         if (audioRef.current && videoRef.current) {
@@ -20,7 +19,7 @@ function Mixing() {
             videoRef.current.play();
         }
     };
-
+    /**2022/05/22 - 현재 재생중인 비디오와 오디로를 정지하는 함수 - 박수범 */
     const handleVideoPause = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
         if (audioRef.current && videoRef.current) {
@@ -28,7 +27,7 @@ function Mixing() {
             videoRef.current.pause();
         }
     };
-
+    /**2022/05/22 - 현재 재생중인 오디오 볼륨 올리는 함수 - 박수범 */
     const handleAudioVolumeUp = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
 
@@ -39,7 +38,7 @@ function Mixing() {
             return alert('볼륨을 더이상 키울 수 없습니다.');
         }
     };
-
+    /**2022/05/22 - 현재 재생중인 오디오 볼륨 낮추는 함수 - 박수범 */
     const handleAudioVolumeDawn = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
         if (audioRef.current && audioVolume > 0.1) {
@@ -49,24 +48,25 @@ function Mixing() {
             return alert('볼륨을 더이상 줄일 수 없습니다.');
         }
     };
-
+    /**2022/05/22 - 현재 재생중인 비디오 제거 하는 함수 - 박수범 */
     const changeVideo = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
-        setVideoUploader(false);
+        setvideouploadState(false);
     };
-
-    /** 2023.05.16 사운드바 상태 변경 -김주비 */
+    /**2022/05/22 - 다른 페이지 다녀오면 믹싱바 초기화해주기 위한 로직 - 박수범 */
     useEffect(() => {
-        setSoundbarOpen(false);
+        setvideouploadState(false);
     }, []);
 
     return (
         <MixingSection>
             <MixingBackground></MixingBackground>
             <MixingHeader>
-                <Musiclist>
-                    <LikedList audioRef={audioRef} />
-                </Musiclist>
+                {!videoState ? null : (
+                    <Musiclist>
+                        <LikedList audioRef={audioRef} />
+                    </Musiclist>
+                )}
                 <div className="flex-center">
                     <MixingPage>
                         <span className="mixing-title">FITTING &nbsp; ROOM</span>
@@ -75,23 +75,25 @@ function Mixing() {
                         <p className="mixing-text">Directly compare whether the sound source suits your video.</p>
                     </Mixingtext>
                     <VideoUploader videoRef={videoRef} />
-                    <VideoBtnbar>
-                        <VideoBtn onClick={handleVideoPlay}>
-                            <FaPlay />
-                        </VideoBtn>
-                        <VideoBtn onClick={handleVideoPause}>
-                            <FaPause />
-                        </VideoBtn>
-                        <VideoBtn onClick={handleAudioVolumeUp}>
-                            <FaVolumeUp />
-                        </VideoBtn>
-                        <VideoBtn onClick={handleAudioVolumeDawn}>
-                            <FaVolumeDown />
-                        </VideoBtn>
-                        <VideoBtn onClick={changeVideo}>
-                            <FaVideoSlash />
-                        </VideoBtn>
-                    </VideoBtnbar>
+                    {!videoState ? null : (
+                        <VideoBtnbar>
+                            <VideoBtn onClick={handleVideoPlay}>
+                                <FaPlay />
+                            </VideoBtn>
+                            <VideoBtn onClick={handleVideoPause}>
+                                <FaPause />
+                            </VideoBtn>
+                            <VideoBtn onClick={handleAudioVolumeUp}>
+                                <FaVolumeUp />
+                            </VideoBtn>
+                            <VideoBtn onClick={handleAudioVolumeDawn}>
+                                <FaVolumeDown />
+                            </VideoBtn>
+                            <VideoBtn onClick={changeVideo}>
+                                <FaVideoSlash />
+                            </VideoBtn>
+                        </VideoBtnbar>
+                    )}
                 </div>
             </MixingHeader>
         </MixingSection>
@@ -212,6 +214,7 @@ const Musiclist = styled.div`
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.18);
 `;
+/** 2022/05/22 - 비디오,오디오 컨트롤러 - 박수범 */
 const VideoBtnbar = styled.div`
     margin-top: 30px;
     display: flex;
@@ -224,15 +227,21 @@ const VideoBtnbar = styled.div`
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.18);
 `;
+/** 2022/05/22 - 비디오,오디오 버튼 컴포넌트 - 박수범 */
 const VideoBtn = styled.button`
     outline: none;
     border: none;
     background: none;
     margin: 5px 10px;
     font-size: 35px;
-    color: #eaf2f9;
+    color: #f0f8ff;
     cursor: pointer;
     &:hover {
-        color: #acd2f3;
+        color: #cce4fa;
+        stroke: red;
+    }
+    &:focus {
+        color: #6db4f3;
+        font-size: 40px;
     }
 `;
