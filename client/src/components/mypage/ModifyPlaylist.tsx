@@ -52,11 +52,11 @@ function ModifyPlaylist() {
         setBody(e.target.value);
     };
 
-    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        if (e.key === 'Enter') {
-            setIsEditing(false);
-        }
-    };
+    // const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    //     if (e.key === 'Enter') {
+    //         setIsEditing(false);
+    //     }
+    // };
 
     const sendRequestToServer = async () => {
         // try {
