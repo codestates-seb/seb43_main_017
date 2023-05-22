@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { BsPencilSquare } from 'react-icons/bs';
-import { VscClose } from 'react-icons/vsc';
+// import { VscClose } from 'react-icons/vsc';
 import { useRecoilState } from 'recoil';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -10,7 +10,7 @@ function ModifyPlaylist() {
     const [myplaylistData, setMyplaylistData] = useRecoilState(myplaylistState);
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
 
-    const [ModifyPlaylistId, _] = useRecoilState(modifyClickState);
+    const [ModifyPlaylistId] = useRecoilState(modifyClickState);
 
     useEffect(() => {
         // 플레이리스트 가져오는 함수
@@ -25,8 +25,6 @@ function ModifyPlaylist() {
                     },
                 );
                 setMyplaylistData(response.data.data);
-                console.log(response.data.data);
-                console.log(response.data);
             } catch (error) {
                 console.error(error);
             }
@@ -112,12 +110,12 @@ function ModifyPlaylist() {
                                                     type="text"
                                                     value={title}
                                                     onChange={handleTitleChange}
-                                                    onKeyPress={handleKeyPress}
+                                                    // onKeyPress={handleKeyPress}
                                                 />
                                                 <textarea
                                                     value={body}
                                                     onChange={handleBodyChange}
-                                                    onKeyPress={handleKeyPress}
+                                                    // onKeyPress={handleKeyPress}
                                                 />
                                             </div>
                                         ) : (
