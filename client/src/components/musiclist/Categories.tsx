@@ -199,7 +199,6 @@ const CateTagContainer = styled.div`
         backdrop-filter: blur(5px);
     }
 `;
-
 /* 2023.05.07 카테고리 컴포넌트 구현 - 홍혜란 */
 const CategoryContainer = styled.div`
     position: absolute;
@@ -214,7 +213,6 @@ const CategoryContainer = styled.div`
         transform: translateX(-50%);
     }
 `;
-
 const TagGroup = styled.div`
     width: 100%;
 
@@ -265,7 +263,6 @@ const TagGroup = styled.div`
         }
     }
 `;
-
 /* 2023.05.10 태그 박스 컴포넌트 구현 - 홍혜란 */
 const TagBox = styled.div`
     position: absolute;
@@ -275,7 +272,6 @@ const TagBox = styled.div`
         right: 35px;
     }
 `;
-
 /* 2023.05.10 태그 컴포넌트 구현 - 홍혜란 */
 const TagContainer = styled.div`
     border: 1px solid white;
@@ -319,7 +315,6 @@ const TagContainer = styled.div`
         color: white;
     }
 `;
-
 const Xbox = styled.div`
     display: flex;
     justify-content: center;
