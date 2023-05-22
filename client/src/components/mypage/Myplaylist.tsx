@@ -14,12 +14,13 @@ const Myplaylist = () => {
 
     const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
     const [totalPages, setTotalPages] = useState<number>(0); // 전체 페이지 수
+    const [update, setUpdate] = useState<boolean>(false);
     const buttonArray = [];
 
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
 
     const [myplaylistData, setMyplaylistData] = useRecoilState(myplaylistState);
-    const [_, setModifyDataState] = useRecoilState(modifyClickState);
+    const [, setModifyDataState] = useRecoilState(modifyClickState);
 
     /* 2023.05.21 마이플레이리스트 생성 */
     const MyplaylistCreate = () => {
@@ -39,6 +40,7 @@ const Myplaylist = () => {
             )
             .then((response) => {
                 console.log(response);
+                setUpdate(!update);
             })
             .catch((error) => {
                 console.error(error);
@@ -47,26 +49,23 @@ const Myplaylist = () => {
 
     /* 2023.05.22 마이플레이리스트 조회 */
     useEffect(() => {
-        // 플레이리스트 데이터를 가져오는 함수
-        const fetchMyplaylistData = async () => {
-            try {
-                const response = await axios.get(
-                    `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/member-playlist?&page=${currentPage}&size=3`,
-                    {
-                        headers: {
-                            Authorization: token,
-                        },
+        axios
+            .get(
+                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/member-playlist?&page=${currentPage}&size=3`,
+                {
+                    headers: {
+                        Authorization: token,
                     },
-                );
+                },
+            )
+            .then((response) => {
                 setMyplaylistData(response.data.data);
                 setTotalPages(response.data.pageInfo.totalPages);
-            } catch (error) {
+            })
+            .catch((error) => {
                 console.error(error);
-            }
-        };
-
-        fetchMyplaylistData();
-    }, [myplaylistData]);
+            });
+    }, [update]);
 
     /* 2023.05.22 마이플레이리스트 삭제 */
     const handleDeletePlaylist = async (playlistId: number) => {
