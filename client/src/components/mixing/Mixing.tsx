@@ -272,7 +272,7 @@ const Musiclist = styled.div`
     @keyframes openSearch {
         100% {
             margin: 0;
-            z-index: 3;
+            z-index: 9999;
             left: 0;
             width: 100%;
         }
