@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import {
     commentOpenState,
-    // soundbarOpenState,
     downloadLink,
     showDownloadState,
     musicIdState,
@@ -19,7 +18,7 @@ import {
     DetailSection,
     AlbumRecode,
     MusicContents,
-    MusicTags,
+    // MusicTags,
     MusicTitle,
     MusicInfo,
     MusicText,
@@ -28,6 +27,8 @@ import MusicPlayer from 'src/components/soundbar/SoundBar';
 
 function MusicDetail() {
     const msId = useParams();
+    sessionStorage.setItem('musicId', String(msId.msId));
+    sessionStorage.setItem('onPlaylist', 'false');
     const [commentOpen] = useRecoilState<boolean>(commentOpenState);
     // const [, setSoundbarOpen] = useRecoilState<boolean>(soundbarOpenState);
     const [, setShowDownlaod] = useRecoilState<boolean>(showDownloadState);

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { BiX } from 'react-icons/bi';
 import { useRecoilState } from 'recoil';
-import { commentOpenState, musicIdState, playlistCommentState } from 'src/recoil/Atoms';
+import { commentOpenState } from 'src/recoil/Atoms';
 import { useEffect, useState } from 'react';
 import { commentType } from 'src/types/Commentlist';
 import axios from 'axios';
@@ -9,14 +9,25 @@ import axios from 'axios';
 function CommentViewer() {
     const [, setCommentOpen] = useRecoilState<boolean>(commentOpenState);
     const [comment, setComment] = useState<commentType[]>([]);
-    const [musicId] = useRecoilState(musicIdState);
     const [commentText, setCommentText] = useState<string>('');
-    const [playlistComment] = useRecoilState<boolean>(playlistCommentState);
-
+    const [commentSubmit, setCommentSubmit] = useState<boolean>(false);
+    const onPlaylist = sessionStorage.getItem('onPlaylist');
+    const msId = sessionStorage.getItem('musicId');
     const token = localStorage.getItem('access_token');
     const memberId = localStorage.getItem('memberId');
-    const url: string = playlistComment ? `/playlist-comments/` : `/music-comments/musics/`;
 
+    // console.log(comment);
+    const url: string = onPlaylist === 'true' ? `/playlist-comments/` : `/music-comments/musics/`;
+
+    /**2023.05.22 코멘트조회 - 김주비 */
+    useEffect(() => {
+        axios
+            .get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080${url}${msId}`)
+            .then((response) => {
+                setComment(response.data);
+            });
+    }, [commentSubmit]);
+    /**2023.05.22 코멘트작성 - 김주비 */
     const handelCommentWriting = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (token) {
@@ -25,7 +36,7 @@ function CommentViewer() {
             } else {
                 axios
                     .post(
-                        `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080${url}${musicId}`,
+                        `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080${url}${msId}`,
                         {
                             content: commentText,
                         },
@@ -35,47 +46,29 @@ function CommentViewer() {
                             },
                         },
                     )
-                    .then(function (response) {
-                        console.log(response);
+                    .then(() => {
                         setCommentText('');
-                    })
-                    .catch(function (error) {
-                        console.log(error);
+                        setCommentSubmit(!commentSubmit);
                     });
             }
         } else {
             alert('로그인을 먼저 진행해주시기 바랍니다.');
         }
     };
-
+    /**2023.05.22 코멘트삭제 - 김주비 */
     const handleCommentDelete = (index: number) => {
-        // console.log(index);
-        const delurl: string = playlistComment ? `/playlist-comments/` : `/music-comments/`;
-
+        const delurl: string = onPlaylist === 'true' ? `/playlist-comments/` : `/music-comments/`;
+        console.log(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080${delurl}${index}`);
         axios
             .delete(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080${delurl}${index}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             })
-            .then(function (response) {
-                console.log(response);
-            })
-            .catch(function (error) {
-                console.log(error);
+            .then(() => {
+                setCommentSubmit(!commentSubmit);
             });
     };
-
-    useEffect(() => {
-        axios
-            .get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080${url}${musicId}`)
-            .then((response) => {
-                setComment(response.data);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    }, [comment]);
 
     return (
         <CommentViewerGroup>

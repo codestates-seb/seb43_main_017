@@ -12,7 +12,7 @@ import {
     DetailSection,
     AlbumRecode,
     MusicContents,
-    MusicTags,
+    // MusicTags,
     MusicTitle,
     MusicInfo,
     MusicText,
@@ -21,6 +21,8 @@ import MusicPlayer from 'src/components/soundbar/SoundBar';
 
 function PlaylistDetail() {
     const plId = useParams();
+    sessionStorage.setItem('musicId', String(plId.plId));
+    sessionStorage.setItem('onPlaylist', 'true');
     const [plDetailData, setPlDetailData] = useState<PlcardProps>({
         playListId: 0,
         memberId: 0,

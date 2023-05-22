@@ -46,15 +46,7 @@ export const DetailSection = styled.div`
     height: 100%;
     z-index: 2;
 `;
-export const AlbumHeader = styled.div<url>`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    width: 100%;
-    height: 200px;
-    background: url(${(props) => props.url});
-`;
+
 /**2023-05-09 rotate 레코드 : 김주비 */
 export const AlbumRecode = styled.div<url>`
     display: flex;
@@ -70,7 +62,7 @@ export const AlbumRecode = styled.div<url>`
     opacity: 0.7;
     border-radius: 20px;
     animation: showalbumimg 2s forwards 2s;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
     @keyframes showalbumimg {
         100% {
             height: 200px;

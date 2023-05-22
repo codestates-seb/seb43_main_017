@@ -1,7 +1,6 @@
 import styled from 'styled-components';
+import axios from 'axios';
 import React, { useRef, useState, useEffect } from 'react';
-import { useRecoilState } from 'recoil';
-import { commentOpenState, showDownloadState, playlistCommentState, musicIdState } from 'src/recoil/Atoms';
 
 import { BsFillPlayFill, BsPauseFill } from 'react-icons/bs';
 import { TbPlayerTrackPrevFilled, TbPlayerTrackNextFilled } from 'react-icons/tb';
@@ -15,31 +14,49 @@ const AudioPlayer = () => {
     const [currentSongIndex, setCurrentSongIndex] = useState(0);
     const [onPlay, setOnPlay] = useState<boolean>(false);
     const [showSoundControll, setShowSoundControll] = useState<boolean>(false);
+    const [songs, setSongs] = useState([{ src: '', duration: 0 }]);
 
-    const songs = [
-        {
-            src: 'http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com/assets/music/Carefree - Kevin MacLeod.mp3',
-            duration: '03:28',
-        },
-        {
-            src: 'http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com/assets/music/Cheery Monday - Kevin MacLeod.mp3',
-            duration: '03:28',
-        },
-        {
-            src: 'http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com/assets/music/Death Of A Friend - Yeti Music.mp3',
-            duration: '03:28',
-        },
-    ];
+    const onPlaylist = sessionStorage.getItem('onPlaylist');
+    const msId = sessionStorage.getItem('musicId');
+
+    const plOn: string = onPlaylist === 'true' ? '/playlists' : '';
+
+    console.log(songs);
+
     useEffect(() => {
+        axios
+            .get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics${plOn}/${msId}`)
+            .then((response) => {
+                console.log(response.data.data);
+                let data;
+                if (onPlaylist === 'true') {
+                    data = response.data.map((song: any) => ({
+                        src: song.musicUri,
+                        duration: song.musicTime,
+                    }));
+                } else {
+                    data = [response.data.data].map((song: any) => ({
+                        src: song.musicUri,
+                        duration: song.musicTime,
+                    }));
+                }
+
+                setSongs(data);
+                // console.log(data);
+            })
+            .catch((error) => {
+                // 요청 중에 오류가 발생한 경우
+                console.error(error);
+            });
+
         if (audioRef.current) {
             audioRef.current.volume = volume;
-        }
-        if (audioRef.current) {
             audioRef.current.currentTime = currentTime;
         }
-    }, [audioRef]);
+    }, []);
 
     const currentSong = songs[currentSongIndex]; // 현재 재생되는 음원 데이터
+
     /** 203.05.22 음원재생 - 김주비 */
     const play = () => {
         if (audioRef.current) {
@@ -112,7 +129,7 @@ const AudioPlayer = () => {
         <AudioPlayerGroup>
             <audio
                 ref={audioRef}
-                src={currentSong.src}
+                src={`http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com/assets/music/${currentSong.src}`}
                 onTimeUpdate={handleTimeUpdate}
                 onEnded={handleSongEnd}
                 autoPlay
@@ -129,7 +146,7 @@ const AudioPlayer = () => {
                     value={currentTime}
                     onChange={handleTimeChange}
                 />
-                <div>{currentSong.duration}</div>
+                <div>{formatSecondsToTime(currentSong.duration)}</div>
             </SoundMovingBar>
             <SoundOption>
                 <SoundVolume>
