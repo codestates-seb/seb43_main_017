@@ -30,8 +30,6 @@ public class MusicService {
 
     private final MusicRepository musicRepository;
     private final MemberRepository memberRepository;
-    private boolean isDescendingOrder = true;
-    private boolean isDescendingOrderMethod = true;
 
     // Music 생성(등록)
     public Music createMusic(Music music) {
@@ -78,50 +76,43 @@ public class MusicService {
     }
 
     // Music 전체 조회
-    public Page<Music> findAllMusic(int page, int size) {
+    public Page<Music> findMusicsOrderByCreatedAtDesc(int page, int size) {
         return musicRepository.findAll(PageRequest.of(page, size,
                 Sort.by("musicId").descending()));
     }
 
     // 음악 생성일 기준 오름차순/내림차순 정렬
-    public Page<Music> toggleCreatedAtOrder(int page, int size) {
-        List<Music> musicList = musicRepository.findAll();
-
-        if (isDescendingOrder) {
-            musicList = musicList.stream()
-                    .sorted(Comparator.comparing(Music::getCreatedAt).reversed())
-                    .collect(Collectors.toList());
-        } else {
-            musicList = musicList.stream()
-                    .sorted(Comparator.comparing(Music::getCreatedAt))
-                    .collect(Collectors.toList());
-        }
-
-        isDescendingOrder = !isDescendingOrder;
-
-        int start = page * size;
-        int end = Math.min(start + size, musicList.size());
-
-        List<Music> pageMusics = musicList.subList(start, end);
-
-        return new PageImpl<>(pageMusics, PageRequest.of(page, size), musicList.size());
-    }
+//    public Page<Music> toggleCreatedAtOrder(int page, int size) {
+//        List<Music> musicList = musicRepository.findAll();
+//
+//        if (isDescendingOrder) {
+//            musicList = musicList.stream()
+//                    .sorted(Comparator.comparing(Music::getCreatedAt).reversed())
+//                    .collect(Collectors.toList());
+//        } else {
+//            musicList = musicList.stream()
+//                    .sorted(Comparator.comparing(Music::getCreatedAt))
+//                    .collect(Collectors.toList());
+//        }
+//
+//        isDescendingOrder = !isDescendingOrder;
+//
+//        int start = page * size;
+//        int end = Math.min(start + size, musicList.size());
+//
+//        List<Music> pageMusics = musicList.subList(start, end);
+//
+//        return new PageImpl<>(pageMusics, PageRequest.of(page, size), musicList.size());
+//    }
 
 
     // 좋아요 수 기준 오름차순/내림차순 정렬
-    public Page<Music> toggleLikeCountOrder(int page, int size) {
+    public Page<Music> findMusicsOrderByLikeCountDesc(int page, int size) {
         List<Music> musicList = musicRepository.findAll();
 
-        if (isDescendingOrderMethod) {
-            musicList = musicList.stream()
-                    .sorted(Comparator.comparingInt(Music::getMusicLikeCount).reversed())
-                    .collect(Collectors.toList());
-        } else {
-            musicList = musicList.stream()
-                    .sorted(Comparator.comparingInt(Music::getMusicLikeCount))
-                    .collect(Collectors.toList());
-        }
-        isDescendingOrderMethod = !isDescendingOrderMethod;
+        musicList = musicList.stream()
+                .sorted(Comparator.comparingInt(Music::getMusicLikeCount).reversed())
+                .collect(Collectors.toList());
 
         int start = page * size;
         int end = Math.min(start + size, musicList.size());
@@ -130,7 +121,6 @@ public class MusicService {
 
         return new PageImpl<>(pageMusics, PageRequest.of(page, size), musicList.size());
     }
-
 
     // Music 삭제
     public void deleteMusic(long musicId, Long memberId) {
