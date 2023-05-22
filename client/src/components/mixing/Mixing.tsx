@@ -1,12 +1,14 @@
 import styled from 'styled-components';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { videouploadState, showSearch } from 'src/recoil/Atoms';
 import VideoUploader from './VideoUpdate';
 import LikedList from './LikedList';
 import { FaPlay, FaPause, FaVolumeUp, FaVolumeDown, FaVideoSlash } from 'react-icons/fa';
+import { BiSearch } from 'react-icons/bi';
 
 function Mixing() {
+    const [audioSelect, setAudioSelect] = useState<boolean>(false);
     const [openSearch, setOpenSearch] = useRecoilState<boolean>(showSearch);
     const [videoState, setvideouploadState] = useRecoilState(videouploadState);
     let audioVolume = 0.5;
@@ -65,25 +67,28 @@ function Mixing() {
             <MixingHeader>
                 {!videoState ? null : (
                     <Musiclist className={openSearch ? 'open-search' : ''}>
-                        <LikedList audioRef={audioRef} />
+                        <LikedList audioRef={audioRef} setAudioSelect={setAudioSelect} />
                     </Musiclist>
                 )}
-                <SearchOpen
-                    onClick={() => {
-                        setOpenSearch(true);
-                    }}
-                >
-                    SEARCH
-                </SearchOpen>
+                {!videoState ? null : (
+                    <SearchOpen
+                        onClick={() => {
+                            setOpenSearch(true);
+                        }}
+                    >
+                        <BiSearch />
+                        SELECT MUSIC
+                    </SearchOpen>
+                )}
                 <div className="flex-center">
                     <MixingPage>
                         <span className="mixing-title">FITTING &nbsp; ROOM</span>
                     </MixingPage>
                     <Mixingtext>
-                        <p className="mixing-text">Directly compare whether the sound source suits your video.</p>
+                        <p className="mixing-text">내 영상에 맞는 음원인지 직접 비교해보세요.</p>
                     </Mixingtext>
                     <VideoUploader videoRef={videoRef} />
-                    {!videoState ? null : (
+                    {!videoState || !audioSelect ? null : (
                         <VideoBtnbar>
                             <VideoBtn onClick={handleVideoPlay}>
                                 <FaPlay />
@@ -236,7 +241,7 @@ const Mixingtext = styled.div`
     }
 `;
 
-/**2023-05-06 슬라이드 업 되는 서브텍스트 애니메이션 - 박수범*/
+/**2023-05-22 좋아요한 음악 리스트 컴포넌트 - 박수범*/
 const Musiclist = styled.div`
     height: 100vh;
     position: absolute;
@@ -247,28 +252,26 @@ const Musiclist = styled.div`
     text-align: center;
     top: 0;
     background: rgba(63, 59, 59, 0.25);
-    box-shadow: 0 8px 32px 0 rgba(113, 119, 207, 0.37);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    border-radius: 10px;
+    box-shadow: 0 8px 32px 0 rgba(113, 119, 207, 0.57);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     border: 1px solid rgba(255, 255, 255, 0.18);
     @media screen and (max-width: 1530px) {
-        /* display: none; */
         position: absolute;
         display: none;
         top: 0px;
         width: 0%;
-        z-index: 3;
         animation: openSearch 1s forwards;
         overflow: hidden;
     }
 
     &.open-search {
         position: fixed;
-        display: block;
+        display: flex;
     }
     @keyframes openSearch {
         100% {
+            margin: 0;
             z-index: 3;
             left: 0;
             width: 100%;
@@ -304,12 +307,6 @@ const VideoBtn = styled.button`
     margin: 5px 10px;
     font-size: 35px;
     color: #f0f8ff;
-    @media (max-width: 1350px) {
-        font-size: 23px;
-    }
-    @media (max-width: 722px) {
-        font-size: 15px;
-    }
     cursor: pointer;
     &:hover {
         color: #cce4fa;
@@ -319,8 +316,32 @@ const VideoBtn = styled.button`
         color: #6db4f3;
         font-size: 40px;
     }
+    @media (max-width: 1350px) {
+        font-size: 23px;
+        cursor: pointer;
+        &:hover {
+            color: #cce4fa;
+            stroke: red;
+        }
+        &:focus {
+            color: #6db4f3;
+            font-size: 26px;
+        }
+    }
+    @media (max-width: 722px) {
+        cursor: pointer;
+        font-size: 15px;
+        &:hover {
+            color: #cce4fa;
+            stroke: red;
+        }
+        &:focus {
+            color: #6db4f3;
+            font-size: 17px;
+        }
+    }
 `;
-
+/**2023-05-22 모바일버전 좋아요한 음악 리스트 여는 버튼 - 박수범*/
 const SearchOpen = styled.div`
     display: flex;
     justify-content: center;
@@ -333,6 +354,11 @@ const SearchOpen = styled.div`
     transition: 0.2s ease-in-out;
     @media (min-width: 1530px) {
         display: none;
+    }
+    @media (max-width: 722px) {
+        border: 1px solid #ccc;
+        color: #ccc;
+        font-size: 0.5rem;
     }
     > * {
         margin-right: 5px;
