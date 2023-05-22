@@ -2,13 +2,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import {
-    commentOpenState,
-    soundbarOpenState,
-    showDownloadState,
-    playlistCommentState,
-    musicIdState,
-} from 'src/recoil/Atoms';
+import { commentOpenState, showDownloadState, playlistCommentState, musicIdState } from 'src/recoil/Atoms';
 import { PlcardProps } from 'src/types/Slider';
 import CommentViewer from 'src/components/musicdetail/CommentViewer';
 import Sidebutton from 'src/components/musicdetail/SideButton';
@@ -18,14 +12,17 @@ import {
     DetailSection,
     AlbumRecode,
     MusicContents,
-    MusicTags,
+    // MusicTags,
     MusicTitle,
     MusicInfo,
     MusicText,
 } from 'src/components/musicdetail/style/DetailStyle';
+import MusicPlayer from 'src/components/soundbar/SoundBar';
 
 function PlaylistDetail() {
     const plId = useParams();
+    sessionStorage.setItem('musicId', String(plId.plId));
+    sessionStorage.setItem('onPlaylist', 'true');
     const [plDetailData, setPlDetailData] = useState<PlcardProps>({
         playListId: 0,
         memberId: 0,
@@ -40,12 +37,10 @@ function PlaylistDetail() {
     });
     const [commentOpen] = useRecoilState<boolean>(commentOpenState);
     const [, setShowDownlaod] = useRecoilState<boolean>(showDownloadState);
-    const [, setSoundbarOpen] = useRecoilState<boolean>(soundbarOpenState);
     const [, setMusicId] = useRecoilState<string | undefined>(musicIdState);
     const [, setPlaylistComment] = useRecoilState<boolean>(playlistCommentState);
 
     useEffect(() => {
-        setSoundbarOpen(true);
         setShowDownlaod(false);
         setPlaylistComment(true);
         setMusicId(plId.plId);
@@ -66,16 +61,15 @@ function PlaylistDetail() {
         <DetailGroup>
             {commentOpen ? <CommentViewer></CommentViewer> : null}
             <PlaylistBackground url={plDetailData.coverImg}></PlaylistBackground>
-            <AlbumRecode>
-                <img src={plDetailData.coverImg} />
-            </AlbumRecode>
             <DetailSection>
-                <MusicContents>
-                    <MusicTags>
+                <AlbumRecode url={plDetailData.coverImg}>
+                    {/* <MusicTags>
                         {plDetailData.tags.map((tag, index) => (
                             <li key={`tag-${index}`}>{tag}</li>
                         ))}
-                    </MusicTags>
+                    </MusicTags> */}
+                </AlbumRecode>
+                <MusicContents>
                     <MusicTitle>
                         <span>{plDetailData.title}</span>
                     </MusicTitle>
@@ -90,6 +84,7 @@ function PlaylistDetail() {
                     </MusicText>
                 </MusicContents>
                 <Sidebutton />
+                <MusicPlayer />
             </DetailSection>
         </DetailGroup>
     );

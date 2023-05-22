@@ -113,8 +113,10 @@ public class PlayListService {
             if (requestBody.getBody() != null) {
                 findPlayList.setBody(requestBody.getBody());
             }
+            if (requestBody.getCoverImg() != null) {
+                findPlayList.setCoverImg(requestBody.getCoverImg());
+            }
         }
-
         return findPlayList;
     }
 

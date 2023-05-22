@@ -19,7 +19,6 @@ public class PlayListDto {
         private String body;
 
         private String coverImg;
-
     }
 
     @Getter

@@ -32,6 +32,7 @@ interface LikedListProps {
  */
 
 const LikedList = ({ audioRef }: LikedListProps) => {
+    const [MusicTitle, setMusicTitle] = useState<string>('');
     const [currentMusic, setCurrentMusic] = useState<boolean>(false);
     const [audioControl, setAudioControl] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
@@ -62,7 +63,7 @@ const LikedList = ({ audioRef }: LikedListProps) => {
         const fetchLikedMusic = async () => {
             try {
                 const response = await axios.get(
-                    `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/liked-musics?&page=${currentPage}&size=5`,
+                    `${process.env.REACT_APP_API_URL}/musics/liked-musics?&page=${currentPage}&size=8`,
                     {
                         headers: {
                             Authorization: token,
@@ -73,7 +74,7 @@ const LikedList = ({ audioRef }: LikedListProps) => {
                     (music: LikeMusicList) => music.musicLikeCount > 0,
                 );
                 setLikedMusic(likedMusicData);
-                console.log(response.data.data);
+
                 setTotalPages(response.data.pageInfo.totalPages);
             } catch (error) {
                 console.error('Error fetching liked music:', error);
@@ -119,28 +120,32 @@ const LikedList = ({ audioRef }: LikedListProps) => {
                 </div>
             </LikeTitle>
             {likedMusic.map((likedata) => (
-                <>
-                    <LikeList key={likedata.musicId}>
-                        <img src={likedata.albumCoverImg} alt={likedata.musicName} />
-                        <li>{likedata.musicName}</li>
-                        <li>{likedata.artistName}</li>
-                        <AddMusic
-                            onClick={() => {
-                                handleSongClick(likedata.musicUri, likedata.musicName);
-                                setCurrentMusic(!currentMusic);
-                            }}
-                        >
-                            <AiOutlinePlus />
-                        </AddMusic>
-                    </LikeList>
-                    {currentMusic && (
-                        <CurrentMusic>
-                            현재 곡은 <span>"{likedata.musicName}"</span>입니다.
-                        </CurrentMusic>
-                    )}
-                </>
+                <LikeList key={likedata.musicId}>
+                    <img src={likedata.albumCoverImg} alt={likedata.musicName} />
+                    <li>{likedata.musicName}</li>
+                    <li>{likedata.artistName}</li>
+                    <AddMusic
+                        onClick={() => {
+                            handleSongClick(likedata.musicUri, likedata.musicName);
+                            setCurrentMusic(true);
+                            setMusicTitle(likedata.musicName);
+                        }}
+                    >
+                        <AiOutlinePlus />
+                    </AddMusic>
+                </LikeList>
             ))}
-            {audioControl && <audio ref={audioRef} src={selectedSong}></audio>}
+            {currentMusic && (
+                <CurrentMusic>
+                    현재 곡은 <span>"{MusicTitle}"</span>입니다.
+                </CurrentMusic>
+            )}
+            {audioControl && (
+                <audio
+                    ref={audioRef}
+                    src={`http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com/assets/music/${selectedSong}`}
+                ></audio>
+            )}
             <Pagination>
                 <button disabled={currentPage === 1} onClick={handlePrevPage}>
                     Prev

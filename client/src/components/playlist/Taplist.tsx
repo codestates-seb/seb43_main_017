@@ -37,7 +37,7 @@ function Taplist() {
                 )
                 .then(function (response) {
                     // 성공적으로 요청을 보낸 경우
-                    setPldata(response.data);
+                    setPldata(response.data.content);
                     console.log(response.data);
                     setTotalPages(response.data.pageInfo.totalPages);
                 })
@@ -89,7 +89,7 @@ function Taplist() {
                             <p>
                                 <Link to={`/playlsit/${data.playListId}`}>{data.title.slice(0, 20)}</Link>
                             </p>
-                            <p>{data.createMember}</p>
+                            <p className="pl-createMember">{data.createMember}</p>
                         </div>
                         <ul className="pl-tag">
                             {data.tags.slice(0, 2).map((tag, i) => (
@@ -98,7 +98,6 @@ function Taplist() {
                         </ul>
                         <div className="pl-like">
                             <Like plId={data.playListId} />
-                            <span>{data.likeCount}</span>
                         </div>
                     </TapList>
                 ))}
@@ -141,36 +140,36 @@ function Like({ plId }: { plId: number }) {
     }, []);
 
     const haldleLiketoggle = () => {
-        axios
-            .post(
-                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/${plId}/like`,
-                {},
-                {
-                    headers: {
-                        Authorization: token,
+        if (token) {
+            axios
+                .post(
+                    `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/${plId}/like`,
+                    {},
+                    {
+                        headers: {
+                            Authorization: token,
+                        },
                     },
-                },
-            )
-            .then(function (res) {
-                console.log(res.data);
-                setLike(res.data.playListId === plId);
-            })
-            .catch(function (err) {
-                console.log(err);
-            });
+                )
+                .then(function (res) {
+                    console.log(res.data);
+                    setLike(res.data.playListId === plId);
+                })
+                .catch(function (err) {
+                    console.log(err);
+                });
+        } else {
+            alert('로그인을 진행해주세요');
+        }
     };
 
-    return (
-        <LikeGroup>
-            {like ? <HiHeart onClick={haldleLiketoggle} /> : <HiOutlineHeart onClick={haldleLiketoggle} />}
-        </LikeGroup>
-    );
+    return <LikeGroup onClick={haldleLiketoggle}>{like ? <HiHeart /> : <HiOutlineHeart />}</LikeGroup>;
 }
 
 export default Taplist;
 
 const LikeGroup = styled.div`
-    padding: 10px 5px;
+    padding: 10px;
     > * {
         animation: bounceHeart 0.5s forwards;
     }
@@ -242,6 +241,7 @@ const TapList = styled.li`
     animation: opacity 1s forwards;
     margin-top: 10px;
     transition: 0.3s ease-in-out;
+    padding: 10px;
 
     :hover {
         transform: scale(1.05);
@@ -249,8 +249,8 @@ const TapList = styled.li`
     }
 
     > div img {
-        margin: 10px;
         border-radius: 5px;
+        margin-right: 20px;
         transition: 0.2s ease-in-out;
         width: 40px;
         height: 40px;
@@ -272,6 +272,9 @@ const TapList = styled.li`
         color: #ccc;
         text-decoration: none;
     }
+    .pl-createMember {
+        transform: scale(0.6);
+    }
 
     .pl-tag {
         display: flex;
@@ -291,7 +294,7 @@ const TapList = styled.li`
         display: flex;
         justify-content: center;
         align-items: center;
-        min-width: 100px;
+
         color: rgba(199, 68, 68, 1);
     }
     @keyframes opacity {
