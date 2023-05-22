@@ -41,6 +41,22 @@ const Musiclist = () => {
             });
     };
 
+    /* 2023.05.21 태그 서치 결과에 따른 뮤직리스트 출력 */
+    const showTagSearchResult = (TagsearchText: string[]) => {
+        axios
+            .get(
+                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/search-by-tags?${TagsearchText}&page=${currentPage}&size=5`,
+            )
+            .then((response) => {
+                const { content, pageInfo } = response.data;
+                setMusicDataList(content);
+                setTotalPages(pageInfo.totalPages);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
+
     /* 2023.05.21 뮤직리스트 토탈 출력 */
     const fetchMusicList = () => {
         axios
@@ -95,7 +111,7 @@ const Musiclist = () => {
             <BackgroundCover></BackgroundCover>
             <MusiclistContainer>
                 <TagContainer className={openSearch ? 'open-search' : ''}>
-                    <Categories showSearchResult={showSearchResult} />
+                    <Categories showSearchResult={showSearchResult} showTagSearchResult={showTagSearchResult} />
                 </TagContainer>
                 <RightContainer>
                     <SearchOpen
