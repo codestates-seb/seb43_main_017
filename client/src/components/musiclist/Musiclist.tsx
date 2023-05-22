@@ -156,7 +156,6 @@ const Musiclist = () => {
                                     </li>
                                     <li className="music-artist color-gray">{musicData.artistName}</li>
                                     <li className="music-album color-gray">{musicData.albumName}</li>
-                                    {/* <li className="music-tags">{musicData.musicTagName}</li> */}
                                     <TagValue>
                                         {musicData.musicTagName.slice(0, 2).map((tag, i) => (
                                             <li key={`tag-${i}`}>{tag}</li>
@@ -342,6 +341,7 @@ const Item = styled.ul`
         align-items: center;
         justify-content: center;
         font-size: 0.8rem;
+        letter-spacing: 0.5px;
         height: 20px;
         width: 100%;
         font-family: 'Rajdhani', sans-serif;
@@ -354,6 +354,7 @@ const Item = styled.ul`
     .music-name a {
         color: #ccc;
         text-decoration: none;
+        font-weight: 500;
     }
     .music-image {
         width: 70px;
@@ -364,25 +365,6 @@ const Item = styled.ul`
         height: 50px;
         border-radius: 5px;
         margin: 0px 10px;
-    }
-
-    .music-tags {
-        min-width: 150px;
-        display: flex;
-        flex-direction: row;
-        justify-content: right;
-        align-items: center;
-    }
-
-    .music-tags li {
-        width: 50px;
-        align-items: center;
-        border: 1px solid #ff971f;
-        padding: 2px 5px 0px 5px;
-        border-radius: 20px;
-        font-size: 12px;
-        color: #ff971f;
-        margin: 3px;
     }
 
     .color-gray {
@@ -396,6 +378,11 @@ const Item = styled.ul`
             display: none;
         }
     }
+    @media (max-width: 700px) {
+        .music-artist {
+            display: none;
+        }
+    }
 `;
 
 const TagValue = styled.div`
@@ -403,16 +390,19 @@ const TagValue = styled.div`
     flex-direction: row;
     justify-content: right;
     align-items: center;
+    min-width: 140px;
+    /* border: 1px solid red; */
 
     li {
-        width: 50px;
+        font-family: 'Noto Sans KR', sans-serif;
         align-items: center;
-        border: 1px solid #ff971f;
-        padding: 2px 3px 0px 3px;
+        border: 2px solid #ccc;
         border-radius: 20px;
-        font-size: 8px;
-        color: #ff971f;
+        width: 70px;
+        font-size: 0.65rem;
+        color: #ccc;
         margin: 3px;
+        text-transform: uppercase;
     }
 `;
 
