@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import VideoPlayer from './VideoPlayer';
 import { videouploadState } from 'src/recoil/Atoms';
 import { useRecoilState } from 'recoil';
-
+/** 2022/05/22 - Video Ref 타입 선언 - 박수범 */
 interface LikedListProps {
     videoRef: LegacyRef<HTMLVideoElement>;
 }
@@ -12,6 +12,7 @@ const VideoUploader = ({ videoRef }: LikedListProps) => {
     const [uploadedVideo, setUploadedVideo] = useState<File | null>(null);
     const [videoState, setvideouploadState] = useRecoilState(videouploadState);
 
+    /** 2022/05/22 - 드래그앤 드랍을 통해 드랍존에 비디오 데이터가 들어왔을때 비디오플레이어가 나타나게 해주고 파일데이터를 저장하는 로직 -박수범 */
     const onDrop = useCallback((acceptedFiles: File[]) => {
         acceptedFiles.forEach((file: File) => {
             const reader = new FileReader();
@@ -22,10 +23,9 @@ const VideoUploader = ({ videoRef }: LikedListProps) => {
             reader.readAsArrayBuffer(file);
         });
     }, []);
-
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
     const fileInputRef = useRef<HTMLInputElement>(null);
-
+    /** 2022/05/22 - 드랍존 ref 로직 - 박수범 */
     const handleInputClick = () => {
         if (fileInputRef.current) {
             fileInputRef.current.click();
