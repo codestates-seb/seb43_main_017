@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import {
     commentOpenState,
-    // soundbarOpenState,
     downloadLink,
     showDownloadState,
     musicIdState,
@@ -19,7 +18,7 @@ import {
     DetailSection,
     AlbumRecode,
     MusicContents,
-    MusicTags,
+    // MusicTags,
     MusicTitle,
     MusicInfo,
     MusicText,
@@ -28,6 +27,8 @@ import MusicPlayer from 'src/components/soundbar/SoundBar';
 
 function MusicDetail() {
     const msId = useParams();
+    sessionStorage.setItem('musicId', String(msId.msId));
+    sessionStorage.setItem('onPlaylist', 'false');
     const [commentOpen] = useRecoilState<boolean>(commentOpenState);
     // const [, setSoundbarOpen] = useRecoilState<boolean>(soundbarOpenState);
     const [, setShowDownlaod] = useRecoilState<boolean>(showDownloadState);
@@ -81,16 +82,15 @@ function MusicDetail() {
         <DetailGroup>
             {commentOpen ? <CommentViewer></CommentViewer> : null}
             <PlaylistBackground url={msDetailData.albumCoverImg}></PlaylistBackground>
-            <AlbumRecode>
-                <img src={msDetailData.albumCoverImg} />
-            </AlbumRecode>
             <DetailSection>
-                <MusicContents>
-                    <MusicTags>
+                <AlbumRecode url={msDetailData.albumCoverImg}>
+                    {/* <MusicTags>
                         {msDetailData.musicTagName.map((tag) => (
                             <li>{tag}</li>
                         ))}
-                    </MusicTags>
+                    </MusicTags> */}
+                </AlbumRecode>
+                <MusicContents>
                     <MusicTitle>
                         <span>{msDetailData.musicName}</span>
                     </MusicTitle>

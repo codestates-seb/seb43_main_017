@@ -11,6 +11,7 @@ function Sidebutton() {
     const [ShowDownload] = useRecoilState<boolean>(showDownloadState);
     const [like, setLike] = useState<boolean>(false);
     const [download] = useRecoilState<string>(downloadLink);
+
     return (
         <SidebtnGroup>
             <Button
@@ -31,7 +32,7 @@ function Sidebutton() {
             </Button>
             {ShowDownload ? (
                 <Button>
-                    <a href={`/assest/music/${download}`} download>
+                    <a href={`/assets/music/${download}`} download>
                         <RiDownload2Fill />
                         <span>DOWNLOAD</span>
                     </a>
