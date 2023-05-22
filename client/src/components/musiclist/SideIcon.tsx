@@ -22,8 +22,8 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
         if (!token) {
             console.log('로그인을 진행해주세요');
         } else {
-            const updatedLike = !like; // 새로운 like 상태
-            setLike(updatedLike); // 먼저 상태 업데이트
+            const updatedLike = !like;
+            setLike(updatedLike);
             axios
                 .post(
                     `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/music-like/toggle`,

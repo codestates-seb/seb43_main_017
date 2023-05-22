@@ -10,17 +10,16 @@ import { BiSearch } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
 import { MusicDataResponse } from 'src/types/Musiclist';
 import { musicDataListState } from 'src/recoil/Atoms';
-// import { AiOutlineArrowUp, AiOutlineArrowDown } from 'react-icons/ai';
 
 const Musiclist = () => {
     const [musicDataList, setMusicDataList] = useRecoilState(musicDataListState);
-    // const [orderBy, setOrderBy] = useState('/musics');
 
     const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
     const [totalPages, setTotalPages] = useState<number>(0); // 전체 페이지 수
     const [openSearch, setOpenSearch] = useRecoilState<boolean>(showSearch);
     const [tapClick, setTapClick] = useState<string>('order-by-created-at');
     const buttonArray = [];
+
     /* 2023.05.21 서치 결과에 따른 뮤직리스트 출력 */
     const showSearchResult = (searchText: string) => {
         axios
@@ -41,37 +40,6 @@ const Musiclist = () => {
             });
     };
 
-    // const fetchMusicList = () => {
-    //     axios
-    //         .get<MusicDataResponse>(`${orderBy}`, {
-    //             params: {
-    //                 page: currentPage,
-    //             },
-    //         })
-    //         .then((response) => {
-    //             // {
-    //             //     orderBy === '/musics' ? setMusicDataList(response.data.data) : setMusicDataList(response.data);
-    //             // }
-    //             setMusicDataList(response.data.data);
-    //             setTotalPages(response.data.pageInfo.totalPages);
-    //         })
-    //         .catch((error) => {
-    //             console.error(error);
-    //         });
-    // };
-
-    // useEffect(() => {
-    //     fetchMusicList();
-    // }, [currentPage, orderBy]);
-
-    // const showNewResult = () => {
-    //     setOrderBy('/musics/order-by-created-at');
-    // };
-
-    // const showLikeResult = () => {
-    //     setOrderBy('/musics/order-by-like-count');
-    // };
-
     /* 2023.05.21 뮤직리스트 토탈 출력 */
     const fetchMusicList = () => {
         axios
@@ -90,32 +58,6 @@ const Musiclist = () => {
     useEffect(() => {
         fetchMusicList();
     }, [currentPage]);
-
-    // /* 2023.05.21 뮤직리스트 최신순 조회 */
-    // const showNewResult = () => {
-    //     axios
-    //         .get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/order-by-created-at`)
-    //         .then((response) => {
-    //             setMusicDataList(response.data);
-    //             setTotalPages(response.data.pageInfo.totalPages);
-    //         })
-    //         .catch((error) => {
-    //             console.error(error);
-    //         });
-    // };
-
-    // /* 2023.05.21 뮤직리스트 좋아요순 조회 */
-    // const showLikeResult = () => {
-    //     axios
-    //         .get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/order-by-like-count`)
-    //         .then((response) => {
-    //             setMusicDataList(response.data);
-    //             setTotalPages(response.data.pageInfo.totalPages);
-    //         })
-    //         .catch((error) => {
-    //             console.error(error);
-    //         });
-    // };
 
     /** 2023.05.17 전체 페이지 수 만큼 버튼 생성 - 김주비*/
     for (let i = 1; i <= totalPages; i++) {
