@@ -26,8 +26,8 @@ const Myplaylist = () => {
             .post(
                 `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists`,
                 {
-                    title: '새벽에 듣기 좋은 플리',
-                    body: '새벽2시',
+                    title: '플레이리스트',
+                    body: '플레이리스트 내용',
                     coverImg:
                         'https://is3-ssl.mzstatic.com/image/thumb/Music114/v4/5e/6e/36/5e6e36fa-4aaa-1705-a420-7ee7bdd53cb8/artwork.jpg/600x600bf-60.jpg',
                 },
@@ -81,29 +81,6 @@ const Myplaylist = () => {
             console.error(error);
         }
     };
-
-    /* 2023.05.21 마이플레이리스트 수정 */
-    // const MyplaylistModify = () => {
-    //     axios
-    //         .patch(
-    //             `/playlists/{playlist-id}`,
-    //             {
-    //                 playListId: '1',
-    //                 title: '제목1',
-    //             },
-    //             {
-    //                 headers: {
-    //                     Authorization: token,
-    //                 },
-    //             },
-    //         )
-    //         .then(() => {
-    //             console.log();
-    //         })
-    //         .catch((error) => {
-    //             console.error(error);
-    //         });
-    // };
 
     /** 2023.05.17 전체 페이지 수 만큼 버튼 생성 - 김주비*/
     for (let i = 1; i <= totalPages; i++) {

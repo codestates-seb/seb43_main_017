@@ -2,9 +2,43 @@ import styled from 'styled-components';
 import { BsPencilSquare } from 'react-icons/bs';
 import { VscClose } from 'react-icons/vsc';
 import { useRecoilState } from 'recoil';
-import { myplaylistState } from 'src/recoil/Atoms';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { titleState, bodyState, myplaylistState } from 'src/recoil/Atoms';
 
-const [myplaylistData, setMyplaylistData] = useRecoilState(myplaylistState);
+//     const [title, setTitle] = useRecoilState(titleState);
+//     const [body, setBody] = useRecoilState(bodyState);
+//     const [isEditing, setIsEditing] = useState(false);
+
+//     useEffect(() => {
+//         if (!isEditing) {
+//             // 편집이 완료되었을 때 API 요청
+//             sendRequestToServer();
+//         }
+//     }, [isEditing]);
+
+//     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//         setTitle(e.target.value);
+//     };
+
+//     const handleBodyChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+//         setBody(e.target.value);
+//     };
+
+//     const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+//         if (e.key === 'Enter') {
+//             setIsEditing(false);
+//         }
+//     };
+
+//     const sendRequestToServer = async () => {
+//         try {
+//             const response = await axios.post('API 주소', { title, body });
+//             console.log('서버 응답:', response.data);
+//         } catch (error) {
+//             console.error('API 요청 실패:', error);
+//         }
+//     };
 
 function ModifyPlaylist() {
     return (
@@ -16,36 +50,34 @@ function ModifyPlaylist() {
                 <p>MODIFY PLAYLIST</p>
             </div>
             <ModiCointainer>
-                {myplaylistData.map((data) => (
-                    <div>
-                        <Plcard>
-                            <div className="pl-treck">TRECK 8</div>
-                            <div className="pl-contents">
-                                <Pluser>
-                                    <span>WTITER</span>
-                                    <span>{data.createMember}</span>
-                                    <span>LIKE</span>
-                                    <span>{data.likeCount}</span>
-                                </Pluser>
-                                <Pltext>
-                                    <span>{data.title}</span>
-                                    <span>{data.body}</span>
-                                </Pltext>
-                            </div>
-                        </Plcard>
-                        <PlyList>
-                            <div className="plyItem">
-                                <img src="./assets/ditto.png" alt="cover-img" />
-                                <li>Ditto</li>
-                                <li>Newjeans</li>
-                                <li>OMG</li>
-                                <li>
-                                    <VscClose />
-                                </li>
-                            </div>
-                        </PlyList>
-                    </div>
-                ))}
+                <div>
+                    <Plcard>
+                        <div className="pl-treck">TRECK 8</div>
+                        <div className="pl-contents">
+                            <Pluser>
+                                <span>WTITER</span>
+                                <span>관리자</span>
+                                <span>LIKE</span>
+                                <span>13</span>
+                            </Pluser>
+                            <Pltext>
+                                <span>나만의 플레이리스트</span>
+                                <span>나만의 플레이리스트</span>
+                            </Pltext>
+                        </div>
+                    </Plcard>
+                    <PlyList>
+                        <div className="plyItem">
+                            <img src="./assets/ditto.png" alt="cover-img" />
+                            <li>Ditto</li>
+                            <li>Newjeans</li>
+                            <li>OMG</li>
+                            <li>
+                                <VscClose />
+                            </li>
+                        </div>
+                    </PlyList>
+                </div>
             </ModiCointainer>
         </ModifyContainer>
     );
@@ -94,6 +126,11 @@ const ModifyContainer = styled.div`
 const ModiCointainer = styled.div`
     display: flex;
     flex-direction: column;
+`;
+
+const ModifyList = styled.div`
+    display: flex;
+    align-items: center;
 `;
 
 /**2023-05-06 플리 슬라이드 카드 섹션 : 김주비 */

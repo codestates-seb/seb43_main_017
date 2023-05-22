@@ -97,3 +97,15 @@ export const myplaylistState = atom<MyplaylistData[]>({
     key: 'myplaylistState',
     default: [],
 });
+
+/* 2023.05.22 마이플레이리스트 타이틀 수정 - 홍혜란 */
+export const titleState = atom({
+    key: 'titleState',
+    default: '',
+});
+
+/* 2023.05.22 마이플레이리스트 내용 수정 - 홍혜란 */
+export const bodyState = atom({
+    key: 'bodyState',
+    default: '',
+});
