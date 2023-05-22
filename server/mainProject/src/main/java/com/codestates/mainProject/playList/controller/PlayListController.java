@@ -79,7 +79,7 @@ public class PlayListController {
     @GetMapping("/member-playlist")
     public ResponseEntity getMemberPlayLists(@LoginMemberId Long memberId,
                                             @Positive @RequestParam(value = "page", defaultValue = "1") int page,
-                                            @Positive @RequestParam(value = "size", defaultValue = "3") int size) {
+                                            @Positive @RequestParam(value = "size", defaultValue = "5") int size) {
         Page<PlayList> pagePlayList = playListService.findMemberPlayLists(memberId, page-1, size);
         List<PlayListDto.ResponseDto> response = playListMapper.playListsToResponses(pagePlayList.getContent());
 
