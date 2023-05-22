@@ -51,7 +51,7 @@ const Myplaylist = () => {
         const fetchMyplaylistData = async () => {
             try {
                 const response = await axios.get(
-                    `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists?&page=${currentPage}&size=3`,
+                    `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/member-playlist?&page=${currentPage}&size=3`,
                     {
                         headers: {
                             Authorization: token,
@@ -273,8 +273,7 @@ const PlaylistList = styled.div`
     @media screen and (max-width: 1000px) {
         width: 400px;
         margin: 0;
-        margin-top: 50px;
-        margin-left: 30px;
+        margin-top: 20px;
     }
 `;
 
