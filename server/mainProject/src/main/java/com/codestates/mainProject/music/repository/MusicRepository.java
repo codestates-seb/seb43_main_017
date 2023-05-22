@@ -20,6 +20,4 @@ public interface MusicRepository extends JpaRepository<Music, Long> {
     Page<MusicDto.ResponseDto> findMusicByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
     List<Music> findTop6ByOrderByMusicLikeCountDesc();
-
-    List<Music> findAllByOrderByCreatedAtDesc();
 }
