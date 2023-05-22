@@ -7,6 +7,11 @@ import { TbPlayerTrackPrevFilled, TbPlayerTrackNextFilled } from 'react-icons/tb
 import { FaVolumeUp, FaVolumeMute } from 'react-icons/fa';
 import { RiPlayListFill } from 'react-icons/ri';
 
+interface Song {
+    musicUri: string;
+    musicTime: number;
+}
+
 const AudioPlayer = () => {
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const [currentTime, setCurrentTime] = useState(0);
@@ -24,15 +29,14 @@ const AudioPlayer = () => {
         axios
             .get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics${plOn}/${msId}`)
             .then((response) => {
-                console.log(response.data.data);
                 let data;
                 if (onPlaylist === 'true') {
-                    data = response.data.map((song: any) => ({
+                    data = response.data.map((song: Song) => ({
                         src: song.musicUri,
                         duration: song.musicTime,
                     }));
                 } else {
-                    data = [response.data.data].map((song: any) => ({
+                    data = [response.data.data].map((song) => ({
                         src: song.musicUri,
                         duration: song.musicTime,
                     }));
@@ -118,8 +122,10 @@ const AudioPlayer = () => {
         const formattedSeconds = String(remainingSeconds).padStart(2, '0');
         return `${formattedMinutes}:${formattedSeconds}`;
     };
+    /** 203.05.22 음원 재생종료 - 김주비 */
     const handleSongEnd = () => {
         playNextSong();
+        setOnPlay(!onPlay);
     };
 
     return (
