@@ -245,7 +245,7 @@ const Mixingtext = styled.div`
 const Musiclist = styled.div`
     height: 100vh;
     position: absolute;
-    z-index: 9999;
+    z-index: 5;
     display: flex;
     flex-direction: column;
     left: 100px;
@@ -266,14 +266,14 @@ const Musiclist = styled.div`
     }
 
     &.open-search {
+        left: 0;
+        margin: 0;
+        z-index: 5;
         position: fixed;
         display: flex;
     }
     @keyframes openSearch {
         100% {
-            margin: 0;
-            z-index: 9999;
-            left: 0;
             width: 100%;
         }
     }
