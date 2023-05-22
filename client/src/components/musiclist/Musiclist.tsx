@@ -4,7 +4,7 @@ import Trending from './Trending';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import axios from 'axios';
-import { showSearch } from 'src/recoil/Atoms';
+import { showSearch, tagSreachState } from 'src/recoil/Atoms';
 import Sideicon from 'src/components/musiclist/SideIcon';
 import { BiSearch } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
@@ -14,6 +14,7 @@ import Loding from 'src/pages/Loding';
 
 const Musiclist = () => {
     const [musicDataList, setMusicDataList] = useRecoilState(musicDataListState);
+    const [tagSearch] = useRecoilState(tagSreachState);
     const [isLoding, setIsLoding] = useState(true);
     const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
     const [totalPages, setTotalPages] = useState<number>(0); // 전체 페이지 수
@@ -41,44 +42,37 @@ const Musiclist = () => {
             });
     };
 
-    /* 2023.05.21 태그 서치 결과에 따른 뮤직리스트 출력 */
-    const showTagSearchResult = (TagsearchText: string[]) => {
-        axios
-            .get(
-                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/search-by-tags?${TagsearchText}&page=${currentPage}&size=5`,
-            )
-            .then((response) => {
-                const { content, pageInfo } = response.data;
-                setMusicDataList(content);
-                setTotalPages(pageInfo.totalPages);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    };
-
     /* 2023.05.21 뮤직리스트 토탈 출력 */
-    const fetchMusicList = () => {
+
+    const url = tagSearch
+        ? `musics/search-by-tags?${tagSearch}&page=${currentPage}&size=5`
+        : `${tapClick}?&page=${currentPage}&size=5`;
+
+    useEffect(() => {
         axios
-            .get<MusicDataResponse>(
-                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/${tapClick}?&page=${currentPage}&size=5`,
-            )
+            .get<MusicDataResponse>(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/${url}`)
             .then((response) => {
-                setMusicDataList(response.data.data);
+                if (tagSearch) {
+                    setMusicDataList(response.data.content);
+                } else {
+                    setMusicDataList(response.data.data);
+                }
                 setTotalPages(response.data.pageInfo.totalPages);
                 setIsLoding(false);
             })
             .catch((error) => {
                 console.error(error);
             });
-    };
-
-    useEffect(() => {
-        fetchMusicList();
-    }, [tapClick, currentPage]);
+    }, [tapClick, currentPage, tagSearch]);
 
     /** 2023.05.17 전체 페이지 수 만큼 버튼 생성 - 김주비*/
-    for (let i = 1; i <= totalPages; i++) {
+    const prevGroupPage = Math.floor((currentPage - 1) / 5) * 5;
+    const nextGroupPage = Math.ceil(currentPage / 5) * 5 + 1;
+
+    const isPrevButtonDisabled = prevGroupPage < 1; // 이전페이지 비활성화 여부
+    const isNextButtonDisabled = nextGroupPage > totalPages; // 다음페이지 비활성화 여부
+
+    for (let i = prevGroupPage + 1; i < Math.min(prevGroupPage + 6, totalPages + 1); i++) {
         buttonArray.push(
             <button
                 key={i}
@@ -92,10 +86,14 @@ const Musiclist = () => {
         );
     }
     const handleNextPage = () => {
-        setCurrentPage(currentPage + 1);
+        if (!isNextButtonDisabled) {
+            setCurrentPage(nextGroupPage);
+        }
     };
     const handlePrevPage = () => {
-        setCurrentPage(currentPage - 1);
+        if (!isPrevButtonDisabled) {
+            setCurrentPage(prevGroupPage);
+        }
     };
 
     const formatSecondsToTime = (time: number) => {
@@ -111,7 +109,7 @@ const Musiclist = () => {
             <BackgroundCover></BackgroundCover>
             <MusiclistContainer>
                 <TagContainer className={openSearch ? 'open-search' : ''}>
-                    <Categories showSearchResult={showSearchResult} showTagSearchResult={showTagSearchResult} />
+                    <Categories showSearchResult={showSearchResult} />
                 </TagContainer>
                 <RightContainer>
                     <SearchOpen
@@ -201,7 +199,7 @@ const MusiclistContainer = styled.div`
     display: flex;
     align-items: center;
     flex-direction: row;
-    height: 100vh;
+    height: 100%;
     @media screen and (max-width: 700px) {
         padding-top: 100px;
     }
