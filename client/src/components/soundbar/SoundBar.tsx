@@ -18,10 +18,7 @@ const AudioPlayer = () => {
 
     const onPlaylist = sessionStorage.getItem('onPlaylist');
     const msId = sessionStorage.getItem('musicId');
-
     const plOn: string = onPlaylist === 'true' ? '/playlists' : '';
-
-    console.log(songs);
 
     useEffect(() => {
         axios
