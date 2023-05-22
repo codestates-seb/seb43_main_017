@@ -126,14 +126,7 @@ const Musiclist = () => {
                     <MusicListTitle>
                         <div className="musicList-title">Music List</div>
                         <div className="music-inquiry">
-                            <li
-                                onClick={() => {
-                                    setTapClick('order-by-created-at');
-                                }}
-                                className={tapClick === 'order-by-created-at' ? 'active' : ''}
-                            >
-                                최신순
-                            </li>
+                            <li onClick={fetchMusicList}>최신순</li>
                             <li
                                 onClick={() => {
                                     setTapClick('order-by-like-count');
