@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { BsPencilSquare } from 'react-icons/bs';
-// import { VscClose } from 'react-icons/vsc';
 import { useRecoilState } from 'recoil';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -10,24 +9,28 @@ function ModifyPlaylist() {
     const [myplaylistData, setMyplaylistData] = useRecoilState(myplaylistState);
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
 
-    const [ModifyPlaylistId] = useRecoilState(modifyClickState);
+    const [ModifyPlaylistId, _] = useRecoilState(modifyClickState);
 
     useEffect(() => {
         // 플레이리스트 가져오는 함수
-        const fetchMyplaylistData = async () => {
-            try {
-                const response = await axios.get(
+        const fetchMyplaylistData = () => {
+            axios
+                .get(
                     `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/${ModifyPlaylistId}`,
                     {
                         headers: {
                             Authorization: token,
                         },
                     },
-                );
-                setMyplaylistData(response.data.data);
-            } catch (error) {
-                console.error(error);
-            }
+                )
+                .then((response) => {
+                    setMyplaylistData(response.data.data);
+                    console.log(response.data.data);
+                    console.log(response.data);
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
         };
 
         fetchMyplaylistData();
@@ -40,7 +43,7 @@ function ModifyPlaylist() {
     useEffect(() => {
         if (!isEditing) {
             // 편집이 완료되었을 때 API 요청
-            sendRequestToServer();
+            // sendRequestToServer();
         }
     }, [isEditing]);
 
@@ -52,34 +55,27 @@ function ModifyPlaylist() {
         setBody(e.target.value);
     };
 
-    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        if (e.key === 'Enter') {
-            setIsEditing(false);
-        }
-    };
-
-    const sendRequestToServer = async () => {
-        // try {
-        //     const response = await axios.patch(
-        //         `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/${playListId}`,
-        //         {
-        //             headers: {
-        //                 Authorization: token,
-        //             },
-        //         },
-        //         {
-        //             {
-        //                 title: title,
-        //                 body: body,
-        //                 // coverImg: url,
-        //             },
-        //         },
-        //     );
-        //     console.log('서버 응답:', response.data);
-        // } catch (error) {
-        //     console.error('API 요청 실패:', error);
-        // }
-    };
+    // const sendRequestToServer = () => {
+    //              axios.patch(
+    //             `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/${ModifyPlaylistId}`,
+    //             {
+    //                 headers: {
+    //                     Authorization: token,
+    //                 },
+    //             },
+    //             {
+    //                 {
+    //                     title: title,
+    //                     body: body,
+    //                     // coverImg: url,
+    //                 },
+    //             },
+    //         );
+    //         console.log('서버 응답:', response.data);
+    //     } catch (error) {
+    //         console.error('API 요청 실패:', error);
+    //     }
+    // };
 
     return (
         <ModifyContainer>
@@ -106,17 +102,8 @@ function ModifyPlaylist() {
                                     <Pltext>
                                         {isEditing ? (
                                             <div>
-                                                <input
-                                                    type="text"
-                                                    value={title}
-                                                    onChange={handleTitleChange}
-                                                    // onKeyPress={handleKeyPress}
-                                                />
-                                                <textarea
-                                                    value={body}
-                                                    onChange={handleBodyChange}
-                                                    // onKeyPress={handleKeyPress}
-                                                />
+                                                <input type="text" value={title} onChange={handleTitleChange} />
+                                                <textarea value={body} onChange={handleBodyChange} />
                                             </div>
                                         ) : (
                                             <div className="pl-name" onClick={() => setIsEditing(true)}>

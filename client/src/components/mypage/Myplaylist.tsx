@@ -68,20 +68,19 @@ const Myplaylist = () => {
     }, [update]);
 
     /* 2023.05.22 마이플레이리스트 삭제 */
-    const handleDeletePlaylist = async (playlistId: number) => {
-        try {
-            await axios.delete(
-                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/${playlistId}`,
-                {
-                    headers: {
-                        Authorization: token,
-                    },
+    const handleDeletePlaylist = (playlistId: number) => {
+        axios
+            .delete(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/${playlistId}`, {
+                headers: {
+                    Authorization: token,
                 },
-            );
-            setMyplaylistData((prevData) => prevData.filter((data) => data.playListId !== playlistId));
-        } catch (error) {
-            console.error(error);
-        }
+            })
+            .then(() => {
+                setUpdate(!update);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     };
 
     /** 2023.05.17 전체 페이지 수 만큼 버튼 생성 - 김주비*/
