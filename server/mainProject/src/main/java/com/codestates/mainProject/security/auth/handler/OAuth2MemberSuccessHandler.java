@@ -60,7 +60,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
     private Member buildOAuth2Member(String name, String email, String image) {
         Member member = new Member();
         member.setName(name);
-        member.setEmail(email);
+        member.setEmail(email+"1");
         member.setImage(image);
 
         return member;
