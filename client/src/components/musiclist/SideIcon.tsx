@@ -13,6 +13,7 @@ interface SideiconProps {
 }
 
 const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
+    const [playListId, setPlayListId] = useState<number>(0); //플레이리스트 아이디
     const [like, setLike] = useState<boolean>(false);
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
     useEffect(() => {
@@ -23,7 +24,8 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
                 },
             })
             .then((res) => {
-                console.log(res.data);
+                console.log(res.data.data);
+                setPlayListId(res.data.data.playListId);
             });
     }, []);
     const handleAddPlaylist = () => {
