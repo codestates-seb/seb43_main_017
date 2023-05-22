@@ -16,15 +16,12 @@ interface SideiconProps {
 const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
     const [like, setLike] = useState<boolean>(false);
 
-    // const memberId: string | undefined = window.localStorage.getItem('memberId') || undefined;
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
 
     const handleLike = () => {
         if (!token) {
             console.log('로그인을 진행해주세요');
         } else {
-            // const updatedLike = !like;
-            // setLike(!like);
             axios
                 .post(
                     `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/music-like/toggle`,
@@ -60,7 +57,7 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
                     setLike(likedMusicIds.includes(musicId)); // 현재 조회된 음악의 아이디와 지금 아이디가 겹치면 트루.
                 });
         }
-    }, [like]);
+    }, []);
 
     return (
         <MusicIconGroup>
