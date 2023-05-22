@@ -13,39 +13,12 @@ import { MdPiano } from 'react-icons/md';
 
 interface CategoryProps {
     showSearchResult: (searchText: string) => void;
+    showTagSearchResult: (TagsearchText: string[]) => void;
 }
 
-// /* 2023.05.07 카테고리 타입, 종류 선언 - 홍혜란 */
-// export type Category = {
-//     index: number;
-//     name: string;
-//     subCategories: string[];
-// };
-
-// export const categories: Category[] = [
-//     {
-//         index: 0,
-//         name: 'FEEL',
-//         subCategories: ['잔잔한', '우울한', '신나는', '로맨틱한', '희망적인'],
-//     },
-//     {
-//         index: 1,
-//         name: 'GENRE',
-//         subCategories: ['EDM', '발라드', '어쿠스틱', '인디', '댄스'],
-//     },
-//     {
-//         index: 2,
-//         name: 'INSTRUMENT',
-//         subCategories: ['피아노', '드럼', '기타', '베이스', '현악기'],
-//     },
-// ];
-
-const Categories = ({ showSearchResult }: CategoryProps) => {
-    /* 2023.05.07 Category 클릭 시  subCategories 오픈 - 홍혜란 */
-    const [openCategory, setOpenCategory] = useState('');
-    const [index, setIndex] = useState(0);
-    /* 2023.05.10 subCategory 클릭 시 태그 생성 - 홍혜란 */
+const Categories = ({ showSearchResult, showTagSearchResult }: CategoryProps) => {
     const [selectedTags, setSelectedTags] = useRecoilState(selectedTagsState);
+    const [tagSelectedTags, setTagSelectedTags] = useState<string[]>([]);
     const [, setShowSearch] = useRecoilState<boolean>(showSearch);
     const [feel, setFeel] = useState<tag[]>([]);
     const [genre, setGenre] = useState<tag[]>([]);
@@ -70,15 +43,6 @@ const Categories = ({ showSearchResult }: CategoryProps) => {
         });
     }, []);
 
-    // const handleCategoryClick = (name: string, i: number) => {
-    //     if (openCategory === name) {
-    //         setOpenCategory('');
-    //     } else {
-    //         setOpenCategory(name);
-    //     }
-    //     setIndex(i);
-    // };
-
     const handleSubCategoryClick = (subCategory: string) => {
         // 이미 선택된 태그가 있는지 확인
         const tagAlreadySelected = selectedTags.includes(subCategory);
@@ -86,9 +50,19 @@ const Categories = ({ showSearchResult }: CategoryProps) => {
         // 선택된 태그가 없을 경우만 추가
         if (!tagAlreadySelected) {
             setSelectedTags([...selectedTags, subCategory]);
+
+            setTagSelectedTags([...tagSelectedTags, `tags=${subCategory}`]);
+
+            showTagSearchResult(tagSelectedTags);
         }
     };
 
+    const handleTagDelete = (tag: string) => {
+        setSelectedTags(selectedTags.filter((t) => t !== tag));
+        setTagSelectedTags(tagSelectedTags.filter((t) => t !== `tags=${tag}`));
+    };
+
+    console.log(tagSelectedTags);
     return (
         <CateTagContainer>
             <CategoryContainer>
@@ -166,7 +140,12 @@ const Categories = ({ showSearchResult }: CategoryProps) => {
                 {selectedTags.map((tag) => (
                     <TagContainer key={tag}>
                         <div className="tagText">{tag}</div>
-                        <div className="tagIcon" onClick={() => setSelectedTags(selectedTags.filter((t) => t !== tag))}>
+                        <div
+                            className="tagIcon"
+                            onClick={() => {
+                                handleTagDelete(tag);
+                            }}
+                        >
                             <VscClose />
                         </div>
                     </TagContainer>
@@ -242,6 +221,9 @@ const TagGroup = styled.div`
         overflow: hidden;
         height: 0px;
         margin: 0px;
+    }
+    .Sub-tags:hover {
+        color: hsl(0, 75%, 61%);
     }
 
     .Show-subtag {
