@@ -1,6 +1,5 @@
 package com.codestates.mainProject.playListTag.entity;
 
-import com.codestates.mainProject.member.entity.Member;
 import com.codestates.mainProject.playList.entity.PlayList;
 import com.codestates.mainProject.tags.entity.Tag;
 import lombok.Getter;
