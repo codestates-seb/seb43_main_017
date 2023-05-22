@@ -4,8 +4,7 @@ import { HiOutlineHeart, HiHeart } from 'react-icons/hi';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { type } from 'os';
 
 interface SideiconProps {
@@ -15,16 +14,28 @@ interface SideiconProps {
 
 const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
     const [like, setLike] = useState<boolean>(false);
-
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
-
+    useEffect(() => {
+        axios
+            .get(`${process.env.REACT_APP_API_URL}/playlists/member-playlist`, {
+                headers: {
+                    Authorization: token,
+                },
+            })
+            .then((res) => {
+                console.log(res.data);
+            });
+    }, []);
+    const handleAddPlaylist = () => {
+        console.log('유저리스트 조회');
+    };
     const handleLike = () => {
         if (!token) {
             console.log('로그인을 진행해주세요');
         } else {
             axios
                 .post(
-                    `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/music-like/toggle`,
+                    `${process.env.REACT_APP_API_URL}/music-like/toggle`,
                     {
                         musicId: musicId,
                     },
@@ -64,7 +75,10 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
             <Link to={`/musiclist/${musicId}`}>
                 <FiPlayCircle className="color-blue" />
             </Link>
-            <FiFolderPlus />
+            <AddPlayList onClick={handleAddPlaylist}>
+                <FiFolderPlus />
+            </AddPlayList>
+
             <a href={`/assets/music/${musicUri}`} download>
                 <MdFileDownload />
             </a>
@@ -114,4 +128,12 @@ const MusicIconGroup = styled.li`
             margin: 0px 10px;
         }
     }
+`;
+
+const AddPlayList = styled.button`
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color: #ccc;
 `;
