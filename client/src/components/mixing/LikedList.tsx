@@ -24,9 +24,10 @@ interface LikeMusicList {
 /** 2022/05/22 - useRef 타입 선언 - 박수범 */
 interface LikedListProps {
     audioRef: RefObject<HTMLAudioElement>;
+    setAudioSelect: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const LikedList = ({ audioRef }: LikedListProps) => {
-    const [, setShowSearch] = useRecoilState<boolean>(showSearch);
+const LikedList = ({ audioRef, setAudioSelect }: LikedListProps) => {
+    const [, setShowSearch] = useRecoilState<boolean>(showSearch); //모버일버전 좋아요 음악리스트 닫기
     const [emptyList, setEmptyList] = useState<boolean>(false); //좋아요한 음악이 있는지 없는지 여부
     const [MusicTitle, setMusicTitle] = useState<string>(''); //현재 삽입된 오디오 제목
     const [currentMusic, setCurrentMusic] = useState<boolean>(false); // 선택된 음악인지 판단하는 값
@@ -94,6 +95,7 @@ const LikedList = ({ audioRef }: LikedListProps) => {
     const handleSongClick = (songUrl: string, songName: string) => {
         setSelectedSong(songUrl);
         setAudioControl(true);
+
         alert(songName + '이 추가되었습니다.');
     };
 
@@ -116,6 +118,7 @@ const LikedList = ({ audioRef }: LikedListProps) => {
                                 handleSongClick(likedata.musicUri, likedata.musicName);
                                 setCurrentMusic(true);
                                 setMusicTitle(likedata.musicName);
+                                setAudioSelect(true);
                             }}
                         >
                             <AiOutlinePlus />
@@ -123,7 +126,7 @@ const LikedList = ({ audioRef }: LikedListProps) => {
                     </LikeList>
                 ))
             ) : (
-                <li>좋아요한 음악이 없습니다.</li>
+                <li>Add your favorite music.</li>
             )}
             {currentMusic && (
                 <CurrentMusic>
@@ -147,13 +150,13 @@ const LikedList = ({ audioRef }: LikedListProps) => {
                     </button>
                 </Pagination>
             ) : null}
-            <Xbox
+            <Exitbox
                 onClick={() => {
                     setShowSearch(false);
                 }}
             >
                 <MdTransitEnterexit />
-            </Xbox>
+            </Exitbox>
         </LikeContainer>
     );
 };
@@ -268,7 +271,7 @@ const AddMusic = styled.button`
         color: red;
     }
 `;
-
+/**2023/05/22 - 현재음악 알려주는 p태그 - 박수범 */
 const CurrentMusic = styled.p`
     margin-top: 50px;
     font-size: 14px;
@@ -278,7 +281,8 @@ const CurrentMusic = styled.p`
         color: #feeaea;
     }
 `;
-const Xbox = styled.div`
+/**2023/05/22 - 모바일버전 좋아요한 음악 리스트 나가기 버튼 - 박수범 */
+const Exitbox = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
@@ -288,9 +292,9 @@ const Xbox = styled.div`
     width: 50px;
     height: 50px;
     font-size: 2rem;
-    color: #666;
+    color: rgba(199, 68, 68, 1);
     text-align: center;
-    border: 2px solid #666;
+    border: 2px solid rgba(199, 68, 68, 1);
     :hover {
         color: #ccc;
         border-color: #ccc;
