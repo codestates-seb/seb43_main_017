@@ -3,63 +3,29 @@ import styled from 'styled-components';
 import { AiFillHeart } from 'react-icons/ai';
 import { BsMusicPlayer, BsPlayCircle, BsPlusSquare } from 'react-icons/bs';
 import { CiMenuKebab } from 'react-icons/ci';
-import { modalState } from 'src/recoil/Atoms';
+import { modalState, myplaylistState } from 'src/recoil/Atoms';
 import { useState } from 'react';
-import { atom } from 'recoil';
 import axios from 'axios';
 
-/* 2023.05.10 마이플레이스트 타입 선언 */
-interface PlayData {
-    playListId: number;
-    imgSrc: string;
-    name: string;
-    vote: number;
-}
-
-/* 2023.05.10 마이플레이스트 더미데이터(임시) */
-const MyPlay: PlayData[] = [
-    {
-        playListId: 0,
-        imgSrc: './assets/ditto.png',
-        name: '나만의 플레이리스트',
-        vote: 13,
-    },
-    {
-        playListId: 1,
-        imgSrc: './assets/ditto.png',
-        name: '나만의 플레이리스트',
-        vote: 13,
-    },
-    {
-        playListId: 2,
-        imgSrc: './assets/ditto.png',
-        name: '나만의 플레이리스트',
-        vote: 13,
-    },
-];
-
-const playlistState = atom<PlayData[]>({
-    key: 'playlistState',
-    default: [],
-});
-
 const Myplaylist = () => {
-    const playlistData = MyPlay;
-
     /* 2023.05.16 마이플레이리스트 메뉴 버튼 클릭시 수정, 삭제 버튼 모달 */
     const [showModal, setShowModal] = useRecoilState<boolean>(modalState);
     const [selectedPlaylistId, setSelectedPlaylistId] = useState<number | null>(null);
 
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
 
+    const [myplaylistData, setMyplaylistData] = useRecoilState(myplaylistState);
+
     /* 2023.05.21 마이플레이리스트 생성 */
     const MyplaylistCreate = () => {
         axios
             .post(
-                `/playlists`,
+                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists`,
                 {
-                    playListId: '1',
-                    title: '제목1',
+                    title: '새벽에 듣기 좋은 플리',
+                    body: '새벽2시',
+                    coverImg:
+                        'https://is3-ssl.mzstatic.com/image/thumb/Music114/v4/5e/6e/36/5e6e36fa-4aaa-1705-a420-7ee7bdd53cb8/artwork.jpg/600x600bf-60.jpg',
                 },
                 {
                     headers: {
@@ -67,8 +33,9 @@ const Myplaylist = () => {
                     },
                 },
             )
-            .then(() => {
-                console.log();
+            .then((response) => {
+                setMyplaylistData(response.data.data);
+                console.log(response.data.data);
             })
             .catch((error) => {
                 console.error(error);
@@ -76,26 +43,24 @@ const Myplaylist = () => {
     };
 
     /* 2023.05.16 마이플레이리스트 삭제 */
-    const [playlist, setPlaylist] = useRecoilState(playlistState);
+    // const handleDelete = (playlistId: number) => {
+    //     const updatedPlaylist = myplaylistData.filter((data) => data.playListId !== playlistId);
+    //     setMyplaylistData(updatedPlaylist);
 
-    const handleDelete = (playlistId: number) => {
-        const updatedPlaylist = playlist.filter((data) => data.playListId !== playlistId);
-        setPlaylist(updatedPlaylist);
-
-        axios
-            .delete(`/playlists/{playlist-id}`, {
-                headers: {
-                    Authorization: token,
-                },
-            })
-            .then(() => {
-                console.log('플레이리스트 아이템이 성공적으로 삭제되었습니다.');
-            })
-            .catch((error) => {
-                console.error('플레이리스트 아이템 삭제 중 오류가 발생했습니다:', error);
-                setPlaylist(playlist);
-            });
-    };
+    //     axios
+    //         .delete(`/playlists/{playlist-id}`, {
+    //             headers: {
+    //                 Authorization: token,
+    //             },
+    //         })
+    //         .then(() => {
+    //             console.log('플레이리스트 아이템이 성공적으로 삭제되었습니다.');
+    //         })
+    //         .catch((error) => {
+    //             console.error('플레이리스트 아이템 삭제 중 오류가 발생했습니다:', error);
+    //             setMyplaylistData(myplaylistData);
+    //         });
+    // };
 
     /* 2023.05.21 마이플레이리스트 수정 */
     // const MyplaylistModify = () => {
@@ -154,13 +119,13 @@ const Myplaylist = () => {
                 </li>
             </div>
 
-            {playlistData.map((data) => (
-                <div className="playlist-list">
-                    <img src={data.imgSrc} alt="musicimg" />
-                    <li>{data.name}</li>
+            {myplaylistData.map((data) => (
+                <div className="playlist-list" key={data.playListId}>
+                    <img src={data.coverImg} alt="musicimg" />
+                    <li>{data.title}</li>
                     <div className="playlist-vote-icon">
                         <AiFillHeart />
-                        {data.vote}
+                        {data.likeCount}
                     </div>
                     <div className="playlist-button">
                         <BsPlayCircle />
@@ -178,7 +143,7 @@ const Myplaylist = () => {
                                 <ModalButtons>
                                     <Button>수정</Button>
 
-                                    <Button onClick={() => handleDelete(data.playListId)}>삭제</Button>
+                                    <Button>삭제</Button>
                                 </ModalButtons>
                             </ModalContainer>
                         )}

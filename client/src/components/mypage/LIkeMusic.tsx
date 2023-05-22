@@ -71,61 +71,6 @@ const LikeMusic = () => {
         setCurrentPage(currentPage - 1);
     };
 
-    // const [like, setLike] = useState<boolean>(false);
-
-    // const memberId: string | undefined = window.localStorage.getItem('memberId') || undefined;
-
-    // const handleLike = () => {
-    //     if (!token) {
-    //         return;
-    //     }
-
-    //     const updatedLike = !like; // 새로운 like 상태
-
-    //     setLike(updatedLike); // 먼저 상태 업데이트
-
-    //     axios
-    //         .post(
-    //             `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/music-like/toggle`,
-    //             {
-    //                 memberId: memberId,
-    //                 musicId: musicId,
-    //             },
-    //             {
-    //                 headers: {
-    //                     Authorization: token,
-    //                 },
-    //             },
-    //         )
-    //         .then((response) => {
-    //             console.log(response.data);
-    //             const updatedMusicId = response.data.musicId;
-    //             setLike(updatedMusicId === musicId);
-    //         })
-    //         .catch((error) => {
-    //             console.error(error);
-    //             setLike(!updatedLike);
-    //         });
-    // };
-
-    // useEffect(() => {
-    //     axios
-    //         .get('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/liked-musics', {
-    //             headers: {
-    //                 Authorization: token,
-    //             },
-    //         })
-    //         .then((response) => {
-    //             const data = response.data.data;
-    //             const likedMusicIds = data.map((item: { musicId: number }) => item.musicId);
-    //             setLike(likedMusicIds.includes(musicId));
-    //             console.log(data);
-    //         })
-    //         .catch((error) => {
-    //             console.error(error);
-    //         });
-    // }, [setLike]);
-
     return (
         <LikeContainer>
             <LikeTitle>
