@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Loding from 'src/pages/Loding';
 import styled from 'styled-components';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 interface MusicData {
     musicId: number;
@@ -40,6 +41,7 @@ const Trending = () => {
                 .get('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics?&size=6')
                 .then((response) => {
                     setTranding(response.data.data);
+                    setIsLoding(false);
                 })
                 .catch((error) => {
                     console.error(error);
@@ -58,9 +60,11 @@ const Trending = () => {
                 <ItemsContainer>
                     {tranding.map((data) => (
                         <Item key={data.musicId}>
-                            <Image src={data.albumCoverImg} alt={data.musicName} />
-                            <Title>{data.musicName}</Title>
-                            <Artist>{data.artistName}</Artist>
+                            <Link to={`/musiclist/${data.musicId}`}>
+                                <Image src={data.albumCoverImg} alt={data.musicName} />
+                                <Title>{data.musicName}</Title>
+                                <Artist>{data.artistName}</Artist>
+                            </Link>
                         </Item>
                     ))}
                 </ItemsContainer>
@@ -99,6 +103,9 @@ const TrTitle = styled.div`
     font-weight: 700;
     color: hsl(0, 0%, 100%);
     margin: 10px 0px;
+    a {
+        text-decoration: none;
+    }
 `;
 
 /* 2023.05.11 MusicList Tranding (리스트 나올 박스) 컴포넌트 구현 / slideIn 애니메이션 - 홍혜란 */
@@ -131,6 +138,9 @@ const ItemsContainer = styled.div`
     display: flex;
     flex-direction: row;
     font-family: 'Rajdhani', sans-serif;
+    a {
+        text-decoration: none;
+    }
     @media screen and (max-width: 1200px) {
         & ${Item}:nth-child(6) {
             display: none;

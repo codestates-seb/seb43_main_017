@@ -70,14 +70,14 @@ const Categories = ({ showSearchResult }: CategoryProps) => {
         });
     }, []);
 
-    const handleCategoryClick = (name: string, i: number) => {
-        if (openCategory === name) {
-            setOpenCategory('');
-        } else {
-            setOpenCategory(name);
-        }
-        setIndex(i);
-    };
+    // const handleCategoryClick = (name: string, i: number) => {
+    //     if (openCategory === name) {
+    //         setOpenCategory('');
+    //     } else {
+    //         setOpenCategory(name);
+    //     }
+    //     setIndex(i);
+    // };
 
     const handleSubCategoryClick = (subCategory: string) => {
         // 이미 선택된 태그가 있는지 확인
@@ -222,7 +222,7 @@ const TagGroup = styled.div`
         font-size: 0.8rem;
     }
     ul > li {
-        margin: 20px 30px;
+        margin: 0px 30px;
         color: #999999;
         font-family: 'Noto Sans KR', sans-serif;
     }
@@ -235,7 +235,7 @@ const TagGroup = styled.div`
         font-size: 1rem;
         font-weight: 700;
         color: #ccc;
-        opacity: 0;
+
         > * {
             margin-right: 10px;
         }
@@ -247,10 +247,14 @@ const TagGroup = styled.div`
     }
 
     .Show-subtag {
+        opacity: 0;
         animation: showfeel 1s forwards;
     }
 
     @keyframes showfeel {
+        0% {
+            margin: 0px 30px;
+        }
         50% {
             opacity: 0;
         }
@@ -260,26 +264,6 @@ const TagGroup = styled.div`
             margin: 20px 30px;
         }
     }
-    /* @keyframes showgenre {
-        50% {
-            opacity: 0;
-        }
-        100% {
-            opacity: 1;
-            height: auto;
-            margin: 20px 30px;
-        }
-    }
-    @keyframes showinstrument {
-        50% {
-            opacity: 0;
-        }
-        100% {
-            opacity: 1;
-            height: auto;
-            margin: 20px 30px;
-        }
-    } */
 `;
 
 /* 2023.05.10 태그 박스 컴포넌트 구현 - 홍혜란 */
