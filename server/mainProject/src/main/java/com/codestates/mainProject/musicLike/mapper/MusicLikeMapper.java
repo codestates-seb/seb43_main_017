@@ -11,8 +11,6 @@ public interface MusicLikeMapper {
     @Mapping(source = "member.memberId", target = "memberId")
     @Mapping(source = "music.musicId", target = "musicId")
     MusicLikeDto.MusicLikeResponseDto entityToResponseDto(MusicLike musicLike);
-
-    MusicLike postDtoToEntity(MusicLikeDto.MusicLikePostDto musicLikePostDto);
 }
 
 

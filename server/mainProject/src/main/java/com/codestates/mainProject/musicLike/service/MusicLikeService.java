@@ -5,17 +5,13 @@ import com.codestates.mainProject.exception.ExceptionCode;
 import com.codestates.mainProject.member.entity.Member;
 import com.codestates.mainProject.member.repository.MemberRepository;
 import com.codestates.mainProject.member.service.MemberService;
-import com.codestates.mainProject.memberMusic.entity.MemberMusic;
 import com.codestates.mainProject.memberMusic.service.MemberMusicService;
-import com.codestates.mainProject.memberMusicTag.entity.MemberMusicTag;
-import com.codestates.mainProject.memberMusicTag.service.MemberMusicTagService;
 import com.codestates.mainProject.music.entity.Music;
 import com.codestates.mainProject.music.repository.MusicRepository;
-import com.codestates.mainProject.music.service.MusicService;
 import com.codestates.mainProject.musicLike.dto.MusicLikeDto;
 import com.codestates.mainProject.musicLike.entity.MusicLike;
 import com.codestates.mainProject.musicLike.repository.MusicLikeRepository;
-import com.codestates.mainProject.musicTag.entity.MusicTag;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +30,7 @@ public class MusicLikeService {
     private final MusicRepository musicRepository;
     private final MemberService memberService;
     private final MemberRepository memberRepository;
-    private final MemberMusicTagService memberMusicTagService;
+    private final MemberMusicService memberMusicService;
 
     // 음악 좋아요 생성/취소
     public MusicLikeDto.MusicLikeToggleResponseDto toggleMusicLike(Long memberId, long musicId) {
@@ -43,8 +39,10 @@ public class MusicLikeService {
         Music music = musicRepository.findById(musicId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MUSIC_NOT_FOUND));
 
+
+
         List<MusicLike> musicLikes = music.getMusicLikes();
-        List<MusicTag> musicTags = music.getMusicTags();
+
 
         Optional<MusicLike> optionalMusicLike = musicLikes.stream()
                 .filter(musiclike -> musiclike.getMember().getMemberId().equals(memberId))
@@ -60,9 +58,9 @@ public class MusicLikeService {
             validateMusicLikeAuthorOrAdmin(memberId, musicLike);
             music.removeMusicLike(musicLike);
 
-            for(MusicTag musicTag : musicTags ){
-                memberMusicTagService.deleteMemberMusicTag(memberId,musicTag.getMusicTagId());  //music에 있는 musicTag들을 memberMusicTag에서 모두지움
-            }
+
+
+            memberMusicService.deleteMemberMusic(memberId,musicId);
 
             musicLikeRepository.delete(musicLike);
 
@@ -72,9 +70,8 @@ public class MusicLikeService {
             music.addMusicLike(musicLike);
             MusicLike savedMusicLike = musicLikeRepository.save(musicLike);
 
-            for(MusicTag musicTag : musicTags ){
-                memberMusicTagService.createMemberMusicTag(memberId,musicTag.getMusicTagId()); //music에 있는 musicTag들을 memberMusicTag에서 모두생성
-            }
+
+            memberMusicService.createMemberMusic(memberId, musicId);
 
             responseDto.setMusicLikeId(savedMusicLike.getMusicLikeId());
             responseDto.setMessage("좋아요가 생성되었습니다.");

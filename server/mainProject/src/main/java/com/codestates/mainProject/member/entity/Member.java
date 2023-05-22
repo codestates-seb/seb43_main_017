@@ -2,18 +2,13 @@ package com.codestates.mainProject.member.entity;
 
 import com.codestates.mainProject.audit.Auditable;
 import com.codestates.mainProject.memberMusic.entity.MemberMusic;
-import com.codestates.mainProject.memberMusicTag.entity.MemberMusicTag;
 import com.codestates.mainProject.music.entity.Music;
-import com.codestates.mainProject.musicTag.entity.MusicTag;
-import com.codestates.mainProject.musicTag.repository.MusicTagRepository;
 import com.codestates.mainProject.playList.entity.PlayList;
 import com.codestates.mainProject.playListLike.entity.PlayListLike;
-import com.codestates.mainProject.playlListMusic.entity.PlayListMusic;
 import lombok.*;
-
 import javax.persistence.*;
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 @NoArgsConstructor
 @Entity
@@ -54,8 +49,7 @@ public class Member extends Auditable {
     @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
     private List<PlayListLike> likedPlayLists = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
-    private List<MemberMusicTag> memberMusicTags = new ArrayList<>();
+
 
 
 
@@ -114,17 +108,7 @@ public class Member extends Auditable {
         }
     }
 
-    public void addMemberMusicTag(MemberMusicTag memberMusicTag){
-        this.memberMusicTags.add(memberMusicTag);
-        memberMusicTag.setMember(this);
-    }
 
-    public void removeMemberMusicTag(MemberMusicTag memberMusicTag) {
-        this.memberMusicTags.remove(memberMusicTag);
-        if(memberMusicTag.getMember() != this) {
-            memberMusicTag.setMember(this);
-        }
-    }
 
 
     public Member(String email) {

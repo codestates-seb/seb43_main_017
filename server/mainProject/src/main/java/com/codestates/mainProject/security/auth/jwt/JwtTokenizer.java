@@ -111,17 +111,4 @@ public class JwtTokenizer {
         tokenBlackList.put(jws, expirationTime);
     }
 
-    public boolean isTokenInBlackList(String jws) {
-        if(!tokenBlackList.containsKey(jws)) {
-            return false;
-        }
-
-        long expirationTime = tokenBlackList.get(jws);
-        if(System.currentTimeMillis() > expirationTime) {
-            tokenBlackList.remove(jws);
-            return false;
-        }
-
-        return true;
-    }
 }

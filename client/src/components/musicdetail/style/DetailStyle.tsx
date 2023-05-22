@@ -25,13 +25,13 @@ export const PlaylistBackground = styled.article<url>`
     width: 100%;
     min-height: 100vh;
     background: url(${(props) => props.url});
-    filter: blur(60px);
+    filter: blur(50px);
     background-size: cover;
-    opacity: 0.4;
+    opacity: 0.3;
     animation: bgScale 10s infinite;
     @keyframes bgScale {
         50% {
-            transform: scale(1.4);
+            transform: scale(1.2);
         }
     }
 `;
@@ -46,38 +46,30 @@ export const DetailSection = styled.div`
     height: 100%;
     z-index: 2;
 `;
-export const AlbumHeader = styled.div<url>`
+
+/**2023-05-09 rotate 레코드 : 김주비 */
+export const AlbumRecode = styled.div<url>`
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
-    width: 100%;
-    height: 200px;
-    border: 1px solid red;
+    width: 600px;
+    height: 0px;
     background: url(${(props) => props.url});
-`;
-/**2023-05-09 rotate 레코드 : 김주비 */
-export const AlbumRecode = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: -200px;
-    width: 400px;
-    height: 400px;
-    background: url('/assets/background-detail-recode.png');
+    /* background: url('/assets/background-detail-recode.png'); */
     background-size: cover;
+    background-position: center;
     opacity: 0.7;
-    animation: roundingrecode 10s infinite linear;
-    img {
-        width: 200px;
-        height: 200px;
-        border-radius: 200px;
-    }
-    @keyframes roundingrecode {
+    border-radius: 20px;
+    animation: showalbumimg 2s forwards 2s;
+    margin-bottom: 40px;
+    @keyframes showalbumimg {
         100% {
-            transform: rotate(360deg);
+            height: 200px;
         }
+    }
+    @media (max-width: 700px) {
+        width: 90%;
     }
 `;
 /**2023-05-09 detailpage 컨텐츠 섹션 + 키프레임 애니메이션 : 김주비 */
@@ -137,7 +129,7 @@ export const MusicTitle = styled.div`
     justify-content: center;
     align-items: center;
     width: 100%;
-    font-size: 5.5rem;
+    font-size: 4rem;
     letter-spacing: -2px;
     text-transform: uppercase;
     font-weight: 700;
@@ -163,7 +155,7 @@ export const MusicInfo = styled.ul`
 
     li {
         margin-right: 20px;
-        transform: translateY(20px);
+        transform: translateY(40px);
         animation: ascendText 1s forwards 2.5s;
     }
     li:nth-child(2n-1) {
