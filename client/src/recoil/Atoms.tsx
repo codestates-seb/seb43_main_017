@@ -119,3 +119,8 @@ export const modifyClickState = atom({
     key: 'modifyClickState',
     default: 0,
 });
+
+export const tagSreachState = atom({
+    key: 'tagSreachState',
+    default: '',
+});

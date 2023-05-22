@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { VscClose } from 'react-icons/vsc';
 import { useRecoilState } from 'recoil';
-import { selectedTagsState, showSearch } from 'src/recoil/Atoms';
+import { selectedTagsState, showSearch, tagSreachState } from 'src/recoil/Atoms';
 import { MdTransitEnterexit } from 'react-icons/md';
 import axios from 'axios';
 import Search from './Search';
@@ -13,10 +13,9 @@ import { MdPiano } from 'react-icons/md';
 
 interface CategoryProps {
     showSearchResult: (searchText: string) => void;
-    showTagSearchResult: (TagsearchText: string[]) => void;
 }
 
-const Categories = ({ showSearchResult, showTagSearchResult }: CategoryProps) => {
+const Categories = ({ showSearchResult }: CategoryProps) => {
     const [selectedTags, setSelectedTags] = useRecoilState(selectedTagsState);
     const [tagSelectedTags, setTagSelectedTags] = useState<string[]>([]);
     const [, setShowSearch] = useRecoilState<boolean>(showSearch);
@@ -24,6 +23,10 @@ const Categories = ({ showSearchResult, showTagSearchResult }: CategoryProps) =>
     const [genre, setGenre] = useState<tag[]>([]);
     const [instrument, setInstrument] = useState<tag[]>([]);
     const [showSubTags, setShowSubTags] = useState<string>('');
+    const [tag, setTags] = useRecoilState(tagSreachState);
+
+    const tagsString = tagSelectedTags.join('&');
+    setTags(tagsString);
 
     interface tag {
         id: number;
@@ -50,19 +53,16 @@ const Categories = ({ showSearchResult, showTagSearchResult }: CategoryProps) =>
         // 선택된 태그가 없을 경우만 추가
         if (!tagAlreadySelected) {
             setSelectedTags([...selectedTags, subCategory]);
-
             setTagSelectedTags([...tagSelectedTags, `tags=${subCategory}`]);
-
-            showTagSearchResult(tagSelectedTags);
         }
     };
 
+    //태그 딜리트기능
     const handleTagDelete = (tag: string) => {
         setSelectedTags(selectedTags.filter((t) => t !== tag));
         setTagSelectedTags(tagSelectedTags.filter((t) => t !== `tags=${tag}`));
     };
 
-    console.log(tagSelectedTags);
     return (
         <CateTagContainer>
             <CategoryContainer>
