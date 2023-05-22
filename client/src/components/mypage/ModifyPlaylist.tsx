@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { BsPencilSquare } from 'react-icons/bs';
+import { VscClose } from 'react-icons/vsc';
 import { useRecoilState } from 'recoil';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -58,6 +59,10 @@ function ModifyPlaylist() {
         if (e.key === 'Enter') {
             setIsEditing(false);
         }
+    };
+
+    const handleLeavePage = () => {
+        setMyplaylistData([]);
     };
 
     const sendRequestToServer = () => {
@@ -144,6 +149,11 @@ function ModifyPlaylist() {
                     </ModifyList>
                 ))}
             </ModiCointainer>
+            <ButtonContainer>
+                <button onClick={handleLeavePage}>
+                    <VscClose />
+                </button>
+            </ButtonContainer>
         </ModifyContainer>
     );
 }
@@ -339,5 +349,21 @@ const PlyList = styled.div`
     @media screen and (max-width: 1000px) {
         width: 400px;
         margin: 0;
+    }
+`;
+
+const ButtonContainer = styled.div`
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+
+    button {
+        border-radius: 50px;
+        border: 1px solid white;
+        display: flex;
+        align-items: center;
+        font-size: 20px;
+        width: 30px;
+        height: 20px;
     }
 `;
