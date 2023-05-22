@@ -67,9 +67,9 @@ const PlaylistBackground = styled.article<url>`
     width: 100%;
     min-height: 100vh;
     background: url(${(props) => props.url});
-    filter: blur(10px);
+    filter: blur(0px);
     background-size: cover;
-    opacity: 0.2;
+    opacity: 0.3;
     animation: bgScale 20s infinite;
     @keyframes bgScale {
         50% {

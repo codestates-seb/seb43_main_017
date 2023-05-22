@@ -152,7 +152,6 @@ function Like({ plId }: { plId: number }) {
                     },
                 )
                 .then(function (res) {
-                    console.log(res.data);
                     setLike(res.data.playListId === plId);
                 })
                 .catch(function (err) {

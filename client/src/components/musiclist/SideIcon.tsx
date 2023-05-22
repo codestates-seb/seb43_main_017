@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { type } from 'os';
 
 interface SideiconProps {
     musicId: number;
@@ -22,8 +23,8 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
         if (!token) {
             console.log('로그인을 진행해주세요');
         } else {
-            const updatedLike = !like;
-            setLike(updatedLike);
+            // const updatedLike = !like;
+            // setLike(!like);
             axios
                 .post(
                     `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/music-like/toggle`,
@@ -37,7 +38,7 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
                     },
                 )
                 .then((response) => {
-                    setLike(response.data.musicId === musicId);
+                    setLike(typeof response.data.musicLikeId === 'number');
                 })
                 .catch((err) => {
                     console.log(err);
@@ -55,8 +56,8 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
                 })
                 .then((response) => {
                     const data = response.data.data;
-                    const likedMusicIds = data.map((item: { musicId: number }) => item.musicId);
-                    setLike(likedMusicIds.includes(musicId));
+                    const likedMusicIds = data.map((item: { musicId: number }) => item.musicId); //조회된 멤버의 좋아요 뮤직아이디
+                    setLike(likedMusicIds.includes(musicId)); // 현재 조회된 음악의 아이디와 지금 아이디가 겹치면 트루.
                 });
         }
     }, [like]);

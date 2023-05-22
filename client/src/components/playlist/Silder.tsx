@@ -30,7 +30,7 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
         }
 
         axios
-            .get('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists?page=1&size=5')
+            .get('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/admin?page=1&size=5')
             .then(function (response) {
                 // 성공적으로 요청을 보낸 경우
                 setPldata(response.data.data);
@@ -113,12 +113,14 @@ const Plcard = styled.div<bgimg>`
     width: 500px;
     height: 350px;
     border-radius: 20px;
-    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.9)), url(${(props) => props.bgImg});
+    background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8) 80%), url(${(props) => props.bgImg});
     background-size: cover;
     transform: scale(0.85);
     color: #ddd;
     overflow: hidden;
     transition: 0.3s ease-in-out;
+    box-sizing: border-box;
+    /* border: 1px solid rgb(0, 0, 0, 1); */
 
     > a {
         color: #ddd;
@@ -127,7 +129,9 @@ const Plcard = styled.div<bgimg>`
         position: absolute;
         top: 30px;
         right: 30px;
+        font-family: 'Noto Sans KR', sans-serif;
         font-weight: 600;
+        text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
     }
     .pl-contents {
         position: absolute;
@@ -142,6 +146,7 @@ const SilderGroup = styled.div`
     animation: opacity 2s forwards;
     .slick-center ${Plcard} {
         transform: scale(1);
+        border: 2px solid #ccc;
     }
     .dots-paging {
         display: flex;
@@ -191,20 +196,22 @@ const Pluser = styled.div`
     margin-top: 20px;
     font-size: 0.8rem;
     > span {
+        font-family: 'Noto Sans KR', sans-serif;
         margin-right: 15px;
+        text-shadow: 0px 0px 10px rgba(0, 0, 0, 1);
     }
     span:nth-child(2n + 1) {
         font-weight: 800;
-        color: #ff8716;
+        color: rgba(199, 68, 68, 1);
     }
 `;
 /**2023-05-06 슬라이드 텍스트 : 김주비 */
 const Pltext = styled.div`
-    width: 98%;
     display: flex;
     flex-direction: column;
     > span {
         margin-top: 10px;
+        font-family: 'Noto Sans KR', sans-serif;
     }
     span:nth-child(1) {
         color: #fff;
@@ -218,8 +225,9 @@ const Pltext = styled.div`
         margin-top: 20px;
         line-height: 140%;
         opacity: 0.5;
-        width: 80%;
-        font-size: 0.7rem;
+        width: 100%;
+        font-size: 0.8rem;
+        font-weight: 300;
     }
     @media (max-width: 600px) {
         span:nth-child(1) {
