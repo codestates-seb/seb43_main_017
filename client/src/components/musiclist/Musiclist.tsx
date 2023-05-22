@@ -10,7 +10,6 @@ import { BiSearch } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
 import { MusicDataResponse } from 'src/types/Musiclist';
 import { musicDataListState } from 'src/recoil/Atoms';
-// import { AiOutlineArrowUp, AiOutlineArrowDown } from 'react-icons/ai';
 
 const Musiclist = () => {
     const [musicDataList, setMusicDataList] = useRecoilState(musicDataListState);
@@ -20,6 +19,7 @@ const Musiclist = () => {
     const [openSearch, setOpenSearch] = useRecoilState<boolean>(showSearch);
     const [tapClick, setTapClick] = useState<string>('order-by-created-at');
     const buttonArray = [];
+
     /* 2023.05.21 서치 결과에 따른 뮤직리스트 출력 */
     const showSearchResult = (searchText: string) => {
         axios
@@ -31,8 +31,9 @@ const Musiclist = () => {
                 },
             })
             .then((response) => {
-                setMusicDataList(response.data.content);
-                setTotalPages(response.data.pageInfo.totalPages);
+                const { content, pageInfo } = response.data;
+                setMusicDataList(content);
+                setTotalPages(pageInfo.totalPages);
             })
             .catch((error) => {
                 console.error(error);
@@ -40,7 +41,7 @@ const Musiclist = () => {
     };
 
     /* 2023.05.21 뮤직리스트 토탈 출력 */
-    useEffect(() => {
+    const fetchMusicList = () => {
         axios
             .get<MusicDataResponse>(
                 `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/${tapClick}?&page=${currentPage}&size=5`,
@@ -52,7 +53,11 @@ const Musiclist = () => {
             .catch((error) => {
                 console.error(error);
             });
-    }, [currentPage, tapClick]);
+    };
+
+    useEffect(() => {
+        fetchMusicList();
+    }, [currentPage]);
 
     /** 2023.05.17 전체 페이지 수 만큼 버튼 생성 - 김주비*/
     for (let i = 1; i <= totalPages; i++) {
@@ -133,11 +138,11 @@ const Musiclist = () => {
                                 <li className="music-artist color-gray">{musicData.artistName}</li>
                                 <li className="music-album color-gray">{musicData.albumName}</li>
                                 {/* <li className="music-tags">{musicData.musicTagName}</li> */}
-                                <ul className="music-tags">
+                                <TagValue>
                                     {musicData.musicTagName.slice(0, 2).map((tag, i) => (
                                         <li key={`tag-${i}`}>{tag}</li>
                                     ))}
-                                </ul>
+                                </TagValue>
                                 <li className="music-time color-gray">
                                     {formatSecondsToTime(Number(musicData.musicTime))}
                                 </li>
@@ -369,6 +374,24 @@ const Item = styled.ul`
         .music-album {
             display: none;
         }
+    }
+`;
+
+const TagValue = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    align-items: center;
+
+    li {
+        width: 50px;
+        align-items: center;
+        border: 1px solid #ff971f;
+        padding: 2px 3px 0px 3px;
+        border-radius: 20px;
+        font-size: 8px;
+        color: #ff971f;
+        margin: 3px;
     }
 `;
 

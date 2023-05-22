@@ -1,89 +1,159 @@
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { AiFillHeart } from 'react-icons/ai';
-import { BsMusicPlayer, BsPlayCircle } from 'react-icons/bs';
+import { BsMusicPlayer, BsPlayCircle, BsPlusSquare } from 'react-icons/bs';
 import { CiMenuKebab } from 'react-icons/ci';
-import { modalState } from 'src/recoil/Atoms';
-import { useState } from 'react';
-import { atom } from 'recoil';
+import { modalState, myplaylistState } from 'src/recoil/Atoms';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-/* 2023.05.10 마이플레이스트 타입 선언 */
-interface PlayData {
-    playListId: number;
-    imgSrc: string;
-    name: string;
-    vote: number;
-}
-
-/* 2023.05.10 마이플레이스트 더미데이터(임시) */
-const MyPlay: PlayData[] = [
-    {
-        playListId: 0,
-        imgSrc: './assets/ditto.png',
-        name: '나만의 플레이리스트',
-        vote: 13,
-    },
-    {
-        playListId: 1,
-        imgSrc: './assets/ditto.png',
-        name: '나만의 플레이리스트',
-        vote: 13,
-    },
-    {
-        playListId: 2,
-        imgSrc: './assets/ditto.png',
-        name: '나만의 플레이리스트',
-        vote: 13,
-    },
-];
-
-const playlistState = atom<PlayData[]>({
-    key: 'playlistState',
-    default: [],
-});
-
 const Myplaylist = () => {
-    const playlistData = MyPlay;
-
     /* 2023.05.16 마이플레이리스트 메뉴 버튼 클릭시 수정, 삭제 버튼 모달 */
     const [showModal, setShowModal] = useRecoilState<boolean>(modalState);
     const [selectedPlaylistId, setSelectedPlaylistId] = useState<number | null>(null);
 
-    /* 2023.05.16 마이플레이리스트 메뉴 버튼 클릭시 삭제 버튼 요청 */
-    const [playlist, setPlaylist] = useRecoilState(playlistState);
+    const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
+    const [totalPages, setTotalPages] = useState<number>(0); // 전체 페이지 수
+    const buttonArray = [];
 
-    const handleDelete = (playlistId: number) => {
-        const updatedPlaylist = playlist.filter((data) => data.playListId !== playlistId);
-        setPlaylist(updatedPlaylist);
+    const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
 
+    const [myplaylistData, setMyplaylistData] = useRecoilState(myplaylistState);
+
+    /* 2023.05.21 마이플레이리스트 생성 */
+    const MyplaylistCreate = () => {
         axios
-            .delete(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/members/{member-id}`)
-            .then(() => {
-                console.log('플레이리스트 아이템이 성공적으로 삭제되었습니다.');
+            .post(
+                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists`,
+                {
+                    title: '새벽에 듣기 좋은 플리',
+                    body: '새벽2시',
+                    coverImg:
+                        'https://is3-ssl.mzstatic.com/image/thumb/Music114/v4/5e/6e/36/5e6e36fa-4aaa-1705-a420-7ee7bdd53cb8/artwork.jpg/600x600bf-60.jpg',
+                },
+                {
+                    headers: {
+                        Authorization: token,
+                    },
+                },
+            )
+            .then((response) => {
+                console.log(response);
             })
             .catch((error) => {
-                console.error('플레이리스트 아이템 삭제 중 오류가 발생했습니다:', error);
-                setPlaylist(playlist);
+                console.error(error);
             });
+    };
+
+    /* 2023.05.22 마이플레이리스트 조회 */
+    useEffect(() => {
+        // 플레이리스트 데이터를 가져오는 함수
+        const fetchMyplaylistData = async () => {
+            try {
+                const response = await axios.get(
+                    `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/member-playlist?&page=${currentPage}&size=3`,
+                    {
+                        headers: {
+                            Authorization: token,
+                        },
+                    },
+                );
+                setMyplaylistData(response.data.data);
+                setTotalPages(response.data.pageInfo.totalPages);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchMyplaylistData();
+    }, []);
+
+    /* 2023.05.22 마이플레이리스트 삭제 */
+    const handleDeletePlaylist = async (playlistId: number) => {
+        try {
+            await axios.delete(`/playlists/${playlistId}`, {
+                headers: {
+                    Authorization: token,
+                },
+            });
+            setMyplaylistData((prevData) => prevData.filter((data) => data.playListId !== playlistId));
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    /* 2023.05.21 마이플레이리스트 수정 */
+    // const MyplaylistModify = () => {
+    //     axios
+    //         .patch(
+    //             `/playlists/{playlist-id}`,
+    //             {
+    //                 playListId: '1',
+    //                 title: '제목1',
+    //             },
+    //             {
+    //                 headers: {
+    //                     Authorization: token,
+    //                 },
+    //             },
+    //         )
+    //         .then(() => {
+    //             console.log();
+    //         })
+    //         .catch((error) => {
+    //             console.error(error);
+    //         });
+    // };
+
+    /** 2023.05.17 전체 페이지 수 만큼 버튼 생성 - 김주비*/
+    for (let i = 1; i <= totalPages; i++) {
+        buttonArray.push(
+            <button
+                key={i}
+                className={i === currentPage ? 'page-focused' : ''}
+                onClick={() => {
+                    setCurrentPage(i);
+                }}
+            >
+                {i}
+            </button>,
+        );
+    }
+    const handleNextPage = () => {
+        setCurrentPage(currentPage + 1);
+    };
+    const handlePrevPage = () => {
+        setCurrentPage(currentPage - 1);
     };
 
     return (
         <PlayListContainer>
-            <div className="playlist-title">
+            <MyplaylistTitle>
                 <div className="play-icon">
                     <BsMusicPlayer />
+                    <p>MY PLAYLIST</p>
+                    <li>
+                        <BsPlusSquare onClick={MyplaylistCreate} />
+                    </li>
                 </div>
-                <p>MY PLAYLIST</p>
-            </div>
+                <Pagination>
+                    <button disabled={currentPage === 1} onClick={handlePrevPage}>
+                        Prev
+                    </button>
+                    {buttonArray}
+                    <button disabled={currentPage === totalPages} onClick={handleNextPage}>
+                        Next
+                    </button>
+                </Pagination>
+            </MyplaylistTitle>
 
-            {playlistData.map((data) => (
-                <div className="playlist-list">
-                    <img src={data.imgSrc} alt="musicimg" />
-                    <li>{data.name}</li>
+            {myplaylistData.map((data) => (
+                <PlaylistList key={data.playListId}>
+                    <img src={data.coverImg} alt="musicimg" />
+                    <li>{data.title}</li>
                     <div className="playlist-vote-icon">
                         <AiFillHeart />
-                        {data.vote}
+                        {data.likeCount}
                     </div>
                     <div className="playlist-button">
                         <BsPlayCircle />
@@ -101,12 +171,12 @@ const Myplaylist = () => {
                                 <ModalButtons>
                                     <Button>수정</Button>
 
-                                    <Button onClick={() => handleDelete(data.playListId)}>삭제</Button>
+                                    <Button onClick={() => handleDeletePlaylist(data.playListId)}>삭제</Button>
                                 </ModalButtons>
                             </ModalContainer>
                         )}
                     </div>
-                </div>
+                </PlaylistList>
             ))}
         </PlayListContainer>
     );
@@ -114,81 +184,96 @@ const Myplaylist = () => {
 
 export default Myplaylist;
 
-/* 2023.05.07 마이플레이리스트 컴포넌트 구현 - 홍혜란 */
 const PlayListContainer = styled.div`
+    width: 400px;
     align-items: center;
     margin: 30px;
-    margin-top: 40px;
-    width: 400px;
-
-    .playlist-title {
-        display: flex;
-        align-items: center;
-
-        .play-icon {
-            font-size: 16px;
-            color: hsl(216, 100%, 50%);
-            display: flex;
-            align-items: center;
-        }
-
-        p {
-            font-size: 16px;
-            color: #ffffff;
-            margin-left: 5px;
-        }
-    }
-
-    .playlist-list {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        background: rgba(43, 43, 43, 0.8);
-        margin-top: 20px;
-
-        img {
-            width: 50px;
-            height: 50px;
-        }
-
-        li {
-            font-size: 12px;
-            color: white;
-        }
-
-        li:nth-child(3) {
-            font-size: 10px;
-        }
-
-        .playlist-vote-icon {
-            font-size: 12px;
-            color: rgb(245, 109, 109);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .playlist-button {
-            font-size: 16px;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .playlist-menu {
-            font-size: 16px;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-    }
     @media screen and (max-width: 1000px) {
         width: 400px;
         margin: 0;
         margin-top: 50px;
         margin-left: 30px;
+    }
+`;
+
+/* 2023.05.10 Like Music 타이틀 컴포넌트 - 홍혜란 */
+const MyplaylistTitle = styled.div`
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 10px;
+
+    .play-icon {
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+        color: rgb(41, 55, 255);
+        padding-top: 5px;
+    }
+
+    p {
+        font-size: 16px;
+        color: #ffffff;
+        margin-left: 5px;
+    }
+
+    li {
+        display: flex;
+        align-items: center;
+        color: white;
+        margin-left: 8px;
+    }
+`;
+
+const PlaylistList = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(43, 43, 43, 0.8);
+    margin-top: 20px;
+
+    img {
+        width: 50px;
+        height: 50px;
+    }
+
+    li {
+        font-size: 12px;
+        color: white;
+    }
+
+    li:nth-child(3) {
+        font-size: 10px;
+    }
+
+    .playlist-vote-icon {
+        font-size: 12px;
+        color: rgb(245, 109, 109);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .playlist-button {
+        font-size: 16px;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .playlist-menu {
+        font-size: 16px;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    @media screen and (max-width: 1000px) {
+        width: 400px;
+        margin: 0;
+        margin-top: 20px;
     }
 `;
 
@@ -217,4 +302,36 @@ const Button = styled.button`
     color: white;
     font-size: 10px;
     padding: 5px;
+`;
+
+const Pagination = styled.div`
+    button {
+        color: #ccc;
+        background: none;
+        border: 1px solid #5a5a5a;
+        border-radius: 3px;
+        margin: 0px 3px;
+        transition: 0.2s ease-in-out;
+        cursor: pointer;
+    }
+    button:hover {
+        color: #ccc;
+        border-color: #ccc;
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    button:disabled {
+        border: 1px solid #5a5a5a;
+        color: #5a5a5a;
+    }
+    button:disabled:hover {
+        background: none;
+        cursor: default;
+    }
+
+    .page-focused {
+        color: #ccc;
+        border-color: #ccc;
+        background: rgba(255, 255, 255, 0.2);
+    }
 `;

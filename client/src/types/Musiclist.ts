@@ -16,6 +16,7 @@ export interface MusicData {
 
 export interface MusicDataResponse {
     data: MusicData[];
+    content: MusicData[];
     pageInfo: {
         page: number;
         size: number;
@@ -23,18 +24,3 @@ export interface MusicDataResponse {
         totalPages: number;
     };
 }
-
-// export interface SearchResponse {
-//     musicId: number;
-//     musicName: string;
-//     artistName: string;
-//     albumName: string;
-//     musicTime: number;
-//     albumCoverImg: string;
-//     musicUri: string;
-//     musicLikeCount: number;
-//     createdAt: string;
-//     modifiedAt: string;
-//     musicTagName: string[];
-//     memberId: number;
-// }
