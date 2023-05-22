@@ -154,7 +154,7 @@ const MixingHeader = styled.article`
     justify-content: center;
     align-items: center;
     width: 60%;
-    z-index: 2;
+    z-index: 5;
     > div {
         margin: 10px;
     }
