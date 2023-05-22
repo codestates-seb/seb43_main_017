@@ -1,7 +1,7 @@
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { AiFillHeart } from 'react-icons/ai';
-import { BsMusicPlayer, BsPlayCircle } from 'react-icons/bs';
+import { BsMusicPlayer, BsPlayCircle, BsPlusSquare } from 'react-icons/bs';
 import { CiMenuKebab } from 'react-icons/ci';
 import { modalState } from 'src/recoil/Atoms';
 import { useState } from 'react';
@@ -50,7 +50,32 @@ const Myplaylist = () => {
     const [showModal, setShowModal] = useRecoilState<boolean>(modalState);
     const [selectedPlaylistId, setSelectedPlaylistId] = useState<number | null>(null);
 
-    /* 2023.05.16 마이플레이리스트 메뉴 버튼 클릭시 삭제 버튼 요청 */
+    const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
+
+    /* 2023.05.21 마이플레이리스트 생성 */
+    const MyplaylistCreate = () => {
+        axios
+            .post(
+                `/playlists`,
+                {
+                    playListId: '1',
+                    title: '제목1',
+                },
+                {
+                    headers: {
+                        Authorization: token,
+                    },
+                },
+            )
+            .then(() => {
+                console.log();
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
+
+    /* 2023.05.16 마이플레이리스트 삭제 */
     const [playlist, setPlaylist] = useRecoilState(playlistState);
 
     const handleDelete = (playlistId: number) => {
@@ -58,7 +83,11 @@ const Myplaylist = () => {
         setPlaylist(updatedPlaylist);
 
         axios
-            .delete(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/members/{member-id}`)
+            .delete(`/playlists/{playlist-id}`, {
+                headers: {
+                    Authorization: token,
+                },
+            })
             .then(() => {
                 console.log('플레이리스트 아이템이 성공적으로 삭제되었습니다.');
             })
@@ -68,6 +97,51 @@ const Myplaylist = () => {
             });
     };
 
+    /* 2023.05.21 마이플레이리스트 수정 */
+    // const MyplaylistModify = () => {
+    //     axios
+    //         .patch(
+    //             `/playlists/{playlist-id}`,
+    //             {
+    //                 playListId: '1',
+    //                 title: '제목1',
+    //             },
+    //             {
+    //                 headers: {
+    //                     Authorization: token,
+    //                 },
+    //             },
+    //         )
+    //         .then(() => {
+    //             console.log();
+    //         })
+    //         .catch((error) => {
+    //             console.error(error);
+    //         });
+    // };
+
+    /* 2023.05.21 마이플레이리스트 음악 삭제 */
+    // const MyplaylistMusic = () => {
+    //     axios
+    //         .delete(
+    //             `/playlists/{playlist-id}/musics/{music-id}`,
+    //             {
+    //                 musicId: 1,
+    //             },
+    //             {
+    //                 headers: {
+    //                     Authorization: token,
+    //                 },
+    //             },
+    //         )
+    //         .then(() => {
+    //             console.log();
+    //         })
+    //         .catch((error) => {
+    //             console.error(error);
+    //         });
+    // };
+
     return (
         <PlayListContainer>
             <div className="playlist-title">
@@ -75,6 +149,9 @@ const Myplaylist = () => {
                     <BsMusicPlayer />
                 </div>
                 <p>MY PLAYLIST</p>
+                <li>
+                    <BsPlusSquare onClick={MyplaylistCreate} />
+                </li>
             </div>
 
             {playlistData.map((data) => (
@@ -136,6 +213,13 @@ const PlayListContainer = styled.div`
             font-size: 16px;
             color: #ffffff;
             margin-left: 5px;
+        }
+
+        li {
+            color: white;
+            margin-left: 8px;
+            display: flex;
+            align-items: center;
         }
     }
 

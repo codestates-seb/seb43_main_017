@@ -14,6 +14,7 @@ import { musicDataListState } from 'src/recoil/Atoms';
 
 const Musiclist = () => {
     const [musicDataList, setMusicDataList] = useRecoilState(musicDataListState);
+    // const [orderBy, setOrderBy] = useState('/musics');
 
     const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
     const [totalPages, setTotalPages] = useState<number>(0); // 전체 페이지 수
@@ -40,6 +41,37 @@ const Musiclist = () => {
                 console.error(error);
             });
     };
+
+    // const fetchMusicList = () => {
+    //     axios
+    //         .get<MusicDataResponse>(`${orderBy}`, {
+    //             params: {
+    //                 page: currentPage,
+    //             },
+    //         })
+    //         .then((response) => {
+    //             // {
+    //             //     orderBy === '/musics' ? setMusicDataList(response.data.data) : setMusicDataList(response.data);
+    //             // }
+    //             setMusicDataList(response.data.data);
+    //             setTotalPages(response.data.pageInfo.totalPages);
+    //         })
+    //         .catch((error) => {
+    //             console.error(error);
+    //         });
+    // };
+
+    // useEffect(() => {
+    //     fetchMusicList();
+    // }, [currentPage, orderBy]);
+
+    // const showNewResult = () => {
+    //     setOrderBy('/musics/order-by-created-at');
+    // };
+
+    // const showLikeResult = () => {
+    //     setOrderBy('/musics/order-by-like-count');
+    // };
 
     /* 2023.05.21 뮤직리스트 토탈 출력 */
     const fetchMusicList = () => {
@@ -383,7 +415,7 @@ const TagValue = styled.div`
         border: 1px solid #ff971f;
         padding: 2px 3px 0px 3px;
         border-radius: 20px;
-        font-size: 5px;
+        font-size: 8px;
         color: #ff971f;
         margin: 3px;
     }
