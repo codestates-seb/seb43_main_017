@@ -63,7 +63,7 @@ function ModifyPlaylist() {
     const sendRequestToServer = () => {
         axios
             .patch(
-                `playlists/${ModifyPlaylistId}`,
+                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/${ModifyPlaylistId}`,
                 {
                     title: title,
                     body: body,
