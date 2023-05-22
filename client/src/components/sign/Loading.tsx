@@ -45,7 +45,7 @@ export const Loading = () => {
                 window.localStorage.setItem('userimg', userimg);
                 // 추출한 데이터를 백엔드 서버로 보내준다.
                 axios
-                    .post<LoginPost>(`${BaseUrl}`, {
+                    .post<LoginPost>(`${BaseUrl}/naver`, {
                         email: userid,
                         name: username,
                         profileimg: userimg,
@@ -122,7 +122,7 @@ export const Loading = () => {
                             if (kakaoemail) {
                                 // 카카오에서 받아온 유저정보를 백엔드 서버로 보내주고 토큰을 요청
                                 axios
-                                    .post<LoginPost>(`${BaseUrl}`, {
+                                    .post<LoginPost>(`${BaseUrl}/kakao`, {
                                         email: kakaoemail,
                                         name: kakaonickname,
                                         profileimg: kakaoimg,

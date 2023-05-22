@@ -55,13 +55,37 @@ public class MemberContorller {
         return ResponseEntity.created(location).build();
     }
        //  # 프론트엔드에서 네이버유저의 아이디와 비번을 알려주면 그걸 이용해 회원가입을 하고 토큰발급하는 방식
-    @PostMapping("/oauth/signup")
-    public ResponseEntity oAuth2Login(@RequestBody @Valid AuthLoginDto requesBody) {
+    @PostMapping("/oauth/signup/naver")
+    public ResponseEntity oAuth2LoginNaver(@RequestBody @Valid AuthLoginDto requesBody) {
         log.info("### oauth2 login start! ###");
         String accessToken = "";
         String refreshToken = "";
         String memberId = "";
         Member member = mapper.AuthLoginDtoMember(requesBody);
+        member.setEmail(member.getEmail()+"2");   //Naver 유저인 경우 이메일 뒤에 2를 붙임
+
+        if(!memberService.existsByEmail(member.getEmail())) {
+            member = memberService.createMemberOAuth2(member);
+        } else {
+            member = memberService.findVerifiedMember(member.getEmail());
+        }
+
+        accessToken = memberService.delegateAccessToken(member);
+        refreshToken = memberService.delegateRefreshToken(member);
+        memberId = String.valueOf(member.getMemberId());
+        return ResponseEntity.ok().header("Authorization", "Bearer " + accessToken)
+                .header("Refresh", refreshToken)
+                .header("MemberId", memberId).build();
+    }
+
+    @PostMapping("/oauth/signup/kakao")
+    public ResponseEntity oAuth2LoginKakao(@RequestBody @Valid AuthLoginDto requesBody) {
+        log.info("### oauth2 login start! ###");
+        String accessToken = "";
+        String refreshToken = "";
+        String memberId = "";
+        Member member = mapper.AuthLoginDtoMember(requesBody);
+        member.setEmail(member.getEmail()+"3");
         if(!memberService.existsByEmail(member.getEmail())) {
             member = memberService.createMemberOAuth2(member);
         } else {

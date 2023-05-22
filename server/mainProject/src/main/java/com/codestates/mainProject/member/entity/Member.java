@@ -50,10 +50,6 @@ public class Member extends Auditable {
     private List<PlayListLike> likedPlayLists = new ArrayList<>();
 
 
-
-
-
-
     public List<Music> getMusics() {
         List<Music> musics = new ArrayList<>();
         for (MemberMusic memberMusic : memberMusics) {

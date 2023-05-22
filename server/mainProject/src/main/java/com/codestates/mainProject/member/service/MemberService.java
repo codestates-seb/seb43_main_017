@@ -74,15 +74,14 @@ public class MemberService {
     }
 
     public Member createMemberOAuth2(Member member) {
-        verifyExistEmail(member.getEmail());
 
         List<String> roles = authorityUtils.createRoles(member.getEmail());
         member.setRoles(roles);
         String newName = verifyExistName(member.getName());
         member.setName(newName);
+
         return memberRepository.save(member);
     }
-
 
     public Member findMember(long memberId) {
         return findVerifiedMember(memberId);
