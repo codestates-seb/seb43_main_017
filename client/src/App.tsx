@@ -154,7 +154,7 @@ const NavSection = styled.section`
     background: linear-gradient(90deg, rgb(0, 0, 0), rgb(0, 0, 0, 0));
     animation: sildeNav 2s forwards;
     opacity: 0;
-    z-index: 2;
+    z-index: 3;
     @keyframes sildeNav {
         100% {
             opacity: 1;
@@ -171,7 +171,7 @@ const NavSection = styled.section`
 
 /**2023-05-05 sign 버튼 섹션 : 김주비*/
 const SignBtnSection = styled.aside`
-    z-index: 2;
+    z-index: 3;
     position: absolute;
     margin-top: 20px;
     right: 20px;
@@ -184,7 +184,7 @@ const SignBtnSection = styled.aside`
         }
     }
     @media (max-width: 700px) {
-        z-index: 2;
+        z-index: 3;
         display: none;
     }
 `;
