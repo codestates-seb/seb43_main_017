@@ -22,8 +22,7 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
         if (!token) {
             console.log('로그인을 진행해주세요');
         } else {
-            const updatedLike = !like;
-            setLike(updatedLike);
+            setLike(!like);
             axios
                 .post(
                     `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/music-like/toggle`,
@@ -59,7 +58,7 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
                     setLike(likedMusicIds.includes(musicId));
                 });
         }
-    }, [like]);
+    }, []);
 
     return (
         <MusicIconGroup>

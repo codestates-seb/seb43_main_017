@@ -1,9 +1,9 @@
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { AiFillHeart } from 'react-icons/ai';
 import { BsMusicPlayer, BsPlayCircle, BsPlusSquare } from 'react-icons/bs';
 import { CiMenuKebab } from 'react-icons/ci';
-import { modalState, myplaylistState } from 'src/recoil/Atoms';
+import { modalState, myplaylistState, modifyDataState } from 'src/recoil/Atoms';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -28,8 +28,7 @@ const Myplaylist = () => {
                 {
                     title: '플레이리스트',
                     body: '플레이리스트 내용',
-                    coverImg:
-                        'https://is3-ssl.mzstatic.com/image/thumb/Music114/v4/5e/6e/36/5e6e36fa-4aaa-1705-a420-7ee7bdd53cb8/artwork.jpg/600x600bf-60.jpg',
+                    coverImg: './assets/mypage.png',
                 },
                 {
                     headers: {
@@ -39,6 +38,7 @@ const Myplaylist = () => {
             )
             .then((response) => {
                 console.log(response);
+                setMyplaylistData((prevData) => [...prevData, response.data]);
             })
             .catch((error) => {
                 console.error(error);
@@ -71,11 +71,14 @@ const Myplaylist = () => {
     /* 2023.05.22 마이플레이리스트 삭제 */
     const handleDeletePlaylist = async (playlistId: number) => {
         try {
-            await axios.delete(`/playlists/${playlistId}`, {
-                headers: {
-                    Authorization: token,
+            await axios.delete(
+                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/${playlistId}`,
+                {
+                    headers: {
+                        Authorization: token,
+                    },
                 },
-            });
+            );
             setMyplaylistData((prevData) => prevData.filter((data) => data.playListId !== playlistId));
         } catch (error) {
             console.error(error);
@@ -101,6 +104,12 @@ const Myplaylist = () => {
     };
     const handlePrevPage = () => {
         setCurrentPage(currentPage - 1);
+    };
+
+    const setModifyState = useSetRecoilState(modifyDataState);
+
+    const handleModfiyState = () => {
+        setModifyState(true);
     };
 
     return (
@@ -146,7 +155,7 @@ const Myplaylist = () => {
                         {selectedPlaylistId === data.playListId && showModal && (
                             <ModalContainer>
                                 <ModalButtons>
-                                    <Button>수정</Button>
+                                    <Button onClick={handleModfiyState}>수정</Button>
 
                                     <Button onClick={() => handleDeletePlaylist(data.playListId)}>삭제</Button>
                                 </ModalButtons>

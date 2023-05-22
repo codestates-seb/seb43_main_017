@@ -109,3 +109,8 @@ export const bodyState = atom({
     key: 'bodyState',
     default: '',
 });
+
+export const modifyDataState = atom({
+    key: 'modifyDataState',
+    default: false,
+});

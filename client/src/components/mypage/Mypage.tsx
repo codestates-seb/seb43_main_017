@@ -2,12 +2,16 @@ import styled from 'styled-components';
 import LikeMusic from './LIkeMusic';
 import Myplaylist from './Myplaylist';
 import ModifyPlaylist from './ModifyPlaylist';
+import { modifyDataState } from 'src/recoil/Atoms';
+import { useRecoilState } from 'recoil';
 
 function Mypage() {
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
     const userimg: string | undefined = window.localStorage.getItem('userimg') || undefined;
     const usernickname: string | undefined = window.localStorage.getItem('usernickname') || undefined;
     const useremail: string | undefined = window.localStorage.getItem('useremail') || undefined;
+
+    const [modifyPlaylistState, _] = useRecoilState(modifyDataState);
 
     return (
         <div>
@@ -49,9 +53,7 @@ function Mypage() {
                             <Myplaylist /> {/* my playlist 파일 */}
                         </LeftContainer>
 
-                        <RightContainer>
-                            <ModifyPlaylist />
-                        </RightContainer>
+                        <RightContainer>{modifyPlaylistState && <ModifyPlaylist />}</RightContainer>
                     </MusicInfor>
                 </MypageListContainer>
             </MypageContainer>
