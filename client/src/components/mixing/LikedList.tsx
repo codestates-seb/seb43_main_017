@@ -74,7 +74,6 @@ const LikedList = ({ audioRef }: LikedListProps) => {
                     (music: LikeMusicList) => music.musicLikeCount > 0,
                 );
                 setLikedMusic(likedMusicData);
-
                 setTotalPages(response.data.pageInfo.totalPages);
             } catch (error) {
                 console.error('Error fetching liked music:', error);

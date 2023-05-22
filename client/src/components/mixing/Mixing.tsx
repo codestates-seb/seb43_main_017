@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { useEffect, useRef } from 'react';
-import { useSetRecoilState } from 'recoil';
+import { useEffect, useRef, useState } from 'react';
+import { useSetRecoilState, useRecoilState } from 'recoil';
 import { soundbarOpenState, videouploadState } from 'src/recoil/Atoms';
 import VideoUploader from './VideoUpdate';
 import LikedList from './LikedList';
@@ -8,7 +8,8 @@ import { FaPlay, FaPause, FaVolumeUp, FaVolumeDown, FaVideoSlash } from 'react-i
 
 function Mixing() {
     const setSoundbarOpen = useSetRecoilState<boolean>(soundbarOpenState);
-    const setVideoUploader = useSetRecoilState<boolean>(videouploadState);
+    const [videoState, setvideouploadState] = useRecoilState(videouploadState);
+
     let audioVolume = 0.5;
     const videoRef = useRef<HTMLVideoElement>(null);
     const audioRef = useRef<HTMLAudioElement>(null);
@@ -52,7 +53,7 @@ function Mixing() {
 
     const changeVideo = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
-        setVideoUploader(false);
+        setvideouploadState(false);
     };
 
     /** 2023.05.16 사운드바 상태 변경 -김주비 */
@@ -64,9 +65,11 @@ function Mixing() {
         <MixingSection>
             <MixingBackground></MixingBackground>
             <MixingHeader>
-                <Musiclist>
-                    <LikedList audioRef={audioRef} />
-                </Musiclist>
+                {!videoState ? null : (
+                    <Musiclist>
+                        <LikedList audioRef={audioRef} />
+                    </Musiclist>
+                )}
                 <div className="flex-center">
                     <MixingPage>
                         <span className="mixing-title">FITTING &nbsp; ROOM</span>
@@ -75,23 +78,25 @@ function Mixing() {
                         <p className="mixing-text">Directly compare whether the sound source suits your video.</p>
                     </Mixingtext>
                     <VideoUploader videoRef={videoRef} />
-                    <VideoBtnbar>
-                        <VideoBtn onClick={handleVideoPlay}>
-                            <FaPlay />
-                        </VideoBtn>
-                        <VideoBtn onClick={handleVideoPause}>
-                            <FaPause />
-                        </VideoBtn>
-                        <VideoBtn onClick={handleAudioVolumeUp}>
-                            <FaVolumeUp />
-                        </VideoBtn>
-                        <VideoBtn onClick={handleAudioVolumeDawn}>
-                            <FaVolumeDown />
-                        </VideoBtn>
-                        <VideoBtn onClick={changeVideo}>
-                            <FaVideoSlash />
-                        </VideoBtn>
-                    </VideoBtnbar>
+                    {!videoState ? null : (
+                        <VideoBtnbar>
+                            <VideoBtn onClick={handleVideoPlay}>
+                                <FaPlay />
+                            </VideoBtn>
+                            <VideoBtn onClick={handleVideoPause}>
+                                <FaPause />
+                            </VideoBtn>
+                            <VideoBtn onClick={handleAudioVolumeUp}>
+                                <FaVolumeUp />
+                            </VideoBtn>
+                            <VideoBtn onClick={handleAudioVolumeDawn}>
+                                <FaVolumeDown />
+                            </VideoBtn>
+                            <VideoBtn onClick={changeVideo}>
+                                <FaVideoSlash />
+                            </VideoBtn>
+                        </VideoBtnbar>
+                    )}
                 </div>
             </MixingHeader>
         </MixingSection>
@@ -230,9 +235,14 @@ const VideoBtn = styled.button`
     background: none;
     margin: 5px 10px;
     font-size: 35px;
-    color: #eaf2f9;
+    color: #f0f8ff;
     cursor: pointer;
     &:hover {
-        color: #acd2f3;
+        color: #cce4fa;
+        stroke: red;
+    }
+    &:focus {
+        color: #6db4f3;
+        font-size: 40px;
     }
 `;

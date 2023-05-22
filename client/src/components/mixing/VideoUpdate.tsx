@@ -1,9 +1,9 @@
-import React, { useCallback, useRef, useState, LegacyRef } from 'react';
+import { useCallback, useRef, useState, LegacyRef } from 'react';
 import { useDropzone } from 'react-dropzone';
 import styled from 'styled-components';
 import VideoPlayer from './VideoPlayer';
 import { videouploadState } from 'src/recoil/Atoms';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 
 interface LikedListProps {
     videoRef: LegacyRef<HTMLVideoElement>;
