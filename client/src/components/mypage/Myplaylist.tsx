@@ -173,7 +173,7 @@ export default Myplaylist;
 const PlayListContainer = styled.div`
     width: 400px;
     align-items: center;
-    margin: 30px;
+    margin-top: 40px;
     @media screen and (max-width: 1000px) {
         width: 400px;
         margin: 0;

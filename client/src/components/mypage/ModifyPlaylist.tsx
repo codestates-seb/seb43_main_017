@@ -57,27 +57,26 @@ function ModifyPlaylist() {
     };
 
     const sendRequestToServer = async () => {
-        try {
-            const response = await axios;
-            //.patch
-            // `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/${playListId}`,
-            // {
-            //     headers: {
-            //         Authorization: token,
-            //     },
-            //     data: {
-            //         title: title,
-            //         body: body,
-            //         coverImg: coverImg,
-            //     },
-            // },
-            // ();
-            // console.log('서버 응답:', response.data);
-            // 서버로부터의 응답을 처리하거나 필요한 작업을 수행할 수 있습니다.
-        } catch (error) {
-            console.error('API 요청 실패:', error);
-            // API 요청 실패에 대한 오류 처리를 수행할 수 있습니다.
-        }
+        // try {
+        //     const response = await axios.patch(
+        //         `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/${playListId}`,
+        //         {
+        //             headers: {
+        //                 Authorization: token,
+        //             },
+        //         },
+        //         {
+        //             {
+        //                 title: title,
+        //                 body: body,
+        //                 // coverImg: url,
+        //             },
+        //         },
+        //     );
+        //     console.log('서버 응답:', response.data);
+        // } catch (error) {
+        //     console.error('API 요청 실패:', error);
+        // }
     };
 
     return (

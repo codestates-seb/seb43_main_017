@@ -101,7 +101,6 @@ const MypageListContainer = styled.div`
 const UserProfile = styled.div`
     display: flex;
     align-items: flex-start;
-    margin-top: 100px;
 
     div {
         display: flex;
@@ -116,8 +115,8 @@ const UserProfile = styled.div`
         }
     }
     @media screen and (max-width: 1000px) {
-        margin-left: 0;
-        margin-top: 700px;
+        margin-left: 30px;
+        margin-top: 600px;
         width: 400px;
     }
 `;

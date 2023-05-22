@@ -96,11 +96,6 @@ const LikeMusic = () => {
                     <li>{likedata.albumName}</li>
                     <div className="music-icon">
                         <HiHeart />
-                        {/* {like ? (
-                            <HiHeart onClick={handleLike} className="color-red like-action" />
-                        ) : (
-                            <HiOutlineHeart onClick={handleLike} className="color-red" />
-                        )} */}
                     </div>
                 </LikeList>
             ))}
@@ -114,7 +109,7 @@ export default LikeMusic;
 const LikeContainer = styled.div`
     width: 400px;
     align-items: center;
-    margin: 30px;
+    margin-top: 40px;
     @media screen and (max-width: 1000px) {
         width: 400px;
         margin: 0;
@@ -144,6 +139,12 @@ const LikeTitle = styled.div`
         color: #ffffff;
         margin-left: 5px;
     }
+`;
+
+const LikeNo = styled.div`
+    display: flex;
+    font-size: 50px;
+    background-color: hsl(0, 0%, 65%, 0.5);
 `;
 
 /* 2023.05.10 Like Music 리스트 출력 컴포넌트 - 홍혜란 */

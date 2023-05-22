@@ -80,6 +80,15 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
 
 export default Sideicon;
 
+const WindowContainer = styled.div`
+    border: 1px solid black;
+    width: 200px;
+    height: 200px;
+    position: fixed;
+    top: 0;
+    right: 0;
+`;
+
 const MusicIconGroup = styled.li`
     > * {
         margin: 0px 20px;
