@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { AiFillHeart } from 'react-icons/ai';
 import { BsMusicPlayer, BsPlayCircle, BsPlusSquare } from 'react-icons/bs';
 import { CiMenuKebab } from 'react-icons/ci';
-import { modalState, myplaylistState, modifyDataState } from 'src/recoil/Atoms';
+import { modalState, myplaylistState, modifyDataState, modifyClickState } from 'src/recoil/Atoms';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -19,6 +19,7 @@ const Myplaylist = () => {
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
 
     const [myplaylistData, setMyplaylistData] = useRecoilState(myplaylistState);
+    const [_, setModifyDataState] = useRecoilState(modifyClickState);
 
     /* 2023.05.21 마이플레이리스트 생성 */
     const MyplaylistCreate = () => {
@@ -38,7 +39,6 @@ const Myplaylist = () => {
             )
             .then((response) => {
                 console.log(response);
-                setMyplaylistData((prevData) => [...prevData, response.data]);
             })
             .catch((error) => {
                 console.error(error);
@@ -66,7 +66,7 @@ const Myplaylist = () => {
         };
 
         fetchMyplaylistData();
-    }, []);
+    }, [myplaylistData]);
 
     /* 2023.05.22 마이플레이리스트 삭제 */
     const handleDeletePlaylist = async (playlistId: number) => {
@@ -108,8 +108,9 @@ const Myplaylist = () => {
 
     const setModifyState = useSetRecoilState(modifyDataState);
 
-    const handleModfiyState = () => {
+    const handleModfiyState = (id: number) => {
         setModifyState(true);
+        setModifyDataState(id);
     };
 
     return (
@@ -155,7 +156,7 @@ const Myplaylist = () => {
                         {selectedPlaylistId === data.playListId && showModal && (
                             <ModalContainer>
                                 <ModalButtons>
-                                    <Button onClick={handleModfiyState}>수정</Button>
+                                    <Button onClick={() => handleModfiyState(data.playListId)}>수정</Button>
 
                                     <Button onClick={() => handleDeletePlaylist(data.playListId)}>삭제</Button>
                                 </ModalButtons>

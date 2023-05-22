@@ -4,18 +4,20 @@ import { VscClose } from 'react-icons/vsc';
 import { useRecoilState } from 'recoil';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { titleState, bodyState, myplaylistState } from 'src/recoil/Atoms';
+import { titleState, bodyState, myplaylistState, modifyClickState } from 'src/recoil/Atoms';
 
 function ModifyPlaylist() {
     const [myplaylistData, setMyplaylistData] = useRecoilState(myplaylistState);
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
+
+    const [ModifyPlaylistId, _] = useRecoilState(modifyClickState);
 
     useEffect(() => {
         // 플레이리스트 가져오는 함수
         const fetchMyplaylistData = async () => {
             try {
                 const response = await axios.get(
-                    `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/member-playlist`,
+                    `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/${ModifyPlaylistId}`,
                     {
                         headers: {
                             Authorization: token,
@@ -23,6 +25,8 @@ function ModifyPlaylist() {
                     },
                 );
                 setMyplaylistData(response.data.data);
+                console.log(response.data.data);
+                console.log(response.data);
             } catch (error) {
                 console.error(error);
             }
