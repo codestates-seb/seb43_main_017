@@ -15,10 +15,15 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, videoRef }) => {
 };
 /* 2023.05.10 Video 섹션 컨테이너 - 박수범 */
 const VideoContainer = styled.div`
+    width: 100%;
     margin-top: 30px;
-    display: block;
+    display: flex;
+    @media (max-width: 722px) {
+        width: 300px;
+        height: 150px;
+    }
     > video {
-        width: 700px;
+        width: 100%;
         height: 350px;
         position: relative;
         max-width: 100%;
@@ -27,6 +32,14 @@ const VideoContainer = styled.div`
         -webkit-backdrop-filter: blur(4px);
         border-radius: 10px;
         border: 1px solid rgba(255, 255, 255, 0.18);
+        @media (max-width: 1350px) {
+            width: 500px;
+            height: 250px;
+        }
+        @media (max-width: 722px) {
+            width: 300px;
+            height: 150px;
+        }
     }
 `;
 

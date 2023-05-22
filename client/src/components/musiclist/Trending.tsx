@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Loding from 'src/pages/Loding';
 import styled from 'styled-components';
 import axios from 'axios';
 
@@ -16,7 +17,7 @@ interface MusicData {
 
 const Trending = () => {
     const [tranding, setTranding] = useState<MusicData[]>([]);
-
+    const [isLoding, setIsLoding] = useState(true);
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
 
     useEffect(() => {
@@ -29,6 +30,7 @@ const Trending = () => {
                 })
                 .then((response) => {
                     setTranding(response.data.data);
+                    setIsLoding(false);
                 })
                 .catch((error) => {
                     console.error(error);
@@ -50,15 +52,19 @@ const Trending = () => {
             <TrTitleContainer>
                 <TrTitle>Trending</TrTitle>
             </TrTitleContainer>
-            <ItemsContainer>
-                {tranding.map((data) => (
-                    <Item key={data.musicId}>
-                        <Image src={data.albumCoverImg} alt={data.musicName} />
-                        <Title>{data.musicName}</Title>
-                        <Artist>{data.artistName}</Artist>
-                    </Item>
-                ))}
-            </ItemsContainer>
+            {isLoding ? (
+                <Loding />
+            ) : (
+                <ItemsContainer>
+                    {tranding.map((data) => (
+                        <Item key={data.musicId}>
+                            <Image src={data.albumCoverImg} alt={data.musicName} />
+                            <Title>{data.musicName}</Title>
+                            <Artist>{data.artistName}</Artist>
+                        </Item>
+                    ))}
+                </ItemsContainer>
+            )}
         </Container>
     );
 };

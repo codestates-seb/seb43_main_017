@@ -3,6 +3,9 @@ import { HiHeart } from 'react-icons/hi';
 import { AiOutlinePlus } from 'react-icons/ai';
 import axios from 'axios';
 import { useEffect, useState, RefObject } from 'react';
+import { useRecoilState } from 'recoil';
+import { showSearch } from 'src/recoil/Atoms';
+import { MdTransitEnterexit } from 'react-icons/md';
 
 interface LikeMusicList {
     albumCoverImg: string;
@@ -21,8 +24,10 @@ interface LikeMusicList {
 /** 2022/05/22 - useRef 타입 선언 - 박수범 */
 interface LikedListProps {
     audioRef: RefObject<HTMLAudioElement>;
+    setAudioSelect: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const LikedList = ({ audioRef }: LikedListProps) => {
+const LikedList = ({ audioRef, setAudioSelect }: LikedListProps) => {
+    const [, setShowSearch] = useRecoilState<boolean>(showSearch); //모버일버전 좋아요 음악리스트 닫기
     const [emptyList, setEmptyList] = useState<boolean>(false); //좋아요한 음악이 있는지 없는지 여부
     const [MusicTitle, setMusicTitle] = useState<string>(''); //현재 삽입된 오디오 제목
     const [currentMusic, setCurrentMusic] = useState<boolean>(false); // 선택된 음악인지 판단하는 값
@@ -90,6 +95,7 @@ const LikedList = ({ audioRef }: LikedListProps) => {
     const handleSongClick = (songUrl: string, songName: string) => {
         setSelectedSong(songUrl);
         setAudioControl(true);
+
         alert(songName + '이 추가되었습니다.');
     };
 
@@ -112,6 +118,7 @@ const LikedList = ({ audioRef }: LikedListProps) => {
                                 handleSongClick(likedata.musicUri, likedata.musicName);
                                 setCurrentMusic(true);
                                 setMusicTitle(likedata.musicName);
+                                setAudioSelect(true);
                             }}
                         >
                             <AiOutlinePlus />
@@ -119,7 +126,7 @@ const LikedList = ({ audioRef }: LikedListProps) => {
                     </LikeList>
                 ))
             ) : (
-                <li>좋아요한 음악이 없습니다.</li>
+                <li>Add your favorite music.</li>
             )}
             {currentMusic && (
                 <CurrentMusic>
@@ -143,6 +150,13 @@ const LikedList = ({ audioRef }: LikedListProps) => {
                     </button>
                 </Pagination>
             ) : null}
+            <Exitbox
+                onClick={() => {
+                    setShowSearch(false);
+                }}
+            >
+                <MdTransitEnterexit />
+            </Exitbox>
         </LikeContainer>
     );
 };
@@ -154,8 +168,9 @@ const LikeContainer = styled.div`
     width: 15rem;
     align-items: center;
     margin: 30px;
+    font-size: 1rem;
     @media screen and (max-width: 1000px) {
-        width: 400px;
+        width: 200px;
         margin: 0;
         margin-top: 50px;
         margin-left: 30px;
@@ -256,7 +271,7 @@ const AddMusic = styled.button`
         color: red;
     }
 `;
-
+/**2023/05/22 - 현재음악 알려주는 p태그 - 박수범 */
 const CurrentMusic = styled.p`
     margin-top: 50px;
     font-size: 14px;
@@ -264,5 +279,27 @@ const CurrentMusic = styled.p`
     > span {
         font-weight: bold;
         color: #feeaea;
+    }
+`;
+/**2023/05/22 - 모바일버전 좋아요한 음악 리스트 나가기 버튼 - 박수범 */
+const Exitbox = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 50px;
+    height: 50px;
+    font-size: 2rem;
+    color: rgba(199, 68, 68, 1);
+    text-align: center;
+    border: 2px solid rgba(199, 68, 68, 1);
+    :hover {
+        color: #ccc;
+        border-color: #ccc;
+    }
+    @media screen and (min-width: 1530px) {
+        display: none;
     }
 `;
