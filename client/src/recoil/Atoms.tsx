@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 import { MusicData } from 'src/types/Musiclist';
-import { Myplaylist } from 'src/types/myplaylist';
+import { MyplaylistData } from 'src/types/myplaylist';
 
 /* 2023.05.10 뮤직리스트 카테고리 클릭시 태그 생성 상태 관리 - 홍혜란 */
 export const selectedTagsState = atom<string[]>({
@@ -93,7 +93,7 @@ export const playlistCommentState = atom<boolean>({
 });
 
 /* 2023.05.16 마이플레이리스트 리스트 출력 관리 - 홍혜란 */
-export const myplaylistState = atom<Myplaylist[]>({
+export const myplaylistState = atom<MyplaylistData[]>({
     key: 'myplaylistState',
     default: [],
 });

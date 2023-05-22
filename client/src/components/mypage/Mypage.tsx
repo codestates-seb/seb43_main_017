@@ -49,9 +49,7 @@ function Mypage() {
                             <Myplaylist /> {/* my playlist 파일 */}
                         </LeftContainer>
 
-                        <RightContainer>
-                            <ModifyPlaylist />
-                        </RightContainer>
+                        <RightContainer>{/* <ModifyPlaylist /> */}</RightContainer>
                     </MusicInfor>
                 </MypageListContainer>
             </MypageContainer>

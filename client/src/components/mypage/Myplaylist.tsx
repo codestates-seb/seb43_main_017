@@ -4,13 +4,17 @@ import { AiFillHeart } from 'react-icons/ai';
 import { BsMusicPlayer, BsPlayCircle, BsPlusSquare } from 'react-icons/bs';
 import { CiMenuKebab } from 'react-icons/ci';
 import { modalState, myplaylistState } from 'src/recoil/Atoms';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const Myplaylist = () => {
     /* 2023.05.16 마이플레이리스트 메뉴 버튼 클릭시 수정, 삭제 버튼 모달 */
     const [showModal, setShowModal] = useRecoilState<boolean>(modalState);
     const [selectedPlaylistId, setSelectedPlaylistId] = useState<number | null>(null);
+
+    const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
+    const [totalPages, setTotalPages] = useState<number>(0); // 전체 페이지 수
+    const buttonArray = [];
 
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
 
@@ -34,33 +38,49 @@ const Myplaylist = () => {
                 },
             )
             .then((response) => {
-                setMyplaylistData(response.data.data);
-                console.log(response.data.data);
+                console.log(response);
             })
             .catch((error) => {
                 console.error(error);
             });
     };
 
-    /* 2023.05.16 마이플레이리스트 삭제 */
-    // const handleDelete = (playlistId: number) => {
-    //     const updatedPlaylist = myplaylistData.filter((data) => data.playListId !== playlistId);
-    //     setMyplaylistData(updatedPlaylist);
+    /* 2023.05.22 마이플레이리스트 조회 */
+    useEffect(() => {
+        // 플레이리스트 데이터를 가져오는 함수
+        const fetchMyplaylistData = async () => {
+            try {
+                const response = await axios.get(
+                    `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists?&page=${currentPage}&size=3`,
+                    {
+                        headers: {
+                            Authorization: token,
+                        },
+                    },
+                );
+                setMyplaylistData(response.data.data);
+                setTotalPages(response.data.pageInfo.totalPages);
+            } catch (error) {
+                console.error(error);
+            }
+        };
 
-    //     axios
-    //         .delete(`/playlists/{playlist-id}`, {
-    //             headers: {
-    //                 Authorization: token,
-    //             },
-    //         })
-    //         .then(() => {
-    //             console.log('플레이리스트 아이템이 성공적으로 삭제되었습니다.');
-    //         })
-    //         .catch((error) => {
-    //             console.error('플레이리스트 아이템 삭제 중 오류가 발생했습니다:', error);
-    //             setMyplaylistData(myplaylistData);
-    //         });
-    // };
+        fetchMyplaylistData();
+    }, []);
+
+    /* 2023.05.22 마이플레이리스트 삭제 */
+    const handleDeletePlaylist = async (playlistId: number) => {
+        try {
+            await axios.delete(`/playlists/${playlistId}`, {
+                headers: {
+                    Authorization: token,
+                },
+            });
+            setMyplaylistData((prevData) => prevData.filter((data) => data.playListId !== playlistId));
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     /* 2023.05.21 마이플레이리스트 수정 */
     // const MyplaylistModify = () => {
@@ -85,42 +105,50 @@ const Myplaylist = () => {
     //         });
     // };
 
-    /* 2023.05.21 마이플레이리스트 음악 삭제 */
-    // const MyplaylistMusic = () => {
-    //     axios
-    //         .delete(
-    //             `/playlists/{playlist-id}/musics/{music-id}`,
-    //             {
-    //                 musicId: 1,
-    //             },
-    //             {
-    //                 headers: {
-    //                     Authorization: token,
-    //                 },
-    //             },
-    //         )
-    //         .then(() => {
-    //             console.log();
-    //         })
-    //         .catch((error) => {
-    //             console.error(error);
-    //         });
-    // };
+    /** 2023.05.17 전체 페이지 수 만큼 버튼 생성 - 김주비*/
+    for (let i = 1; i <= totalPages; i++) {
+        buttonArray.push(
+            <button
+                key={i}
+                className={i === currentPage ? 'page-focused' : ''}
+                onClick={() => {
+                    setCurrentPage(i);
+                }}
+            >
+                {i}
+            </button>,
+        );
+    }
+    const handleNextPage = () => {
+        setCurrentPage(currentPage + 1);
+    };
+    const handlePrevPage = () => {
+        setCurrentPage(currentPage - 1);
+    };
 
     return (
         <PlayListContainer>
-            <div className="playlist-title">
+            <MyplaylistTitle>
                 <div className="play-icon">
                     <BsMusicPlayer />
+                    <p>MY PLAYLIST</p>
+                    <li>
+                        <BsPlusSquare onClick={MyplaylistCreate} />
+                    </li>
                 </div>
-                <p>MY PLAYLIST</p>
-                <li>
-                    <BsPlusSquare onClick={MyplaylistCreate} />
-                </li>
-            </div>
+                <Pagination>
+                    <button disabled={currentPage === 1} onClick={handlePrevPage}>
+                        Prev
+                    </button>
+                    {buttonArray}
+                    <button disabled={currentPage === totalPages} onClick={handleNextPage}>
+                        Next
+                    </button>
+                </Pagination>
+            </MyplaylistTitle>
 
             {myplaylistData.map((data) => (
-                <div className="playlist-list" key={data.playListId}>
+                <PlaylistList key={data.playListId}>
                     <img src={data.coverImg} alt="musicimg" />
                     <li>{data.title}</li>
                     <div className="playlist-vote-icon">
@@ -143,12 +171,12 @@ const Myplaylist = () => {
                                 <ModalButtons>
                                     <Button>수정</Button>
 
-                                    <Button>삭제</Button>
+                                    <Button onClick={() => handleDeletePlaylist(data.playListId)}>삭제</Button>
                                 </ModalButtons>
                             </ModalContainer>
                         )}
                     </div>
-                </div>
+                </PlaylistList>
             ))}
         </PlayListContainer>
     );
@@ -156,82 +184,91 @@ const Myplaylist = () => {
 
 export default Myplaylist;
 
-/* 2023.05.07 마이플레이리스트 컴포넌트 구현 - 홍혜란 */
 const PlayListContainer = styled.div`
+    width: 400px;
     align-items: center;
     margin: 30px;
-    margin-top: 40px;
-    width: 400px;
+    @media screen and (max-width: 1000px) {
+        width: 400px;
+        margin: 0;
+        margin-top: 50px;
+        margin-left: 30px;
+    }
+`;
 
-    .playlist-title {
+/* 2023.05.10 Like Music 타이틀 컴포넌트 - 홍혜란 */
+const MyplaylistTitle = styled.div`
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 10px;
+
+    .play-icon {
         display: flex;
         align-items: center;
-
-        .play-icon {
-            font-size: 16px;
-            color: hsl(216, 100%, 50%);
-            display: flex;
-            align-items: center;
-        }
-
-        p {
-            font-size: 16px;
-            color: #ffffff;
-            margin-left: 5px;
-        }
-
-        li {
-            color: white;
-            margin-left: 8px;
-            display: flex;
-            align-items: center;
-        }
+        font-size: 16px;
+        color: rgb(41, 55, 255);
+        padding-top: 5px;
     }
 
-    .playlist-list {
+    p {
+        font-size: 16px;
+        color: #ffffff;
+        margin-left: 5px;
+    }
+
+    li {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        background: rgba(43, 43, 43, 0.8);
-        margin-top: 20px;
+        color: white;
+        margin-left: 8px;
+    }
+`;
 
-        img {
-            width: 50px;
-            height: 50px;
-        }
+const PlaylistList = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(43, 43, 43, 0.8);
+    margin-top: 20px;
 
-        li {
-            font-size: 12px;
-            color: white;
-        }
+    img {
+        width: 50px;
+        height: 50px;
+    }
 
-        li:nth-child(3) {
-            font-size: 10px;
-        }
+    li {
+        font-size: 12px;
+        color: white;
+    }
 
-        .playlist-vote-icon {
-            font-size: 12px;
-            color: rgb(245, 109, 109);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    li:nth-child(3) {
+        font-size: 10px;
+    }
 
-        .playlist-button {
-            font-size: 16px;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    .playlist-vote-icon {
+        font-size: 12px;
+        color: rgb(245, 109, 109);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-        .playlist-menu {
-            font-size: 16px;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    .playlist-button {
+        font-size: 16px;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .playlist-menu {
+        font-size: 16px;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     @media screen and (max-width: 1000px) {
         width: 400px;
@@ -266,4 +303,36 @@ const Button = styled.button`
     color: white;
     font-size: 10px;
     padding: 5px;
+`;
+
+const Pagination = styled.div`
+    button {
+        color: #ccc;
+        background: none;
+        border: 1px solid #5a5a5a;
+        border-radius: 3px;
+        margin: 0px 3px;
+        transition: 0.2s ease-in-out;
+        cursor: pointer;
+    }
+    button:hover {
+        color: #ccc;
+        border-color: #ccc;
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    button:disabled {
+        border: 1px solid #5a5a5a;
+        color: #5a5a5a;
+    }
+    button:disabled:hover {
+        background: none;
+        cursor: default;
+    }
+
+    .page-focused {
+        color: #ccc;
+        border-color: #ccc;
+        background: rgba(255, 255, 255, 0.2);
+    }
 `;

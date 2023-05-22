@@ -1,4 +1,4 @@
-export interface Myplaylist {
+export interface MyplaylistData {
     playListId: number;
     memberId: number;
     createMember: string;
@@ -11,6 +11,6 @@ export interface Myplaylist {
     modifiedAt: string;
 }
 
-export interface MyplaylistResponse {
-    data: Myplaylist[];
+export interface MyplaylistDataResponse {
+    data: MyplaylistData[];
 }
