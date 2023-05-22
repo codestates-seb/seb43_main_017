@@ -15,6 +15,7 @@ public class MemberDto {
     @NoArgsConstructor
     @Setter
     public static class PostDto{
+        @NotBlank
         private String name;
         @NotBlank
         @Email

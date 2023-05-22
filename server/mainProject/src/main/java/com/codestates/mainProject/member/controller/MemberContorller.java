@@ -76,22 +76,6 @@ public class MemberContorller {
                 .header("MemberId", memberId).build();
     }
 
-    // 토큰을 이용해 사용자의 정보를 가져와 회원가입을 하고 받아오는 방식
-//    @PostMapping("/oauth/signup")
-//    public ResponseEntity oAuth2Login(HttpRequest request) throws IOException {
-//        log.info("### oauth2 login start! ###");
-//        String accessToken = "";
-//        String refreshToken = "";
-//
-//        Member member = memberService.createNaverOAuth2(request);
-//
-//        accessToken = memberService.delegateAccessToken(member);
-//        refreshToken = memberService.delegateRefreshToken(member);
-//        return ResponseEntity.ok().header("Authorization", "Bearer " + accessToken)
-//                .header("Refresh", refreshToken).build();
-//    }
-
-
     @GetMapping("/info")
     public ResponseEntity getMemberInfo(@LoginMemberId Long memberId){
         Member findMember = memberService.findMember(memberId);
@@ -162,8 +146,6 @@ public class MemberContorller {
     public ResponseEntity patchMember(@PathVariable("member-id") @Positive long memberId,
                                       @LoginMemberId Long loginId,
                                       @Valid @RequestBody MemberDto.PatchDto requestBody){
-
-
 
         Member member = mapper.patchToMember(requestBody);
         member.setMemberId(memberId);
