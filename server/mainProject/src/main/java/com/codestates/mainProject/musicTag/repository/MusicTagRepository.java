@@ -1,6 +1,5 @@
 package com.codestates.mainProject.musicTag.repository;
 
-import com.codestates.mainProject.memberMusic.entity.MemberMusic;
 import com.codestates.mainProject.musicTag.entity.MusicTag;
 import org.springframework.data.jpa.repository.JpaRepository;
 

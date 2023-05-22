@@ -8,8 +8,6 @@ import com.codestates.mainProject.memberMusic.entity.MemberMusic;
 import com.codestates.mainProject.memberMusic.repository.MemberMusicRepository;
 import com.codestates.mainProject.music.entity.Music;
 import com.codestates.mainProject.music.service.MusicService;
-import com.codestates.mainProject.musicLike.entity.MusicLike;
-import com.codestates.mainProject.playlListMusic.entity.PlayListMusic;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
