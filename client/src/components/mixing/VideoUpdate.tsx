@@ -56,6 +56,10 @@ const DropzoneStyle = styled.div`
     justify-content: center;
     align-items: center;
     padding: 16px;
+    @media (max-width: 722px) {
+        width: 300px;
+        height: 120px;
+    }
     cursor: pointer;
     > p {
         color: gray;
