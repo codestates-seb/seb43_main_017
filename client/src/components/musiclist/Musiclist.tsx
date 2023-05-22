@@ -10,10 +10,11 @@ import { BiSearch } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
 import { MusicDataResponse } from 'src/types/Musiclist';
 import { musicDataListState } from 'src/recoil/Atoms';
+import Loding from 'src/pages/Loding';
 
 const Musiclist = () => {
     const [musicDataList, setMusicDataList] = useRecoilState(musicDataListState);
-
+    const [isLoding, setIsLoding] = useState(true);
     const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
     const [totalPages, setTotalPages] = useState<number>(0); // 전체 페이지 수
     const [openSearch, setOpenSearch] = useRecoilState<boolean>(showSearch);
@@ -49,6 +50,7 @@ const Musiclist = () => {
             .then((response) => {
                 setMusicDataList(response.data.data);
                 setTotalPages(response.data.pageInfo.totalPages);
+                setIsLoding(false);
             })
             .catch((error) => {
                 console.error(error);
@@ -126,30 +128,34 @@ const Musiclist = () => {
                             </li>
                         </div>
                     </MusicListTitle>
-                    <SongContainer>
-                        {musicDataList.map((musicData) => (
-                            <Item key={musicData.musicId}>
-                                <li className="music-image">
-                                    <img src={musicData.albumCoverImg} alt={musicData.musicName} />
-                                </li>
-                                <li className="music-name">
-                                    <Link to={`/musiclist/${musicData.musicId}`}>{musicData.musicName}</Link>
-                                </li>
-                                <li className="music-artist color-gray">{musicData.artistName}</li>
-                                <li className="music-album color-gray">{musicData.albumName}</li>
-                                {/* <li className="music-tags">{musicData.musicTagName}</li> */}
-                                <TagValue>
-                                    {musicData.musicTagName.slice(0, 2).map((tag, i) => (
-                                        <li key={`tag-${i}`}>{tag}</li>
-                                    ))}
-                                </TagValue>
-                                <li className="music-time color-gray">
-                                    {formatSecondsToTime(Number(musicData.musicTime))}
-                                </li>
-                                <Sideicon musicId={musicData.musicId} musicUri={musicData.musicUri} />
-                            </Item>
-                        ))}
-                    </SongContainer>
+                    {isLoding ? (
+                        <Loding />
+                    ) : (
+                        <SongContainer>
+                            {musicDataList.map((musicData) => (
+                                <Item key={musicData.musicId}>
+                                    <li className="music-image">
+                                        <img src={musicData.albumCoverImg} alt={musicData.musicName} />
+                                    </li>
+                                    <li className="music-name">
+                                        <Link to={`/musiclist/${musicData.musicId}`}>{musicData.musicName}</Link>
+                                    </li>
+                                    <li className="music-artist color-gray">{musicData.artistName}</li>
+                                    <li className="music-album color-gray">{musicData.albumName}</li>
+                                    {/* <li className="music-tags">{musicData.musicTagName}</li> */}
+                                    <TagValue>
+                                        {musicData.musicTagName.slice(0, 2).map((tag, i) => (
+                                            <li key={`tag-${i}`}>{tag}</li>
+                                        ))}
+                                    </TagValue>
+                                    <li className="music-time color-gray">
+                                        {formatSecondsToTime(Number(musicData.musicTime))}
+                                    </li>
+                                    <Sideicon musicId={musicData.musicId} musicUri={musicData.musicUri} />
+                                </Item>
+                            ))}
+                        </SongContainer>
+                    )}
                     <Pagination>
                         <button disabled={currentPage === 1} onClick={handlePrevPage}>
                             Prev
@@ -193,9 +199,10 @@ const TagContainer = styled.div`
     flex-direction: column;
     @media screen and (max-width: 700px) {
         /* display: none; */
-        position: absolute;
+        position: fixed;
         display: none;
         top: 0px;
+        height: 100vh;
         width: 0%;
         z-index: 3;
         animation: openSearch 1s forwards;
