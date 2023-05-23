@@ -1,66 +1,81 @@
 import styled from 'styled-components';
 import axios from 'axios';
+import { useRecoilState } from 'recoil';
+import { UpdataModify, playListModalState } from 'src/recoil/Atoms';
 import { useState } from 'react';
 
 const AddListMusic = () => {
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
-    // const [coverImg, setCoverImg] = useState<File | null>(null);
+    const [update, setUpdate] = useRecoilState(UpdataModify);
+    const [, setModalOpen] = useRecoilState(playListModalState);
+
     const [title, setTitle] = useState<string>('');
     const [body, setBody] = useState<string>('');
-    const [coverImg, setCoverImg] = useState<string>('');
+    const [coverImg, setCoverImg] = useState<string>(`https://i.imgur.com/d88JH69.png`);
 
     /* 2023.05.21 마이플레이리스트 생성 요청 - 홍혜란 */
     const MyplaylistCreate = () => {
-        // const formData = new FormData();
-        // formData.append('title', title);
-        // formData.append('body', body);
-        // formData.append('coverImg', coverImg as File);
-        axios
-            .post(
-                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists`,
-                {
-                    title: title,
-                    body: body,
-                    coverImg: coverImg,
-                },
-                {
-                    headers: {
-                        Authorization: token,
+        if (body.length === 0 || title.length === 0) {
+            alert('플레이리스트의 이름과 내용을 모두 작성해주시기 바랍니다.');
+        } else {
+            axios
+                .post(
+                    `${process.env.REACT_APP_API_URL}/playlists`,
+                    {
+                        title: title,
+                        body: body,
+                        coverImg: coverImg,
                     },
-                },
-            )
-            .then((response) => {
-                console.log(response);
-                // setCoverImg(null);
-                setCoverImg('');
-                setTitle('');
-                setBody('');
-                window.location.reload();
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+                    {
+                        headers: {
+                            Authorization: token,
+                        },
+                    },
+                )
+                .then((response) => {
+                    console.log(response);
+                    // setCoverImg(null);
+                    setCoverImg('');
+                    setTitle('');
+                    setBody('');
+                    setUpdate(!update);
+                    alert('플레이리스트가 생성되었습니다!');
+                    setModalOpen(false);
+                })
+                .catch((error) => {
+                    console.error(error);
+                    alert('플레이리스트 생성에 실패했습니다.');
+                });
+        }
     };
 
     return (
         <PlayListContainer>
             <MyplaylistTitle>
-                <li>Add My Playlist</li>
+                <span>ADD PLAYLIST</span>
             </MyplaylistTitle>
             <MyplaylistItem>
-                <li>Playlist-CoverImg</li>
-                <p>커버 이미지 url 주소를 넣어주세요.</p>
-                {/* <input type="file" onChange={(e) => setCoverImg(e.target.files && e.target.files[0])} /> */}
-                <input value={coverImg} onChange={(e) => setCoverImg(e.target.value)} />
-                <li>Playlist-Title</li>
-                <p>플레이리스트의 제목을 적어주세요.</p>
-                <input value={title} onChange={(e) => setTitle(e.target.value)} />
-                <li>Playlist-Content</li>
-                <p>플레이리스트를 설명하는 글을 적어주세요.</p>
-                <input value={body} onChange={(e) => setBody(e.target.value)} />
+                <span>Cover Image</span>
+                <input
+                    value={coverImg}
+                    onChange={(e) => setCoverImg(e.target.value)}
+                    placeholder="커버 이미지 url 주소를 넣어주세요"
+                />
+                <span>Title</span>
+                <input
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="플레이리스트의 제목을 작성해주세요"
+                />
+                <span>Content</span>
+                <input
+                    value={body}
+                    onChange={(e) => setBody(e.target.value)}
+                    placeholder="자신의 플레이리스트를 소개해주세요"
+                />
             </MyplaylistItem>
             <Submit>
-                <button onClick={MyplaylistCreate}>submit</button>
+                <button onClick={MyplaylistCreate}>SUBMIT</button>
             </Submit>
         </PlayListContainer>
     );
@@ -72,7 +87,6 @@ export default AddListMusic;
 const PlayListContainer = styled.div`
     z-index: 3;
     width: 400px;
-    height: 350px;
 `;
 
 const MyplaylistTitle = styled.div`
@@ -80,10 +94,12 @@ const MyplaylistTitle = styled.div`
     flex-direction: column;
     align-items: center;
 
-    li {
+    span {
         color: white;
-        font-size: 20px;
-        margin: 10px;
+        font-size: 2.5rem;
+        margin: 30px;
+        font-family: 'Noto Sans KR', sans-serif;
+        font-weight: 700;
     }
 `;
 
@@ -92,26 +108,39 @@ const MyplaylistItem = styled.div`
     flex-direction: column;
     justify-content: space-between;
     margin-bottom: 10px;
+    font-family: 'Noto Sans KR', sans-serif;
 
-    li {
+    span {
         display: flex;
         align-items: center;
         color: white;
         margin: 10px 0px 10px 0px;
+        text-transform: uppercase;
     }
 
     p {
-        color: rgb(156, 156, 156);
-        font-size: 12px;
+        color: rgba(255, 255, 255, 0.3);
+        font-size: 0.8rem;
         margin-bottom: 5px;
+        font-weight: 300;
     }
 
     input {
         width: 400px;
         height: 20px;
         border: none;
-        background-color: rgba(75, 75, 75, 0.8);
-        color: white;
+        background: none;
+        border-bottom: 2px solid #ccc;
+        padding: 5px 0px;
+        color: #ccc;
+        margin-bottom: 20px;
+        :focus {
+            outline: none;
+            border-color: #ff4444;
+        }
+        ::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
     }
     @media (max-width: 700px) {
         margin: 30px;
@@ -124,13 +153,15 @@ const MyplaylistItem = styled.div`
 
 const Submit = styled.div`
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    justify-content: center;
+    margin: 40px;
     button {
-        width: 80px;
-        height: 30px;
-        margin: 10px;
-        border-radius: 10px;
-        background-color: #8f8f8f;
+        border-style: none;
+        width: 100px;
+        height: 50px;
+        border-radius: 5px;
+        background-color: #ff4444;
+        color: #e9e9e9;
+        font-family: 'Noto Sans KR', sans-serif;
     }
 `;

@@ -6,14 +6,41 @@ import { modifyDataState, playListModalState } from 'src/recoil/Atoms';
 import { useRecoilState } from 'recoil';
 import AddMyplaylist from './AddMyplaylist';
 import { ImCross } from 'react-icons/im';
+import Loding from 'src/pages/Loding';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function Mypage() {
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
     const userimg: string | undefined = window.localStorage.getItem('userimg') || undefined;
     const usernickname: string | undefined = window.localStorage.getItem('usernickname') || undefined;
     const useremail: string | undefined = window.localStorage.getItem('useremail') || undefined;
+    const memberId = window.localStorage.getItem('memberId');
     const [openPlayList, setOpenPlayList] = useRecoilState<boolean>(playListModalState);
     const [modifyPlaylistState] = useRecoilState(modifyDataState);
+    const Navigate = useNavigate();
+
+    const handelWithdrawal = () => {
+        const result = confirm('회원탈퇴를 진행할경우 가지고 있던 음원 데이터는 모두 소실합니다. 동의하십니까?');
+
+        if (result) {
+            axios
+                .delete(`${process.env.REACT_APP_API_URL}/members/${memberId}`, {
+                    headers: {
+                        Authorization: token,
+                    },
+                })
+                .then(() => {
+                    alert('회원탈퇴가 완료되었습니다.');
+                    Navigate('/');
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        } else {
+            alert('회원탈퇴가 취소되었습니다.');
+        }
+    };
 
     return (
         <div>
@@ -44,18 +71,11 @@ function Mypage() {
                                 <UserContainer>
                                     <div className="user-name">{usernickname}</div>
                                     <div className="user-email">{useremail}</div>
+                                    <Withdrawal onClick={handelWithdrawal}>회원탈퇴</Withdrawal>
                                 </UserContainer>
                             </div>
                         ) : (
-                            <div>
-                                <div className="user-profile">
-                                    <img src="./assets/profile-icon.png" alt="userImg" />
-                                </div>
-                                <UserContainer>
-                                    <div className="user-name">Undefined</div>
-                                    <div className="user-email">undefined@naver.com</div>
-                                </UserContainer>
-                            </div>
+                            <Loding />
                         )}
                     </UserProfile>
 
@@ -83,7 +103,6 @@ const MypageContainer = styled.div`
     justify-content: center;
     overflow: auto;
 `;
-
 /**2023-05-06 ScaleOver 되는 백그라운드 애니메이션 - 김주비 */
 const BackgroundCover = styled.div`
     box-sizing: border-box;
@@ -103,12 +122,11 @@ const BackgroundCover = styled.div`
         }
     }
 `;
-
 const MypageListContainer = styled.div`
     align-items: center;
-    z-index: 2;
+    z-index: 1;
+    /* border: 1px solid red; */
 `;
-
 /* 2023.05.06 유저 프로필사진 컴포넌트 - 홍헤란 */
 const UserProfile = styled.div`
     display: flex;
@@ -120,8 +138,8 @@ const UserProfile = styled.div`
 
     .user-profile {
         img {
-            width: 175px;
-            height: 175px;
+            width: 130px;
+            height: 130px;
             border-radius: 50%;
             border: 3px solid linear-gradient(to right, #ff00bf, blue) 1;
         }
@@ -132,25 +150,29 @@ const UserProfile = styled.div`
         width: 400px;
     }
 `;
-
 /* 2023.05.06 유저의 이름 / 이메일 컴포넌트 구현 - 홍혜란 */
 const UserContainer = styled.div`
     align-items: flex-start;
     display: flex;
     flex-direction: column;
-    margin-top: 50px;
+    /* align-items: center; */
+    justify-content: center;
+    font-family: 'Noto Sans KR', sans-serif;
+
+    > * {
+        margin: 5px 40px;
+    }
 
     .user-name {
         font-size: 30px;
         font-weight: bold;
         color: hsl(0, 0%, 100%);
-        margin: 10px 0px 10px 25px;
     }
 
     .user-email {
         font-size: 16px;
-        color: hsl(0, 0%, 100%);
-        margin: 10px 0px 15px 25px;
+        color: rgba(255, 255, 255, 0.5);
+        font-weight: 300;
     }
 
     @media screen and (max-width: 1000px) {
@@ -158,7 +180,6 @@ const UserContainer = styled.div`
         margin-top: 20px;
     }
 `;
-
 const MusicInfor = styled.div`
     position: relative;
     display: flex;
@@ -168,27 +189,35 @@ const MusicInfor = styled.div`
         flex-direction: column;
     }
 `;
-
 const LeftContainer = styled.div`
     width: 500px;
     height: 600px;
 `;
-
 const RightContainer = styled.div`
     width: 500px;
     height: 600px;
 `;
-
 /**2023/05/23 - 플레이리스트 음원 추가 컨테이너 - 박수범 */
 const PlaylistContainer = styled.div`
+    position: absolute;
+    top: 0px;
     width: 100%;
-    height: 100vh;
+    height: 0vh;
     display: flex;
     flex-direction: column;
-
-    background: rgba(245, 223, 223, 0.25);
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
     justify-content: center;
     align-items: center;
+    overflow: hidden;
+    z-index: 5;
+    animation: showModal 1s forwards;
+
+    @keyframes showModal {
+        100% {
+            height: 100vh;
+        }
+    }
 `;
 /**2023/05/23 - 플레이리스트 음원추가 모달창 - 박수범 */
 const PlaylistModal = styled.div`
@@ -203,35 +232,45 @@ const PlaylistModal = styled.div`
         width: 400px;
         height: 560px;
     }
-    background: rgba(12, 11, 11, 0.55);
     > button {
         cursor: pointer;
-        z-index: 3;
     }
 `;
 const Exitbox = styled.div`
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
     display: flex;
     justify-content: center;
     align-items: center;
     bottom: 0px;
     left: 0px;
-    width: 30px;
-    height: 30px;
+    width: 60px;
+    height: 60px;
     font-size: 10px;
-    border-radius: 100px;
-    color: rgba(199, 68, 68, 1);
+    color: #ccc;
     text-align: center;
-    border: 2px solid rgba(199, 68, 68, 1);
+    font-size: 2rem;
+    border: 2px solid #ccc;
+
     cursor: pointer;
-    @media (max-width: 700px) {
-        width: 30px;
-        height: 20px;
-        font-size: 8px;
-        margin-top: 30px;
-    }
     z-index: 3;
     :hover {
-        color: #ccc;
-        border-color: #ccc;
+        color: rgba(199, 68, 68, 1);
+        border-color: rgba(199, 68, 68, 1);
+    }
+`;
+const Withdrawal = styled.button`
+    width: 80px;
+    height: 40px;
+    background-color: #ff4848;
+    border: none;
+    color: #ececec;
+    font-family: 'Noto Sans KR', sans-serif;
+    border-radius: 5px;
+    margin-top: 20px;
+    transition: 0.1s ease-in-out;
+    :hover {
+        background-color: #ff7979;
     }
 `;
