@@ -157,6 +157,7 @@ const LikeTitle = styled.div`
         margin-left: 5px;
     }
 `;
+
 /* 2023.05.10 Like Music 리스트 출력 컴포넌트 - 홍혜란 */
 const LikeList = styled.div`
     display: flex;

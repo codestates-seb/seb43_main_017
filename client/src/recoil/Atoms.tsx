@@ -144,3 +144,8 @@ export const playlistViewerState = atom({
     key: 'playlistViewerState',
     default: false,
 });
+
+export const UpdataModify = atom({
+    key: 'UpdataModify',
+    default: false,
+});

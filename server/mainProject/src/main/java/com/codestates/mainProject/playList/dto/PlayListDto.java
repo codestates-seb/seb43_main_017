@@ -25,9 +25,7 @@ public class PlayListDto {
     @Setter
     @NoArgsConstructor
     public static class PatchDto {
-        @NotBlank
         private String title;
-        @NotBlank
         private String body;
         private String coverImg;
     }

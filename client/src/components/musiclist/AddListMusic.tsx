@@ -1,20 +1,18 @@
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { AiFillHeart } from 'react-icons/ai';
 import { BsMusicPlayer } from 'react-icons/bs';
-import { myplaylistState, modifyClickState, getMusicIdState } from 'src/recoil/Atoms';
+import { myplaylistState, getMusicIdState } from 'src/recoil/Atoms';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const AddListMusic = () => {
-    const [newMusicId, _] = useRecoilState(getMusicIdState); // 새로운 뮤직 ID
+    const [newMusicId] = useRecoilState(getMusicIdState); // 새로운 뮤직 ID
     const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
     const [totalPages, setTotalPages] = useState<number>(0); // 전체 페이지 수
-    const [update, setUpdate] = useState<boolean>(false);
     const buttonArray = [];
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
     const [myplaylistData, setMyplaylistData] = useRecoilState(myplaylistState);
-    const [, setModifyDataState] = useRecoilState(modifyClickState);
     console.log(newMusicId);
 
     /* 2023.05.22 마이플레이리스트 조회 */
@@ -35,7 +33,7 @@ const AddListMusic = () => {
             .catch((error) => {
                 console.error(error);
             });
-    }, [update]);
+    }, []);
 
     /** 2023.05.17 전체 페이지 수 만큼 버튼 생성 - 김주비*/
     for (let i = 1; i <= totalPages; i++) {

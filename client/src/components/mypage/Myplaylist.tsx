@@ -3,7 +3,14 @@ import styled from 'styled-components';
 import { AiFillHeart } from 'react-icons/ai';
 import { BsMusicPlayer, BsPlayCircle, BsPlusSquare } from 'react-icons/bs';
 import { CiMenuKebab } from 'react-icons/ci';
-import { modalState, myplaylistState, modifyDataState, modifyClickState, playListModalState } from 'src/recoil/Atoms';
+import {
+    modalState,
+    myplaylistState,
+    modifyDataState,
+    modifyClickState,
+    playListModalState,
+    UpdataModify,
+} from 'src/recoil/Atoms';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -12,20 +19,16 @@ const Myplaylist = () => {
     /* 2023.05.16 마이플레이리스트 메뉴 버튼 클릭시 수정, 삭제 버튼 모달 */
     const [showModal, setShowModal] = useRecoilState<boolean>(modalState);
     const [selectedPlaylistId, setSelectedPlaylistId] = useState<number | null>(null);
-
     const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
     const [totalPages, setTotalPages] = useState<number>(0); // 전체 페이지 수
     const [update, setUpdate] = useState<boolean>(false);
-    const buttonArray = [];
-
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
-
     const [myplaylistData, setMyplaylistData] = useRecoilState(myplaylistState);
     const [, setModifyDataState] = useRecoilState(modifyClickState);
-
     const setPlayListState = useSetRecoilState(playListModalState);
+    const [test] = useRecoilState(UpdataModify);
 
-    /* 2023.05.22 마이플레이리스트 조회 */
+    /** 2023.05.22 마이플레이리스트 조회 */
     useEffect(() => {
         axios
             .get(
@@ -43,7 +46,10 @@ const Myplaylist = () => {
             .catch((error) => {
                 console.error(error);
             });
-    }, [update]);
+        console.log('랜더가 되었습니다.');
+    }, [update, test]);
+
+    console.log(myplaylistData);
 
     /* 2023.05.22 마이플레이리스트 삭제 */
     const handleDeletePlaylist = (playlistId: number) => {
@@ -233,7 +239,7 @@ const PlaylistList = styled.div`
         justify-content: center;
     }
     @media screen and (max-width: 1000px) {
-        width: 300px;
+        width: 400px;
         margin: 0;
         margin-top: 20px;
     }

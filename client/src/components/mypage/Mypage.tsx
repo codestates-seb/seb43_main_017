@@ -13,7 +13,7 @@ function Mypage() {
     const usernickname: string | undefined = window.localStorage.getItem('usernickname') || undefined;
     const useremail: string | undefined = window.localStorage.getItem('useremail') || undefined;
     const [openPlayList, setOpenPlayList] = useRecoilState<boolean>(playListModalState);
-    const [modifyPlaylistState, _] = useRecoilState(modifyDataState);
+    const [modifyPlaylistState] = useRecoilState(modifyDataState);
 
     return (
         <div>

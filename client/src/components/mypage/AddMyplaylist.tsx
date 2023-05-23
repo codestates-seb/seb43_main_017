@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import axios from 'axios';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 const AddListMusic = () => {
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
@@ -10,7 +9,7 @@ const AddListMusic = () => {
     const [body, setBody] = useState<string>('');
     const [coverImg, setCoverImg] = useState<string>('');
 
-    /* 2023.05.21 마이플레이리스트 생성 */
+    /* 2023.05.21 마이플레이리스트 생성 요청 - 홍혜란 */
     const MyplaylistCreate = () => {
         // const formData = new FormData();
         // formData.append('title', title);
@@ -69,6 +68,7 @@ const AddListMusic = () => {
 
 export default AddListMusic;
 
+/** 2023.05.23 마이플레이리스트 모달창 안에 작성 컴포넌트 - 홍혜란 */
 const PlayListContainer = styled.div`
     z-index: 3;
     width: 400px;
