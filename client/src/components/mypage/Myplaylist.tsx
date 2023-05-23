@@ -177,7 +177,7 @@ const PlayListContainer = styled.div`
     height: 280px;
     align-items: center;
     margin-top: 40px;
-    @media screen and (max-width: 1000px) {
+    @media screen and (max-width: 722px) {
         width: 400px;
         margin: 0;
         margin-top: 50px;
@@ -221,6 +221,7 @@ const PlaylistList = styled.div`
     justify-content: space-between;
     background: rgba(43, 43, 43, 0.8);
     margin-top: 20px;
+    width: 400px;
 
     img {
         width: 50px;
@@ -265,7 +266,7 @@ const PlaylistList = styled.div`
         justify-content: center;
     }
     @media screen and (max-width: 1000px) {
-        width: 400px;
+        width: 300px;
         margin: 0;
         margin-top: 20px;
     }

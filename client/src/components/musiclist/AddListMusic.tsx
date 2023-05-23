@@ -125,6 +125,8 @@ const PlayListContainer = styled.div`
     height: 280px;
     align-items: center;
     margin-top: 40px;
+    display: flex;
+    flex-direction: column;
 `;
 
 /* 2023.05.10 Like Music 타이틀 컴포넌트 - 홍혜란 */
@@ -209,8 +211,8 @@ const PlaylistList = styled.div`
         align-items: center;
         justify-content: center;
     }
-    @media screen and (max-width: 1000px) {
-        width: 400px;
+    @media screen and (max-width: 720px) {
+        width: 300px;
         margin: 0;
         margin-top: 20px;
     }
