@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { type } from 'os';
 
 interface SideiconProps {
     musicId: number;
@@ -13,6 +12,7 @@ interface SideiconProps {
 }
 
 const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
+    const [, setPlayListId] = useState<number>(0); //플레이리스트 아이디
     const [like, setLike] = useState<boolean>(false);
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
     useEffect(() => {
@@ -23,7 +23,8 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
                 },
             })
             .then((res) => {
-                console.log(res.data);
+                console.log(res.data.data);
+                setPlayListId(res.data.data.playListId);
             });
     }, []);
     const handleAddPlaylist = () => {
@@ -75,17 +76,17 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
             <Link to={`/musiclist/${musicId}`}>
                 <FiPlayCircle className="color-blue" />
             </Link>
-            <AddPlayList onClick={handleAddPlaylist}>
+            <AddPlayList onClick={handleAddPlaylist} className="view-700">
                 <FiFolderPlus />
             </AddPlayList>
 
             <a href={`/assets/music/${musicUri}`} download>
-                <MdFileDownload />
+                <MdFileDownload className="view-700" />
             </a>
             {like ? (
-                <HiHeart onClick={handleLike} className="color-red like-action" />
+                <HiHeart onClick={handleLike} className="color-red like-action view-700" />
             ) : (
-                <HiOutlineHeart onClick={handleLike} className="color-red" />
+                <HiOutlineHeart onClick={handleLike} className="color-red view-700" />
             )}
         </MusicIconGroup>
     );
@@ -126,6 +127,16 @@ const MusicIconGroup = styled.li`
     @media (max-width: 1200px) {
         > * {
             margin: 0px 10px;
+        }
+    }
+
+    @media (max-width: 700px) {
+        max-width: 80px;
+        .view-700 {
+            display: none;
+        }
+        > * {
+            margin: 0px;
         }
     }
 `;

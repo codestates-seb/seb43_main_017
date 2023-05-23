@@ -6,11 +6,14 @@ import { useState, useEffect, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { PlcardProps, bgimg } from 'src/types/Slider';
 import axios from 'axios';
+import Loding from 'src/pages/Loding';
+
 function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<string>> }) {
     const [pldata, setPldata] = useState<PlcardProps[]>([]); //플리데이터 저장 스테이트
     const [currentSlideIndex, setCurrentSlideIndex] = useState<number>(0); //포커스된 슬라이드 인덱스
     const [silderPage, setSliderPage] = useState<number>(3); //슬라이더 페이지 갯수
     const [width, setWidth] = useState<number>(window.innerWidth); //현재 창의 width 길이
+    const [loding, setLoding] = useState<boolean>(true);
 
     window.addEventListener('resize', () => {
         setWidth(window.innerWidth);
@@ -30,11 +33,12 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
         }
 
         axios
-            .get('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/admin?page=1&size=5')
+            .get('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/admin?page=1&size=10')
             .then(function (response) {
                 // 성공적으로 요청을 보낸 경우
                 setPldata(response.data.data);
                 setBgSrc(response.data.data[currentSlideIndex].coverImg);
+                setLoding(false);
             })
             .catch(function (error) {
                 // 요청 중에 오류가 발생한 경우
@@ -75,32 +79,36 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
 
     return (
         <SilderGroup>
-            <Slider {...settings}>
-                {pldata.map((data) => (
-                    <Plcard bgImg={data.coverImg} key={data.playListId}>
-                        <div className="pl-treck">TRECK 10</div>
-                        <Link to={`/playlsit/${data.playListId}`}>
-                            <div className="pl-contents">
-                                <Pltag>
-                                    {data.tags.map((tag, index) => (
-                                        <li key={`tag-${index}`}>{tag}</li>
-                                    ))}
-                                </Pltag>
-                                <Pluser>
-                                    <span>WRITER</span>
-                                    <span>{data.createMember}</span>
-                                    <span>LIKE</span>
-                                    <span>{data.likeCount}</span>
-                                </Pluser>
-                                <Pltext>
-                                    <span>{data.title}</span>
-                                    <span>{data.body}</span>
-                                </Pltext>
-                            </div>
-                        </Link>
-                    </Plcard>
-                ))}
-            </Slider>
+            {loding ? (
+                <Loding />
+            ) : (
+                <Slider {...settings}>
+                    {pldata.map((data) => (
+                        <Plcard bgImg={data.coverImg} key={data.playListId}>
+                            <div className="pl-treck">TRECK 10</div>
+                            <Link to={`/playlsit/${data.playListId}`}>
+                                <div className="pl-contents">
+                                    <Pltag>
+                                        {data.tags.map((tag, index) => (
+                                            <li key={`tag-${index}`}>{tag}</li>
+                                        ))}
+                                    </Pltag>
+                                    <Pluser>
+                                        <span>WRITER</span>
+                                        <span>{data.createMember}</span>
+                                        <span>LIKE</span>
+                                        <span>{data.likeCount}</span>
+                                    </Pluser>
+                                    <Pltext>
+                                        <span>{data.title}</span>
+                                        <span>{data.body}</span>
+                                    </Pltext>
+                                </div>
+                            </Link>
+                        </Plcard>
+                    ))}
+                </Slider>
+            )}
         </SilderGroup>
     );
 }

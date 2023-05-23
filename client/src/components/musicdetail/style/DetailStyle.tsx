@@ -43,8 +43,6 @@ export const DetailSection = styled.div`
     align-items: center;
     box-sizing: border-box;
     width: 100%;
-    height: 100%;
-    z-index: 2;
 `;
 
 /**2023-05-09 rotate 레코드 : 김주비 */
@@ -61,8 +59,9 @@ export const AlbumRecode = styled.div<url>`
     background-position: center;
     opacity: 0.7;
     border-radius: 20px;
-    animation: showalbumimg 2s forwards 2s;
+    animation: showalbumimg 2s forwards 0s;
     margin-bottom: 40px;
+    overflow: hidden;
     @keyframes showalbumimg {
         100% {
             height: 200px;
@@ -86,7 +85,7 @@ export const MusicContents = styled.article`
     }
     @keyframes ascendText {
         100% {
-            transform: translateY(0px);
+            transform: translateY(-2px);
         }
     }
     @keyframes ascendText2 {
@@ -135,8 +134,9 @@ export const MusicTitle = styled.div`
     font-weight: 700;
     overflow: hidden;
     span {
+        font-family: 'Noto Sans KR', sans-serif;
         transform: translateY(100px);
-        animation: ascendText 2s forwards 1.5s;
+        animation: ascendText 2s forwards 0.5s;
     }
     @media (max-width: 1200px) {
         font-size: 4rem;
@@ -152,11 +152,12 @@ export const MusicInfo = styled.ul`
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    font-family: 'Noto Sans KR', sans-serif;
 
     li {
         margin-right: 20px;
         transform: translateY(40px);
-        animation: ascendText 1s forwards 2.5s;
+        animation: ascendText 1s forwards 1s;
     }
     li:nth-child(2n-1) {
         font-weight: 600;
@@ -172,14 +173,15 @@ export const MusicInfo = styled.ul`
 /**2023-05-09 사이드 텍스트 : 김주비 */
 export const MusicText = styled.div`
     display: flex;
-    font-size: 13px;
+    font-size: 1rem;
     line-height: 150%;
     width: 600px;
     height: 40px;
     overflow-x: hidden;
     padding-right: 30px;
     opacity: 0;
-    animation: fadeinText 2s forwards 3s;
+    font-family: 'Noto Sans KR', sans-serif;
+    animation: fadeinText 2s forwards 1.5s;
     span {
         text-align: center;
         width: 100%;
@@ -189,5 +191,43 @@ export const MusicText = styled.div`
     }
     @media (max-width: 700px) {
         text-align: center;
+    }
+`;
+
+export const Lodingbar = styled.ul`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    margin: 20px;
+
+    li {
+        width: 10px;
+        height: 10px;
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.8);
+        margin: 3px;
+    }
+    .sec-0 {
+        animation: waveDots 2s infinite 0s;
+    }
+    .sec-1 {
+        animation: waveDots 2s infinite 0.3s;
+    }
+    .sec-2 {
+        animation: waveDots 2s infinite 0.5s;
+    }
+    .sec-3 {
+        animation: waveDots 2s infinite 0.8s;
+    }
+    .sec-4 {
+        animation: waveDots 2s infinite 1s;
+    }
+
+    @keyframes waveDots {
+        50% {
+            height: 50px;
+        }
     }
 `;

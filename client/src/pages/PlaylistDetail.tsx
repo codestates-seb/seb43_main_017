@@ -2,7 +2,14 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { commentOpenState, showDownloadState, playlistCommentState, musicIdState } from 'src/recoil/Atoms';
+import {
+    commentOpenState,
+    showDownloadState,
+    playlistCommentState,
+    musicIdState,
+    playingMusic,
+    playlistViewerState,
+} from 'src/recoil/Atoms';
 import { PlcardProps } from 'src/types/Slider';
 import CommentViewer from 'src/components/musicdetail/CommentViewer';
 import Sidebutton from 'src/components/musicdetail/SideButton';
@@ -12,12 +19,13 @@ import {
     DetailSection,
     AlbumRecode,
     MusicContents,
-    // MusicTags,
+    Lodingbar,
     MusicTitle,
     MusicInfo,
     MusicText,
 } from 'src/components/musicdetail/style/DetailStyle';
 import MusicPlayer from 'src/components/soundbar/SoundBar';
+import PlaylistViewer from 'src/components/musicdetail/PlaylistViewer';
 
 function PlaylistDetail() {
     const plId = useParams();
@@ -36,9 +44,11 @@ function PlaylistDetail() {
         modifiedAt: '',
     });
     const [commentOpen] = useRecoilState<boolean>(commentOpenState);
+    const [playingDots] = useRecoilState<boolean>(playingMusic);
     const [, setShowDownlaod] = useRecoilState<boolean>(showDownloadState);
     const [, setMusicId] = useRecoilState<string | undefined>(musicIdState);
     const [, setPlaylistComment] = useRecoilState<boolean>(playlistCommentState);
+    const [openViewer] = useRecoilState<boolean>(playlistViewerState);
 
     useEffect(() => {
         setShowDownlaod(false);
@@ -63,11 +73,11 @@ function PlaylistDetail() {
             <PlaylistBackground url={plDetailData.coverImg}></PlaylistBackground>
             <DetailSection>
                 <AlbumRecode url={plDetailData.coverImg}>
-                    {/* <MusicTags>
-                        {plDetailData.tags.map((tag, index) => (
-                            <li key={`tag-${index}`}>{tag}</li>
+                    <Lodingbar>
+                        {[...Array(5)].map((_, index) => (
+                            <li className={playingDots ? `sec-${index}` : ''}></li>
                         ))}
-                    </MusicTags> */}
+                    </Lodingbar>
                 </AlbumRecode>
                 <MusicContents>
                     <MusicTitle>
@@ -86,6 +96,7 @@ function PlaylistDetail() {
                 <Sidebutton />
                 <MusicPlayer />
             </DetailSection>
+            {openViewer ? <PlaylistViewer /> : null}
         </DetailGroup>
     );
 }
