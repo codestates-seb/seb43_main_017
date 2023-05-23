@@ -69,9 +69,7 @@ const AddListMusic = () => {
                     },
                 },
             )
-            .then((res) => {
-                console.log('플레이리스트에 음악이 추가되었습니다.');
-                console.log(res);
+            .then(() => {
                 alert(`선택하신 음악이 ${title}에 추가되었습니다.`);
             })
             .catch(() => {

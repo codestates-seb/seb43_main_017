@@ -24,18 +24,14 @@ function ModifyPlaylist() {
         // 플레이리스트 가져오는 함수
         const fetchMyplaylistData = () => {
             axios
-                .get(
-                    `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/${ModifyPlaylistId}`,
-                    {
-                        headers: {
-                            Authorization: token,
-                        },
+                .get(`${process.env.REACT_APP_API_URL}/playlists/${ModifyPlaylistId}`, {
+                    headers: {
+                        Authorization: token,
                     },
-                )
+                })
                 .then((response) => {
                     setModifyTarget(response.data.data);
                     setUpdateState(!UpdateState);
-                    console.log(response.data.data);
                 })
                 .catch((error) => {
                     console.error(error);
@@ -45,12 +41,9 @@ function ModifyPlaylist() {
         /** 2023.05.23 마이플레이리스트 음악 전체 조회 - 홍혜란 */
         const fetchMusicData = () => {
             axios
-                .get(
-                    `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/playlists/${ModifyPlaylistId}`,
-                )
+                .get(`${process.env.REACT_APP_API_URL}/musics/playlists/${ModifyPlaylistId}`)
                 .then((response) => {
                     setMusicDataList(response.data);
-                    console.log(response.data);
                 })
                 .catch((error) => {
                     console.error(error);
@@ -60,8 +53,6 @@ function ModifyPlaylist() {
         fetchMyplaylistData();
         fetchMusicData();
     }, [update]);
-
-    console.log(modifyTarget);
 
     /** 2023.05.22 모디파이플레이리스트 이름, 코멘트 수정 input 처리 - 홍혜란 */
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,14 +71,14 @@ function ModifyPlaylist() {
     };
 
     const handleLeave = () => {
-        setIsEditing(true);
+        setIsEditing(false);
     };
 
     /* 2023.05.22 모디파이 플레이리스트 이름, 코멘트 수정 요청 */
     const sendRequestToServer = () => {
         axios
             .patch(
-                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/${ModifyPlaylistId}`,
+                `${process.env.REACT_APP_API_URL}/playlists/${ModifyPlaylistId}`,
                 {
                     title: title,
                     body: body,
@@ -98,9 +89,8 @@ function ModifyPlaylist() {
                     },
                 },
             )
-            .then((response) => {
+            .then(() => {
                 setUpdate(!update);
-                console.log('서버 응답:', response.data);
             })
             .catch((error) => {
                 console.error(error);
@@ -110,14 +100,11 @@ function ModifyPlaylist() {
     /* 2023.05.22 모디파이 플레이리스트 노래 삭제 요청 */
     const handleDeletePlaylist = (musicId: number) => {
         axios
-            .delete(
-                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/${ModifyPlaylistId}/musics/${musicId}`,
-                {
-                    headers: {
-                        Authorization: token,
-                    },
+            .delete(`${process.env.REACT_APP_API_URL}/playlists/${ModifyPlaylistId}/musics/${musicId}`, {
+                headers: {
+                    Authorization: token,
                 },
-            )
+            })
             .then(() => {
                 setUpdate(!update);
             })
@@ -136,10 +123,14 @@ function ModifyPlaylist() {
             </div>
             <ModiCointainer>
                 <ModifyList>
-                    <Plcard onClick={handleLeave}>
+                    <Plcard>
                         {modifyTarget && (
                             <div className="back-img">
-                                <img src={modifyTarget.coverImg} alt={modifyTarget.createMember} />
+                                <img
+                                    src={modifyTarget.coverImg}
+                                    alt={modifyTarget.createMember}
+                                    onClick={handleLeave}
+                                />
                                 <div className="pl-contents">
                                     <Pluser>
                                         <span>WTITER</span>

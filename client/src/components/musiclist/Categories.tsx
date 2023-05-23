@@ -6,7 +6,7 @@ import { selectedTagsState, showSearch, tagSreachState } from 'src/recoil/Atoms'
 import { MdTransitEnterexit } from 'react-icons/md';
 import axios from 'axios';
 import Search from './Search';
-
+import { useLocation } from 'react-router-dom';
 import { TbMoodPlus } from 'react-icons/tb';
 import { IoMdMusicalNote } from 'react-icons/io';
 import { MdPiano } from 'react-icons/md';
@@ -35,7 +35,7 @@ const Categories = ({ showSearchResult }: CategoryProps) => {
     }
 
     useEffect(() => {
-        axios.get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/tags`).then(function (res) {
+        axios.get(`${process.env.REACT_APP_API_URL}/tags`).then(function (res) {
             const tags = res.data;
             const filteredTags = tags.filter((tag: tag) => tag.category === 'FEEL');
             const filteredGenre = tags.filter((tag: tag) => tag.category === 'GENRE');
@@ -62,6 +62,14 @@ const Categories = ({ showSearchResult }: CategoryProps) => {
         setSelectedTags(selectedTags.filter((t) => t !== tag));
         setTagSelectedTags(tagSelectedTags.filter((t) => t !== `tags=${tag}`));
     };
+
+    /** 2023.05.24 태그 선택된 채로 다른 페이지 이동한 후 돌아왔을 때 태그 초기화 */
+    const location = useLocation();
+
+    useEffect(() => {
+        setSelectedTags([]);
+        setTagSelectedTags([]);
+    }, [location.pathname]); //경로(location.pathname)가 변경될 때마다 선택된 태그를 초기화
 
     return (
         <CateTagContainer>

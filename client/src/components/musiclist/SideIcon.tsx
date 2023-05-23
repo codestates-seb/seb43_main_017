@@ -50,7 +50,7 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
     useEffect(() => {
         if (token) {
             axios
-                .get('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/liked-musics', {
+                .get(`${process.env.REACT_APP_API_URL}/musics/liked-musics`, {
                     headers: {
                         Authorization: token,
                     },

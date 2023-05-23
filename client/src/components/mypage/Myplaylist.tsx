@@ -45,6 +45,7 @@ const Myplaylist = () => {
             });
     }, [update, updateModify, currentPage]);
 
+
     /* 2023.05.22 마이플레이리스트 삭제 */
     const handleDeletePlaylist = (playlistId: number) => {
         axios
@@ -54,6 +55,7 @@ const Myplaylist = () => {
                 },
             })
             .then(() => {
+                confirm(`삭제하시겠습니까?`);
                 setUpdate(!update);
             })
             .catch((error) => {
