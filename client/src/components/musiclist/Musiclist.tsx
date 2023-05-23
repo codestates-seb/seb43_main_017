@@ -477,8 +477,10 @@ const PlaylistContainer = styled.div`
     height: 100vh;
     display: flex;
     flex-direction: column;
+    position: relative;
+    z-index: 5;
 
-    background: rgba(245, 223, 223, 0.25);
+    background: rgba(42, 39, 39, 0.65);
     justify-content: center;
     align-items: center;
 `;
@@ -492,8 +494,8 @@ const PlaylistModal = styled.div`
     flex-direction: column;
     border-radius: 10px;
     @media (max-width: 700px) {
-        width: 400px;
-        height: 560px;
+        width: 350px;
+        height: 460px;
     }
     background: rgba(12, 11, 11, 0.55);
     > button {
