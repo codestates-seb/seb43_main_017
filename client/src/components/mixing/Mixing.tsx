@@ -154,7 +154,7 @@ const MixingHeader = styled.article`
     justify-content: center;
     align-items: center;
     width: 60%;
-    z-index: 2;
+    z-index: 5;
     > div {
         margin: 10px;
     }
@@ -245,7 +245,7 @@ const Mixingtext = styled.div`
 const Musiclist = styled.div`
     height: 100vh;
     position: absolute;
-    z-index: 9999;
+    z-index: 2;
     display: flex;
     flex-direction: column;
     left: 100px;
@@ -257,8 +257,8 @@ const Musiclist = styled.div`
     -webkit-backdrop-filter: blur(6px);
     border: 1px solid rgba(255, 255, 255, 0.18);
     @media screen and (max-width: 1530px) {
-        position: absolute;
         display: none;
+        left: 0;
         top: 0px;
         width: 0%;
         animation: openSearch 1s forwards;
@@ -266,14 +266,14 @@ const Musiclist = styled.div`
     }
 
     &.open-search {
+        left: 0;
+        margin: 0;
+        z-index: 5;
         position: fixed;
         display: flex;
     }
     @keyframes openSearch {
         100% {
-            margin: 0;
-            z-index: 9999;
-            left: 0;
             width: 100%;
         }
     }

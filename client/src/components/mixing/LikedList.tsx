@@ -5,7 +5,8 @@ import axios from 'axios';
 import { useEffect, useState, RefObject } from 'react';
 import { useRecoilState } from 'recoil';
 import { showSearch } from 'src/recoil/Atoms';
-import { MdTransitEnterexit } from 'react-icons/md';
+import { MdTransitEnterexit, MdArrowLeft, MdArrowRight } from 'react-icons/md';
+import { Link } from 'react-router-dom';
 
 interface LikeMusicList {
     albumCoverImg: string;
@@ -27,7 +28,7 @@ interface LikedListProps {
     setAudioSelect: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const LikedList = ({ audioRef, setAudioSelect }: LikedListProps) => {
-    const [, setShowSearch] = useRecoilState<boolean>(showSearch); //모버일버전 좋아요 음악리스트 닫기
+    const [ShowSearch, setShowSearch] = useRecoilState<boolean>(showSearch); //모버일버전 좋아요 음악리스트 닫기
     const [emptyList, setEmptyList] = useState<boolean>(false); //좋아요한 음악이 있는지 없는지 여부
     const [MusicTitle, setMusicTitle] = useState<string>(''); //현재 삽입된 오디오 제목
     const [currentMusic, setCurrentMusic] = useState<boolean>(false); // 선택된 음악인지 판단하는 값
@@ -126,7 +127,13 @@ const LikedList = ({ audioRef, setAudioSelect }: LikedListProps) => {
                     </LikeList>
                 ))
             ) : (
-                <li>Add your favorite music.</li>
+                <Link to="/musiclist" style={{ textDecoration: 'none' }}>
+                    <EmptyListText>
+                        <MdArrowRight />
+                        Add your favorite music.
+                        <MdArrowLeft />
+                    </EmptyListText>
+                </Link>
             )}
             {currentMusic && (
                 <CurrentMusic>
@@ -226,6 +233,24 @@ const LikeList = styled.ul`
         align-items: center;
         justify-content: center;
     }
+    @media screen and (max-width: 1530px) {
+        width: 650px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid hsl(0, 0%, 65%);
+        padding: 8px;
+        margin-bottom: 20px;
+    }
+    @media screen and (max-width: 722px) {
+        width: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid hsl(0, 0%, 65%);
+        padding: 8px;
+        margin-bottom: 20px;
+    }
 `;
 /* 2023.05.10 Like Music 리스트 페이지네이션 - 홍혜란 */
 const Pagination = styled.div`
@@ -302,4 +327,13 @@ const Exitbox = styled.div`
     @media screen and (min-width: 1530px) {
         display: none;
     }
+`;
+const EmptyListText = styled.p`
+    color: #ccc;
+    @keyframes blink-effect {
+        50% {
+            opacity: 0;
+        }
+    }
+    animation: blink-effect 1s step-end infinite;
 `;

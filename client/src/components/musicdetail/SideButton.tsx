@@ -47,7 +47,7 @@ export default Sidebutton;
 const SidebtnGroup = styled.div`
     display: flex;
     opacity: 0;
-    animation: fadeinText2 2s forwards 3.5s;
+    animation: fadeinText2 2s forwards 2s;
     > * {
         margin: 20px 20px 0px 20px;
     }

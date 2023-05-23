@@ -207,7 +207,7 @@ const Plsearch = styled.input`
     animation: showinput 1s forwards;
     opacity: 0;
     margin-top: -30px;
-
+    font-family: 'Noto Sans KR', sans-serif;
     ::placeholder {
         color: #969696;
         font-family: 'Rajdhani', sans-serif;
@@ -241,7 +241,7 @@ const TapList = styled.li`
     margin-top: 10px;
     transition: 0.3s ease-in-out;
     padding: 10px;
-
+    font-family: 'Noto Sans KR', sans-serif;
     :hover {
         transform: scale(1.05);
         background-color: rgba(20, 20, 20, 0.5);
