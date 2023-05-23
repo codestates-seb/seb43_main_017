@@ -14,7 +14,7 @@ interface SideiconProps {
 }
 
 const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
-    const [playListId, setPlayListId] = useState<number>(0); //플레이리스트 아이디
+    const [, setPlayListId] = useState<number>(0); //플레이리스트 아이디
     const [like, setLike] = useState<boolean>(false);
     const setPlayListState = useSetRecoilState(playListModalState);
     const setMusicIdState = useSetRecoilState(getMusicIdState);
@@ -70,22 +70,25 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
                 <FiPlayCircle className="color-blue" />
             </Link>
 
+
             <AddPlayList
                 onClick={() => {
                     setPlayListState(true);
                     setMusicIdState(musicId);
+                    handleAddPlaylist;
+                   className="view-700"
                 }}
             >
                 <FiFolderPlus />
             </AddPlayList>
 
             <a href={`/assets/music/${musicUri}`} download>
-                <MdFileDownload />
+                <MdFileDownload className="view-700" />
             </a>
             {like ? (
-                <HiHeart onClick={handleLike} className="color-red like-action" />
+                <HiHeart onClick={handleLike} className="color-red like-action view-700" />
             ) : (
-                <HiOutlineHeart onClick={handleLike} className="color-red" />
+                <HiOutlineHeart onClick={handleLike} className="color-red view-700" />
             )}
         </MusicIconGroup>
     );
@@ -126,6 +129,16 @@ const MusicIconGroup = styled.li`
     @media (max-width: 1200px) {
         > * {
             margin: 0px 10px;
+        }
+    }
+
+    @media (max-width: 700px) {
+        max-width: 80px;
+        .view-700 {
+            display: none;
+        }
+        > * {
+            margin: 0px;
         }
     }
 `;

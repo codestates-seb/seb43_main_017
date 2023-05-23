@@ -120,6 +120,7 @@ export const modifyClickState = atom({
     default: 0,
 });
 
+
 export const playListModalState = atom({
     key: 'playListModalState',
     default: false,
@@ -127,5 +128,19 @@ export const playListModalState = atom({
 
 export const getMusicIdState = atom({
     key: 'getMusicIdState',
-    default: 0,
+});
+export const tagSreachState = atom({
+    key: 'tagSreachState',
+    default: '',
+});
+
+export const playingMusic = atom({
+    key: 'playingMusic',
+    default: true,
+});
+
+export const playlistViewerState = atom({
+    key: 'playlistViewerState',
+    default: false,
+
 });

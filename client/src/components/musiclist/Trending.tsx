@@ -79,7 +79,6 @@ export default Trending;
 const Container = styled.div`
     display: flex;
     flex-direction: column;
-    overflow-x: auto;
     gap: 16px;
     padding: 16px 0;
     width: 100%;

@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import axios from 'axios';
 import React, { useRef, useState, useEffect } from 'react';
+import { useRecoilState } from 'recoil';
+import { playingMusic, playlistViewerState } from 'src/recoil/Atoms';
 
 import { BsFillPlayFill, BsPauseFill } from 'react-icons/bs';
 import { TbPlayerTrackPrevFilled, TbPlayerTrackNextFilled } from 'react-icons/tb';
@@ -15,11 +17,14 @@ interface Song {
 const AudioPlayer = () => {
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const [currentTime, setCurrentTime] = useState(0);
-    const [volume, setVolume] = useState(0.5);
+    const [volume, setVolume] = useState(0.15);
     const [currentSongIndex, setCurrentSongIndex] = useState(0);
     const [onPlay, setOnPlay] = useState<boolean>(false);
     const [showSoundControll, setShowSoundControll] = useState<boolean>(false);
+    const [, setPlayingDots] = useRecoilState<boolean>(playingMusic);
+
     const [songs, setSongs] = useState([{ src: '', duration: 0 }]);
+    const [, setOpenViewer] = useRecoilState<boolean>(playlistViewerState);
 
     const onPlaylist = sessionStorage.getItem('onPlaylist');
     const msId = sessionStorage.getItem('musicId');
@@ -64,6 +69,7 @@ const AudioPlayer = () => {
             audioRef.current.play();
         }
         setOnPlay(false);
+        setPlayingDots(true);
     };
     /** 203.05.22 일시정지 - 김주비 */
     const pause = () => {
@@ -71,6 +77,7 @@ const AudioPlayer = () => {
             audioRef.current.pause();
         }
         setOnPlay(true);
+        setPlayingDots(false);
     };
     /** 203.05.22 음원 재생시간 - 김주비 */
     const handleTimeUpdate = () => {
@@ -92,6 +99,7 @@ const AudioPlayer = () => {
             setCurrentSongIndex(songs.length - 1);
         } else {
             setCurrentSongIndex(currentSongIndex - 1);
+            setPlayingDots(true);
         }
         setOnPlay(false);
         setCurrentTime(0); // 이전 곡으로 이동할 때 재생 시간 초기화
@@ -102,6 +110,7 @@ const AudioPlayer = () => {
             setCurrentSongIndex(0);
         } else {
             setCurrentSongIndex(currentSongIndex + 1);
+            setPlayingDots(true);
         }
         setOnPlay(false);
         setCurrentTime(0); // 다음 곡으로 이동할 때 재생 시간 초기화
@@ -124,8 +133,20 @@ const AudioPlayer = () => {
     };
     /** 203.05.22 음원 재생종료 - 김주비 */
     const handleSongEnd = () => {
-        playNextSong();
-        setOnPlay(!onPlay);
+        if (currentSongIndex === songs.length - 1) {
+            setOnPlay(!onPlay);
+            setPlayingDots(false);
+        } else {
+            playNextSong();
+        }
+    };
+
+    const handlePlBox = () => {
+        if (onPlaylist === 'true') {
+            setOpenViewer(true);
+        } else {
+            alert('단일 음원 데이터에서는 플레이리스트 기능을 제공하지 않습니다.');
+        }
     };
 
     return (
@@ -195,7 +216,7 @@ const AudioPlayer = () => {
                         <TbPlayerTrackNextFilled />
                     </button>
                 </SoundPlay>
-                <PlaylistBox>
+                <PlaylistBox onClick={handlePlBox}>
                     <RiPlayListFill />
                 </PlaylistBox>
             </SoundOption>
@@ -212,9 +233,9 @@ const AudioPlayerGroup = styled.section`
     align-items: center;
     flex-direction: column;
     width: 600px;
-    margin: 50px;
+    margin-top: 50px;
     opacity: 0;
-    animation: showsoundbar 2s forwards 4s;
+    animation: showsoundbar 2s forwards 2s;
 
     @keyframes showsoundbar {
         100% {
@@ -234,6 +255,7 @@ const SoundMovingBar = styled.div<SoundBarMovingProps>`
     justify-content: center;
     align-items: center;
     width: 100%;
+    z-index: 2;
 
     > * {
         margin: 10px;
@@ -273,7 +295,12 @@ const SoundVolume = styled.div`
     align-items: center;
     font-size: 1.3rem;
     padding: 10px;
-    color: #666;
+    color: rgb(255, 255, 255, 0.4);
+    transition: 0.2s ease-in-out;
+
+    :hover {
+        color: rgb(255, 255, 255, 0.7);
+    }
     .volume-controll {
         position: absolute;
         height: 5px;
@@ -317,5 +344,10 @@ const PlaylistBox = styled.div`
     align-items: center;
     font-size: 1.3rem;
     padding: 10px;
-    color: #666;
+    color: rgb(255, 255, 255, 0.4);
+    transition: 0.2s ease-in-out;
+
+    :hover {
+        color: rgb(255, 255, 255, 0.7);
+    }
 `;
