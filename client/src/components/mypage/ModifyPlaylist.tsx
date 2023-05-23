@@ -13,6 +13,7 @@ function ModifyPlaylist() {
 
     const [ModifyPlaylistId, _] = useRecoilState(modifyClickState);
 
+    /* 2023.05.22  마이플레이리스트 단일 조회 요청 */
     useEffect(() => {
         // 플레이리스트 가져오는 함수
         const fetchMyplaylistData = () => {
@@ -66,6 +67,7 @@ function ModifyPlaylist() {
         setMyplaylistData([]);
     };
 
+    /* 2023.05.22 모디파이 플레이리스트 수정 요청 */
     const sendRequestToServer = () => {
         axios
             .patch(
@@ -90,19 +92,40 @@ function ModifyPlaylist() {
     };
 
     const [musicDataList, setMusicDataList] = useRecoilState(musicDataListState);
+    const [update, setUpdate] = useState<boolean>(false);
 
+    /* 2023.05.22 모디파이 플레이리스트 노래 전체 조회 요청 */
     useEffect(() => {
         axios
             .get(
                 `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/playlists/${ModifyPlaylistId}`,
             )
             .then((response) => {
-                setMusicDataList(response.data);
+                setMusicDataList([response.data]);
             })
             .catch((error) => {
                 console.error(error);
             });
-    }, []);
+    }, [update]);
+
+    /* 2023.05.22 모디파이 플레이리스트 노래 삭제 요청 */
+    const handleDeletePlaylist = (musicId: number) => {
+        axios
+            .delete(
+                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/${ModifyPlaylistId}/musics/${musicId}`,
+                {
+                    headers: {
+                        Authorization: token,
+                    },
+                },
+            )
+            .then(() => {
+                setUpdate(!update);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
 
     return (
         <ModifyContainer>
@@ -153,13 +176,13 @@ function ModifyPlaylist() {
                         </Plcard>
                         <PlyList>
                             {musicDataList.map((musicData) => (
-                                <div className="plyItem">
+                                <div className="plyItem" key={musicData.musicId}>
                                     <img src={musicData.albumCoverImg} alt={musicData.musicName} />
                                     <li>{musicData.musicName}</li>
                                     <li>{musicData.artistName}</li>
                                     <li>{musicData.albumName}</li>
                                     <li>
-                                        <VscClose />
+                                        <VscClose onClick={() => handleDeletePlaylist(musicData.musicId)} />
                                     </li>
                                 </div>
                             ))}
