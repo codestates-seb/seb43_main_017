@@ -2,20 +2,32 @@ import styled from 'styled-components';
 import LikeMusic from './LIkeMusic';
 import Myplaylist from './Myplaylist';
 import ModifyPlaylist from './ModifyPlaylist';
-import { modifyDataState } from 'src/recoil/Atoms';
+import { modifyDataState, playListModalState } from 'src/recoil/Atoms';
 import { useRecoilState } from 'recoil';
+import AddMyplaylist from './AddMyplaylist';
+import { ImCross } from 'react-icons/im';
 
 function Mypage() {
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
     const userimg: string | undefined = window.localStorage.getItem('userimg') || undefined;
     const usernickname: string | undefined = window.localStorage.getItem('usernickname') || undefined;
     const useremail: string | undefined = window.localStorage.getItem('useremail') || undefined;
-
+    const [openPlayList, setOpenPlayList] = useRecoilState<boolean>(playListModalState);
     const [modifyPlaylistState, _] = useRecoilState(modifyDataState);
 
     return (
         <div>
             <BackgroundCover></BackgroundCover>
+            {openPlayList && (
+                <PlaylistContainer>
+                    <PlaylistModal>
+                        <AddMyplaylist />
+                        <Exitbox onClick={() => setOpenPlayList(false)}>
+                            <ImCross />
+                        </Exitbox>
+                    </PlaylistModal>
+                </PlaylistContainer>
+            )}
             <MypageContainer>
                 <MypageListContainer>
                     <UserProfile>
@@ -165,4 +177,61 @@ const LeftContainer = styled.div`
 const RightContainer = styled.div`
     width: 500px;
     height: 600px;
+`;
+
+/**2023/05/23 - 플레이리스트 음원 추가 컨테이너 - 박수범 */
+const PlaylistContainer = styled.div`
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    background: rgba(245, 223, 223, 0.25);
+    justify-content: center;
+    align-items: center;
+`;
+/**2023/05/23 - 플레이리스트 음원추가 모달창 - 박수범 */
+const PlaylistModal = styled.div`
+    justify-content: center;
+    align-items: center;
+    width: 450px;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    @media (max-width: 700px) {
+        width: 400px;
+        height: 560px;
+    }
+    background: rgba(12, 11, 11, 0.55);
+    > button {
+        cursor: pointer;
+        z-index: 3;
+    }
+`;
+const Exitbox = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    bottom: 0px;
+    left: 0px;
+    width: 30px;
+    height: 30px;
+    font-size: 10px;
+    border-radius: 100px;
+    color: rgba(199, 68, 68, 1);
+    text-align: center;
+    border: 2px solid rgba(199, 68, 68, 1);
+    cursor: pointer;
+    @media (max-width: 700px) {
+        width: 30px;
+        height: 20px;
+        font-size: 8px;
+        margin-top: 30px;
+    }
+    z-index: 3;
+    :hover {
+        color: #ccc;
+        border-color: #ccc;
+    }
 `;

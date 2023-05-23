@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { AiFillHeart } from 'react-icons/ai';
 import { BsMusicPlayer, BsPlayCircle, BsPlusSquare } from 'react-icons/bs';
 import { CiMenuKebab } from 'react-icons/ci';
-import { modalState, myplaylistState, modifyDataState, modifyClickState } from 'src/recoil/Atoms';
+import { modalState, myplaylistState, modifyDataState, modifyClickState, playListModalState } from 'src/recoil/Atoms';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -23,30 +23,7 @@ const Myplaylist = () => {
     const [myplaylistData, setMyplaylistData] = useRecoilState(myplaylistState);
     const [, setModifyDataState] = useRecoilState(modifyClickState);
 
-    /* 2023.05.21 마이플레이리스트 생성 */
-    const MyplaylistCreate = () => {
-        axios
-            .post(
-                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists`,
-                {
-                    title: '플레이리스트',
-                    body: '플레이리스트 내용',
-                    coverImg: './assets/mypage.png',
-                },
-                {
-                    headers: {
-                        Authorization: token,
-                    },
-                },
-            )
-            .then((response) => {
-                console.log(response);
-                setUpdate(!update);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    };
+    const setPlayListState = useSetRecoilState(playListModalState);
 
     /* 2023.05.22 마이플레이리스트 조회 */
     useEffect(() => {
@@ -119,7 +96,11 @@ const Myplaylist = () => {
                     <BsMusicPlayer />
                     <p>MY PLAYLIST</p>
                     <li>
-                        <BsPlusSquare onClick={MyplaylistCreate} />
+                        <BsPlusSquare
+                            onClick={() => {
+                                setPlayListState(true);
+                            }}
+                        />
                     </li>
                 </div>
                 <Pagination>

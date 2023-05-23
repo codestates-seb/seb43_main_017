@@ -5,13 +5,16 @@ import { useRecoilState } from 'recoil';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { titleState, bodyState, myplaylistState, modifyClickState, musicDataListState } from 'src/recoil/Atoms';
-import { MusicData } from 'src/types/Musiclist';
 
 function ModifyPlaylist() {
     const [myplaylistData, setMyplaylistData] = useRecoilState(myplaylistState);
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
-
+    const [musicDataList, setMusicDataList] = useRecoilState(musicDataListState);
+    const [update, setUpdate] = useState<boolean>(false);
     const [ModifyPlaylistId, _] = useRecoilState(modifyClickState);
+    const [title, setTitle] = useRecoilState(titleState);
+    const [body, setBody] = useRecoilState(bodyState);
+    const [isEditing, setIsEditing] = useState(false);
 
     /* 2023.05.22  마이플레이리스트 단일 조회 요청 */
     useEffect(() => {
@@ -35,12 +38,23 @@ function ModifyPlaylist() {
                 });
         };
 
-        fetchMyplaylistData();
-    }, []);
+        const fetchMusicData = () => {
+            axios
+                .get(
+                    `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/playlists/${ModifyPlaylistId}`,
+                )
+                .then((response) => {
+                    setMusicDataList(response.data);
+                    console.log(response.data);
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        };
 
-    const [title, setTitle] = useRecoilState(titleState);
-    const [body, setBody] = useRecoilState(bodyState);
-    const [isEditing, setIsEditing] = useState(false);
+        fetchMyplaylistData();
+        fetchMusicData();
+    }, [update]);
 
     useEffect(() => {
         if (!isEditing) {
@@ -69,44 +83,27 @@ function ModifyPlaylist() {
 
     /* 2023.05.22 모디파이 플레이리스트 수정 요청 */
     const sendRequestToServer = () => {
-        axios
-            .patch(
-                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/${ModifyPlaylistId}`,
-                {
-                    title: title,
-                    body: body,
-                },
-                {
-                    headers: {
-                        Authorization: token,
-                    },
-                },
-            )
-            .then((response) => {
-                setMyplaylistData([response.data.data]);
-                console.log('서버 응답:', response.data);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+        // axios
+        //     .patch(
+        //         `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/${ModifyPlaylistId}`,
+        //         {
+        //             title: title,
+        //             body: body,
+        //         },
+        //         {
+        //             headers: {
+        //                 Authorization: token,
+        //             },
+        //         },
+        //     )
+        //     .then((response) => {
+        //         setMyplaylistData([response.data.data]);
+        //         console.log('서버 응답:', response.data);
+        //     })
+        //     .catch((error) => {
+        //         console.error(error);
+        //     });
     };
-
-    const [musicDataList, setMusicDataList] = useRecoilState(musicDataListState);
-    const [update, setUpdate] = useState<boolean>(false);
-
-    /* 2023.05.22 모디파이 플레이리스트 노래 전체 조회 요청 */
-    useEffect(() => {
-        axios
-            .get(
-                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/playlists/${ModifyPlaylistId}`,
-            )
-            .then((response) => {
-                setMusicDataList([response.data]);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    }, [update]);
 
     /* 2023.05.22 모디파이 플레이리스트 노래 삭제 요청 */
     const handleDeletePlaylist = (musicId: number) => {
@@ -141,7 +138,6 @@ function ModifyPlaylist() {
                         <Plcard>
                             <div className="back-img">
                                 <img src={data.coverImg} alt={data.createMember} />
-                                <div className="pl-treck">TRECK 0</div>
                                 <div className="pl-contents">
                                     <Pluser>
                                         <span>WTITER</span>
@@ -175,17 +171,18 @@ function ModifyPlaylist() {
                             </div>
                         </Plcard>
                         <PlyList>
-                            {musicDataList.map((musicData) => (
-                                <div className="plyItem" key={musicData.musicId}>
-                                    <img src={musicData.albumCoverImg} alt={musicData.musicName} />
-                                    <li>{musicData.musicName}</li>
-                                    <li>{musicData.artistName}</li>
-                                    <li>{musicData.albumName}</li>
-                                    <li>
-                                        <VscClose onClick={() => handleDeletePlaylist(musicData.musicId)} />
-                                    </li>
-                                </div>
-                            ))}
+                            {Array.isArray(musicDataList) &&
+                                musicDataList.map((musicData) => (
+                                    <div className="plyItem" key={musicData.musicId}>
+                                        <img src={musicData.albumCoverImg} alt={musicData.musicName} />
+                                        <li>{musicData.musicName}</li>
+                                        <li>{musicData.artistName}</li>
+                                        <li>{musicData.albumName}</li>
+                                        <li>
+                                            <VscClose onClick={() => handleDeletePlaylist(musicData.musicId)} />
+                                        </li>
+                                    </div>
+                                ))}
                         </PlyList>
                     </ModifyList>
                 ))}
@@ -264,6 +261,7 @@ const Plcard = styled.div`
         img {
             width: 450px;
             height: 200px;
+            filter: blur(5px);
         }
     }
 
@@ -314,6 +312,7 @@ const Plcard = styled.div`
 const Pluser = styled.div`
     margin-top: 20px;
     font-size: 0.8rem;
+    color: #000000;
     > span {
         margin-right: 15px;
     }
@@ -331,7 +330,7 @@ const Pltext = styled.div`
         margin-top: 10px;
     }
     span:nth-child(1) {
-        color: #fff;
+        color: #000000;
         letter-spacing: -0.5px;
         font-size: 1.6rem;
         min-width: 103%;
@@ -344,6 +343,7 @@ const Pltext = styled.div`
         opacity: 0.5;
         width: 80%;
         font-size: 0.7rem;
+        color: #000000;
     }
     @media (max-width: 600px) {
         span:nth-child(1) {
