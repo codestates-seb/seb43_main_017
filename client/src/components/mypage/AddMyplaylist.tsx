@@ -50,7 +50,6 @@ const AddListMusic = () => {
             <MyplaylistItem>
                 <li>Playlist-CoverImg</li>
                 <p>커버 이미지 url 주소를 넣어주세요.</p>
-                {/* <input type="file" onChange={(e) => setCoverImg(e.target.files && e.target.files[0])} /> */}
                 <input value={coverImg} onChange={(e) => setCoverImg(e.target.value)} />
                 <li>Playlist-Title</li>
                 <p>플레이리스트의 제목을 적어주세요.</p>

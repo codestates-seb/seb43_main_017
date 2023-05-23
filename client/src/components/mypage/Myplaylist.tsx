@@ -46,10 +46,7 @@ const Myplaylist = () => {
             .catch((error) => {
                 console.error(error);
             });
-        console.log('랜더가 되었습니다.');
     }, [update, test]);
-
-    console.log(myplaylistData);
 
     /* 2023.05.22 마이플레이리스트 삭제 */
     const handleDeletePlaylist = (playlistId: number) => {
@@ -60,7 +57,9 @@ const Myplaylist = () => {
                 },
             })
             .then(() => {
+                confirm(`삭제하시겠습니까?`);
                 setUpdate(!update);
+                // alert(`플레이리스트가 삭제되었습니다.`);
             })
             .catch((error) => {
                 console.error(error);
