@@ -2,7 +2,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { AiFillHeart } from 'react-icons/ai';
 import { BsMusicPlayer } from 'react-icons/bs';
-import { myplaylistState, modifyDataState, modifyClickState, getMusicIdState } from 'src/recoil/Atoms';
+import { myplaylistState, modifyClickState, getMusicIdState } from 'src/recoil/Atoms';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -60,15 +60,21 @@ const AddListMusic = () => {
     /** 2023/05/23 - 자신의 플레이리스트를 클릭하면 플레이리스트에 음악을 추가하는 함수 - 박수범*/
     const addPlayListMusic = (playListId: number, title: string) => {
         axios
-            .post(`${process.env.REACT_APP_API_URL}/playlists/${playListId}/musics/${newMusicId}`, {
-                headers: {
-                    Authorization: token,
+            .post(
+                `${process.env.REACT_APP_API_URL}/playlists/${playListId}/musics/${newMusicId}`,
+                {},
+                {
+                    headers: {
+                        Accept: 'application/json',
+                        withCredentials: true,
+                        Authorization: token,
+                    },
                 },
-            })
+            )
             .then((res) => {
                 console.log('플레이리스트에 음악이 추가되었습니다.');
                 console.log(res);
-                alert(`선택하신 음악${title}이 플레이리스트에 추가되었습니다.`);
+                alert(`선택하신 음악이 ${title}에 추가되었습니다.`);
             })
             .catch(() => {
                 alert('플레이리스트에 정상적으로 추가가 되지 않았습니다.');
