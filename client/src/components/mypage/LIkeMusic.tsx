@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import { HiHeart, HiOutlineHeart } from 'react-icons/hi';
+import { HiHeart } from 'react-icons/hi';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface LikeMusicList {
     albumCoverImg: string;
@@ -170,12 +170,6 @@ const LikeTitle = styled.div`
         color: #ffffff;
         margin-left: 5px;
     }
-`;
-
-const LikeNo = styled.div`
-    display: flex;
-    font-size: 50px;
-    background-color: hsl(0, 0%, 65%, 0.5);
 `;
 
 /* 2023.05.10 Like Music 리스트 출력 컴포넌트 - 홍혜란 */

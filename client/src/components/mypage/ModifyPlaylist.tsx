@@ -5,18 +5,20 @@ import { useRecoilState } from 'recoil';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { titleState, bodyState, myplaylistState, modifyClickState, musicDataListState } from 'src/recoil/Atoms';
+import { ModifyTargetData } from 'src/types/myplaylist';
 
 function ModifyPlaylist() {
     const [myplaylistData, setMyplaylistData] = useRecoilState(myplaylistState);
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
     const [musicDataList, setMusicDataList] = useRecoilState(musicDataListState);
     const [update, setUpdate] = useState<boolean>(false);
-    const [ModifyPlaylistId, _] = useRecoilState(modifyClickState);
+    const [ModifyPlaylistId] = useRecoilState(modifyClickState);
     const [title, setTitle] = useRecoilState(titleState);
     const [body, setBody] = useRecoilState(bodyState);
     const [isEditing, setIsEditing] = useState(false);
+    const [modifyTarget, setModifyTarget] = useState<ModifyTargetData | undefined>();
 
-    /* 2023.05.22  마이플레이리스트 단일 조회 요청 */
+    /** 2023.05.22  마이플레이리스트 단일 조회 요청 - 홍혜란 */
     useEffect(() => {
         // 플레이리스트 가져오는 함수
         const fetchMyplaylistData = () => {
@@ -30,7 +32,7 @@ function ModifyPlaylist() {
                     },
                 )
                 .then((response) => {
-                    setMyplaylistData([response.data.data]);
+                    setModifyTarget(response.data.data);
                     console.log(response.data.data);
                 })
                 .catch((error) => {
@@ -38,6 +40,7 @@ function ModifyPlaylist() {
                 });
         };
 
+        /** 2023.05.23 마이플레이리스트 음악 전체 조회 - 홍혜란 */
         const fetchMusicData = () => {
             axios
                 .get(
@@ -56,13 +59,9 @@ function ModifyPlaylist() {
         fetchMusicData();
     }, [update]);
 
-    useEffect(() => {
-        if (!isEditing) {
-            // 편집이 완료되었을 때 API 요청
-            sendRequestToServer();
-        }
-    }, [isEditing]);
+    console.log(modifyTarget);
 
+    /** 2023.05.22 모디파이플레이리스트 이름, 코멘트 수정 input 처리 - 홍혜란 */
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTitle(e.target.value);
     };
@@ -74,35 +73,32 @@ function ModifyPlaylist() {
     const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         if (e.key === 'Enter') {
             setIsEditing(false);
+            sendRequestToServer();
         }
     };
 
-    const handleLeavePage = () => {
-        setMyplaylistData([]);
-    };
-
-    /* 2023.05.22 모디파이 플레이리스트 수정 요청 */
+    /* 2023.05.22 모디파이 플레이리스트 이름, 코멘트 수정 요청 */
     const sendRequestToServer = () => {
-        // axios
-        //     .patch(
-        //         `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/${ModifyPlaylistId}`,
-        //         {
-        //             title: title,
-        //             body: body,
-        //         },
-        //         {
-        //             headers: {
-        //                 Authorization: token,
-        //             },
-        //         },
-        //     )
-        //     .then((response) => {
-        //         setMyplaylistData([response.data.data]);
-        //         console.log('서버 응답:', response.data);
-        //     })
-        //     .catch((error) => {
-        //         console.error(error);
-        //     });
+        axios
+            .patch(
+                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/${ModifyPlaylistId}`,
+                {
+                    title: title,
+                    body: body,
+                },
+                {
+                    headers: {
+                        Authorization: token,
+                    },
+                },
+            )
+            .then((response) => {
+                setMyplaylistData([...myplaylistData, response.data.data]);
+                console.log('서버 응답:', response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     };
 
     /* 2023.05.22 모디파이 플레이리스트 노래 삭제 요청 */
@@ -133,17 +129,17 @@ function ModifyPlaylist() {
                 <p>MODIFY PLAYLIST</p>
             </div>
             <ModiCointainer>
-                {myplaylistData.map((data) => (
-                    <ModifyList key={data.playListId}>
-                        <Plcard>
+                <ModifyList>
+                    <Plcard>
+                        {modifyTarget && (
                             <div className="back-img">
-                                <img src={data.coverImg} alt={data.createMember} />
+                                <img src={modifyTarget.coverImg} alt={modifyTarget.createMember} />
                                 <div className="pl-contents">
                                     <Pluser>
                                         <span>WTITER</span>
-                                        <span>{data.createMember}</span>
+                                        <span>{modifyTarget.createMember}</span>
                                         <span>LIKE</span>
-                                        <span>{data.likeCount}</span>
+                                        <span>{modifyTarget.likeCount}</span>
                                     </Pluser>
                                     <Pltext>
                                         {isEditing ? (
@@ -162,36 +158,31 @@ function ModifyPlaylist() {
                                             </div>
                                         ) : (
                                             <div className="pl-name" onClick={() => setIsEditing(true)}>
-                                                <span>{data.title}</span>
-                                                <span>{data.body}</span>
+                                                <span>{modifyTarget.title}</span>
+                                                <span>{modifyTarget.body}</span>
                                             </div>
                                         )}
                                     </Pltext>
                                 </div>
                             </div>
-                        </Plcard>
-                        <PlyList>
-                            {Array.isArray(musicDataList) &&
-                                musicDataList.map((musicData) => (
-                                    <div className="plyItem" key={musicData.musicId}>
-                                        <img src={musicData.albumCoverImg} alt={musicData.musicName} />
-                                        <li>{musicData.musicName}</li>
-                                        <li>{musicData.artistName}</li>
-                                        <li>{musicData.albumName}</li>
-                                        <li>
-                                            <VscClose onClick={() => handleDeletePlaylist(musicData.musicId)} />
-                                        </li>
-                                    </div>
-                                ))}
-                        </PlyList>
-                    </ModifyList>
-                ))}
+                        )}
+                    </Plcard>
+                    <PlyList>
+                        {Array.isArray(musicDataList) &&
+                            musicDataList.map((musicData) => (
+                                <div className="plyItem" key={musicData.musicId}>
+                                    <img src={musicData.albumCoverImg} alt={musicData.musicName} />
+                                    <span>{musicData.musicName}</span>
+                                    <span>{musicData.artistName}</span>
+                                    <span>{musicData.albumName}</span>
+                                    <span>
+                                        <VscClose onClick={() => handleDeletePlaylist(musicData.musicId)} />
+                                    </span>
+                                </div>
+                            ))}
+                    </PlyList>
+                </ModifyList>
             </ModiCointainer>
-            <ButtonContainer>
-                <button onClick={handleLeavePage}>
-                    <VscClose />
-                </button>
-            </ButtonContainer>
         </ModifyContainer>
     );
 }
@@ -375,7 +366,7 @@ const PlyList = styled.div`
             border-radius: 10%;
         }
 
-        li {
+        span {
             font-size: 14px;
             color: white;
         }
@@ -390,21 +381,5 @@ const PlyList = styled.div`
     @media screen and (max-width: 1000px) {
         width: 400px;
         margin: 0;
-    }
-`;
-
-const ButtonContainer = styled.div`
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
-
-    button {
-        border-radius: 50px;
-        border: 1px solid white;
-        display: flex;
-        align-items: center;
-        font-size: 20px;
-        width: 30px;
-        height: 20px;
     }
 `;

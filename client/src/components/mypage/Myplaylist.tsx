@@ -16,7 +16,6 @@ const Myplaylist = () => {
     const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
     const [totalPages, setTotalPages] = useState<number>(0); // 전체 페이지 수
     const [update, setUpdate] = useState<boolean>(false);
-    const buttonArray = [];
 
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
 
@@ -25,7 +24,7 @@ const Myplaylist = () => {
 
     const setPlayListState = useSetRecoilState(playListModalState);
 
-    /* 2023.05.22 마이플레이리스트 조회 */
+    /** 2023.05.22 마이플레이리스트 조회 */
     useEffect(() => {
         axios
             .get(
@@ -44,6 +43,8 @@ const Myplaylist = () => {
                 console.error(error);
             });
     }, [update]);
+
+    console.log(myplaylistData);
 
     /* 2023.05.22 마이플레이리스트 삭제 */
     const handleDeletePlaylist = (playlistId: number) => {
