@@ -141,6 +141,14 @@ const AudioPlayer = () => {
         }
     };
 
+    const handlePlBox = () => {
+        if (onPlaylist === 'true') {
+            setOpenViewer(true);
+        } else {
+            alert('단일 음원 데이터에서는 플레이리스트 기능을 제공하지 않습니다.');
+        }
+    };
+
     return (
         <AudioPlayerGroup>
             <audio
@@ -208,11 +216,7 @@ const AudioPlayer = () => {
                         <TbPlayerTrackNextFilled />
                     </button>
                 </SoundPlay>
-                <PlaylistBox
-                    onClick={() => {
-                        setOpenViewer(true);
-                    }}
-                >
+                <PlaylistBox onClick={handlePlBox}>
                     <RiPlayListFill />
                 </PlaylistBox>
             </SoundOption>
