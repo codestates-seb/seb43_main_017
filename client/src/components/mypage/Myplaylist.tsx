@@ -59,7 +59,6 @@ const Myplaylist = () => {
             .then(() => {
                 confirm(`삭제하시겠습니까?`);
                 setUpdate(!update);
-                // alert(`플레이리스트가 삭제되었습니다.`);
             })
             .catch((error) => {
                 console.error(error);

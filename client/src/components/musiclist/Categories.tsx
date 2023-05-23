@@ -69,7 +69,7 @@ const Categories = ({ showSearchResult }: CategoryProps) => {
     useEffect(() => {
         setSelectedTags([]);
         setTagSelectedTags([]);
-    }, [location.pathname]);
+    }, [location.pathname]); //경로(location.pathname)가 변경될 때마다 선택된 태그를 초기화
 
     return (
         <CateTagContainer>
