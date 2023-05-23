@@ -4,12 +4,11 @@ import Trending from './Trending';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import axios from 'axios';
-import { showSearch, tagSreachState } from 'src/recoil/Atoms';
 import Sideicon from 'src/components/musiclist/SideIcon';
 import { BiSearch } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
 import { MusicDataResponse } from 'src/types/Musiclist';
-import { musicDataListState, playListModalState, showSearch } from 'src/recoil/Atoms';
+import { musicDataListState, playListModalState, showSearch, tagSreachState } from 'src/recoil/Atoms';
 import Loding from 'src/pages/Loding';
 import AddListMusic from './AddListMusic';
 

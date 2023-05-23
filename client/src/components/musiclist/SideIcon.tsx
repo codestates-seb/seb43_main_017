@@ -70,14 +70,13 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
                 <FiPlayCircle className="color-blue" />
             </Link>
 
-
             <AddPlayList
                 onClick={() => {
                     setPlayListState(true);
                     setMusicIdState(musicId);
                     handleAddPlaylist;
-                   className="view-700"
                 }}
+                className="view-700"
             >
                 <FiFolderPlus />
             </AddPlayList>
