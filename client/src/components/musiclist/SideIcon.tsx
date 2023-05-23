@@ -14,7 +14,6 @@ interface SideiconProps {
 }
 
 const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
-    const [, setPlayListId] = useState<number>(0); //플레이리스트 아이디
     const [like, setLike] = useState<boolean>(false);
     const setPlayListState = useSetRecoilState(playListModalState);
     const setMusicIdState = useSetRecoilState(getMusicIdState);

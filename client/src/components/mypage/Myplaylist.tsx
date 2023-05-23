@@ -42,6 +42,7 @@ const Myplaylist = () => {
             .catch((error) => {
                 console.error(error);
             });
+        console.log('랜더가 되었습니다.');
     }, [update]);
 
     console.log(myplaylistData);
@@ -234,7 +235,7 @@ const PlaylistList = styled.div`
         justify-content: center;
     }
     @media screen and (max-width: 1000px) {
-        width: 300px;
+        width: 400px;
         margin: 0;
         margin-top: 20px;
     }

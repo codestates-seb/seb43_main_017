@@ -17,6 +17,7 @@ function ModifyPlaylist() {
     const [body, setBody] = useRecoilState(bodyState);
     const [isEditing, setIsEditing] = useState(false);
     const [modifyTarget, setModifyTarget] = useState<ModifyTargetData | undefined>();
+    // const [UpdateState, setUpdateState] = useRecoilState(UpdataModify);
 
     /** 2023.05.22  마이플레이리스트 단일 조회 요청 - 홍혜란 */
     useEffect(() => {
@@ -33,6 +34,7 @@ function ModifyPlaylist() {
                 )
                 .then((response) => {
                     setModifyTarget(response.data.data);
+                    // setUpdateState(!UpdateState);
                     console.log(response.data.data);
                 })
                 .catch((error) => {
@@ -77,6 +79,10 @@ function ModifyPlaylist() {
         }
     };
 
+    const handleLeave = () => {
+        setIsEditing(true);
+    };
+
     /* 2023.05.22 모디파이 플레이리스트 이름, 코멘트 수정 요청 */
     const sendRequestToServer = () => {
         axios
@@ -93,7 +99,9 @@ function ModifyPlaylist() {
                 },
             )
             .then((response) => {
-                setMyplaylistData([...myplaylistData, response.data.data]);
+                // setMyplaylistData([...myplaylistData, response.data.data]);
+                setUpdate(!update);
+                window.location.reload();
                 console.log('서버 응답:', response.data);
             })
             .catch((error) => {
@@ -130,7 +138,7 @@ function ModifyPlaylist() {
             </div>
             <ModiCointainer>
                 <ModifyList>
-                    <Plcard>
+                    <Plcard onClick={handleLeave}>
                         {modifyTarget && (
                             <div className="back-img">
                                 <img src={modifyTarget.coverImg} alt={modifyTarget.createMember} />
