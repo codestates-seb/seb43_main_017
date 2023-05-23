@@ -6,6 +6,7 @@ import { useRecoilState } from 'recoil';
 import axios from 'axios';
 import Sideicon from 'src/components/musiclist/SideIcon';
 import { BiSearch } from 'react-icons/bi';
+import { ImCross } from 'react-icons/im';
 import { Link } from 'react-router-dom';
 import { MusicDataResponse } from 'src/types/Musiclist';
 import { musicDataListState, playListModalState, showSearch, tagSreachState } from 'src/recoil/Atoms';
@@ -112,7 +113,9 @@ const Musiclist = () => {
                 <PlaylistContainer>
                     <PlaylistModal>
                         <AddListMusic />
-                        <Exitbox onClick={() => setOpenPlayList(false)}>x</Exitbox>
+                        <Exitbox onClick={() => setOpenPlayList(false)}>
+                            <ImCross />
+                        </Exitbox>
                     </PlaylistModal>
                 </PlaylistContainer>
             )}
@@ -507,6 +510,7 @@ const Exitbox = styled.div`
     width: 30px;
     height: 30px;
     font-size: 20px;
+    border-radius: 100px;
     color: rgba(199, 68, 68, 1);
     text-align: center;
     border: 2px solid rgba(199, 68, 68, 1);
