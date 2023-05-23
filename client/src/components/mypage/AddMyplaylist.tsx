@@ -1,15 +1,21 @@
 import styled from 'styled-components';
 import axios from 'axios';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const AddListMusic = () => {
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
-    const [coverImg, setCoverImg] = useState<string>('');
+    // const [coverImg, setCoverImg] = useState<File | null>(null);
     const [title, setTitle] = useState<string>('');
     const [body, setBody] = useState<string>('');
+    const [coverImg, setCoverImg] = useState<string>('');
 
     /* 2023.05.21 마이플레이리스트 생성 */
     const MyplaylistCreate = () => {
+        // const formData = new FormData();
+        // formData.append('title', title);
+        // formData.append('body', body);
+        // formData.append('coverImg', coverImg as File);
         axios
             .post(
                 `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists`,
@@ -26,9 +32,11 @@ const AddListMusic = () => {
             )
             .then((response) => {
                 console.log(response);
+                // setCoverImg(null);
                 setCoverImg('');
                 setTitle('');
                 setBody('');
+                window.location.reload();
             })
             .catch((error) => {
                 console.error(error);
@@ -43,6 +51,7 @@ const AddListMusic = () => {
             <MyplaylistItem>
                 <li>Playlist-CoverImg</li>
                 <p>커버 이미지 url 주소를 넣어주세요.</p>
+                {/* <input type="file" onChange={(e) => setCoverImg(e.target.files && e.target.files[0])} /> */}
                 <input value={coverImg} onChange={(e) => setCoverImg(e.target.value)} />
                 <li>Playlist-Title</li>
                 <p>플레이리스트의 제목을 적어주세요.</p>
