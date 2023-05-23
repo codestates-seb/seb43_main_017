@@ -123,13 +123,6 @@ const LikeContainer = styled.div`
     width: 400px;
     height: 280px;
     align-items: center;
-    margin-top: 40px;
-    @media screen and (max-width: 1000px) {
-        width: 400px;
-        margin: 0;
-        margin-top: 50px;
-        margin-left: 30px;
-    }
 `;
 /* 2023.05.10 Like Music 타이틀 컴포넌트 - 홍혜란 */
 const LikeTitle = styled.div`

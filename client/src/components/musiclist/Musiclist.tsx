@@ -473,16 +473,24 @@ const SearchOpen = styled.div`
 `;
 /**2023/05/23 - 플레이리스트 음원 추가 컨테이너 - 박수범 */
 const PlaylistContainer = styled.div`
+    position: absolute;
+    top: 0px;
     width: 100%;
-    height: 100vh;
+    height: 0vh;
     display: flex;
     flex-direction: column;
-    position: relative;
-    z-index: 5;
-
-    background: rgba(42, 39, 39, 0.65);
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
     justify-content: center;
     align-items: center;
+    overflow: hidden;
+    z-index: 3;
+    animation: showModal 1s forwards;
+    @keyframes showModal {
+        100% {
+            height: 100vh;
+        }
+    }
 `;
 /**2023/05/23 - 플레이리스트 음원추가 모달창 - 박수범 */
 const PlaylistModal = styled.div`
@@ -494,37 +502,34 @@ const PlaylistModal = styled.div`
     flex-direction: column;
     border-radius: 10px;
     @media (max-width: 700px) {
-        width: 350px;
-        height: 460px;
+        width: 400px;
+        height: 560px;
     }
-    background: rgba(12, 11, 11, 0.55);
     > button {
         cursor: pointer;
-        z-index: 3;
     }
 `;
 const Exitbox = styled.div`
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
     display: flex;
     justify-content: center;
     align-items: center;
     bottom: 0px;
     left: 0px;
-    width: 30px;
-    height: 30px;
-    font-size: 20px;
-    border-radius: 100px;
-    color: rgba(199, 68, 68, 1);
+    width: 60px;
+    height: 60px;
+    font-size: 10px;
+    color: #ccc;
     text-align: center;
-    border: 2px solid rgba(199, 68, 68, 1);
+    font-size: 2rem;
+    border: 2px solid #ccc;
+
     cursor: pointer;
-    @media (max-width: 700px) {
-        width: 30px;
-        height: 20px;
-        font-size: 1rem;
-    }
     z-index: 3;
     :hover {
-        color: #ccc;
-        border-color: #ccc;
+        color: rgba(199, 68, 68, 1);
+        border-color: rgba(199, 68, 68, 1);
     }
 `;

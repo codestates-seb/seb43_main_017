@@ -1,8 +1,8 @@
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { AiFillHeart } from 'react-icons/ai';
-import { BsMusicPlayer, BsPlayCircle, BsPlusSquare } from 'react-icons/bs';
-import { CiMenuKebab } from 'react-icons/ci';
+import { TfiMenu } from 'react-icons/tfi';
+import { RiFolderMusicFill, RiPencilFill, RiDeleteBin5Line } from 'react-icons/ri';
 import {
     modalState,
     myplaylistState,
@@ -45,7 +45,6 @@ const Myplaylist = () => {
             });
     }, [update, updateModify, currentPage]);
 
-
     /* 2023.05.22 마이플레이리스트 삭제 */
     const handleDeletePlaylist = (playlistId: number) => {
         axios
@@ -75,21 +74,24 @@ const Myplaylist = () => {
     const handleModfiyState = (id: number) => {
         setModifyState(true);
         setModifyDataState(id);
+        setUpdate(!update);
     };
 
     return (
         <PlayListContainer>
             <MyplaylistTitle>
                 <div className="play-icon">
-                    <BsMusicPlayer />
+                    <RiFolderMusicFill className="color-blue" />
                     <p>MY PLAYLIST</p>
-                    <li>
-                        <BsPlusSquare
+                    <span>
+                        <button
                             onClick={() => {
                                 setPlayListState(true);
                             }}
-                        />
-                    </li>
+                        >
+                            생성하기
+                        </button>
+                    </span>
                 </div>
                 <Pagination>
                     <button disabled={currentPage === 1} onClick={handlePrevPage}>
@@ -104,32 +106,30 @@ const Myplaylist = () => {
 
             {myplaylistData.map((data) => (
                 <PlaylistList key={data.playListId}>
-                    <img src={data.coverImg} alt="musicimg" />
-                    <li>{data.title}</li>
-                    <div className="playlist-vote-icon">
+                    <Link to={`/playlsit/${data.playListId}`}>
+                        <img src={data.coverImg} alt="musicimg" />
+                        <span className="playlist-title">{data.title}</span>
+                    </Link>
+                    <div className="playlist-vote-icon box-size">
                         <AiFillHeart />
                         {data.likeCount}
                     </div>
-                    <div className="playlist-button">
-                        <Link to={`/playlsit/${data.playListId}`}>
-                            <BsPlayCircle className="color-blue" />
-                        </Link>
-                    </div>
                     <div
-                        className="playlist-menu"
+                        className="playlist-menu box-size"
                         onClick={() => {
                             setSelectedPlaylistId(data.playListId);
                             setShowModal(!showModal);
                         }}
                     >
-                        <CiMenuKebab />
+                        <TfiMenu className="color-gray" />
                         {selectedPlaylistId === data.playListId && showModal && (
                             <ModalContainer>
-                                <ModalButtons>
-                                    <Button onClick={() => handleModfiyState(data.playListId)}>수정</Button>
-
-                                    <Button onClick={() => handleDeletePlaylist(data.playListId)}>삭제</Button>
-                                </ModalButtons>
+                                <Button onClick={() => handleModfiyState(data.playListId)}>
+                                    <RiPencilFill />
+                                </Button>
+                                <Button onClick={() => handleDeletePlaylist(data.playListId)}>
+                                    <RiDeleteBin5Line />
+                                </Button>
                             </ModalContainer>
                         )}
                     </div>
@@ -145,75 +145,95 @@ const PlayListContainer = styled.div`
     width: 400px;
     height: 280px;
     align-items: center;
-    margin-top: 40px;
-    @media screen and (max-width: 722px) {
-        width: 400px;
-        margin: 0;
-        margin-top: 50px;
-        margin-left: 30px;
-    }
+    margin-top: 20px;
 `;
-
 /* 2023.05.10 Like Music 타이틀 컴포넌트 - 홍혜란 */
 const MyplaylistTitle = styled.div`
     display: flex;
     align-items: center;
     flex-direction: row;
     justify-content: space-between;
-    margin-bottom: 10px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 700;
+    color: #ccc;
+    margin-bottom: 20px;
 
     .play-icon {
         display: flex;
+        justify-content: center;
         align-items: center;
         font-size: 16px;
-        color: rgb(41, 55, 255);
-        padding-top: 5px;
-    }
-
-    p {
-        font-size: 16px;
-        color: #ffffff;
-        margin-left: 5px;
-    }
-
-    li {
-        display: flex;
-        align-items: center;
-        color: white;
-        margin-left: 8px;
+        color: #fff;
+        > * {
+            margin-right: 8px;
+        }
+        .color-blue {
+            color: #4869ff;
+        }
+        button {
+            width: 60px;
+            height: 20px;
+            background: #4869ff;
+            border: none;
+            color: #ffffff;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            transition: 0.1s ease-in-out;
+            :hover {
+                background: #6985ff;
+            }
+        }
     }
 `;
-
 const PlaylistList = styled.div`
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     background: rgba(43, 43, 43, 0.8);
-    margin-top: 20px;
+    margin-top: 10px;
     width: 400px;
+    height: 50px;
 
+    > * {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        color: #ccc;
+        font-family: 'Noto Sans KR';
+        font-size: 0.8rem;
+    }
+    a {
+        text-decoration: none;
+    }
     img {
         width: 50px;
         height: 50px;
+        border-radius: 0px 10px 10px 0px;
     }
 
-    li {
-        font-size: 12px;
-        color: white;
+    .color-gray {
+        color: rgba(255, 255, 255, 0.3);
+        :hover {
+            color: rgba(255, 255, 255, 0.7);
+        }
     }
-
-    li:nth-child(3) {
-        font-size: 10px;
+    .box-size {
+        width: 50px;
     }
-
+    .playlist-title {
+        padding-left: 20px;
+    }
     .playlist-vote-icon {
         font-size: 12px;
         color: rgb(245, 109, 109);
         display: flex;
         align-items: center;
         justify-content: center;
+        > * {
+            margin: 7px;
+        }
     }
-
     .playlist-button {
         font-size: 16px;
         color: #6e9cff;
@@ -226,48 +246,54 @@ const PlaylistList = styled.div`
             transition: 0.2s ease-in-out;
         }
     }
-
     .playlist-menu {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         font-size: 16px;
         color: white;
         display: flex;
         align-items: center;
         justify-content: center;
     }
-    @media screen and (max-width: 1000px) {
-        width: 400px;
-        margin: 0;
-        margin-top: 20px;
-    }
 `;
-
 /* 2023.05.16 마이플레이리스트 메뉴 모달 컴포넌트 - 홍혜란 */
 const ModalContainer = styled.div`
-    position: fixed;
-    width: 100%;
-    height: 100%;
+    position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: 30px;
-`;
+    left: 40px;
+    width: 50px;
+    height: 30px;
+    background: #414141;
+    border-radius: 0.4em;
 
-/* 2023.05.16 마이플레이리스트 메뉴 모달 버튼 컴포넌트 - 홍혜란 */
-const ModalButtons = styled.div`
-    display: flex;
-    flex-direction: column;
+    :after {
+        content: '';
+        position: absolute;
+        left: 2px;
+        top: 50%;
+        width: 0;
+        height: 0;
+        border: 0.469em solid transparent;
+        border-right-color: #414141;
+        border-left: 0;
+        margin-top: -0.469em;
+        margin-left: -0.469em;
+    }
 `;
-
 /* 2023.05.16 마이플레이리스트 메뉴 모달 버튼 컴포넌트 - 홍혜란 */
 const Button = styled.button`
-    margin-left: 10px;
-    background-color: rgba(43, 43, 43, 0.8);
+    background: none;
+    color: #ccc;
     border: none;
-    color: white;
     font-size: 10px;
-    padding: 5px;
+    :hover {
+        color: #4869ff;
+    }
 `;
-
 const Pagination = styled.div`
     button {
         color: #ccc;
