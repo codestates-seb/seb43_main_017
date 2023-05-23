@@ -4,20 +4,15 @@ import { useState } from 'react';
 
 const AddListMusic = () => {
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
-    // const [coverImg, setCoverImg] = useState<File | null>(null);
     const [title, setTitle] = useState<string>('');
     const [body, setBody] = useState<string>('');
     const [coverImg, setCoverImg] = useState<string>('');
 
     /* 2023.05.21 마이플레이리스트 생성 요청 - 홍혜란 */
     const MyplaylistCreate = () => {
-        // const formData = new FormData();
-        // formData.append('title', title);
-        // formData.append('body', body);
-        // formData.append('coverImg', coverImg as File);
         axios
             .post(
-                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists`,
+                `${process.env.REACT_APP_API_URL}/playlists`,
                 {
                     title: title,
                     body: body,
@@ -29,9 +24,7 @@ const AddListMusic = () => {
                     },
                 },
             )
-            .then((response) => {
-                console.log(response);
-                // setCoverImg(null);
+            .then(() => {
                 setCoverImg('');
                 setTitle('');
                 setBody('');

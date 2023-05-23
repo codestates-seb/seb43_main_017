@@ -31,14 +31,11 @@ const Myplaylist = () => {
     /** 2023.05.22 마이플레이리스트 조회 */
     useEffect(() => {
         axios
-            .get(
-                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/member-playlist?&page=${currentPage}&size=3`,
-                {
-                    headers: {
-                        Authorization: token,
-                    },
+            .get(`${process.env.REACT_APP_API_URL}/playlists/member-playlist?&page=${currentPage}&size=3`, {
+                headers: {
+                    Authorization: token,
                 },
-            )
+            })
             .then((response) => {
                 setMyplaylistData(response.data.data);
                 setTotalPages(response.data.pageInfo.totalPages);
@@ -51,7 +48,7 @@ const Myplaylist = () => {
     /* 2023.05.22 마이플레이리스트 삭제 */
     const handleDeletePlaylist = (playlistId: number) => {
         axios
-            .delete(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/${playlistId}`, {
+            .delete(`${process.env.REACT_APP_API_URL}/playlists/${playlistId}`, {
                 headers: {
                     Authorization: token,
                 },
