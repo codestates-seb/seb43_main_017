@@ -165,6 +165,7 @@ const PlaylistList = styled.div`
     justify-content: space-between;
     background: rgba(43, 43, 43, 0.8);
     margin-top: 20px;
+    width: 400px;
     cursor: pointer;
     &:hover {
         background-color: rgba(181, 179, 179, 0.5);
