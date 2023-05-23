@@ -495,11 +495,15 @@ const PlaylistContainer = styled.div`
 const PlaylistModal = styled.div`
     justify-content: center;
     align-items: center;
-    width: 500px;
-    height: 700px;
+    width: 450px;
+    height: 600px;
     display: flex;
     flex-direction: column;
-
+    border-radius: 10px;
+    @media (max-width: 700px) {
+        width: 400px;
+        height: 560px;
+    }
     background: rgba(12, 11, 11, 0.55);
     > button {
         cursor: pointer;
@@ -512,13 +516,18 @@ const Exitbox = styled.div`
     align-items: center;
     bottom: 0px;
     left: 0px;
-    width: 50px;
-    height: 50px;
-    font-size: 2rem;
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
     color: rgba(199, 68, 68, 1);
     text-align: center;
     border: 2px solid rgba(199, 68, 68, 1);
     cursor: pointer;
+    @media (max-width: 700px) {
+        width: 30px;
+        height: 20px;
+        font-size: 1.2rem;
+    }
     z-index: 3;
     :hover {
         color: #ccc;
