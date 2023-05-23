@@ -24,6 +24,7 @@ const LikeMusic = () => {
     const buttonArray = [];
     const [likedMusic, setLikedMusic] = useState<LikeMusicList[]>([]);
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
+    const [update, setUpdate] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchLikedMusic = () => {
@@ -46,7 +47,7 @@ const LikeMusic = () => {
         };
 
         fetchLikedMusic();
-    }, [setLikedMusic, currentPage]);
+    }, [setLikedMusic, currentPage, update]);
 
     /** 2023.05.17 전체 페이지 수 만큼 버튼 생성 - 김주비*/
     for (let i = 1; i <= totalPages; i++) {
@@ -69,28 +70,27 @@ const LikeMusic = () => {
         setCurrentPage(currentPage - 1);
     };
 
-    // const [like, setLike] = useState<boolean>(false);
-
-    // const handleLike = (musicId: number) => {
-    //     axios
-    //         .post(
-    //             `${process.env.REACT_APP_API_URL}/music-like/toggle`,
-    //             {
-    //                 musicId: musicId,
-    //             },
-    //             {
-    //                 headers: {
-    //                     Authorization: token,
-    //                 },
-    //             },
-    //         )
-    //         .then((response) => {
-    //             setLike(typeof response.data.musicLikeId === 'number');
-    //         })
-    //         .catch((err) => {
-    //             console.log(err);
-    //         });
-    // };
+    const handleLike = (musicId: number) => {
+        axios
+            .post(
+                `${process.env.REACT_APP_API_URL}/music-like/toggle`,
+                {
+                    musicId: musicId,
+                },
+                {
+                    headers: {
+                        Authorization: token,
+                    },
+                },
+            )
+            .then((res) => {
+                console.log(res.data);
+                setUpdate(!update);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
 
     return (
         <LikeContainer>
@@ -103,7 +103,7 @@ const LikeMusic = () => {
                     <button disabled={currentPage === 1} onClick={handlePrevPage}>
                         Prev
                     </button>
-                    {buttonArray}
+                    <button>{currentPage}</button>
                     <button disabled={currentPage === totalPages} onClick={handleNextPage}>
                         Next
                     </button>
@@ -114,8 +114,12 @@ const LikeMusic = () => {
                     <img src={likedata.albumCoverImg} alt={likedata.musicName} />
                     <li>{likedata.musicName}</li>
                     <li>{likedata.artistName}</li>
-                    <li>{likedata.albumName}</li>
-                    <div className="music-icon">
+                    <div
+                        className="music-icon"
+                        onClick={() => {
+                            handleLike(likedata.musicId);
+                        }}
+                    >
                         <HiHeart />
                         {/* {like ? (
                             <HiOutlineHeart onClick={() => handleLike(likedata.musicId)} className="color-red" />

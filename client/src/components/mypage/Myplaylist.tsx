@@ -61,20 +61,6 @@ const Myplaylist = () => {
             });
     };
 
-    /** 2023.05.17 전체 페이지 수 만큼 버튼 생성 - 김주비*/
-    for (let i = 1; i <= totalPages; i++) {
-        buttonArray.push(
-            <button
-                key={i}
-                className={i === currentPage ? 'page-focused' : ''}
-                onClick={() => {
-                    setCurrentPage(i);
-                }}
-            >
-                {i}
-            </button>,
-        );
-    }
     const handleNextPage = () => {
         setCurrentPage(currentPage + 1);
     };
@@ -107,7 +93,7 @@ const Myplaylist = () => {
                     <button disabled={currentPage === 1} onClick={handlePrevPage}>
                         Prev
                     </button>
-                    {buttonArray}
+                    <button>{currentPage}</button>
                     <button disabled={currentPage === totalPages} onClick={handleNextPage}>
                         Next
                     </button>
