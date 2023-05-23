@@ -35,7 +35,7 @@ const Categories = ({ showSearchResult }: CategoryProps) => {
     }
 
     useEffect(() => {
-        axios.get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/tags`).then(function (res) {
+        axios.get(`${process.env.REACT_APP_API_URL}/tags`).then(function (res) {
             const tags = res.data;
             const filteredTags = tags.filter((tag: tag) => tag.category === 'FEEL');
             const filteredGenre = tags.filter((tag: tag) => tag.category === 'GENRE');

@@ -24,7 +24,7 @@ const Trending = () => {
     useEffect(() => {
         if (token) {
             axios
-                .get('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/musics/recommend', {
+                .get(`${process.env.REACT_APP_API_URL}/members/musics/recommend`, {
                     headers: {
                         Authorization: token,
                     },
@@ -38,7 +38,7 @@ const Trending = () => {
                 });
         } else {
             axios
-                .get('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics?&size=6')
+                .get(`${process.env.REACT_APP_API_URL}/musics?&size=6`)
                 .then((response) => {
                     setTranding(response.data.data);
                     setIsLoding(false);
