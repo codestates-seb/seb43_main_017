@@ -14,7 +14,6 @@ const AddListMusic = () => {
 
     /* 2023.05.21 마이플레이리스트 생성 요청 - 홍혜란 */
     const MyplaylistCreate = () => {
-
         if (body.length === 0 || title.length === 0) {
             alert('플레이리스트의 이름과 내용을 모두 작성해주시기 바랍니다.');
         } else {
@@ -47,7 +46,6 @@ const AddListMusic = () => {
                     alert('플레이리스트 생성에 실패했습니다.');
                 });
         }
-
     };
 
     return (
