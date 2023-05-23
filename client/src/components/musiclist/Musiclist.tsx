@@ -27,7 +27,7 @@ const Musiclist = () => {
     /* 2023.05.21 서치 결과에 따른 뮤직리스트 출력 */
     const showSearchResult = (searchText: string) => {
         axios
-            .get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/search-by-keyword`, {
+            .get(`${process.env.REACT_APP_API_URL}/musics/search-by-keyword`, {
                 params: {
                     keyword: searchText,
                     page: currentPage,
@@ -52,7 +52,7 @@ const Musiclist = () => {
 
     useEffect(() => {
         axios
-            .get<MusicDataResponse>(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/${url}`)
+            .get<MusicDataResponse>(`${process.env.REACT_APP_API_URL}/${url}`)
             .then((response) => {
                 if (tagSearch) {
                     setMusicDataList(response.data.content);
