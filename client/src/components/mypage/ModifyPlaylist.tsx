@@ -4,11 +4,10 @@ import { VscClose } from 'react-icons/vsc';
 import { useRecoilState } from 'recoil';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { titleState, bodyState, myplaylistState, modifyClickState, musicDataListState } from 'src/recoil/Atoms';
+import { titleState, bodyState, modifyClickState, musicDataListState, UpdataModify } from 'src/recoil/Atoms';
 import { ModifyTargetData } from 'src/types/myplaylist';
 
 function ModifyPlaylist() {
-    const [myplaylistData, setMyplaylistData] = useRecoilState(myplaylistState);
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
     const [musicDataList, setMusicDataList] = useRecoilState(musicDataListState);
     const [update, setUpdate] = useState<boolean>(false);
@@ -17,7 +16,8 @@ function ModifyPlaylist() {
     const [body, setBody] = useRecoilState(bodyState);
     const [isEditing, setIsEditing] = useState(false);
     const [modifyTarget, setModifyTarget] = useState<ModifyTargetData | undefined>();
-    // const [UpdateState, setUpdateState] = useRecoilState(UpdataModify);
+
+    const [UpdateState, setUpdateState] = useRecoilState(UpdataModify);
 
     /** 2023.05.22  마이플레이리스트 단일 조회 요청 - 홍혜란 */
     useEffect(() => {
@@ -34,7 +34,7 @@ function ModifyPlaylist() {
                 )
                 .then((response) => {
                     setModifyTarget(response.data.data);
-                    // setUpdateState(!UpdateState);
+                    setUpdateState(!UpdateState);
                     console.log(response.data.data);
                 })
                 .catch((error) => {
@@ -99,9 +99,7 @@ function ModifyPlaylist() {
                 },
             )
             .then((response) => {
-                // setMyplaylistData([...myplaylistData, response.data.data]);
                 setUpdate(!update);
-                window.location.reload();
                 console.log('서버 응답:', response.data);
             })
             .catch((error) => {
