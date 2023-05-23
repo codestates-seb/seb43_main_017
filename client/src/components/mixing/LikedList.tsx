@@ -3,7 +3,7 @@ import { HiHeart } from 'react-icons/hi';
 import { AiOutlinePlus } from 'react-icons/ai';
 import axios from 'axios';
 import { useEffect, useState, RefObject } from 'react';
-import { useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { showSearch } from 'src/recoil/Atoms';
 import { MdTransitEnterexit, MdArrowLeft, MdArrowRight } from 'react-icons/md';
 import { Link } from 'react-router-dom';
@@ -28,7 +28,7 @@ interface LikedListProps {
     setAudioSelect: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const LikedList = ({ audioRef, setAudioSelect }: LikedListProps) => {
-    const [ShowSearch, setShowSearch] = useRecoilState<boolean>(showSearch); //모버일버전 좋아요 음악리스트 닫기
+    const setShowSearch = useSetRecoilState<boolean>(showSearch); //모버일버전 좋아요 음악리스트 닫기
     const [emptyList, setEmptyList] = useState<boolean>(false); //좋아요한 음악이 있는지 없는지 여부
     const [MusicTitle, setMusicTitle] = useState<string>(''); //현재 삽입된 오디오 제목
     const [currentMusic, setCurrentMusic] = useState<boolean>(false); // 선택된 음악인지 판단하는 값
