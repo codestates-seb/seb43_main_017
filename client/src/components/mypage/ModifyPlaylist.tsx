@@ -71,7 +71,7 @@ function ModifyPlaylist() {
     };
 
     const handleLeave = () => {
-        setIsEditing(true);
+        setIsEditing(false);
     };
 
     /* 2023.05.22 모디파이 플레이리스트 이름, 코멘트 수정 요청 */
@@ -123,10 +123,14 @@ function ModifyPlaylist() {
             </div>
             <ModiCointainer>
                 <ModifyList>
-                    <Plcard onClick={handleLeave}>
+                    <Plcard>
                         {modifyTarget && (
                             <div className="back-img">
-                                <img src={modifyTarget.coverImg} alt={modifyTarget.createMember} />
+                                <img
+                                    src={modifyTarget.coverImg}
+                                    alt={modifyTarget.createMember}
+                                    onClick={handleLeave}
+                                />
                                 <div className="pl-contents">
                                     <Pluser>
                                         <span>WTITER</span>
