@@ -80,12 +80,11 @@ function Mypage() {
                     </UserProfile>
 
                     <MusicInfor>
-                        <LeftContainer>
+                        <section>
                             <LikeMusic /> {/* like music 파일 */}
                             <Myplaylist /> {/* my playlist 파일 */}
-                        </LeftContainer>
-
-                        <RightContainer>{modifyPlaylistState && <ModifyPlaylist />}</RightContainer>
+                        </section>
+                        <section>{modifyPlaylistState && <ModifyPlaylist />}</section>
                     </MusicInfor>
                 </MypageListContainer>
             </MypageContainer>
@@ -101,7 +100,7 @@ const MypageContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: auto;
+    overflow-x: hidden;
 `;
 /**2023-05-06 ScaleOver 되는 백그라운드 애니메이션 - 김주비 */
 const BackgroundCover = styled.div`
@@ -121,21 +120,30 @@ const BackgroundCover = styled.div`
             transform: scale(1.3);
         }
     }
+    @media screen and (max-width: 700px) {
+        display: none;
+    }
 `;
 const MypageListContainer = styled.div`
-    align-items: center;
+    display: flex;
+    flex-direction: column;
+    width: 900px;
     z-index: 1;
-    /* border: 1px solid red; */
+    @media screen and (max-width: 1200px) {
+        margin-top: 700px;
+        width: 400px;
+    }
+    @media screen and (max-width: 700px) {
+        z-index: 0;
+    }
 `;
 /* 2023.05.06 유저 프로필사진 컴포넌트 - 홍헤란 */
 const UserProfile = styled.div`
-    display: flex;
-    align-items: flex-start;
-
+    width: 100%;
+    margin-bottom: 40px;
     div {
         display: flex;
     }
-
     .user-profile {
         img {
             width: 130px;
@@ -143,11 +151,6 @@ const UserProfile = styled.div`
             border-radius: 50%;
             border: 3px solid linear-gradient(to right, #ff00bf, blue) 1;
         }
-    }
-    @media screen and (max-width: 1000px) {
-        margin-left: 30px;
-        margin-top: 600px;
-        width: 400px;
     }
 `;
 /* 2023.05.06 유저의 이름 / 이메일 컴포넌트 구현 - 홍혜란 */
@@ -174,28 +177,15 @@ const UserContainer = styled.div`
         color: rgba(255, 255, 255, 0.5);
         font-weight: 300;
     }
-
-    @media screen and (max-width: 1000px) {
-        margin-left: 0;
-        margin-top: 20px;
-    }
 `;
 const MusicInfor = styled.div`
-    position: relative;
+    width: 100%;
     display: flex;
-    align-items: center;
     flex-direction: row;
-    @media screen and (max-width: 1000px) {
+    justify-content: space-between;
+    @media screen and (max-width: 1200px) {
         flex-direction: column;
     }
-`;
-const LeftContainer = styled.div`
-    width: 500px;
-    height: 600px;
-`;
-const RightContainer = styled.div`
-    width: 500px;
-    height: 600px;
 `;
 /**2023/05/23 - 플레이리스트 음원 추가 컨테이너 - 박수범 */
 const PlaylistContainer = styled.div`
@@ -210,9 +200,8 @@ const PlaylistContainer = styled.div`
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    z-index: 5;
+    z-index: 3;
     animation: showModal 1s forwards;
-
     @keyframes showModal {
         100% {
             height: 100vh;

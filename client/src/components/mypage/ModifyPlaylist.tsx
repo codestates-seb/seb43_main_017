@@ -1,11 +1,11 @@
 import styled from 'styled-components';
-import { BsPencilSquare } from 'react-icons/bs';
-import { VscClose } from 'react-icons/vsc';
+import { RiPencilRuler2Fill, RiDeleteBack2Line } from 'react-icons/ri';
 import { useRecoilState } from 'recoil';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { titleState, bodyState, modifyClickState, musicDataListState, UpdataModify } from 'src/recoil/Atoms';
 import { ModifyTargetData } from 'src/types/myplaylist';
+import { Link } from 'react-router-dom';
 
 function ModifyPlaylist() {
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
@@ -116,9 +116,7 @@ function ModifyPlaylist() {
     return (
         <ModifyContainer>
             <div className="modify-title">
-                <div className="pencil-icon">
-                    <BsPencilSquare />
-                </div>
+                <RiPencilRuler2Fill className="pencil-icon" />
                 <p>MODIFY PLAYLIST</p>
             </div>
             <ModiCointainer>
@@ -143,14 +141,16 @@ function ModifyPlaylist() {
                                             <div>
                                                 <input
                                                     type="text"
+                                                    defaultValue={modifyTarget.title}
                                                     value={title}
                                                     onChange={handleTitleChange}
-                                                    onKeyPress={handleKeyPress}
+                                                    onKeyDown={handleKeyPress}
                                                 />
                                                 <textarea
+                                                    defaultValue={modifyTarget.body}
                                                     value={body}
                                                     onChange={handleBodyChange}
-                                                    onKeyPress={handleKeyPress}
+                                                    onKeyDown={handleKeyPress}
                                                 />
                                             </div>
                                         ) : (
@@ -166,16 +166,23 @@ function ModifyPlaylist() {
                     </Plcard>
                     <PlyList>
                         {Array.isArray(musicDataList) &&
-                            musicDataList.map((musicData) => (
-                                <div className="plyItem" key={musicData.musicId}>
-                                    <img src={musicData.albumCoverImg} alt={musicData.musicName} />
-                                    <span>{musicData.musicName}</span>
-                                    <span>{musicData.artistName}</span>
-                                    <span>{musicData.albumName}</span>
-                                    <span>
-                                        <VscClose onClick={() => handleDeletePlaylist(musicData.musicId)} />
-                                    </span>
-                                </div>
+                            musicDataList.map((musicData, index) => (
+                                <ul className="plyItem" key={musicData.musicId}>
+                                    <li className="index-number mini-size">{index + 1}</li>
+                                    <li className="coverImg mini-size">
+                                        <Link to={`/musiclist/${musicData.musicId}`}>
+                                            <img src={musicData.albumCoverImg} alt={musicData.musicName} />
+                                        </Link>
+                                    </li>
+                                    <li className="music-name">
+                                        <p>{musicData.musicName}</p>
+                                        <p>{musicData.artistName}</p>
+                                    </li>
+
+                                    <li className="mini-size delete-btn">
+                                        <RiDeleteBack2Line onClick={() => handleDeletePlaylist(musicData.musicId)} />
+                                    </li>
+                                </ul>
                             ))}
                     </PlyList>
                 </ModifyList>
@@ -188,35 +195,29 @@ export default ModifyPlaylist;
 
 /* 2023.05.12 플레이리스트 수정 박스 컴포넌트 구현 - 홍혜란 */
 const ModifyContainer = styled.div`
-    align-items: center;
-    margin: 30px;
     opacity: 0;
     transform: translateX(-20px);
-    animation: slideIn 1s ease-in-out forwards;
+    animation: slideIn 1s forwards;
     width: 400px;
 
     .modify-title {
         display: flex;
         align-items: center;
-        margin-bottom: 15px;
-
+        margin-bottom: 20px;
+        font-family: 'Noto Sans KR', sans-serif;
+        font-weight: 700;
         .pencil-icon {
             font-size: 16px;
-            color: hsl(154, 100%, 40%);
+            color: hsl(154.15384615384616, 57.01754385964912%, 55.294117647058826%);
             padding-top: 5px;
         }
-
         p {
-            font-size: 16px;
+            font-size: 1rem;
             color: #ffffff;
             margin-left: 5px;
         }
     }
     @keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateX(-20px);
-        }
         to {
             opacity: 1;
             transform: translateX(0);
@@ -237,27 +238,20 @@ const ModifyList = styled.div`
 /**2023-05-06 플리 슬라이드 카드 섹션 : 김주비 */
 const Plcard = styled.div`
     position: relative;
-    width: 450px;
-    height: 200px;
+    width: 400px;
+    height: 150px;
     border-radius: 20px 20px 0 0;
     background-size: cover;
     color: #ddd;
     overflow: hidden;
 
     .back-img {
-        z-index: 1;
+        background-color: #000;
         img {
-            width: 450px;
+            width: 400px;
             height: 200px;
-            filter: blur(5px);
+            opacity: 0.4;
         }
-    }
-
-    .pl-treck {
-        position: absolute;
-        top: 30px;
-        right: 30px;
-        font-weight: 600;
     }
     .pl-contents {
         position: absolute;
@@ -268,6 +262,7 @@ const Plcard = styled.div`
             display: flex;
             flex-direction: column;
             margin-top: 10px;
+            color: #ccc;
         }
     }
     input {
@@ -300,13 +295,12 @@ const Plcard = styled.div`
 const Pluser = styled.div`
     margin-top: 20px;
     font-size: 0.8rem;
-    color: #000000;
     > span {
         margin-right: 15px;
     }
     span:nth-child(2n + 1) {
         font-weight: 800;
-        color: #ff8716;
+        color: #ff4545;
     }
 `;
 /**2023-05-06 슬라이드 텍스트 : 김주비 */
@@ -318,7 +312,6 @@ const Pltext = styled.div`
         margin-top: 10px;
     }
     span:nth-child(1) {
-        color: #000000;
         letter-spacing: -0.5px;
         font-size: 1.6rem;
         min-width: 103%;
@@ -326,12 +319,11 @@ const Pltext = styled.div`
         font-weight: 600;
     }
     span:nth-child(2) {
-        margin-top: 20px;
+        margin-top: 5px;
         line-height: 140%;
         opacity: 0.5;
         width: 80%;
         font-size: 0.7rem;
-        color: #000000;
     }
     @media (max-width: 600px) {
         span:nth-child(1) {
@@ -345,38 +337,59 @@ const PlyList = styled.div`
     display: flex;
     flex-direction: column;
     background-color: #272727;
-    width: 450px;
-    height: 300px;
+    width: 400px;
+    height: 320px;
     overflow: auto;
     border-radius: 0 0 20px 20px;
+    margin-bottom: 100px;
 
     .plyItem {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        border-bottom: 1px solid hsl(0, 0%, 65%);
-        padding: 15px;
-
-        img {
-            width: 30px;
-            height: 30px;
-            border-radius: 10%;
+        justify-content: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        width: 100%;
+        height: 50px;
+        color: #ccc;
+        font-size: 0.8rem;
+        font-family: 'Noto Sans KR', sans-serif;
+        > li {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+        .mini-size {
+            width: 40px;
+            padding: 10px;
+        }
+        .index-number {
+            font-weight: 700;
+            font-size: 1.2rem;
+            width: 50px;
         }
 
-        span {
-            font-size: 14px;
-            color: white;
+        .coverImg {
+            img {
+                width: 30px;
+                height: 30px;
+                border-radius: 10%;
+            }
         }
-
-        li:nth-child(2) {
-            font-weight: bold;
+        .delete-btn:hover {
+            color: rgb(255, 68, 68);
         }
-        li:nth-child(n + 3):nth-child(-n + 4) {
-            color: hsl(0, 0%, 72%);
+        .music-name {
+            flex-direction: column;
+            align-items: start;
+            width: 100%;
+            text-align: left;
+            p {
+                margin: 2px 10px;
+                :nth-child(2) {
+                    color: #666;
+                }
+            }
         }
-    }
-    @media screen and (max-width: 1000px) {
-        width: 400px;
-        margin: 0;
     }
 `;
