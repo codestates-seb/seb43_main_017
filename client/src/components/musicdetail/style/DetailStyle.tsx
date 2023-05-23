@@ -85,7 +85,7 @@ export const MusicContents = styled.article`
     }
     @keyframes ascendText {
         100% {
-            transform: translateY(0px);
+            transform: translateY(-2px);
         }
     }
     @keyframes ascendText2 {
@@ -134,6 +134,7 @@ export const MusicTitle = styled.div`
     font-weight: 700;
     overflow: hidden;
     span {
+        font-family: 'Noto Sans KR', sans-serif;
         transform: translateY(100px);
         animation: ascendText 2s forwards 0.5s;
     }
@@ -151,6 +152,7 @@ export const MusicInfo = styled.ul`
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    font-family: 'Noto Sans KR', sans-serif;
 
     li {
         margin-right: 20px;
@@ -171,13 +173,14 @@ export const MusicInfo = styled.ul`
 /**2023-05-09 사이드 텍스트 : 김주비 */
 export const MusicText = styled.div`
     display: flex;
-    font-size: 13px;
+    font-size: 1rem;
     line-height: 150%;
     width: 600px;
     height: 40px;
     overflow-x: hidden;
     padding-right: 30px;
     opacity: 0;
+    font-family: 'Noto Sans KR', sans-serif;
     animation: fadeinText 2s forwards 1.5s;
     span {
         text-align: center;
