@@ -8,6 +8,7 @@ import {
     showDownloadState,
     musicIdState,
     playlistCommentState,
+    playingMusic,
 } from 'src/recoil/Atoms';
 import { musicdetail } from 'src/types/Slider';
 import CommentViewer from 'src/components/musicdetail/CommentViewer';
@@ -18,8 +19,8 @@ import {
     DetailSection,
     AlbumRecode,
     MusicContents,
-    // MusicTags,
     MusicTitle,
+    Lodingbar,
     MusicInfo,
     MusicText,
 } from 'src/components/musicdetail/style/DetailStyle';
@@ -30,7 +31,7 @@ function MusicDetail() {
     sessionStorage.setItem('musicId', String(msId.msId));
     sessionStorage.setItem('onPlaylist', 'false');
     const [commentOpen] = useRecoilState<boolean>(commentOpenState);
-    // const [, setSoundbarOpen] = useRecoilState<boolean>(soundbarOpenState);
+    const [playingDots] = useRecoilState<boolean>(playingMusic);
     const [, setShowDownlaod] = useRecoilState<boolean>(showDownloadState);
     const [, setPlaylistComment] = useRecoilState<boolean>(playlistCommentState);
     const [formattedTime, setFormattedTime] = useState<number>(0);
@@ -84,11 +85,11 @@ function MusicDetail() {
             <PlaylistBackground url={msDetailData.albumCoverImg}></PlaylistBackground>
             <DetailSection>
                 <AlbumRecode url={msDetailData.albumCoverImg}>
-                    {/* <MusicTags>
-                        {msDetailData.musicTagName.map((tag) => (
-                            <li>{tag}</li>
+                    <Lodingbar>
+                        {[...Array(5)].map((_, index) => (
+                            <li className={playingDots ? `sec-${index}` : ''}></li>
                         ))}
-                    </MusicTags> */}
+                    </Lodingbar>
                 </AlbumRecode>
                 <MusicContents>
                     <MusicTitle>

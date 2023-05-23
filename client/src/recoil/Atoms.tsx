@@ -124,3 +124,13 @@ export const tagSreachState = atom({
     key: 'tagSreachState',
     default: '',
 });
+
+export const playingMusic = atom({
+    key: 'playingMusic',
+    default: true,
+});
+
+export const playlistViewerState = atom({
+    key: 'playlistViewerState',
+    default: false,
+});
