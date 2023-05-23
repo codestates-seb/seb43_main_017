@@ -4,13 +4,13 @@ import Trending from './Trending';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import axios from 'axios';
-import { showSearch } from 'src/recoil/Atoms';
 import Sideicon from 'src/components/musiclist/SideIcon';
 import { BiSearch } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
 import { MusicDataResponse } from 'src/types/Musiclist';
-import { musicDataListState } from 'src/recoil/Atoms';
+import { musicDataListState, playListModalState, showSearch } from 'src/recoil/Atoms';
 import Loding from 'src/pages/Loding';
+import AddListMusic from './AddListMusic';
 
 const Musiclist = () => {
     const [musicDataList, setMusicDataList] = useRecoilState(musicDataListState);
@@ -18,6 +18,7 @@ const Musiclist = () => {
     const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
     const [totalPages, setTotalPages] = useState<number>(0); // 전체 페이지 수
     const [openSearch, setOpenSearch] = useRecoilState<boolean>(showSearch);
+    const [openPlayList, setOpenPlayList] = useRecoilState<boolean>(playListModalState);
     const [tapClick, setTapClick] = useState<string>('musics');
     const buttonArray = [];
 
@@ -109,6 +110,14 @@ const Musiclist = () => {
     return (
         <Container>
             <BackgroundCover></BackgroundCover>
+            {openPlayList && (
+                <PlaylistContainer>
+                    <PlaylistModal>
+                        <AddListMusic />
+                        <Exitbox onClick={() => setOpenPlayList(false)}>x</Exitbox>
+                    </PlaylistModal>
+                </PlaylistContainer>
+            )}
             <MusiclistContainer>
                 <TagContainer className={openSearch ? 'open-search' : ''}>
                     <Categories showSearchResult={showSearchResult} showTagSearchResult={showTagSearchResult} />
@@ -469,5 +478,50 @@ const SearchOpen = styled.div`
     }
     @media (min-width: 700px) {
         display: none;
+    }
+`;
+/**2023/05/23 - 플레이리스트 음원 추가 컨테이너 - 박수범 */
+const PlaylistContainer = styled.div`
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    background: rgba(245, 223, 223, 0.25);
+    justify-content: center;
+    align-items: center;
+`;
+/**2023/05/23 - 플레이리스트 음원추가 모달창 - 박수범 */
+const PlaylistModal = styled.div`
+    justify-content: center;
+    align-items: center;
+    width: 500px;
+    height: 700px;
+    display: flex;
+    flex-direction: column;
+
+    background: rgba(12, 11, 11, 0.55);
+    > button {
+        cursor: pointer;
+        z-index: 3;
+    }
+`;
+const Exitbox = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    bottom: 0px;
+    left: 0px;
+    width: 50px;
+    height: 50px;
+    font-size: 2rem;
+    color: rgba(199, 68, 68, 1);
+    text-align: center;
+    border: 2px solid rgba(199, 68, 68, 1);
+    cursor: pointer;
+    z-index: 3;
+    :hover {
+        color: #ccc;
+        border-color: #ccc;
     }
 `;

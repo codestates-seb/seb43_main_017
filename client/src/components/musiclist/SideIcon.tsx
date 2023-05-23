@@ -5,7 +5,8 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { type } from 'os';
+import { useSetRecoilState } from 'recoil';
+import { playListModalState, getMusicIdState } from 'src/recoil/Atoms';
 
 interface SideiconProps {
     musicId: number;
@@ -15,25 +16,16 @@ interface SideiconProps {
 const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
     const [playListId, setPlayListId] = useState<number>(0); //플레이리스트 아이디
     const [like, setLike] = useState<boolean>(false);
+    const setPlayListState = useSetRecoilState(playListModalState);
+    const setMusicIdState = useSetRecoilState(getMusicIdState);
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
-    useEffect(() => {
-        axios
-            .get(`${process.env.REACT_APP_API_URL}/playlists/member-playlist`, {
-                headers: {
-                    Authorization: token,
-                },
-            })
-            .then((res) => {
-                console.log(res.data.data);
-                setPlayListId(res.data.data.playListId);
-            });
-    }, []);
+
     const handleAddPlaylist = () => {
         console.log('유저리스트 조회');
     };
     const handleLike = () => {
         if (!token) {
-            console.log('로그인을 진행해주세요');
+            alert('로그인을 진행해주세요');
         } else {
             axios
                 .post(
@@ -77,7 +69,13 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
             <Link to={`/musiclist/${musicId}`}>
                 <FiPlayCircle className="color-blue" />
             </Link>
-            <AddPlayList onClick={handleAddPlaylist}>
+
+            <AddPlayList
+                onClick={() => {
+                    setPlayListState(true);
+                    setMusicIdState(musicId);
+                }}
+            >
                 <FiFolderPlus />
             </AddPlayList>
 
@@ -94,7 +92,7 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
 };
 
 export default Sideicon;
-
+/**2023/05/23 - 플레이리스트 옆에 아이콘 그룹 - 박수범 */
 const MusicIconGroup = styled.li`
     > * {
         margin: 0px 20px;
@@ -132,6 +130,7 @@ const MusicIconGroup = styled.li`
     }
 `;
 
+/**2023/05/23 - 플레이리스트에 음악을 추가하는 모달창을 띄워주는 버튼 - 박수범 */
 const AddPlayList = styled.button`
     background: none;
     border: none;
