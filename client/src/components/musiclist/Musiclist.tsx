@@ -520,7 +520,7 @@ const Exitbox = styled.div`
     @media (max-width: 700px) {
         width: 30px;
         height: 20px;
-        font-size: 1.2rem;
+        font-size: 1rem;
     }
     z-index: 3;
     :hover {

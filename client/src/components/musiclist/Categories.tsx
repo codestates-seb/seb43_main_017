@@ -74,6 +74,7 @@ const Categories = ({ showSearchResult }: CategoryProps) => {
                             onClick={() => {
                                 setShowSubTags('feel');
                             }}
+                            style={{ cursor: 'pointer' }}
                         >
                             <TbMoodPlus />
                             FEELING
@@ -85,6 +86,7 @@ const Categories = ({ showSearchResult }: CategoryProps) => {
                                 onClick={() => {
                                     handleSubCategoryClick(tag.name);
                                 }}
+                                style={{ cursor: 'pointer' }}
                             >
                                 {tag.name}
                             </li>
@@ -96,6 +98,7 @@ const Categories = ({ showSearchResult }: CategoryProps) => {
                             onClick={() => {
                                 setShowSubTags('genre');
                             }}
+                            style={{ cursor: 'pointer' }}
                         >
                             <IoMdMusicalNote />
                             GENRE
@@ -107,6 +110,7 @@ const Categories = ({ showSearchResult }: CategoryProps) => {
                                 onClick={() => {
                                     handleSubCategoryClick(tag.name);
                                 }}
+                                style={{ cursor: 'pointer' }}
                             >
                                 {tag.name}
                             </li>
@@ -118,6 +122,7 @@ const Categories = ({ showSearchResult }: CategoryProps) => {
                             onClick={() => {
                                 setShowSubTags('instrument');
                             }}
+                            style={{ cursor: 'pointer' }}
                         >
                             <MdPiano />
                             INSTRUMENT
@@ -129,6 +134,7 @@ const Categories = ({ showSearchResult }: CategoryProps) => {
                                 onClick={() => {
                                     handleSubCategoryClick(tag.name);
                                 }}
+                                style={{ cursor: 'pointer' }}
                             >
                                 {tag.name}
                             </li>

@@ -26,24 +26,23 @@ const LikeMusic = () => {
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
 
     useEffect(() => {
-        const fetchLikedMusic = async () => {
-            try {
-                const response = await axios.get(
+        const fetchLikedMusic = () => {
+            axios
+                .get(
                     `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/liked-musics?&page=${currentPage}&size=5`,
                     {
                         headers: {
                             Authorization: token,
                         },
                     },
-                );
-                const likedMusicData: LikeMusicList[] = response.data.data.filter(
-                    (music: LikeMusicList) => music.musicLikeCount > 0,
-                );
-                setLikedMusic(likedMusicData);
-                setTotalPages(response.data.pageInfo.totalPages);
-            } catch (error) {
-                console.error('Error fetching liked music:', error);
-            }
+                )
+                .then((response) => {
+                    setLikedMusic(response.data.data);
+                    setTotalPages(response.data.pageInfo.totalPages);
+                })
+                .catch((error) => {
+                    console.error('Error fetching liked music:', error);
+                });
         };
 
         fetchLikedMusic();
@@ -70,6 +69,29 @@ const LikeMusic = () => {
         setCurrentPage(currentPage - 1);
     };
 
+    // const [like, setLike] = useState<boolean>(false);
+
+    // const handleLike = (musicId: number) => {
+    //     axios
+    //         .post(
+    //             `${process.env.REACT_APP_API_URL}/music-like/toggle`,
+    //             {
+    //                 musicId: musicId,
+    //             },
+    //             {
+    //                 headers: {
+    //                     Authorization: token,
+    //                 },
+    //             },
+    //         )
+    //         .then((response) => {
+    //             setLike(typeof response.data.musicLikeId === 'number');
+    //         })
+    //         .catch((err) => {
+    //             console.log(err);
+    //         });
+    // };
+
     return (
         <LikeContainer>
             <LikeTitle>
@@ -88,13 +110,18 @@ const LikeMusic = () => {
                 </Pagination>
             </LikeTitle>
             {likedMusic.map((likedata) => (
-                <LikeList>
+                <LikeList key={likedata.musicId}>
                     <img src={likedata.albumCoverImg} alt={likedata.musicName} />
                     <li>{likedata.musicName}</li>
                     <li>{likedata.artistName}</li>
                     <li>{likedata.albumName}</li>
                     <div className="music-icon">
                         <HiHeart />
+                        {/* {like ? (
+                            <HiOutlineHeart onClick={() => handleLike(likedata.musicId)} className="color-red" />
+                        ) : (
+                            <HiHeart onClick={() => handleLike(likedata.musicId)} className="color-red like-action" />
+                        )} */}
                     </div>
                 </LikeList>
             ))}

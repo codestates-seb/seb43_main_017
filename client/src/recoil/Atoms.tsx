@@ -110,11 +110,13 @@ export const bodyState = atom({
     default: '',
 });
 
+/* 2023.05.22 마이플레이리스트 생성 - 홍혜란 */
 export const modifyDataState = atom({
     key: 'modifyDataState',
     default: false,
 });
 
+/* 2023.05.22 마이플레이리스트에서 모디파이 연결 - 홍혜란 */
 export const modifyClickState = atom({
     key: 'modifyClickState',
     default: 0,
