@@ -26,7 +26,7 @@ const Myplaylist = () => {
     const [myplaylistData, setMyplaylistData] = useRecoilState(myplaylistState);
     const [, setModifyDataState] = useRecoilState(modifyClickState);
     const setPlayListState = useSetRecoilState(playListModalState);
-    const [test] = useRecoilState(UpdataModify);
+    const [updateModify] = useRecoilState(UpdataModify);
 
     /** 2023.05.22 마이플레이리스트 조회 */
     useEffect(() => {
@@ -43,7 +43,8 @@ const Myplaylist = () => {
             .catch((error) => {
                 console.error(error);
             });
-    }, [update, test]);
+    }, [update, updateModify, currentPage]);
+
 
     /* 2023.05.22 마이플레이리스트 삭제 */
     const handleDeletePlaylist = (playlistId: number) => {

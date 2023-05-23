@@ -10,7 +10,7 @@ const Loding = () => {
                 <li className="sec-4"></li>
                 <li className="sec-5"></li>
             </Lodingbar>
-            <span>LODING</span>
+            <span>LOADING</span>
         </LodingBox>
     );
 };
