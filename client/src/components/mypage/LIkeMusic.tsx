@@ -69,28 +69,28 @@ const LikeMusic = () => {
         setCurrentPage(currentPage - 1);
     };
 
-    const [like, setLike] = useState<boolean>(false);
+    // const [like, setLike] = useState<boolean>(false);
 
-    const handleLike = (musicId: number) => {
-        axios
-            .post(
-                `${process.env.REACT_APP_API_URL}/music-like/toggle`,
-                {
-                    musicId: musicId,
-                },
-                {
-                    headers: {
-                        Authorization: token,
-                    },
-                },
-            )
-            .then((response) => {
-                setLike(typeof response.data.musicLikeId === 'number');
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    };
+    // const handleLike = (musicId: number) => {
+    //     axios
+    //         .post(
+    //             `${process.env.REACT_APP_API_URL}/music-like/toggle`,
+    //             {
+    //                 musicId: musicId,
+    //             },
+    //             {
+    //                 headers: {
+    //                     Authorization: token,
+    //                 },
+    //             },
+    //         )
+    //         .then((response) => {
+    //             setLike(typeof response.data.musicLikeId === 'number');
+    //         })
+    //         .catch((err) => {
+    //             console.log(err);
+    //         });
+    // };
 
     return (
         <LikeContainer>
@@ -116,12 +116,12 @@ const LikeMusic = () => {
                     <li>{likedata.artistName}</li>
                     <li>{likedata.albumName}</li>
                     <div className="music-icon">
-                        {/* <HiHeart /> */}
-                        {like ? (
+                        <HiHeart />
+                        {/* {like ? (
                             <HiOutlineHeart onClick={() => handleLike(likedata.musicId)} className="color-red" />
                         ) : (
                             <HiHeart onClick={() => handleLike(likedata.musicId)} className="color-red like-action" />
-                        )}
+                        )} */}
                     </div>
                 </LikeList>
             ))}

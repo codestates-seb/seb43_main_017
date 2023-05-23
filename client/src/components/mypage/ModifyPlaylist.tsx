@@ -4,7 +4,8 @@ import { VscClose } from 'react-icons/vsc';
 import { useRecoilState } from 'recoil';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { titleState, bodyState, myplaylistState, modifyClickState } from 'src/recoil/Atoms';
+import { titleState, bodyState, myplaylistState, modifyClickState, musicDataListState } from 'src/recoil/Atoms';
+import { MusicData } from 'src/types/Musiclist';
 
 function ModifyPlaylist() {
     const [myplaylistData, setMyplaylistData] = useRecoilState(myplaylistState);
@@ -88,6 +89,21 @@ function ModifyPlaylist() {
             });
     };
 
+    const [musicDataList, setMusicDataList] = useRecoilState(musicDataListState);
+
+    useEffect(() => {
+        axios
+            .get(
+                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/playlists/${ModifyPlaylistId}`,
+            )
+            .then((response) => {
+                setMusicDataList(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, []);
+
     return (
         <ModifyContainer>
             <div className="modify-title">
@@ -136,15 +152,17 @@ function ModifyPlaylist() {
                             </div>
                         </Plcard>
                         <PlyList>
-                            {/* <div className="plyItem">
-                                <img src="./assets/ditto.png" alt="cover-img" />
-                                <li>Ditto</li>
-                                <li>Newjeans</li>
-                                <li>OMG</li>
-                                <li>
-                                    <VscClose />
-                                </li>
-                            </div> */}
+                            {musicDataList.map((musicData) => (
+                                <div className="plyItem">
+                                    <img src={musicData.albumCoverImg} alt={musicData.musicName} />
+                                    <li>{musicData.musicName}</li>
+                                    <li>{musicData.artistName}</li>
+                                    <li>{musicData.albumName}</li>
+                                    <li>
+                                        <VscClose />
+                                    </li>
+                                </div>
+                            ))}
                         </PlyList>
                     </ModifyList>
                 ))}
