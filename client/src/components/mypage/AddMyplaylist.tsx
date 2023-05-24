@@ -84,7 +84,7 @@ export default AddListMusic;
 
 /** 2023.05.23 마이플레이리스트 모달창 안에 작성 컴포넌트 - 홍혜란 */
 const PlayListContainer = styled.div`
-    z-index: 3;
+    z-index: 5;
     width: 400px;
 `;
 
