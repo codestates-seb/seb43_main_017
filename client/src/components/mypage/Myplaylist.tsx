@@ -47,19 +47,24 @@ const Myplaylist = () => {
 
     /* 2023.05.22 마이플레이리스트 삭제 */
     const handleDeletePlaylist = (playlistId: number) => {
-        axios
-            .delete(`${process.env.REACT_APP_API_URL}/playlists/${playlistId}`, {
-                headers: {
-                    Authorization: token,
-                },
-            })
-            .then(() => {
-                confirm(`삭제하시겠습니까?`);
-                setUpdate(!update);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+        const result = confirm('플레이리스트를 삭제하시겠습니까?');
+        if (result) {
+            axios
+                .delete(`${process.env.REACT_APP_API_URL}/playlists/${playlistId}`, {
+                    headers: {
+                        Authorization: token,
+                    },
+                })
+                .then(() => {
+                    setUpdate(!update);
+                    alert('삭제가 완료되었습니다.');
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        } else {
+            alert('삭제가 취소되었습니다.');
+        }
     };
 
     const handleNextPage = () => {

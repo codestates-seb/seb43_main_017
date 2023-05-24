@@ -1,9 +1,17 @@
 import styled from 'styled-components';
 import { RiPencilRuler2Fill, RiDeleteBack2Line } from 'react-icons/ri';
-import { useRecoilState } from 'recoil';
+import { TiDeleteOutline } from 'react-icons/ti';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { titleState, bodyState, modifyClickState, musicDataListState, UpdataModify } from 'src/recoil/Atoms';
+import {
+    titleState,
+    bodyState,
+    modifyClickState,
+    musicDataListState,
+    UpdataModify,
+    modifyDataState,
+} from 'src/recoil/Atoms';
 import { ModifyTargetData } from 'src/types/myplaylist';
 import { Link } from 'react-router-dom';
 
@@ -18,6 +26,7 @@ function ModifyPlaylist() {
     const [modifyTarget, setModifyTarget] = useState<ModifyTargetData | undefined>();
 
     const [UpdateState, setUpdateState] = useRecoilState(UpdataModify);
+    const setLeaveModify = useSetRecoilState(modifyDataState);
 
     /** 2023.05.22  마이플레이리스트 단일 조회 요청 - 홍혜란 */
     useEffect(() => {
@@ -118,6 +127,13 @@ function ModifyPlaylist() {
             <div className="modify-title">
                 <RiPencilRuler2Fill className="pencil-icon" />
                 <p>MODIFY PLAYLIST</p>
+                <Exitbtn
+                    onClick={() => {
+                        setLeaveModify(false);
+                    }}
+                >
+                    <TiDeleteOutline />
+                </Exitbtn>
             </div>
             <ModiCointainer>
                 <ModifyList>
@@ -392,4 +408,14 @@ const PlyList = styled.div`
             }
         }
     }
+`;
+
+const Exitbtn = styled.button`
+    display: flex;
+    align-items: center;
+    color: white;
+    margin-left: 10px;
+    background-color: #6b6b6b;
+    border-radius: 10px;
+    border: none;
 `;
