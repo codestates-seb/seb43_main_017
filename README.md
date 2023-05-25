@@ -11,7 +11,7 @@
 
 <br>
 
-### Stacks
+## Stacks
 
 ![sadsadasdsad](https://github.com/codestates-seb/seb43_main_017/assets/119921683/c3a84d84-cbfa-4015-aa3d-d8fb38705a7d)
 
