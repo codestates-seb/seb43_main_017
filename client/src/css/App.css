@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Monoton&family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Rajdhani:wght@500&display=swap');
+@font-face {
+    font-family: 'kopup';
+    src: url('../../public/assets/fonts/KoPubWorld_Dotum_Medium.woff2');
+}
+
+* {
+    font-family: 'kopup', 'Noto Sans KR', sans-serif;
+    list-style: none;
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
