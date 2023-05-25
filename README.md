@@ -22,6 +22,51 @@
  - Mypage like list
  - Mypage Myplaylist (CRUD)
  - Mypage ModifyPlaylist (RUD)
+ 
+ **김주비**
+ - 전반적 반응형 css 및 Animation 동작구현
+ - Main page (fullpage-scroll)
+ - Playlist page (slider/tap-menu)
+ - Navigate component
+ - MusicDetail page
+ - Comment (CRUD)
+ - Sound component (+playlist-viewer)
+ - Mypage 회원탈퇴
+ - Download + Pagination 구현
+ 
+ **박수범**
+ -로컬 Signin/Signup
+ -유저정보 관리
+ -Oauth 네이버
+ -Oauth 카카오
+ -Oauth 구글
+ -Mixing Page (Play list)
+ -Mixing Page (Drag & Drop)
+ -Mixing Page (Controlbar)
+ -Playlist add music
+ 
+ **김인환**
+ - Playlist CRUD
+- Playlist 좋아요 기능
+- Playlist 댓글 기능
+- Playlist 태그 기능
+- 태그 CRUD
+ 
+ **이재관**
+ -Member CRUD
+-Security
+-JWT
+-local 로그인,로그아웃 구현
+-OAuth2 구글,네이버,카카오 구현
+-AWS deployment
+-s3 버킷 이미지 연동(프로필 이미지)
+-Tag CRUD
+-개인 Member 맞춤 음악 추천 기능
+ 
+ **강지산**
+ -music CRUD 및 좋아요 댓글 구현
+-키워드 검색 및 태그 검색 기능 구현
+-AWS deployment
 
 </div>
 </details>
