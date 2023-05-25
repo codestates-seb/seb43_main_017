@@ -3,6 +3,7 @@
 
 <div align="center">
  <img src="https://github.com/codestates-seb/seb43_main_017/assets/119921683/ecbd10f7-adeb-43c0-b928-bdaf212c4bc1">
+ <br>
 당신을 위한 최고의 음악 플랫폼
 </div>
  ### [UNCOVER](http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com)
