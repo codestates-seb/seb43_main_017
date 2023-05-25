@@ -18,7 +18,7 @@
 <br>
 
 <details>
-<summary>개인 기술 스택</summary>
+<summary>담당 파트</summary>
 <div markdown="1">
 
 **홍혜란**
