@@ -41,6 +41,7 @@
  - Download + Pagination 구현
  
  **박수범**
+ - env 파일 관리
  - 로컬 Signin/Signup
  - 유저정보 관리
  - Oauth 네이버
