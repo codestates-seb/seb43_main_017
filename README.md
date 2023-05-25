@@ -18,9 +18,9 @@
  - Musiclist page (Trending, musiclist)
  - Musiclist like (CRUD)
  - Mypage 회원정보
- - Mypage like list
+ - Mypage like list (RD)
  - Mypage Myplaylist (CRUD)
- - Mypage ModifyPlaylist (RUD)
+ - Mypage Myplaylist Music (RD)
  
  **김주비**
  - 전반적 반응형 css 및 Animation 동작구현
