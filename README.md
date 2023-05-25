@@ -11,23 +11,16 @@
 
 <br>
 
-## 개인 기술 스택
-
 <details>
-<summary>ERD</summary>
+<summary>개인 기술 스택</summary>
 <div markdown="1">
 
 **홍혜란**
  - Musiclist page (Trending, musiclist)
- 
  - Musiclist like (CRUD)
- 
  - Mypage 회원정보
- 
  - Mypage like list
- 
  - Mypage Myplaylist (CRUD)
- 
  - Mypage ModifyPlaylist (RUD)
 
 </div>
