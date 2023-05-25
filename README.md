@@ -1,7 +1,7 @@
 ## Team. Undefined
 ### [UNCOVER](http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com)
 
-<div aline="center">![제목 없음-1](https://github.com/codestates-seb/seb43_main_017/assets/119921683/61e30cad-bf04-4247-a659-e24ff83c1188)</div>
+<div align="center">![제목 없음-1](https://github.com/codestates-seb/seb43_main_017/assets/119921683/61e30cad-bf04-4247-a659-e24ff83c1188)</div>
 
 ## Team List
 |![홍혜란](./img/rab.png)|![김주비](./img/4.png)|![박수범](./img/%EC%88%98%EB%B2%94%EC%9D%B4.png)|![김인환](./img/%EB%94%94%EB%AC%B4.jpg)|![이재관](./img/%EA%B2%80%EB%83%A5%EC%9D%B4.png)|![강지산](./img/%EB%8B%B4%EC%A7%80.png)|
