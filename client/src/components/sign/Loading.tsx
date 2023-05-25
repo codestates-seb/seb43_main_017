@@ -39,10 +39,13 @@ export const Loading = () => {
                 const userid = naverLogin.user.getEmail();
                 const username = naverLogin.user.getNickName();
                 const userimg = naverLogin.user.getProfileImage();
+                // 유저정보 로컬스토리지에 저장.
+                window.localStorage.setItem('useremail', userid);
+                window.localStorage.setItem('usernickname', username);
                 window.localStorage.setItem('userimg', userimg);
                 // 추출한 데이터를 백엔드 서버로 보내준다.
                 axios
-                    .post<LoginPost>(`${BaseUrl}`, {
+                    .post<LoginPost>(`${BaseUrl}/naver`, {
                         email: userid,
                         name: username,
                         profileimg: userimg,
@@ -65,9 +68,25 @@ export const Loading = () => {
         const googlerefresh = new URL(location.href).searchParams.get('refresh_token');
         /** 2023/05/16 - 구글 요청인 경우 - 박수범 */
         if (googlerefresh && googletoken) {
-            window.localStorage.setItem('access_token', googletoken);
+            window.localStorage.setItem('access_token', `Bearer ${googletoken}`);
             window.localStorage.setItem('refresh_token', googlerefresh);
-            window.location.href = '/';
+            axios
+                .get(`${process.env.REACT_APP_API_URL}/members/info`, {
+                    headers: {
+                        Authorization: `Bearer ${googletoken}`,
+                    },
+                })
+                .then((res) => {
+                    const googleemail = res.data.data.email;
+                    const googleickname = res.data.data.name;
+                    const googleimg = res.data.data.image;
+                    const googlememberid = res.data.data.memberId;
+                    window.localStorage.setItem('useremail', googleemail);
+                    window.localStorage.setItem('usernickname', googleickname);
+                    window.localStorage.setItem('userimg', googleimg);
+                    window.localStorage.setItem('memberId', googlememberid);
+                    window.location.href = '/';
+                });
         }
         /** 2023/05/16 - 카카오 요청인 경우 - 박수범 */
         if (kakaocode) {
@@ -92,14 +111,18 @@ export const Loading = () => {
                             },
                         })
                         .then((res) => {
+                            // 유저 이메일,닉네임,프로필이미지 뽑아주고,
                             const kakaoemail = res.data.kakao_account.email;
                             const kakaonickname = res.data.properties.nickname;
                             const kakaoimg = res.data.properties.profile_image;
+                            // 유저정보 로컬스토리지에 저장.
+                            window.localStorage.setItem('useremail', kakaoemail);
+                            window.localStorage.setItem('usernickname', kakaonickname);
                             window.localStorage.setItem('userimg', kakaoimg);
                             if (kakaoemail) {
                                 // 카카오에서 받아온 유저정보를 백엔드 서버로 보내주고 토큰을 요청
                                 axios
-                                    .post<LoginPost>(`${BaseUrl}`, {
+                                    .post<LoginPost>(`${BaseUrl}/kakao`, {
                                         email: kakaoemail,
                                         name: kakaonickname,
                                         profileimg: kakaoimg,

@@ -6,11 +6,14 @@ import { useState, useEffect, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { PlcardProps, bgimg } from 'src/types/Slider';
 import axios from 'axios';
+import Loding from 'src/pages/Loding';
+
 function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<string>> }) {
     const [pldata, setPldata] = useState<PlcardProps[]>([]); //플리데이터 저장 스테이트
     const [currentSlideIndex, setCurrentSlideIndex] = useState<number>(0); //포커스된 슬라이드 인덱스
     const [silderPage, setSliderPage] = useState<number>(3); //슬라이더 페이지 갯수
     const [width, setWidth] = useState<number>(window.innerWidth); //현재 창의 width 길이
+    const [loding, setLoding] = useState<boolean>(true);
 
     window.addEventListener('resize', () => {
         setWidth(window.innerWidth);
@@ -30,23 +33,18 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
         }
 
         axios
-            .get('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists?page=1&size=5')
+            .get('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/admin?page=1&size=10')
             .then(function (response) {
                 // 성공적으로 요청을 보낸 경우
-                // console.log(response.data.data);
                 setPldata(response.data.data);
+                setBgSrc(response.data.data[currentSlideIndex].coverImg);
+                setLoding(false);
             })
             .catch(function (error) {
                 // 요청 중에 오류가 발생한 경우
                 console.error(error);
             });
-    }, []);
-
-    // /**2023-05-07 커버이미지 데이터 전달 : 김주비 */
-    // useEffect(() => {
-    //     setPldata(dummydata);
-    //     setBgSrc(dummydata[currentSlideIndex].coverimg);
-    // }, [currentSlideIndex]);
+    }, [currentSlideIndex]);
 
     /**2023-05-07 플리 슬라이드 인덱스 : 김주비 */
     const handleAfterChange = (index: number) => {
@@ -81,32 +79,36 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
 
     return (
         <SilderGroup>
-            <Slider {...settings}>
-                {pldata.map((data) => (
-                    <Plcard bgImg="/" key={data.playListId}>
-                        <div className="pl-treck">TRECK 10</div>
-                        <Link to={`/playlsit/${data.playListId}`}>
-                            <div className="pl-contents">
-                                <Pltag>
-                                    {/* {data.tag.map((tag, index) => (
-                                        <li key={`tag-${index}`}>{tag.tagname}</li>
-                                    ))} */}
-                                </Pltag>
-                                <Pluser>
-                                    <span>WTITER</span>
-                                    <span>{data.createMember}</span>
-                                    <span>LIKE</span>
-                                    <span>2963</span>
-                                </Pluser>
-                                <Pltext>
-                                    <span>{data.title}</span>
-                                    <span>{data.body}</span>
-                                </Pltext>
-                            </div>
-                        </Link>
-                    </Plcard>
-                ))}
-            </Slider>
+            {loding ? (
+                <Loding />
+            ) : (
+                <Slider {...settings}>
+                    {pldata.map((data) => (
+                        <Plcard bgImg={data.coverImg} key={data.playListId}>
+                            <div className="pl-treck">TRECK 10</div>
+                            <Link to={`/playlsit/${data.playListId}`}>
+                                <div className="pl-contents">
+                                    <Pltag>
+                                        {data.tags.map((tag, index) => (
+                                            <li key={`tag-${index}`}>{tag}</li>
+                                        ))}
+                                    </Pltag>
+                                    <Pluser>
+                                        <span>WRITER</span>
+                                        <span>{data.createMember}</span>
+                                        <span>LIKE</span>
+                                        <span>{data.likeCount}</span>
+                                    </Pluser>
+                                    <Pltext>
+                                        <span>{data.title}</span>
+                                        <span>{data.body}</span>
+                                    </Pltext>
+                                </div>
+                            </Link>
+                        </Plcard>
+                    ))}
+                </Slider>
+            )}
         </SilderGroup>
     );
 }
@@ -119,12 +121,14 @@ const Plcard = styled.div<bgimg>`
     width: 500px;
     height: 350px;
     border-radius: 20px;
-    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.9)), url(${(props) => props.bgImg});
+    background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8) 80%), url(${(props) => props.bgImg});
     background-size: cover;
     transform: scale(0.85);
     color: #ddd;
     overflow: hidden;
     transition: 0.3s ease-in-out;
+    box-sizing: border-box;
+    /* border: 1px solid rgb(0, 0, 0, 1); */
 
     > a {
         color: #ddd;
@@ -133,7 +137,9 @@ const Plcard = styled.div<bgimg>`
         position: absolute;
         top: 30px;
         right: 30px;
+        font-family: 'Noto Sans KR', sans-serif;
         font-weight: 600;
+        text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
     }
     .pl-contents {
         position: absolute;
@@ -148,6 +154,7 @@ const SilderGroup = styled.div`
     animation: opacity 2s forwards;
     .slick-center ${Plcard} {
         transform: scale(1);
+        border: 2px solid #ccc;
     }
     .dots-paging {
         display: flex;
@@ -197,20 +204,22 @@ const Pluser = styled.div`
     margin-top: 20px;
     font-size: 0.8rem;
     > span {
+        font-family: 'Noto Sans KR', sans-serif;
         margin-right: 15px;
+        text-shadow: 0px 0px 10px rgba(0, 0, 0, 1);
     }
     span:nth-child(2n + 1) {
         font-weight: 800;
-        color: #ff8716;
+        color: rgba(199, 68, 68, 1);
     }
 `;
 /**2023-05-06 슬라이드 텍스트 : 김주비 */
 const Pltext = styled.div`
-    width: 98%;
     display: flex;
     flex-direction: column;
     > span {
         margin-top: 10px;
+        font-family: 'Noto Sans KR', sans-serif;
     }
     span:nth-child(1) {
         color: #fff;
@@ -224,8 +233,9 @@ const Pltext = styled.div`
         margin-top: 20px;
         line-height: 140%;
         opacity: 0.5;
-        width: 80%;
-        font-size: 0.7rem;
+        width: 100%;
+        font-size: 0.8rem;
+        font-weight: 300;
     }
     @media (max-width: 600px) {
         span:nth-child(1) {

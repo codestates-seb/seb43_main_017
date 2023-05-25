@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import 'src/css/App.css';
 import 'src/css/reset.css';
 import { BrowserRouter } from 'react-router-dom';
@@ -8,7 +8,7 @@ import Signin from 'src/components/sign/Signin';
 import Signup from 'src/components/sign/Signup';
 import RoutingPages from 'src/pages/Routingpages';
 import { RiProfileFill } from 'react-icons/ri';
-import { MdFaceRetouchingNatural } from 'react-icons/md';
+import { MdFaceRetouchingNatural, MdLogout } from 'react-icons/md';
 import SoundBar from 'src/components/soundbar/SoundBar';
 import { useRecoilState } from 'recoil';
 import { soundbarOpenState } from 'src/recoil/Atoms';
@@ -35,6 +35,7 @@ function App() {
                         <Signup setShowSignUp={setShowSignUp} />
                     </Signview>
                 ) : null}
+                {/* 토큰이 있다면 로그아웃버튼을 출력 없다면 로그인 회원가입 버튼을 출력 */}
                 {token ? (
                     <SignBtnSection>
                         <ButtonStyle
@@ -46,7 +47,11 @@ function App() {
                                 localStorage.removeItem('memberId');
                                 localStorage.removeItem('userimg');
                                 localStorage.removeItem('username');
+                                localStorage.removeItem('useremail');
+                                localStorage.removeItem('usernickname');
+                                sessionStorage.setItem('index', '0');
                                 location.reload();
+                                window.location.href = '/';
                             }}
                         >
                             Logout
@@ -72,22 +77,46 @@ function App() {
                         </ButtonStyle2>{' '}
                     </SignBtnSection>
                 )}
-                <SignBtnSection2>
-                    <ButtonStyle3
-                        onClick={() => {
-                            setShowSignIn(true);
-                        }}
-                    >
-                        <MdFaceRetouchingNatural />
-                    </ButtonStyle3>
-                    <ButtonStyle4
-                        onClick={() => {
-                            setShowSignUp(true);
-                        }}
-                    >
-                        <RiProfileFill />
-                    </ButtonStyle4>
-                </SignBtnSection2>
+                {/* 토큰이 있다면 모바일로그아웃아이콘을 출력, 없다면 모바일로그인,모바일회원가입 아이콘 출력 */}
+                {token ? (
+                    <SignBtnSection2>
+                        <ButtonStyle3
+                            onClick={() => {
+                                localStorage.removeItem('access_token');
+                                localStorage.removeItem('refresh_token');
+                                localStorage.removeItem('com.naver.nid.access_token');
+                                localStorage.removeItem('com.naver.nid.oauth.state_token');
+                                localStorage.removeItem('memberId');
+                                localStorage.removeItem('userimg');
+                                localStorage.removeItem('username');
+                                localStorage.removeItem('useremail');
+                                localStorage.removeItem('usernickname');
+                                sessionStorage.setItem('index', '0');
+                                location.reload();
+                                window.location.href = '/';
+                            }}
+                        >
+                            <MdLogout />
+                        </ButtonStyle3>
+                    </SignBtnSection2>
+                ) : (
+                    <SignBtnSection2>
+                        <ButtonStyle3
+                            onClick={() => {
+                                setShowSignIn(true);
+                            }}
+                        >
+                            <MdFaceRetouchingNatural />
+                        </ButtonStyle3>
+                        <ButtonStyle4
+                            onClick={() => {
+                                setShowSignUp(true);
+                            }}
+                        >
+                            <RiProfileFill />
+                        </ButtonStyle4>
+                    </SignBtnSection2>
+                )}
                 {/* Login botton End*/}
                 {/* Nav Start*/}
                 <NavSection>
@@ -111,7 +140,7 @@ export default App;
 const MainSection = styled.section`
     width: 100%;
     min-height: 100vh;
-    background-color: #222;
+    background-color: #1b1b1b;
 `;
 /**2023-05-05 네비게이션 컴포넌트: 김주비*/
 const NavSection = styled.section`
@@ -133,6 +162,7 @@ const NavSection = styled.section`
         }
     }
     @media (max-width: 700px) {
+        z-index: 1;
         width: 100%;
         height: 100px;
         background: none;
@@ -141,6 +171,7 @@ const NavSection = styled.section`
 
 /**2023-05-05 sign 버튼 섹션 : 김주비*/
 const SignBtnSection = styled.aside`
+    z-index: 3;
     position: absolute;
     margin-top: 20px;
     right: 20px;
@@ -153,6 +184,7 @@ const SignBtnSection = styled.aside`
         }
     }
     @media (max-width: 700px) {
+        z-index: 3;
         display: none;
     }
 `;
@@ -196,7 +228,7 @@ const RouterSection = styled.section`
     overflow: hidden;
 `;
 
-/**2023-05-06 미디어쿼리 반응형 - sign 버튼 섹션 : 김주비*/
+/**2023-05-06 미디어쿼리 반응형 - Signup 버튼 섹션 : 김주비*/
 const SignBtnSection2 = styled(SignBtnSection)`
     display: none;
     flex-direction: column;
@@ -209,7 +241,7 @@ const SignBtnSection2 = styled(SignBtnSection)`
         display: flex;
     }
 `;
-/**2023-05-06 미디어쿼리 반응형 - 로그인버튼 디자인 : 김주비*/
+/**2023-05-06 미디어쿼리 반응형 - Signin 버튼 디자인 : 김주비*/
 const ButtonStyle3 = styled(ButtonStyle)`
     display: flex;
     justify-content: center;

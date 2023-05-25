@@ -64,7 +64,7 @@ function Uncover() {
                         <div className="hover-line">
                             <span></span>
                         </div>
-                        <h3 className="sub-title">03 Mixing</h3>
+                        <h3 className="sub-title">03 Fitting Room</h3>
                         <p className="sub-text">
                             You can mix the sample music you want directly into the video. Add completeness to your work
                             with a workstation for video, sound effects and design.
@@ -72,7 +72,7 @@ function Uncover() {
                         <button
                             className="sub-button"
                             onClick={() => {
-                                HandleNavigate('/mixing', 3);
+                                HandleNavigate('/fittingroom', 3);
                             }}
                         >
                             more

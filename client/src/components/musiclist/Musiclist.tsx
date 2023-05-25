@@ -1,40 +1,80 @@
 import styled from 'styled-components';
 import Categories from './Categories';
-import Trending from './Tranding';
+import Trending from './Trending';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import axios from 'axios';
-import { showSearch } from 'src/recoil/Atoms';
 import Sideicon from 'src/components/musiclist/SideIcon';
 import { BiSearch } from 'react-icons/bi';
+import { ImCross } from 'react-icons/im';
 import { Link } from 'react-router-dom';
 import { MusicDataResponse } from 'src/types/Musiclist';
-import { musicDataListState } from 'src/recoil/Atoms';
+import { musicDataListState, playListModalState, showSearch, tagSreachState } from 'src/recoil/Atoms';
+import Loding from 'src/pages/Loding';
+import AddListMusic from './AddListMusic';
 
 const Musiclist = () => {
     const [musicDataList, setMusicDataList] = useRecoilState(musicDataListState);
+    const [tagSearch] = useRecoilState(tagSreachState);
+    const [isLoding, setIsLoding] = useState(true);
     const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
     const [totalPages, setTotalPages] = useState<number>(0); // 전체 페이지 수
     const [openSearch, setOpenSearch] = useRecoilState<boolean>(showSearch);
-    const [tapClick, setTapClick] = useState<number>(0);
+    const [openPlayList, setOpenPlayList] = useRecoilState<boolean>(playListModalState);
+    const [tapClick, setTapClick] = useState<string>('musics');
     const buttonArray = [];
 
-    useEffect(() => {
+    /* 2023.05.21 서치 결과에 따른 뮤직리스트 출력 */
+    const showSearchResult = (searchText: string) => {
         axios
-            .get<MusicDataResponse>(
-                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics?&page=${currentPage}&size=5`,
-            )
+            .get(`${process.env.REACT_APP_API_URL}/musics/search-by-keyword`, {
+                params: {
+                    keyword: searchText,
+                    page: currentPage,
+                    size: 5,
+                },
+            })
             .then((response) => {
-                setMusicDataList(response.data.data);
-                setTotalPages(response.data.pageInfo.totalPages);
+                const { content, pageInfo } = response.data;
+                setMusicDataList(content);
+                setTotalPages(pageInfo.totalPages);
             })
             .catch((error) => {
                 console.error(error);
             });
-    }, [setMusicDataList, currentPage]);
+    };
+
+    /* 2023.05.21 뮤직리스트 토탈 출력 */
+
+    const url = tagSearch
+        ? `musics/search-by-tags?${tagSearch}&page=${currentPage}&size=5`
+        : `${tapClick}?&page=${currentPage}&size=5`;
+
+    useEffect(() => {
+        axios
+            .get<MusicDataResponse>(`${process.env.REACT_APP_API_URL}/${url}`)
+            .then((response) => {
+                if (tagSearch) {
+                    setMusicDataList(response.data.content);
+                } else {
+                    setMusicDataList(response.data.data);
+                }
+                setTotalPages(response.data.pageInfo.totalPages);
+                setIsLoding(false);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, [tapClick, currentPage, tagSearch]);
 
     /** 2023.05.17 전체 페이지 수 만큼 버튼 생성 - 김주비*/
-    for (let i = 1; i <= totalPages; i++) {
+    const prevGroupPage = Math.floor((currentPage - 1) / 5) * 5;
+    const nextGroupPage = Math.ceil(currentPage / 5) * 5 + 1;
+
+    const isPrevButtonDisabled = prevGroupPage < 1; // 이전페이지 비활성화 여부
+    const isNextButtonDisabled = nextGroupPage > totalPages; // 다음페이지 비활성화 여부
+
+    for (let i = prevGroupPage + 1; i < Math.min(prevGroupPage + 6, totalPages + 1); i++) {
         buttonArray.push(
             <button
                 key={i}
@@ -48,10 +88,14 @@ const Musiclist = () => {
         );
     }
     const handleNextPage = () => {
-        setCurrentPage(currentPage + 1);
+        if (!isNextButtonDisabled) {
+            setCurrentPage(nextGroupPage);
+        }
     };
     const handlePrevPage = () => {
-        setCurrentPage(currentPage - 1);
+        if (!isPrevButtonDisabled) {
+            setCurrentPage(prevGroupPage);
+        }
     };
 
     const formatSecondsToTime = (time: number) => {
@@ -65,9 +109,19 @@ const Musiclist = () => {
     return (
         <Container>
             <BackgroundCover></BackgroundCover>
+            {openPlayList && (
+                <PlaylistContainer>
+                    <PlaylistModal>
+                        <AddListMusic />
+                        <Exitbox onClick={() => setOpenPlayList(false)}>
+                            <ImCross />
+                        </Exitbox>
+                    </PlaylistModal>
+                </PlaylistContainer>
+            )}
             <MusiclistContainer>
                 <TagContainer className={openSearch ? 'open-search' : ''}>
-                    <Categories />
+                    <Categories showSearchResult={showSearchResult} />
                 </TagContainer>
                 <RightContainer>
                     <SearchOpen
@@ -83,42 +137,50 @@ const Musiclist = () => {
                         <div className="musicList-title">Music List</div>
                         <div className="music-inquiry">
                             <li
-                                className={tapClick === 0 ? 'active' : ''}
                                 onClick={() => {
-                                    setTapClick(0);
+                                    setTapClick('musics');
                                 }}
+                                className={tapClick === 'musics' ? 'active' : ''}
                             >
                                 최신순
                             </li>
                             <li
-                                className={tapClick === 1 ? 'active' : ''}
                                 onClick={() => {
-                                    setTapClick(1);
+                                    setTapClick('musics/order-by-like-count');
                                 }}
+                                className={tapClick === 'musics/order-by-like-count' ? 'active' : ''}
                             >
                                 좋아요순
                             </li>
                         </div>
                     </MusicListTitle>
-                    <SongContainer>
-                        {musicDataList.map((musicData) => (
-                            <Item key={musicData.musicId}>
-                                <li className="music-image">
-                                    <img src={musicData.albumCoverImg} alt={musicData.musicName} />
-                                </li>
-                                <li className="music-name">
-                                    <Link to={`/musiclist/${musicData.musicId}`}>{musicData.musicName}</Link>
-                                </li>
-                                <li className="music-artist color-gray">{musicData.artistName}</li>
-                                <li className="music-album color-gray">{musicData.albumName}</li>
-                                <li>{musicData.tags}</li>
-                                <li className="music-time color-gray">
-                                    {formatSecondsToTime(Number(musicData.musicTime))}
-                                </li>
-                                <Sideicon />
-                            </Item>
-                        ))}
-                    </SongContainer>
+                    {isLoding ? (
+                        <Loding />
+                    ) : (
+                        <SongContainer>
+                            {musicDataList.map((musicData) => (
+                                <Item key={musicData.musicId}>
+                                    <li className="music-image">
+                                        <img src={musicData.albumCoverImg} alt={musicData.musicName} />
+                                    </li>
+                                    <li className="music-name">
+                                        <Link to={`/musiclist/${musicData.musicId}`}>{musicData.musicName}</Link>
+                                    </li>
+                                    <li className="music-artist color-gray">{musicData.artistName}</li>
+                                    <li className="music-album color-gray">{musicData.albumName}</li>
+                                    <TagValue>
+                                        {musicData.musicTagName.slice(0, 2).map((tag, i) => (
+                                            <li key={`tag-${i}`}>{tag}</li>
+                                        ))}
+                                    </TagValue>
+                                    <li className="music-time color-gray">
+                                        {formatSecondsToTime(Number(musicData.musicTime))}
+                                    </li>
+                                    <Sideicon musicId={musicData.musicId} musicUri={musicData.musicUri} />
+                                </Item>
+                            ))}
+                        </SongContainer>
+                    )}
                     <Pagination>
                         <button disabled={currentPage === 1} onClick={handlePrevPage}>
                             Prev
@@ -148,7 +210,7 @@ const MusiclistContainer = styled.div`
     display: flex;
     align-items: center;
     flex-direction: row;
-    height: 100vh;
+    height: 100%;
     @media screen and (max-width: 700px) {
         padding-top: 100px;
     }
@@ -162,9 +224,10 @@ const TagContainer = styled.div`
     flex-direction: column;
     @media screen and (max-width: 700px) {
         /* display: none; */
-        position: absolute;
+        position: fixed;
         display: none;
         top: 0px;
+        height: 100vh;
         width: 0%;
         z-index: 3;
         animation: openSearch 1s forwards;
@@ -290,6 +353,7 @@ const Item = styled.ul`
         align-items: center;
         justify-content: center;
         font-size: 0.8rem;
+        letter-spacing: 0.5px;
         height: 20px;
         width: 100%;
         font-family: 'Rajdhani', sans-serif;
@@ -302,6 +366,7 @@ const Item = styled.ul`
     .music-name a {
         color: #ccc;
         text-decoration: none;
+        font-weight: 500;
     }
     .music-image {
         width: 70px;
@@ -324,6 +389,32 @@ const Item = styled.ul`
         .music-album {
             display: none;
         }
+    }
+    @media (max-width: 700px) {
+        .music-artist {
+            display: none;
+        }
+    }
+`;
+
+const TagValue = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    align-items: center;
+    min-width: 140px;
+    /* border: 1px solid red; */
+
+    li {
+        font-family: 'Noto Sans KR', sans-serif;
+        align-items: center;
+        border: 2px solid #ccc;
+        border-radius: 20px;
+        width: 70px;
+        font-size: 0.65rem;
+        color: #ccc;
+        margin: 3px;
+        text-transform: uppercase;
     }
 `;
 
@@ -378,5 +469,67 @@ const SearchOpen = styled.div`
     }
     @media (min-width: 700px) {
         display: none;
+    }
+`;
+/**2023/05/23 - 플레이리스트 음원 추가 컨테이너 - 박수범 */
+const PlaylistContainer = styled.div`
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    height: 0vh;
+    display: flex;
+    flex-direction: column;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    z-index: 3;
+    animation: showModal 1s forwards;
+    @keyframes showModal {
+        100% {
+            height: 100vh;
+        }
+    }
+`;
+/**2023/05/23 - 플레이리스트 음원추가 모달창 - 박수범 */
+const PlaylistModal = styled.div`
+    justify-content: center;
+    align-items: center;
+    width: 450px;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    @media (max-width: 700px) {
+        width: 400px;
+        height: 560px;
+    }
+    > button {
+        cursor: pointer;
+    }
+`;
+const Exitbox = styled.div`
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    bottom: 0px;
+    left: 0px;
+    width: 60px;
+    height: 60px;
+    font-size: 10px;
+    color: #ccc;
+    text-align: center;
+    font-size: 2rem;
+    border: 2px solid #ccc;
+
+    cursor: pointer;
+    z-index: 3;
+    :hover {
+        color: rgba(199, 68, 68, 1);
+        border-color: rgba(199, 68, 68, 1);
     }
 `;

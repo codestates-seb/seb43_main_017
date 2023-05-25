@@ -1,6 +1,5 @@
 package com.codestates.mainProject.playListTag.entity;
 
-import com.codestates.mainProject.member.entity.Member;
 import com.codestates.mainProject.playList.entity.PlayList;
 import com.codestates.mainProject.tags.entity.Tag;
 import lombok.Getter;
@@ -17,10 +16,6 @@ public class PlayListTag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long playListTagId;
-
-    @ManyToOne
-    @JoinColumn(name = "MEMBER_ID")
-    private Member member;
 
     @ManyToOne
     @JoinColumn(name = "PLAYLIST_ID")

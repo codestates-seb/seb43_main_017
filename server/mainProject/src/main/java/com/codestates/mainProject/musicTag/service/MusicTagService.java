@@ -4,17 +4,14 @@ import com.codestates.mainProject.exception.BusinessLogicException;
 import com.codestates.mainProject.exception.ExceptionCode;
 import com.codestates.mainProject.member.entity.Member;
 import com.codestates.mainProject.member.service.MemberService;
-import com.codestates.mainProject.memberMusic.entity.MemberMusic;
-import com.codestates.mainProject.memberMusic.repository.MemberMusicRepository;
-import com.codestates.mainProject.music.dto.MusicDto;
+
 import com.codestates.mainProject.music.entity.Music;
 import com.codestates.mainProject.music.service.MusicService;
-import com.codestates.mainProject.musicLike.entity.MusicLike;
+
 import com.codestates.mainProject.musicTag.dto.MusicTagDto;
 import com.codestates.mainProject.musicTag.entity.MusicTag;
 import com.codestates.mainProject.musicTag.repository.MusicTagRepository;
-import com.codestates.mainProject.playList.entity.PlayList;
-import com.codestates.mainProject.tags.dto.TagDto;
+
 import com.codestates.mainProject.tags.entity.Tag;
 import com.codestates.mainProject.tags.service.TagService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Service
 @Transactional
@@ -73,7 +70,7 @@ public class MusicTagService {
 
         Music findMusic = musicService.findMusicById(musicId);
         Optional<List<MusicTag>> optionalMusicTags = musicTagRepository.findByMusicMusicId(musicId);
-        List<MusicTag> musicTags = optionalMusicTags.orElse(new ArrayList<MusicTag>());
+        List<MusicTag> musicTags = optionalMusicTags.orElse(new ArrayList<>());
         for(MusicTag musicTag : musicTags){
             findMusic.removeMusicTag(musicTag);
             musicTagRepository.delete(musicTag);

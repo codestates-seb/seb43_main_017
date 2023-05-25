@@ -3,6 +3,9 @@ export interface PlcardProps {
     memberId: number;
     createMember: string;
     title: string;
+    coverImg: string;
+    tags: [];
+    likeCount: number;
     body: string;
     createdAt: string;
     modifiedAt: string;
@@ -16,6 +19,7 @@ export interface musicdetail {
     musicTime: number;
     albumCoverImg: string;
     musicUri: string;
+    musicTagName: [];
     createdAt: string;
     modifiedAt: string;
 }

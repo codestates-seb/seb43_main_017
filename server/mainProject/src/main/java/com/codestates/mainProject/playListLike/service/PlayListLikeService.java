@@ -12,6 +12,8 @@ import com.codestates.mainProject.playList.service.PlayListService;
 import com.codestates.mainProject.playListLike.entity.PlayListLike;
 import com.codestates.mainProject.playListLike.repository.PlayListLikeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,11 +37,10 @@ public class PlayListLikeService {
         like.setPlayList(playList);
 
         playList.addPlayListLike(like);
-        member.addLikedPlayLists(playList);
+        member.addLikedPlayLists(like);
 
         return playListLikeRepository.save(like);
     }
-
 
     // 좋아요 삭제
     public void cancelLike(Long memberId, Long playListId){
@@ -51,29 +52,25 @@ public class PlayListLikeService {
             if (member.getMemberId().equals(like.getMember().getMemberId())) {
                 playListLikeRepository.delete(like);
                 playList.removePlayListLike(like);
-                member.removeLikedPlayLists(playList);
+                member.removeLikedPlayLists(like);
             } else throw new BusinessLogicException(ExceptionCode.NO_PERMISSION_EDITING_COMMENT);
         }
     }
 
-    // 조회
-    public PlayListLike getLike(long likeId){
-        return playListLikeRepository.findById(likeId)
-                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.PlAYLIST_LIKE_NOT_FOUND));
+
+    // {playlist-id} like 전체 조회
+    public List<PlayListLike> getLikesByPlayListId(Long playListId){
+        return playListLikeRepository.findByPlayListPlayListId(playListId);
+    }
+
+    // 유저 좋아요 여부
+    public Page<PlayListLike> getMemberLikes(long memberId, Pageable pageable) {
+        Member member = memberService.findMember(memberId);
+        return playListLikeRepository.findAllByMember(member, pageable);
     }
 
     // 모든 멤버, 플리 아이디 조회
     public List<PlayListLike> getAllLikesForMemberAndPlayList(Long memberId, Long playListId) {
         return playListLikeRepository.findByMemberMemberIdAndPlayListPlayListId(memberId, playListId);
-    }
-
-     // 이미 좋아요를 눌렀는지 조회
-    public List<PlayListLike> isAlreadyLiked(Long memberId){
-        return playListLikeRepository.findByMemberMemberId(memberId);
-    }
-
-    // {playlist-id} like 전체 조회
-    public List<PlayListLike> getLikesByPlayListId(Long playListId){
-        return playListLikeRepository.findByPlayListPlayListId(playListId);
     }
 }

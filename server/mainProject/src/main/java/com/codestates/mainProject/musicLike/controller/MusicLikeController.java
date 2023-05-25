@@ -44,8 +44,8 @@ public class MusicLikeController {
     }
 
     // memberId를 받아서 해당 member가 좋아요한 모든 음악 조회
-    @GetMapping("/members/{member-id}")
-    public ResponseEntity<List<MusicLikeDto.MusicLikeResponseDto>> getMusicLikesByMember(@PathVariable("member-id") Long memberId,
+    @GetMapping("/members")
+    public ResponseEntity<List<MusicLikeDto.MusicLikeResponseDto>> getMusicLikesByMember(@LoginMemberId Long memberId,
                                                                                          Pageable pageable) {
         Page<MusicLike> musicLikes = musicLikeService.findMusicLikesByMember(memberId, pageable);
         List<MusicLikeDto.MusicLikeResponseDto> responseDtoList = musicLikes.getContent()

@@ -1,6 +1,9 @@
 package com.codestates.mainProject.member.controller;
 
 import com.codestates.mainProject.member.dto.AuthLoginDto;
+import com.codestates.mainProject.music.dto.MusicDto;
+import com.codestates.mainProject.music.entity.Music;
+import com.codestates.mainProject.music.mapper.MusicMapper;
 import com.codestates.mainProject.response.DataResponseDto;
 import com.codestates.mainProject.security.auth.jwt.JwtTokenizer;
 
@@ -39,6 +42,7 @@ public class MemberContorller {
     private final MemberMapper mapper;
 
     private final JwtTokenizer jwtTokenizer;
+    private final MusicMapper musicMapper;
 
 
     @PostMapping("/signup")
@@ -51,13 +55,15 @@ public class MemberContorller {
         return ResponseEntity.created(location).build();
     }
        //  # 프론트엔드에서 네이버유저의 아이디와 비번을 알려주면 그걸 이용해 회원가입을 하고 토큰발급하는 방식
-    @PostMapping("/oauth/signup")
-    public ResponseEntity oAuth2Login(@RequestBody @Valid AuthLoginDto requesBody) {
+    @PostMapping("/oauth/signup/naver")
+    public ResponseEntity oAuth2LoginNaver(@RequestBody @Valid AuthLoginDto requesBody) {
         log.info("### oauth2 login start! ###");
         String accessToken = "";
         String refreshToken = "";
         String memberId = "";
         Member member = mapper.AuthLoginDtoMember(requesBody);
+        member.setEmail(member.getEmail()+"2");   //Naver 유저인 경우 이메일 뒤에 2를 붙임
+
         if(!memberService.existsByEmail(member.getEmail())) {
             member = memberService.createMemberOAuth2(member);
         } else {
@@ -72,21 +78,27 @@ public class MemberContorller {
                 .header("MemberId", memberId).build();
     }
 
-    // 토큰을 이용해 사용자의 정보를 가져와 회원가입을 하고 받아오는 방식
-//    @PostMapping("/oauth/signup")
-//    public ResponseEntity oAuth2Login(HttpRequest request) throws IOException {
-//        log.info("### oauth2 login start! ###");
-//        String accessToken = "";
-//        String refreshToken = "";
-//
-//        Member member = memberService.createNaverOAuth2(request);
-//
-//        accessToken = memberService.delegateAccessToken(member);
-//        refreshToken = memberService.delegateRefreshToken(member);
-//        return ResponseEntity.ok().header("Authorization", "Bearer " + accessToken)
-//                .header("Refresh", refreshToken).build();
-//    }
+    @PostMapping("/oauth/signup/kakao")
+    public ResponseEntity oAuth2LoginKakao(@RequestBody @Valid AuthLoginDto requesBody) {
+        log.info("### oauth2 login start! ###");
+        String accessToken = "";
+        String refreshToken = "";
+        String memberId = "";
+        Member member = mapper.AuthLoginDtoMember(requesBody);
+        member.setEmail(member.getEmail()+"3");
+        if(!memberService.existsByEmail(member.getEmail())) {
+            member = memberService.createMemberOAuth2(member);
+        } else {
+            member = memberService.findVerifiedMember(member.getEmail());
+        }
 
+        accessToken = memberService.delegateAccessToken(member);
+        refreshToken = memberService.delegateRefreshToken(member);
+        memberId = String.valueOf(member.getMemberId());
+        return ResponseEntity.ok().header("Authorization", "Bearer " + accessToken)
+                .header("Refresh", refreshToken)
+                .header("MemberId", memberId).build();
+    }
 
     @GetMapping("/info")
     public ResponseEntity getMemberInfo(@LoginMemberId Long memberId){
@@ -95,6 +107,22 @@ public class MemberContorller {
 
         return new ResponseEntity<>(
                 new DataResponseDto<>(response), HttpStatus.OK);
+    }
+
+    @GetMapping("/musics/recommend")
+    public ResponseEntity getMemberRecommendMusic(@LoginMemberId Long memberId){
+
+        List<Music> response = memberService.getRecommendMusics(memberId);
+        List<MusicDto.ResponseDto> responses= musicMapper.musicsToResponses(response);
+
+        for(int i=0; i< response.size(); i++) {
+            Music music = response.get(i);
+            List<String> tagName = music.getTagsName();
+            responses.get(i).setMusicTagName(tagName);
+        }
+
+        return new ResponseEntity<>(
+                new DataResponseDto<>(responses), HttpStatus.OK);
     }
 
 
@@ -142,8 +170,6 @@ public class MemberContorller {
     public ResponseEntity patchMember(@PathVariable("member-id") @Positive long memberId,
                                       @LoginMemberId Long loginId,
                                       @Valid @RequestBody MemberDto.PatchDto requestBody){
-
-
 
         Member member = mapper.patchToMember(requestBody);
         member.setMemberId(memberId);

@@ -1,26 +1,18 @@
 import styled from 'styled-components';
-import { useRecoilState, useSetRecoilState } from 'recoil';
-import { searchItemState, searchResultState } from 'src/recoil/Atoms';
+import { useState } from 'react';
+
+interface SearchProps {
+    showSearchResult: (searchText: string) => void;
+}
 
 /* 2023.05.07 검색 컴포넌트 구현 - 홍혜란 */
-function Search() {
-    /* 2023.05.11 서치 상태 관리 - 홍혜란 */
-    const [searchItem, setSearchItem] = useRecoilState(searchItemState);
+function Search({ showSearchResult }: SearchProps) {
+    const [searchText, setSearchText] = useState('');
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchItem(e.target.value);
-    };
-
-    const handleSearch = async () => {
-        const response = await fetch(``);
-        const result = await response.json();
-        // 검색 결과를 전역 recoil 상태에 저장
-        useSetRecoilState(searchResultState)(result);
-    };
-
-    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            handleSearch();
+    const handleSearch = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter' && searchText.length > 0) {
+            showSearchResult(searchText);
+            setSearchText('');
         }
     };
 
@@ -29,9 +21,11 @@ function Search() {
             <SearchInput
                 type="text"
                 placeholder="검색어를 입력하세요"
-                value={searchItem}
-                onChange={handleInputChange}
-                onKeyPress={handleKeyPress}
+                value={searchText}
+                onChange={(e) => {
+                    setSearchText(e.target.value);
+                }}
+                onKeyDown={handleSearch}
             />
         </SearchContainer>
     );

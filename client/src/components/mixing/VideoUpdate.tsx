@@ -1,31 +1,31 @@
-import React, { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState, LegacyRef } from 'react';
 import { useDropzone } from 'react-dropzone';
 import styled from 'styled-components';
 import VideoPlayer from './VideoPlayer';
 import { videouploadState } from 'src/recoil/Atoms';
-import { useSetRecoilState } from 'recoil';
-
-const VideoUploader: React.FC = () => {
+import { useRecoilState } from 'recoil';
+/** 2022/05/22 - Video Ref 타입 선언 - 박수범 */
+interface LikedListProps {
+    videoRef: LegacyRef<HTMLVideoElement>;
+}
+const VideoUploader = ({ videoRef }: LikedListProps) => {
     const [uploadedVideo, setUploadedVideo] = useState<File | null>(null);
-    const setvideouploadState = useSetRecoilState(videouploadState);
+    const [videoState, setvideouploadState] = useRecoilState(videouploadState);
 
+    /** 2022/05/22 - 드래그앤 드랍을 통해 드랍존에 비디오 데이터가 들어왔을때 비디오플레이어가 나타나게 해주고 파일데이터를 저장하는 로직 -박수범 */
     const onDrop = useCallback((acceptedFiles: File[]) => {
         acceptedFiles.forEach((file: File) => {
             const reader = new FileReader();
             reader.onload = () => {
-                const fileData = reader.result;
-                console.log('업로드된 파일:', file.name);
-                console.log('파일 데이터:', fileData);
                 setUploadedVideo(file);
                 setvideouploadState(true);
             };
             reader.readAsArrayBuffer(file);
         });
     }, []);
-
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
     const fileInputRef = useRef<HTMLInputElement>(null);
-
+    /** 2022/05/22 - 드랍존 ref 로직 - 박수범 */
     const handleInputClick = () => {
         if (fileInputRef.current) {
             fileInputRef.current.click();
@@ -34,13 +34,13 @@ const VideoUploader: React.FC = () => {
 
     return (
         <div>
-            {!uploadedVideo ? (
+            {!uploadedVideo || !videoState ? (
                 <DropzoneStyle {...getRootProps()} onClick={handleInputClick}>
                     <input {...getInputProps({ accept: 'video/*' })} ref={fileInputRef} />
-                    <p>비디오 파일을 드래그 앤 드롭하여 업로드하거나, 클릭하여 파일을 선택하세요.</p>
+                    <p>Drag and drop your video file to upload, or click to select a file.</p>
                 </DropzoneStyle>
             ) : (
-                <VideoPlayer videoUrl={URL.createObjectURL(uploadedVideo)} />
+                <VideoPlayer videoUrl={URL.createObjectURL(uploadedVideo)} videoRef={videoRef} />
             )}
         </div>
     );
@@ -56,6 +56,10 @@ const DropzoneStyle = styled.div`
     justify-content: center;
     align-items: center;
     padding: 16px;
+    @media (max-width: 722px) {
+        width: 300px;
+        height: 120px;
+    }
     cursor: pointer;
     > p {
         color: gray;

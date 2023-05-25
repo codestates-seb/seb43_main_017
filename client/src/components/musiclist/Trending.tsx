@@ -1,69 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import Loding from 'src/pages/Loding';
 import styled from 'styled-components';
 import axios from 'axios';
-// import { atom } from 'recoil';
-// import { useRecoilValue } from 'recoil';
-
-/* 2023.05.08 MusicList Tranding 타입 선언 - 홍혜란 */
-// interface TrandingData {
-//     index: number;
-//     albumCover: string;
-//     songTitle: string;
-//     artistName: string;
-// }
-
-// const TrList: TrandingData[] = [
-//     {
-//         index: 1,
-//         albumCover: '/assets/ditto.png',
-//         songTitle: 'Ditto',
-//         artistName: 'Newjeans',
-//     },
-//     {
-//         index: 2,
-//         albumCover: '/assets/ditto.png',
-//         songTitle: 'Ditto',
-//         artistName: 'Newjeans',
-//     },
-//     {
-//         index: 3,
-//         albumCover: '/assets/ditto.png',
-//         songTitle: 'Ditto',
-//         artistName: 'Newjeans',
-//     },
-//     {
-//         index: 4,
-//         albumCover: '/assets/ditto.png',
-//         songTitle: 'Ditto',
-//         artistName: 'Newjeans',
-//     },
-//     {
-//         index: 5,
-//         albumCover: '/assets/ditto.png',
-//         songTitle: 'Ditto',
-//         artistName: 'Newjeans',
-//     },
-//     {
-//         index: 6,
-//         albumCover: '/assets/ditto.png',
-//         songTitle: 'Ditto',
-//         artistName: 'Newjeans',
-//     },
-// ];
-
-/* 2023.05.08 MusicList Tranding 상태관리(추후 수정) - 홍혜란 */
-// const trListState = atom<TrandingData[]>({
-//     key: 'trListState',
-//     default: [],
-// });
-// const trList = useRecoilValue<TrandingData[]>(trListState);
+import { Link } from 'react-router-dom';
 
 interface MusicData {
     musicId: number;
     musicName: string;
     artistName: string;
     albumName: string;
-    musicTime: number; // musicTime 속성을 숫자(number) 타입으로 수정합니다.
+    musicTime: number;
     albumCoverImg: string;
     musicUri: string;
     createdAt: string;
@@ -72,33 +18,57 @@ interface MusicData {
 
 const Trending = () => {
     const [tranding, setTranding] = useState<MusicData[]>([]);
-    console.log(tranding);
+    const [isLoding, setIsLoding] = useState(true);
+    const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
 
     useEffect(() => {
-        axios
-            .get('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics?&size=6')
-            .then((response) => {
-                setTranding(response.data.data);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+        if (token) {
+            axios
+                .get(`${process.env.REACT_APP_API_URL}/members/musics/recommend`, {
+                    headers: {
+                        Authorization: token,
+                    },
+                })
+                .then((response) => {
+                    setTranding(response.data.data);
+                    setIsLoding(false);
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        } else {
+            axios
+                .get(`${process.env.REACT_APP_API_URL}/musics?&size=6`)
+                .then((response) => {
+                    setTranding(response.data.data);
+                    setIsLoding(false);
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        }
     }, []);
 
     return (
         <Container>
             <TrTitleContainer>
-                <TrTitle>Tranding</TrTitle>
+                <TrTitle>Trending</TrTitle>
             </TrTitleContainer>
-            <ItemsContainer>
-                {tranding.map((data) => (
-                    <Item key={data.musicId}>
-                        <Image src={data.albumCoverImg} alt={data.musicName} />
-                        <Title>{data.musicName}</Title>
-                        <Artist>{data.artistName}</Artist>
-                    </Item>
-                ))}
-            </ItemsContainer>
+            {isLoding ? (
+                <Loding />
+            ) : (
+                <ItemsContainer>
+                    {tranding.map((data) => (
+                        <Item key={data.musicId}>
+                            <Link to={`/musiclist/${data.musicId}`}>
+                                <Image src={data.albumCoverImg} alt={data.musicName} />
+                                <Title>{data.musicName}</Title>
+                                <Artist>{data.artistName}</Artist>
+                            </Link>
+                        </Item>
+                    ))}
+                </ItemsContainer>
+            )}
         </Container>
     );
 };
@@ -109,7 +79,6 @@ export default Trending;
 const Container = styled.div`
     display: flex;
     flex-direction: column;
-    overflow-x: auto;
     gap: 16px;
     padding: 16px 0;
     width: 100%;
@@ -133,6 +102,9 @@ const TrTitle = styled.div`
     font-weight: 700;
     color: hsl(0, 0%, 100%);
     margin: 10px 0px;
+    a {
+        text-decoration: none;
+    }
 `;
 
 /* 2023.05.11 MusicList Tranding (리스트 나올 박스) 컴포넌트 구현 / slideIn 애니메이션 - 홍혜란 */
@@ -165,6 +137,9 @@ const ItemsContainer = styled.div`
     display: flex;
     flex-direction: row;
     font-family: 'Rajdhani', sans-serif;
+    a {
+        text-decoration: none;
+    }
     @media screen and (max-width: 1200px) {
         & ${Item}:nth-child(6) {
             display: none;

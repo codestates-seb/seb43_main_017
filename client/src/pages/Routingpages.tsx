@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 // import styled from 'styled-components';
-import NotFound from 'src/components/NotFound';
+import NotFound from 'src/pages/NotFound';
 import MainPage from './MainPage';
 import Playlist from 'src/components/playlist/Playlist';
 import Mixing from 'src/components/mixing/Mixing';
@@ -19,7 +19,7 @@ function RoutingPages() {
             <Route path="/playlsit/:plId" element={<PlaylistDetail />} />
             <Route path="/musiclist" element={<Musiclist />} />
             <Route path="/musiclist/:msId" element={<MusicDetail />} />
-            <Route path="/mixing" element={<Mixing />} />
+            <Route path="/fittingroom" element={<Mixing />} />
             <Route path="/mypage" element={<Mypage />} />
             <Route path="/oauthloading" element={<Loading />} />
         </Routes>

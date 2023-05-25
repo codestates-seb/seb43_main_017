@@ -12,7 +12,6 @@ import com.codestates.mainProject.playListTag.repository.PlayListTagRepository;
 import com.codestates.mainProject.tags.entity.Tag;
 import com.codestates.mainProject.tags.service.TagService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -30,10 +28,7 @@ public class PlayListTagService {
     private final MemberService memberService;
     private final TagService tagService;
 
-    public PlayListTag createPlayListTag(long tagId, Long memberId, long playListId) {
-        try {
-            verifyExistPlayListTag(tagId, playListId);
-            Member member = memberService.findMember(memberId);
+    public PlayListTag createPlayListTag(long tagId, long playListId) {
             PlayList playList = playListService.findVerifiedPlayList(playListId);
             Tag tag = tagService.findVerifiedTag(tagId);
             String tagName = tag.getName();
@@ -45,7 +40,6 @@ public class PlayListTagService {
             }
 
             PlayListTag playListTag = new PlayListTag();
-            playListTag.setMember(member);
             playListTag.setPlayList(playList);
             playListTag.setTag(tag);
             playListTag.setName(tagName);
@@ -53,10 +47,6 @@ public class PlayListTagService {
             playList.addPlayListTag(playListTag);
 
             return playListTagRepository.save(playListTag);
-        } catch (Exception e) {
-            log.error("플레이리스트 태그 생성 실패", e);
-            throw new RuntimeException();
-        }
     }
 
     public List<PlayListTagDto> getPlayListTags(long playListId) {
@@ -67,7 +57,6 @@ public class PlayListTagService {
         for (PlayListTag playListTag : tags) {
             PlayListTagDto playListTagDto = new PlayListTagDto(
                     playListTag.getPlayListTagId(),
-                    playListTag.getMember().getMemberId(),
                     playListTag.getPlayList().getPlayListId(),
                     playListTag.getTag().getTagId(),
                     playListTag.getTag().getName()
@@ -77,22 +66,17 @@ public class PlayListTagService {
         return response;
     }
 
-    public void deletePlayListTag(long tagId, Long memberId, long playListId) {
-        try {
+    public void deletePlayListTag(long tagId, Long memberId , long playListId) {
             PlayListTag tag = findPlayListTag(tagId, playListId);
             PlayList playList = playListService.findVerifiedPlayList(playListId);
-            Member member = memberService.findMember(memberId);
+            Member member = memberService.findMember(playList.getMember().getMemberId());
 
-            if (!member.getMemberId().equals(tag.getMember().getMemberId())) {
+            if (!member.getMemberId().equals(memberId)) {
                 throw new BusinessLogicException(ExceptionCode.NO_PERMISSION_DELETING_POST);
             }
 
             playList.removePlayListTag(tag);
             playListTagRepository.delete(tag);
-        } catch (Exception e) {
-            log.error("플레이리스트 태그 삭제 실패", e);
-            throw new RuntimeException();
-        }
     }
 
     public PlayListTag findPlayListTag(long tagId, long playListId) {
@@ -101,14 +85,5 @@ public class PlayListTagService {
         PlayListTag findPlayListTag = optionalPlayListTag.orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.TAG_NOT_FOUND));
         return findPlayListTag;
-    }
-
-    public void verifyExistPlayListTag(long tagId, long playListId) {
-        PlayList playList = playListService.findVerifiedPlayList(playListId);
-
-        boolean tagExists = playList.getPlayListTags().stream()
-                .anyMatch(playListTag -> playListTag.getTag().getTagId() == tagId);
-
-        if (tagExists) throw new BusinessLogicException(ExceptionCode.PLAYLIST_TAG_EXISTS);
     }
 }

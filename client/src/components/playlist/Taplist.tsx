@@ -9,6 +9,7 @@ function Taplist() {
     const [pldata, setPldata] = useState<PlcardProps[]>([]); //플리데이터 저장 스테이트
     const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
     const [totalPages, setTotalPages] = useState<number>(0); // 전체 페이지 수
+    const [searchText, setSearchText] = useState<string>(''); //서치 텍스트
     const buttonArray = [];
 
     useEffect(() => {
@@ -27,6 +28,25 @@ function Taplist() {
                 console.error(error);
             });
     }, [currentPage]);
+
+    const handelPlSearch = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            axios
+                .get(
+                    `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/search-by-title?title=${searchText}&page=${currentPage}&size=5`,
+                )
+                .then(function (response) {
+                    // 성공적으로 요청을 보낸 경우
+                    setPldata(response.data.content);
+                    console.log(response.data);
+                    setTotalPages(response.data.pageInfo.totalPages);
+                })
+                .catch(function (error) {
+                    // 요청 중에 오류가 발생한 경우
+                    console.error(error);
+                });
+        }
+    };
 
     /** 2023.05.17 전체 페이지 수 만큼 버튼 생성 - 김주비*/
     for (let i = 1; i <= totalPages; i++) {
@@ -51,27 +71,33 @@ function Taplist() {
 
     return (
         <TapGroup>
-            <Plsearch placeholder="제목을 검색해주세요" />
+            <Plsearch
+                placeholder="제목을 검색해주세요"
+                value={searchText}
+                onChange={(e) => {
+                    setSearchText(e.target.value);
+                }}
+                onKeyDown={handelPlSearch}
+            />
             <ul>
                 {pldata.map((data) => (
                     <TapList key={data.playListId}>
                         <div>
-                            <img src="/" alt="playlist cover image" />
+                            <img src={data.coverImg} alt="playlist cover image" />
                         </div>
                         <div className="pl-title">
                             <p>
                                 <Link to={`/playlsit/${data.playListId}`}>{data.title.slice(0, 20)}</Link>
                             </p>
-                            <p>{data.createMember}</p>
+                            <p className="pl-createMember">{data.createMember}</p>
                         </div>
                         <ul className="pl-tag">
-                            {/* {data.tag.slice(0, 2).map((tag, i) => (
-                                <li key={`tag-${i}`}>{tag.tagname}</li>
-                            ))} */}
+                            {data.tags.slice(0, 2).map((tag, i) => (
+                                <li key={`tag-${i}`}>{tag}</li>
+                            ))}
                         </ul>
                         <div className="pl-like">
-                            <Like />
-                            <span>503</span>
+                            <Like plId={data.playListId} />
                         </div>
                     </TapList>
                 ))}
@@ -89,28 +115,70 @@ function Taplist() {
     );
 }
 
-function Like() {
+function Like({ plId }: { plId: number }) {
     const [like, setLike] = useState<boolean>(false);
-    return (
-        <>
-            {like ? (
-                <HiHeart
-                    onClick={() => {
-                        setLike(!like);
-                    }}
-                />
-            ) : (
-                <HiOutlineHeart
-                    onClick={() => {
-                        setLike(!like);
-                    }}
-                />
-            )}
-        </>
-    );
+    const token = localStorage.getItem('access_token');
+    const memberId = localStorage.getItem('memberId');
+
+    useEffect(() => {
+        if (token) {
+            axios
+                .get(
+                    `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/members/${memberId}/like`,
+                    {
+                        headers: {
+                            Authorization: token,
+                        },
+                    },
+                )
+                .then(function (res) {
+                    const data = res.data;
+                    const likedMusicIds = data.map((item: { playListId: number }) => item.playListId);
+                    setLike(likedMusicIds.includes(plId));
+                });
+        }
+    }, []);
+
+    const haldleLiketoggle = () => {
+        if (token) {
+            axios
+                .post(
+                    `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/${plId}/like`,
+                    {},
+                    {
+                        headers: {
+                            Authorization: token,
+                        },
+                    },
+                )
+                .then(function (res) {
+                    setLike(res.data.playListId === plId);
+                })
+                .catch(function (err) {
+                    console.log(err);
+                });
+        } else {
+            alert('로그인을 진행해주세요');
+        }
+    };
+
+    return <LikeGroup onClick={haldleLiketoggle}>{like ? <HiHeart /> : <HiOutlineHeart />}</LikeGroup>;
 }
 
 export default Taplist;
+
+const LikeGroup = styled.div`
+    padding: 10px;
+    > * {
+        animation: bounceHeart 0.5s forwards;
+    }
+    @keyframes bounceHeart {
+        50% {
+            transform: scale(1.4);
+            color: #ffa3a3;
+        }
+    }
+`;
 
 const TapGroup = styled.div`
     width: 100%;
@@ -139,7 +207,7 @@ const Plsearch = styled.input`
     animation: showinput 1s forwards;
     opacity: 0;
     margin-top: -30px;
-
+    font-family: 'Noto Sans KR', sans-serif;
     ::placeholder {
         color: #969696;
         font-family: 'Rajdhani', sans-serif;
@@ -167,20 +235,21 @@ const TapList = styled.li`
     width: 70%;
     background-color: rgba(0, 0, 0, 0.5);
     border: 1px solid #494949;
-    border-radius: 50px;
+    border-radius: 10px;
     opacity: 0;
     animation: opacity 1s forwards;
     margin-top: 10px;
     transition: 0.3s ease-in-out;
-
+    padding: 10px;
+    font-family: 'Noto Sans KR', sans-serif;
     :hover {
         transform: scale(1.05);
         background-color: rgba(20, 20, 20, 0.5);
     }
 
     > div img {
-        margin: 10px;
-        border-radius: 50px;
+        border-radius: 5px;
+        margin-right: 20px;
         transition: 0.2s ease-in-out;
         width: 40px;
         height: 40px;
@@ -202,6 +271,9 @@ const TapList = styled.li`
         color: #ccc;
         text-decoration: none;
     }
+    .pl-createMember {
+        transform: scale(0.6);
+    }
 
     .pl-tag {
         display: flex;
@@ -221,7 +293,7 @@ const TapList = styled.li`
         display: flex;
         justify-content: center;
         align-items: center;
-        min-width: 100px;
+
         color: rgba(199, 68, 68, 1);
     }
     @keyframes opacity {

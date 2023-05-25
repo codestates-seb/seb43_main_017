@@ -3,6 +3,7 @@ package com.codestates.mainProject.playList.entity;
 import com.codestates.mainProject.audit.Auditable;
 import com.codestates.mainProject.member.entity.Member;
 import com.codestates.mainProject.music.entity.Music;
+import com.codestates.mainProject.playListComment.entity.PlayListComment;
 import com.codestates.mainProject.playListLike.entity.PlayListLike;
 import com.codestates.mainProject.playListTag.entity.PlayListTag;
 import com.codestates.mainProject.playlListMusic.entity.PlayListMusic;
@@ -42,10 +43,13 @@ public class PlayList extends Auditable {
     private List<String> tags = new ArrayList<>();
 
     @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
-    private List<PlayListTag> playListTags;
+    private List<PlayListTag> playListTags = new ArrayList<>();
 
     @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
     private List<PlayListLike> playListLikes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
+    private List<PlayListComment> playListComments = new ArrayList<>();
 
     @Column(nullable = false)
     private int likeCount = this.playListLikes.size();

@@ -14,6 +14,7 @@ import com.codestates.mainProject.playlListMusic.service.PlayListMusicService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,7 @@ public class PlayListService {
             playList.setCreateMember(findMember.getName());
 
             findMember.addPlayList(playList);
+            log.info("플레이리스트 생성 memberId={}, create={}", findMember.getMemberId(), findMember.getName());
 
             return playListRepository.save(playList);
         } catch (Exception e){
@@ -50,16 +52,52 @@ public class PlayListService {
         }
     }
 
-    // 유저 플레이리스트 조회
-//    public Page<PlayList> findPlayList(Long memberId, int page, int size) {
-//        Member member = memberService.findMember(memberId);
-//
-//        if (!member.getMemberId().equals())
-//    }
+    // 좋아요 플레이리스트 조회
+    public Page<PlayList> findLikedPlayLists(Long memberId, int page, int size) {
+        Member member = memberService.findMember(memberId);
+        List<PlayList> playLists = member.getLikedPlayLists();
 
+        int start = page * size;
+        int end = Math.min(start + size, playLists.size());
+
+        if (start >= playLists.size()) return Page.empty();
+
+        List<PlayList> pagePlayLists = playLists.subList(start, end);
+        return new PageImpl<>(pagePlayLists, PageRequest.of(page, size), playLists.size());
+    }
+
+    // 멤버 플레이리스트 조회
+    public Page<PlayList> findMemberPlayLists(Long memberId, int page, int size) {
+        Member member = memberService.findMember(memberId);
+        List<PlayList> playLists = member.getPlayLists();
+
+        int start = page * size;
+        int end = Math.min(start + size, playLists.size());
+
+        if (start >= playLists.size()) return Page.empty();
+
+        List<PlayList> pagePlayLists = playLists.subList(start, end);
+        return new PageImpl<>(pagePlayLists, PageRequest.of(page, size), playLists.size());
+    }
+
+    // 플레이리스트 전체 조회
     public Page<PlayList> findPlayLists(int page, int size){
         return playListRepository.findAll(PageRequest.of(
-                page, size, Sort.by("playListId").descending()));
+                page, size, Sort.by("likeCount").descending()));
+    }
+
+    // 관리자 플레이리스트 전체 조회
+    public Page<PlayList> findAdminsPlayLists(long memberId, int page, int size){
+        Member member = memberService.findMember(memberId);
+
+        List<PlayList> playLists = member.getPlayLists();
+
+        int start = page * size;
+        int end = Math.min(start + size, playLists.size());
+
+        if (start >= playLists.size()) return Page.empty();
+        List<PlayList> pagePlayLists = playLists.subList(start, end);
+        return new PageImpl<>(pagePlayLists, PageRequest.of(page, size), playLists.size());
     }
 
     public PlayList updatePlayList(Long playListId, Long memberId, PlayListDto.PatchDto requestBody){
@@ -75,8 +113,10 @@ public class PlayListService {
             if (requestBody.getBody() != null) {
                 findPlayList.setBody(requestBody.getBody());
             }
+            if (requestBody.getCoverImg() != null) {
+                findPlayList.setCoverImg(requestBody.getCoverImg());
+            }
         }
-
         return findPlayList;
     }
 
@@ -147,7 +187,7 @@ public class PlayListService {
                     music.getMusicLikeCount(),
                     music.getCreatedAt().toString(),
                     music.getModifiedAt().toString(),
-                    new ArrayList<>(music.getTags()),
+                    music.getTagsName(),
                     playList.getMember().getMemberId()
             );
             musicDtos.add(musicDto);

@@ -1,6 +1,6 @@
 package com.codestates.mainProject.musicTag.entity;
 
-import com.codestates.mainProject.member.entity.Member;
+
 import com.codestates.mainProject.music.entity.Music;
 import com.codestates.mainProject.tags.entity.Tag;
 import lombok.Getter;

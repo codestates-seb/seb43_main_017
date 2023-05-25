@@ -19,6 +19,12 @@ public class PlayListComment extends Auditable {
     private Long id;
 
     @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private String image;
+
+    @Column(nullable = false)
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -60,7 +60,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
     private Member buildOAuth2Member(String name, String email, String image) {
         Member member = new Member();
         member.setName(name);
-        member.setEmail(email);
+        member.setEmail(email+"1");
         member.setImage(image);
 
         return member;
@@ -128,7 +128,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
                 .host("mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com")
                 //.port(80)   -> aws로 배포했을 때 싸용
 //                .port(3000)   //-> local 테스트용
-                .path("/oauthloading")
+                .path("/oauthloading")            //리다이렉트 주소 (토큰이 포함된 url 을 받는 주소)
                 .queryParams(queryParams)
                 .build()
                 .toUri();

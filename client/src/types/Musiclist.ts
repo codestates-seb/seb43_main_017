@@ -5,15 +5,18 @@ export interface MusicData {
     artistName: string;
     albumName: string;
     musicTime: number;
-    tags: string;
+    musicTagName: string[];
     albumCoverImg: string;
     musicUri: string;
     createdAt: string;
     modifiedAt: string;
+    musicLikeCount: number;
+    memberId: number;
 }
 
 export interface MusicDataResponse {
     data: MusicData[];
+    content: MusicData[];
     pageInfo: {
         page: number;
         size: number;

@@ -19,7 +19,6 @@ public class MusicLikeDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class MusicLikePostDto {
-        private Long memberId;
         private Long musicId;
     }
 
@@ -31,6 +30,9 @@ public class MusicLikeDto {
         private Long id;
         private Long memberId;
         private Long musicId;
+        private String musicName;
+        private String artistName;
+        private String albumName;
     }
 
     @Getter

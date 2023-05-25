@@ -1,9 +1,5 @@
 package com.codestates.mainProject.playList.controller;
 
-import com.codestates.mainProject.exception.BusinessLogicException;
-import com.codestates.mainProject.exception.ExceptionCode;
-import com.codestates.mainProject.member.entity.Member;
-import com.codestates.mainProject.member.repository.MemberRepository;
 import com.codestates.mainProject.member.service.MemberService;
 import com.codestates.mainProject.playList.dto.PlayListDto;
 import com.codestates.mainProject.playList.entity.PlayList;
@@ -17,8 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,26 +55,47 @@ public class PlayListController {
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity getPlayLists(@Positive @RequestParam(value = "page", defaultValue = "1") int page,
-                                       @Positive @RequestParam(value = "size", defaultValue = "5") int size){
-        Page<PlayList> pagePlayList = playListService.findPlayLists(page-1, size);
-        List<PlayList> playLists = pagePlayList.getContent();
-        List<PlayListDto.ResponseDto> response = playListMapper.playListsToResponses(playLists);
+    // 관리자 플레이리스트 전체 조회
+    @GetMapping("/admin")
+    public ResponseEntity findAdminsPlayLists(@Positive @RequestParam(value = "page", defaultValue = "1") int page,
+                                              @Positive @RequestParam(value = "size", defaultValue = "10") int size){
+        Page<PlayList> pagePlayList = playListService.findAdminsPlayLists(1, page-1, size);
+        List<PlayListDto.ResponseDto> response = playListMapper.playListsToResponses(pagePlayList.getContent());
 
         return ResponseEntity.ok(new MultiResponseDto<>(response, pagePlayList));
     }
 
-//    @GetMapping("/member-playlist")
-//    public ResponseEntity getMemberPlayList(@LoginMemberId Long memberId,
-//                                            @Positive @RequestParam(value = "page", defaultValue = "1") int page,
-//                                            @Positive @RequestParam(value = "size", defaultValue = "10") int size) {
-//        Page<PlayList> pagePlayList = playListService.findPlayList(memberId, page-1, size);
-//        List<PlayList> playLists = pagePlayList.getContent();
-//        List<PlayListDto.ResponseDto> response = playListMapper.playListsToResponses(playLists);
-//
-//        return ResponseEntity.ok(new MultiResponseDto<>(response, pagePlayList));
-//    }
+    // 플레이리스트 전체 조회 (좋아요 순)
+    @GetMapping
+    public ResponseEntity getPlayLists(@Positive @RequestParam(value = "page", defaultValue = "1") int page,
+                                       @Positive @RequestParam(value = "size", defaultValue = "5") int size){
+        Page<PlayList> pagePlayList = playListService.findPlayLists(page-1, size);
+        List<PlayListDto.ResponseDto> response = playListMapper.playListsToResponses(pagePlayList.getContent());
+
+        return ResponseEntity.ok(new MultiResponseDto<>(response, pagePlayList));
+    }
+
+    // 멤버 플레이리스트 조회
+    @GetMapping("/member-playlist")
+    public ResponseEntity getMemberPlayLists(@LoginMemberId Long memberId,
+                                            @Positive @RequestParam(value = "page", defaultValue = "1") int page,
+                                            @Positive @RequestParam(value = "size", defaultValue = "3") int size) {
+        Page<PlayList> pagePlayList = playListService.findMemberPlayLists(memberId, page-1, size);
+        List<PlayListDto.ResponseDto> response = playListMapper.playListsToResponses(pagePlayList.getContent());
+
+        return ResponseEntity.ok(new MultiResponseDto<>(response, pagePlayList));
+    }
+
+    // 좋아요 플레이리스트 조회
+    @GetMapping("/member-playlist/liked")
+    public ResponseEntity getLikedPlaylists(@LoginMemberId Long memberId,
+                                            @Positive @RequestParam(value = "page", defaultValue = "1") int page,
+                                            @Positive @RequestParam(value = "page", defaultValue = "5") int size) {
+        Page<PlayList> pagePlayList = playListService.findLikedPlayLists(memberId, page-1, size);
+        List<PlayListDto.ResponseDto> response = playListMapper.playListsToResponses(pagePlayList.getContent());
+
+        return ResponseEntity.ok(new MultiResponseDto<>(response, pagePlayList));
+    }
 
     @PatchMapping("/{playlist-id}")
     public ResponseEntity updatePlayList(@PathVariable("playlist-id") @Positive long playListId,

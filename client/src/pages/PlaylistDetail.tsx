@@ -2,7 +2,14 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { commentOpenState, soundbarOpenState } from 'src/recoil/Atoms';
+import {
+    commentOpenState,
+    showDownloadState,
+    playlistCommentState,
+    musicIdState,
+    playingMusic,
+    playlistViewerState,
+} from 'src/recoil/Atoms';
 import { PlcardProps } from 'src/types/Slider';
 import CommentViewer from 'src/components/musicdetail/CommentViewer';
 import Sidebutton from 'src/components/musicdetail/SideButton';
@@ -12,28 +19,41 @@ import {
     DetailSection,
     AlbumRecode,
     MusicContents,
-    MusicTags,
+    Lodingbar,
     MusicTitle,
     MusicInfo,
     MusicText,
 } from 'src/components/musicdetail/style/DetailStyle';
+import MusicPlayer from 'src/components/soundbar/SoundBar';
+import PlaylistViewer from 'src/components/musicdetail/PlaylistViewer';
 
 function PlaylistDetail() {
     const plId = useParams();
+    sessionStorage.setItem('musicId', String(plId.plId));
+    sessionStorage.setItem('onPlaylist', 'true');
     const [plDetailData, setPlDetailData] = useState<PlcardProps>({
         playListId: 0,
         memberId: 0,
         createMember: '',
         title: '',
+        coverImg: '',
+        tags: [],
+        likeCount: 0,
         body: '',
         createdAt: '',
         modifiedAt: '',
     });
     const [commentOpen] = useRecoilState<boolean>(commentOpenState);
-    const [, setSoundbarOpen] = useRecoilState<boolean>(soundbarOpenState);
+    const [playingDots] = useRecoilState<boolean>(playingMusic);
+    const [, setShowDownlaod] = useRecoilState<boolean>(showDownloadState);
+    const [, setMusicId] = useRecoilState<string | undefined>(musicIdState);
+    const [, setPlaylistComment] = useRecoilState<boolean>(playlistCommentState);
+    const [openViewer] = useRecoilState<boolean>(playlistViewerState);
 
     useEffect(() => {
-        setSoundbarOpen(true);
+        setShowDownlaod(false);
+        setPlaylistComment(true);
+        setMusicId(plId.plId);
         axios
             .get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/${plId.plId}`)
             .then(function (response) {
@@ -50,21 +70,16 @@ function PlaylistDetail() {
     return (
         <DetailGroup>
             {commentOpen ? <CommentViewer></CommentViewer> : null}
-            <PlaylistBackground
-                url={
-                    'https://musicvine.imgix.net/images/all-good-folks-avatar-v1_4282299045668081.jpg?auto=compress&w=388&h=388'
-                }
-            ></PlaylistBackground>
-            <AlbumRecode>
-                <img src="https://musicvine.imgix.net/images/all-good-folks-avatar-v1_4282299045668081.jpg?auto=compress&w=388&h=388" />
-            </AlbumRecode>
+            <PlaylistBackground url={plDetailData.coverImg}></PlaylistBackground>
             <DetailSection>
+                <AlbumRecode url={plDetailData.coverImg}>
+                    <Lodingbar>
+                        {[...Array(5)].map((_, index) => (
+                            <li className={playingDots ? `sec-${index}` : ''}></li>
+                        ))}
+                    </Lodingbar>
+                </AlbumRecode>
                 <MusicContents>
-                    <MusicTags>
-                        <li>귀여운</li>
-                        <li>발랄한</li>
-                        <li>즐거운</li>
-                    </MusicTags>
                     <MusicTitle>
                         <span>{plDetailData.title}</span>
                     </MusicTitle>
@@ -72,14 +87,16 @@ function PlaylistDetail() {
                         <li>CREATE</li>
                         <li>{plDetailData.createMember}</li>
                         <li>ALBUM</li>
-                        <li>정보없음</li>
+                        <li>No album</li>
                     </MusicInfo>
                     <MusicText>
                         <span>{plDetailData.body}</span>
                     </MusicText>
                 </MusicContents>
                 <Sidebutton />
+                <MusicPlayer />
             </DetailSection>
+            {openViewer ? <PlaylistViewer /> : null}
         </DetailGroup>
     );
 }

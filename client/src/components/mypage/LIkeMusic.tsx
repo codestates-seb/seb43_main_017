@@ -1,117 +1,82 @@
 import styled from 'styled-components';
-import { HiOutlineHeart, HiHeart } from 'react-icons/hi';
-// import React, { useEffect } from 'react';
-// import { useRecoilState } from 'recoil';
-// import axios from 'axios';
-// import { likedSongs } from 'src/recoil/Atoms';
+import { HiHeart } from 'react-icons/hi';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
-/* 2023.05.10 Like Music 타입 선언 - 홍혜란 */
-type MusicData = {
-    id: number;
-    name: string;
-    artist: string;
-    album: string;
-    imgSrc: string;
-};
-
-/* 2023.05.10 Like Music 더미데이터(임시) - 홍혜란 */
-const VoteLike: MusicData[] = [
-    {
-        id: 1,
-        name: 'Ditto',
-        artist: 'Newjeans',
-        album: 'OMG',
-        imgSrc: './assets/ditto.png',
-    },
-    {
-        id: 2,
-        name: 'Ditto',
-        artist: 'Newjeans',
-        album: 'OMG',
-        imgSrc: './assets/ditto.png',
-    },
-    {
-        id: 3,
-        name: 'Ditto',
-        artist: 'Newjeans',
-        album: 'OMG',
-        imgSrc: './assets/ditto.png',
-    },
-    {
-        id: 4,
-        name: 'Ditto',
-        artist: 'Newjeans',
-        album: 'OMG',
-        imgSrc: './assets/ditto.png',
-    },
-    {
-        id: 5,
-        name: 'Ditto',
-        artist: 'Newjeans',
-        album: 'OMG',
-        imgSrc: './assets/ditto.png',
-    },
-];
+interface LikeMusicList {
+    albumCoverImg: string;
+    albumName: string;
+    artistName: string;
+    createdAt: string;
+    memberId: number;
+    modifiedAt: string;
+    musicId: number;
+    musicLikeCount: number;
+    musicName: string;
+    musicTagName: string;
+    musicTime: number;
+    musicUri: string;
+}
 
 const LikeMusic = () => {
-    const musicData = VoteLike;
+    const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
+    const [totalPages, setTotalPages] = useState<number>(0); // 전체 페이지
 
-    /* 
-    // 좋아요를 누른 음악 목록을 저장하는 atom
-    const likedSongs = atom<{ [memberId: number]: string[] }>({
-        key: 'likedSongs',
-        default: {},
-    });
+    const [likedMusic, setLikedMusic] = useState<LikeMusicList[]>([]);
+    const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
+    const [update, setUpdate] = useState<boolean>(false);
 
-    // 음악 목록 컴포넌트
-    const SongList = ({ memberId }: { memberId: number }) => {
-        const [likedSongsList, setLikedSongsList] = useRecoilState(likedSongs);
+    console.log(`totalPages ${totalPages} currentPage ${currentPage}`);
 
-        // 좋아요를 누른 음악 목록을 서버에서 가져오는 함수
-        const fetchLikedSongs = async () => {
-            try {
-                const response = await axios.get(`/api/liked-songs/${memberId}`);
-                const data = response.data;
-                setLikedSongsList({ ...likedSongsList, [memberId]: data });
-            } catch (error) {
-                console.error('Failed to fetch liked songs:', error);
-            }
+    useEffect(() => {
+        const fetchLikedMusic = () => {
+            axios
+                .get(`${process.env.REACT_APP_API_URL}/musics/liked-musics?&page=${currentPage}&size=5`, {
+                    headers: {
+                        Authorization: token,
+                    },
+                })
+                .then((response) => {
+                    setLikedMusic(response.data.data);
+                    setTotalPages(response.data.pageInfo.totalPages);
+                })
+                .catch((error) => {
+                    console.error('Error fetching liked music:', error);
+                });
         };
 
-        // 좋아요를 해제하는 함수
-        const handleUnlike = async (songId: string) => {
-            try {
-                await axios.delete(`/api/liked-songs/${memberId}/${songId}`);
-                const updatedLikedSongs = likedSongsList[memberId].filter((id) => id !== songId);
-                setLikedSongsList({ ...likedSongsList, [memberId]: updatedLikedSongs });
-            } catch (error) {
-                console.error('Failed to unlike song:', error);
-            }
-        };
+        fetchLikedMusic();
+    }, [setLikedMusic, currentPage, update]);
 
-        // 컴포넌트가 마운트될 때 좋아요를 누른 음악 목록을 가져옴
-        useEffect(() => {
-            fetchLikedSongs();
-        }, [memberId]);
+    const handleNextPage = () => {
+        setCurrentPage(currentPage + 1);
+    };
+    const handlePrevPage = () => {
+        setCurrentPage(currentPage - 1);
+    };
 
-        const isSongLiked = (songId: string) => likedSongsList[memberId]?.includes(songId);
-
-        return (
-            <div>
-                <h2>Liked Songs</h2>
-                {likedSongsList[memberId]?.map((songId) => (
-                    <div key={songId}>
-                        <span>{songId}</span>
-                        <button onClick={() => handleUnlike(songId)}>{isSongLiked(songId) ? '<HiOutlineHeart />' : '<HiHeart />'}</button>
-                    </div>
-                ))}
-            </div>
-        );
-    }; 
-
-     const memberId = parseInt(localStorage.getItem('member-id') || '');
-     <SongList memberId={memberId} />
-    */
+    const handleLike = (musicId: number) => {
+        axios
+            .post(
+                `${process.env.REACT_APP_API_URL}/music-like/toggle`,
+                {
+                    musicId: musicId,
+                },
+                {
+                    headers: {
+                        Authorization: token,
+                    },
+                },
+            )
+            .then((res) => {
+                console.log(res.data);
+                setUpdate(!update);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
 
     return (
         <LikeContainer>
@@ -120,14 +85,29 @@ const LikeMusic = () => {
                     <HiHeart />
                     <p>LIKE MUSIC</p>
                 </div>
+                <Pagination>
+                    <button disabled={currentPage === 1} onClick={handlePrevPage}>
+                        Prev
+                    </button>
+                    <button>{currentPage}</button>
+                    <button disabled={currentPage === totalPages} onClick={handleNextPage}>
+                        Next
+                    </button>
+                </Pagination>
             </LikeTitle>
-            {musicData.map((data) => (
-                <LikeList>
-                    <img src={data.imgSrc} alt="musicimg" />
-                    <li>{data.name}</li>
-                    <li>{data.artist}</li>
-                    <li>{data.album}</li>
-                    <div className="music-icon">
+            {likedMusic.map((likedata) => (
+                <LikeList key={likedata.musicId}>
+                    <Link to={`/musiclist/${likedata.musicId}`}>
+                        <img src={likedata.albumCoverImg} alt={likedata.musicName} />
+                        <span>{likedata.musicName}</span>
+                        <span>{likedata.artistName}</span>
+                    </Link>
+                    <div
+                        className="music-icon"
+                        onClick={() => {
+                            handleLike(likedata.musicId);
+                        }}
+                    >
                         <HiHeart />
                     </div>
                 </LikeList>
@@ -141,29 +121,24 @@ export default LikeMusic;
 /* 2023.05.10 Like Music 전체 박스 컴포넌트 - 홍혜란 */
 const LikeContainer = styled.div`
     width: 400px;
+    height: 280px;
     align-items: center;
-    margin: 30px;
-    @media screen and (max-width: 1000px) {
-        width: 400px;
-        margin: 0;
-        margin-top: 50px;
-        margin-left: 30px;
-    }
 `;
-
 /* 2023.05.10 Like Music 타이틀 컴포넌트 - 홍혜란 */
 const LikeTitle = styled.div`
     display: flex;
     align-items: center;
     flex-direction: row;
+    justify-content: space-between;
     margin-bottom: 10px;
 
     .vote-icon {
         display: flex;
         align-items: center;
         font-size: 16px;
-        color: rgb(245, 109, 109);
-        padding-top: 5px;
+        color: rgb(255, 80, 80);
+        font-weight: 600;
+        font-family: 'Noto Sans KR', sans-serif;
     }
 
     p {
@@ -178,8 +153,24 @@ const LikeList = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid hsl(0, 0%, 65%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     padding: 8px;
+
+    a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
+        > * {
+            margin-left: 20px;
+        }
+        > *:nth-child(1) {
+            margin: 0px;
+        }
+    }
+    :hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
 
     img {
         width: 30px;
@@ -187,16 +178,58 @@ const LikeList = styled.div`
         border-radius: 10%;
     }
 
-    li {
+    span {
         font-size: 12px;
-        color: white;
+        color: #ccc;
+    }
+
+    span:nth-child(3) {
+        color: rgba(255, 255, 255, 0.4);
     }
 
     .music-icon {
         font-size: 16px;
-        color: rgb(245, 109, 109);
+        color: rgb(255, 80, 80);
         display: flex;
         align-items: center;
         justify-content: center;
+        > * {
+            transition: 0.2s ease-in-out;
+        }
+        > *:hover {
+            transform: scale(1.2);
+            color: rgb(255, 125, 125);
+        }
+    }
+`;
+const Pagination = styled.div`
+    button {
+        color: #ccc;
+        background: none;
+        border: 1px solid #5a5a5a;
+        border-radius: 3px;
+        margin: 0px 3px;
+        transition: 0.2s ease-in-out;
+        cursor: pointer;
+    }
+    button:hover {
+        color: #ccc;
+        border-color: #ccc;
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    button:disabled {
+        border: 1px solid #5a5a5a;
+        color: #5a5a5a;
+    }
+    button:disabled:hover {
+        background: none;
+        cursor: default;
+    }
+
+    .page-focused {
+        color: #ccc;
+        border-color: #ccc;
+        background: rgba(255, 255, 255, 0.2);
     }
 `;

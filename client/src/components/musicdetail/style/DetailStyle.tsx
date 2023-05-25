@@ -4,6 +4,7 @@ import styled from 'styled-components';
 export const DetailGroup = styled.section`
     position: relative;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
@@ -24,10 +25,10 @@ export const PlaylistBackground = styled.article<url>`
     width: 100%;
     min-height: 100vh;
     background: url(${(props) => props.url});
-    filter: blur(10px);
+    filter: blur(50px);
     background-size: cover;
-    opacity: 0.2;
-    animation: bgScale 20s infinite;
+    opacity: 0.3;
+    animation: bgScale 10s infinite;
     @keyframes bgScale {
         50% {
             transform: scale(1.2);
@@ -42,31 +43,32 @@ export const DetailSection = styled.div`
     align-items: center;
     box-sizing: border-box;
     width: 100%;
-    height: 100%;
-    z-index: 2;
 `;
+
 /**2023-05-09 rotate 레코드 : 김주비 */
-export const AlbumRecode = styled.div`
+export const AlbumRecode = styled.div<url>`
     display: flex;
     justify-content: center;
     align-items: center;
-    position: absolute;
-    top: -250px;
-    width: 500px;
-    height: 500px;
-    background: url('/assets/background-detail-recode.png');
+    position: relative;
+    width: 600px;
+    height: 0px;
+    background: url(${(props) => props.url});
+    /* background: url('/assets/background-detail-recode.png'); */
     background-size: cover;
-    opacity: 0.6;
-    animation: roundingrecode 10s infinite linear;
-    img {
-        width: 200px;
-        height: 200px;
-        border-radius: 200px;
-    }
-    @keyframes roundingrecode {
+    background-position: center;
+    opacity: 0.7;
+    border-radius: 20px;
+    animation: showalbumimg 2s forwards 0s;
+    margin-bottom: 40px;
+    overflow: hidden;
+    @keyframes showalbumimg {
         100% {
-            transform: rotate(360deg);
+            height: 200px;
         }
+    }
+    @media (max-width: 700px) {
+        width: 90%;
     }
 `;
 /**2023-05-09 detailpage 컨텐츠 섹션 + 키프레임 애니메이션 : 김주비 */
@@ -83,7 +85,7 @@ export const MusicContents = styled.article`
     }
     @keyframes ascendText {
         100% {
-            transform: translateY(0px);
+            transform: translateY(-2px);
         }
     }
     @keyframes ascendText2 {
@@ -126,14 +128,15 @@ export const MusicTitle = styled.div`
     justify-content: center;
     align-items: center;
     width: 100%;
-    font-size: 5.5rem;
+    font-size: 4rem;
     letter-spacing: -2px;
     text-transform: uppercase;
     font-weight: 700;
     overflow: hidden;
     span {
+        font-family: 'Noto Sans KR', sans-serif;
         transform: translateY(100px);
-        animation: ascendText 2s forwards 1.5s;
+        animation: ascendText 2s forwards 0.5s;
     }
     @media (max-width: 1200px) {
         font-size: 4rem;
@@ -149,11 +152,12 @@ export const MusicInfo = styled.ul`
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    font-family: 'Noto Sans KR', sans-serif;
 
     li {
         margin-right: 20px;
-        transform: translateY(20px);
-        animation: ascendText 1s forwards 2.5s;
+        transform: translateY(40px);
+        animation: ascendText 1s forwards 1s;
     }
     li:nth-child(2n-1) {
         font-weight: 600;
@@ -169,14 +173,15 @@ export const MusicInfo = styled.ul`
 /**2023-05-09 사이드 텍스트 : 김주비 */
 export const MusicText = styled.div`
     display: flex;
-    font-size: 13px;
+    font-size: 1rem;
     line-height: 150%;
     width: 600px;
     height: 40px;
     overflow-x: hidden;
     padding-right: 30px;
     opacity: 0;
-    animation: fadeinText 2s forwards 3s;
+    font-family: 'Noto Sans KR', sans-serif;
+    animation: fadeinText 2s forwards 1.5s;
     span {
         text-align: center;
         width: 100%;
@@ -186,5 +191,43 @@ export const MusicText = styled.div`
     }
     @media (max-width: 700px) {
         text-align: center;
+    }
+`;
+
+export const Lodingbar = styled.ul`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    margin: 20px;
+
+    li {
+        width: 10px;
+        height: 10px;
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.8);
+        margin: 3px;
+    }
+    .sec-0 {
+        animation: waveDots 2s infinite 0s;
+    }
+    .sec-1 {
+        animation: waveDots 2s infinite 0.3s;
+    }
+    .sec-2 {
+        animation: waveDots 2s infinite 0.5s;
+    }
+    .sec-3 {
+        animation: waveDots 2s infinite 0.8s;
+    }
+    .sec-4 {
+        animation: waveDots 2s infinite 1s;
+    }
+
+    @keyframes waveDots {
+        50% {
+            height: 50px;
+        }
     }
 `;

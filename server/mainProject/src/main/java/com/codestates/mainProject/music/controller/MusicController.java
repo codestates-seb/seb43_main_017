@@ -1,14 +1,12 @@
 package com.codestates.mainProject.music.controller;
 
-import com.codestates.mainProject.exception.BusinessLogicException;
-import com.codestates.mainProject.exception.ExceptionCode;
-import com.codestates.mainProject.member.entity.Member;
-import com.codestates.mainProject.member.repository.MemberRepository;
 import com.codestates.mainProject.member.service.MemberService;
 import com.codestates.mainProject.music.dto.MusicDto;
 import com.codestates.mainProject.music.entity.Music;
 import com.codestates.mainProject.music.mapper.MusicMapper;
 import com.codestates.mainProject.music.service.MusicService;
+import com.codestates.mainProject.playList.dto.PlayListDto;
+import com.codestates.mainProject.playList.entity.PlayList;
 import com.codestates.mainProject.playList.service.PlayListService;
 import com.codestates.mainProject.response.MultiResponseDto;
 import com.codestates.mainProject.response.SingleResponseDto;
@@ -19,8 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,23 +48,32 @@ public class MusicController {
         return ResponseEntity.created(location).build();
     }
 
-    // 음악 조회
+    // 음악 개별 조회
     @GetMapping("/{music-id}")
     public ResponseEntity getMusic(@PathVariable("music-id") @Positive long musicId) {
         Music findMusic = musicService.findMusicById(musicId);
         MusicDto.ResponseDto response = mapper.musicToResponse(findMusic);
+        response.setMusicTagName(findMusic.getTagsName());
+
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
-    // 음악 전체 조회
+    // 생성일 기준 내림차순 음악 전체 조회
     @GetMapping
     public ResponseEntity getMusics(@Positive @RequestParam(value = "page", defaultValue = "1") int page,
-                                     @Positive @RequestParam(value = "size", defaultValue = "20") int size){
-        Page<Music> pageMusic = musicService.findAllMusic(page - 1 , size);
+                                    @Positive @RequestParam(value = "size", defaultValue = "10") int size){
+        Page<Music> pageMusic = musicService.findMusicsOrderByCreatedAtDesc(page - 1 , size);
         List<Music> musics = pageMusic.getContent();
         List<MusicDto.ResponseDto> response = mapper.musicsToResponses(musics);
+
+        for(int i=0; i< musics.size(); i++) {
+            Music music = musics.get(i);
+            List<String> tagName = music.getTagsName();
+            response.get(i).setMusicTagName(tagName);
+        }
+
 
         return new ResponseEntity<>(
                 new MultiResponseDto<>(response, pageMusic), HttpStatus.OK);
@@ -78,10 +83,17 @@ public class MusicController {
     @GetMapping("/liked-musics")
     public ResponseEntity getLikedMusics(@LoginMemberId Long memberId,
                                          @Positive @RequestParam(value = "page", defaultValue = "1") int page,
-                                         @Positive @RequestParam(value = "size", defaultValue = "20") int size) {
+                                         @Positive @RequestParam(value = "size", defaultValue = "10") int size) {
 
         Page<Music> likedMusics = memberService.findLikedMusics(memberId, page - 1, size);
-        List<MusicDto.ResponseDto> response = mapper.musicsToResponses(likedMusics.getContent());
+        List<Music> musics = likedMusics.getContent();
+        List<MusicDto.ResponseDto> response = mapper.musicsToResponses(musics);
+
+        for(int i=0; i< musics.size(); i++) {
+            Music music = musics.get(i);
+            List<String> tagName = music.getTagsName();
+            response.get(i).setMusicTagName(tagName);
+        }
 
         return new ResponseEntity<>(
                 new MultiResponseDto<>(response, likedMusics), HttpStatus.OK);
@@ -100,17 +112,44 @@ public class MusicController {
         }
     }
 
-    // musicName, artistName, albumName 중 검색어를 포함하는 music을 조회
-    @GetMapping("/search")
-    public ResponseEntity<List<Music>> findMusicByKeyword(@RequestParam String keyword) {
-        List<Music> musics = musicService.findMusicByKeyword(keyword);
+    // 최신순 음악 조회
+//    @GetMapping("/order-by-created-at")
+//    public ResponseEntity getOrderByCreatedAt(@Positive @RequestParam(value = "page", defaultValue = "1") int page,
+//                                              @Positive @RequestParam(value = "size", defaultValue = "5") int size) {
+//        Page<Music> pageMusics = musicService.toggleCreatedAtOrder(page - 1, size);
+//        List<Music> musics = pageMusics.getContent();
+//        List<MusicDto.ResponseDto> response = mapper.musicsToResponses(pageMusics.getContent());
+//
+//        for(int i=0; i< musics.size(); i++) {
+//            Music music = musics.get(i);
+//            List<String> tagName = music.getTagsName();
+//            response.get(i).setMusicTagName(tagName);
+//        }
+//
+//        return ResponseEntity.ok(new MultiResponseDto<>(response, pageMusics));
+//    }
 
-        return ResponseEntity.ok(musics);
+    // 좋아요 기준 내림차순 음악 전체 조회
+    @GetMapping("/order-by-like-count")
+    public ResponseEntity getOrderByLikeCount(@Positive @RequestParam(value = "page", defaultValue = "1") int page,
+                                              @Positive @RequestParam(value = "size", defaultValue = "10") int size) {
+        Page<Music> pageMusics = musicService.findMusicsOrderByLikeCountDesc(page - 1 , size);
+        List<Music> musics = pageMusics.getContent();
+        List<MusicDto.ResponseDto> response = mapper.musicsToResponses(pageMusics.getContent());
+
+        for(int i=0; i< musics.size(); i++) {
+            Music music = musics.get(i);
+            List<String> tagName = music.getTagsName();
+            response.get(i).setMusicTagName(tagName);
+        }
+
+        return ResponseEntity.ok(new MultiResponseDto<>(response, pageMusics));
     }
+
     // 음악 수정
     @PatchMapping("/{music-id}")
     public ResponseEntity patchMusic(@PathVariable("music-id") @Positive long musicId,
-                                      @Valid @RequestBody MusicDto.PatchDto patchDto,
+                                     @Valid @RequestBody MusicDto.PatchDto patchDto,
                                      @LoginMemberId Long memberId){
         Music updatedMusic = musicService.updateMusic(patchDto, musicId, memberId);
         MusicDto.ResponseDto response = mapper.musicToResponse(updatedMusic);

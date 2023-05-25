@@ -41,6 +41,17 @@ function Signin({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetStat
                     if (res.status === 200 && res.headers.authorization !== undefined) {
                         window.localStorage.setItem('access_token', res.headers.authorization);
                         window.localStorage.setItem('refresh_token', res.headers.refresh);
+                        axios
+                            .get(`${process.env.REACT_APP_API_URL}/members/info`, {
+                                headers: {
+                                    Authorization: `Bearer ${res.headers.authorization}`,
+                                },
+                            })
+                            .then((res) => {
+                                window.localStorage.setItem('memberId', res.data.data.memberId);
+                                window.localStorage.setItem('usernickname', res.data.data.name);
+                                window.localStorage.setItem('useremail', loginInfo.email);
+                            });
                         setCloseDisplay(!closeDisplay);
                         setTimeout(() => {
                             setShowSignIn(false);

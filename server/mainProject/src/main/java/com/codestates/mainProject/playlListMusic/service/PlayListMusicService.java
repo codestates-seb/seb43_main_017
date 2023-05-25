@@ -2,10 +2,6 @@ package com.codestates.mainProject.playlListMusic.service;
 
 import com.codestates.mainProject.exception.BusinessLogicException;
 import com.codestates.mainProject.exception.ExceptionCode;
-import com.codestates.mainProject.member.entity.Member;
-import com.codestates.mainProject.member.service.MemberService;
-import com.codestates.mainProject.memberMusic.entity.MemberMusic;
-import com.codestates.mainProject.memberMusic.repository.MemberMusicRepository;
 import com.codestates.mainProject.music.entity.Music;
 import com.codestates.mainProject.music.service.MusicService;
 import com.codestates.mainProject.playList.entity.PlayList;

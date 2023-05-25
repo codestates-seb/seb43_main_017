@@ -13,6 +13,9 @@ public class TagDto {
     public static class PostDto {
         @NotBlank
         private String name;
+
+        @NotBlank
+        private String category;
     }
     @Getter
     @Setter
@@ -20,5 +23,6 @@ public class TagDto {
     public static class ResponseDto {
         private long id;
         private String name;
+        private String category;
     }
 }

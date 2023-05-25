@@ -1,6 +1,7 @@
 package com.codestates.mainProject.playList.dto;
 
 import com.codestates.mainProject.member.entity.Member;
+import com.codestates.mainProject.playList.entity.PlayList;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
@@ -18,21 +19,15 @@ public class PlayListDto {
         private String body;
 
         private String coverImg;
-
-        private List<String> tags;
-
     }
 
     @Getter
     @Setter
     @NoArgsConstructor
     public static class PatchDto {
-        @NotBlank
         private String title;
-        @NotBlank
         private String body;
         private String coverImg;
-        private List<String> tags;
     }
 
     @Getter
@@ -50,6 +45,18 @@ public class PlayListDto {
         private String createdAt;
         private String modifiedAt;
 
+        public ResponseDto(PlayList playList) {
+            this.playListId = playList.getPlayListId();
+            this.memberId = playList.getMember().getMemberId();
+            this.createMember = playList.getCreateMember();
+            this.title = playList.getTitle();
+            this.body = playList.getBody();
+            this.coverImg = playList.getCoverImg();
+            this.tags = playList.getTags();
+            this.likeCount = playList.getLikeCount();
+            this.createdAt = playList.getCreatedAt();
+            this.modifiedAt = playList.getModifiedAt();
+        }
         public void setMember(Member member){this.memberId = member.getMemberId();}
     }
 
