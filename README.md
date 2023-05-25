@@ -15,11 +15,6 @@
 
 ![sadsadasdsad](https://github.com/codestates-seb/seb43_main_017/assets/119921683/c3a84d84-cbfa-4015-aa3d-d8fb38705a7d)
 
-### Collaboration Tools
-<p>
-<img src="https://user-images.githubusercontent.com/61264510/194802015-8823f450-9df6-48dd-9474-dec2c331cfe5.svg">
-</p>
-
 
 <br>
 
