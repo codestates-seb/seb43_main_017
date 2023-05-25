@@ -7,6 +7,7 @@
 |:---:|:---:|:---:|:---:|:---:|:---:|
 |[홍혜란](https://github.com/forhrever)|[김주비](https://github.com/mscojl24)|[박수범](https://github.com/parksubeom)|[김인환](https://github.com/Preasim)|[이재관](https://github.com/CordJG)|[강지산](https://github.com/hunm719)|
 |FE 팀장|FE|FE|BE 팀장|BE|BE|
+| | | | | | -music CRUD 및 좋아요 댓글 구현 <br> -검색 기능 구현 <br> -배포 준비 |
 
 <br>
 
