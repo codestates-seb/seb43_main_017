@@ -1,50 +1,50 @@
 import styled from 'styled-components';
-import { useState } from 'react';
-import { TiDeleteOutline } from 'react-icons/ti';
+import { useState, useEffect } from 'react';
+import { VscClose } from 'react-icons/vsc';
 import { useRecoilState } from 'recoil';
-import { selectedTagsState } from 'src/recoil/Atoms';
+import { selectedTagsState, showSearch, tagSreachState } from 'src/recoil/Atoms';
+import { MdTransitEnterexit } from 'react-icons/md';
+import axios from 'axios';
+import Search from './Search';
+import { useLocation } from 'react-router-dom';
+import { TbMoodPlus } from 'react-icons/tb';
+import { IoMdMusicalNote } from 'react-icons/io';
+import { MdPiano } from 'react-icons/md';
 
-/* 2023.05.07 카테고리 타입, 종류 선언 - 홍혜란 */
-export type Category = {
-    index: number;
-    name: string;
-    subCategories: string[];
-};
+interface CategoryProps {
+    showSearchResult: (searchText: string) => void;
+}
 
-export const categories: Category[] = [
-    {
-        index: 0,
-        name: 'FEEL',
-        subCategories: ['잔잔한', '우울한', '신나는', '로맨틱한', '희망적인'],
-    },
-    {
-        index: 1,
-        name: 'GENRE',
-        subCategories: ['EDM', '발라드', '어쿠스틱', '인디', '댄스'],
-    },
-    {
-        index: 2,
-        name: 'INSTRUMENT',
-        subCategories: ['피아노', '드럼', '기타', '베이스', '현악기'],
-    },
-];
-
-const Categories = () => {
-    /* 2023.05.07 Category 클릭 시  subCategories 오픈 - 홍혜란 */
-    const [openCategory, setOpenCategory] = useState('');
-    const [index, setIndex] = useState(0);
-
-    const handleCategoryClick = (name: string, i: number) => {
-        if (openCategory === name) {
-            setOpenCategory('');
-        } else {
-            setOpenCategory(name);
-        }
-        setIndex(i);
-    };
-
-    /* 2023.05.10 subCategory 클릭 시 태그 생성 - 홍혜란 */
+const Categories = ({ showSearchResult }: CategoryProps) => {
     const [selectedTags, setSelectedTags] = useRecoilState(selectedTagsState);
+    const [tagSelectedTags, setTagSelectedTags] = useState<string[]>([]);
+    const [, setShowSearch] = useRecoilState<boolean>(showSearch);
+    const [feel, setFeel] = useState<tag[]>([]);
+    const [genre, setGenre] = useState<tag[]>([]);
+    const [instrument, setInstrument] = useState<tag[]>([]);
+    const [showSubTags, setShowSubTags] = useState<string>('');
+    const [tag, setTags] = useRecoilState(tagSreachState);
+
+    const tagsString = tagSelectedTags.join('&');
+    setTags(tagsString);
+
+    interface tag {
+        id: number;
+        name: string;
+        category: string;
+    }
+
+    useEffect(() => {
+        axios.get(`${process.env.REACT_APP_API_URL}/tags`).then(function (res) {
+            const tags = res.data;
+            const filteredTags = tags.filter((tag: tag) => tag.category === 'FEEL');
+            const filteredGenre = tags.filter((tag: tag) => tag.category === 'GENRE');
+            const filteredInstrument = tags.filter((tag: tag) => tag.category === 'INSTRUMENT');
+            setFeel(filteredTags);
+            setGenre(filteredGenre);
+            setInstrument(filteredInstrument);
+        });
+    }, []);
 
     const handleSubCategoryClick = (subCategory: string) => {
         // 이미 선택된 태그가 있는지 확인
@@ -53,109 +53,221 @@ const Categories = () => {
         // 선택된 태그가 없을 경우만 추가
         if (!tagAlreadySelected) {
             setSelectedTags([...selectedTags, subCategory]);
+            setTagSelectedTags([...tagSelectedTags, `tags=${subCategory}`]);
         }
     };
+
+    //태그 딜리트기능
+    const handleTagDelete = (tag: string) => {
+        setSelectedTags(selectedTags.filter((t) => t !== tag));
+        setTagSelectedTags(tagSelectedTags.filter((t) => t !== `tags=${tag}`));
+    };
+
+    /** 2023.05.24 태그 선택된 채로 다른 페이지 이동한 후 돌아왔을 때 태그 초기화 */
+    const location = useLocation();
+
+    useEffect(() => {
+        setSelectedTags([]);
+        setTagSelectedTags([]);
+    }, [location.pathname]); //경로(location.pathname)가 변경될 때마다 선택된 태그를 초기화
 
     return (
         <CateTagContainer>
             <CategoryContainer>
-                {/* 2023.05.07 큰 카테고리에서 작은 카테고리를 보여주는 CategoryContainer - 홍혜란 */}
-                {categories.map((category, i) => (
-                    <div key={category.name}>
-                        <CategoryButton onClick={() => handleCategoryClick(category.name, category.index)}>
-                            {category.name}
-                        </CategoryButton>
-                        <SubCategoryList
-                            className={index === i ? 'ani' : 'null'}
-                            isOpen={openCategory === category.name}
+                <Search showSearchResult={showSearchResult} />
+                <TagGroup>
+                    <ul>
+                        <li
+                            className="Category-title"
+                            onClick={() => {
+                                setShowSubTags('feel');
+                            }}
+                            style={{ cursor: 'pointer' }}
                         >
-                            {category.subCategories.map((subCategory) => (
-                                <SubCategoryItem key={subCategory} onClick={() => handleSubCategoryClick(subCategory)}>
-                                    {subCategory}
-                                </SubCategoryItem>
-                            ))}
-                        </SubCategoryList>
-                    </div>
-                ))}
+                            <TbMoodPlus />
+                            FEELING
+                        </li>
+                        {feel.map((tag) => (
+                            <li
+                                className={`Sub-tags ${showSubTags === 'feel' ? 'Show-subtag' : null}`}
+                                key={tag.id}
+                                onClick={() => {
+                                    handleSubCategoryClick(tag.name);
+                                }}
+                                style={{ cursor: 'pointer' }}
+                            >
+                                {tag.name}
+                            </li>
+                        ))}
+                    </ul>
+                    <ul>
+                        <li
+                            className="Category-title"
+                            onClick={() => {
+                                setShowSubTags('genre');
+                            }}
+                            style={{ cursor: 'pointer' }}
+                        >
+                            <IoMdMusicalNote />
+                            GENRE
+                        </li>
+                        {genre.map((tag) => (
+                            <li
+                                className={`Sub-tags ${showSubTags === 'genre' ? 'Show-subtag' : null}`}
+                                key={tag.id}
+                                onClick={() => {
+                                    handleSubCategoryClick(tag.name);
+                                }}
+                                style={{ cursor: 'pointer' }}
+                            >
+                                {tag.name}
+                            </li>
+                        ))}
+                    </ul>
+                    <ul>
+                        <li
+                            className="Category-title"
+                            onClick={() => {
+                                setShowSubTags('instrument');
+                            }}
+                            style={{ cursor: 'pointer' }}
+                        >
+                            <MdPiano />
+                            INSTRUMENT
+                        </li>
+                        {instrument.map((tag) => (
+                            <li
+                                className={`Sub-tags ${showSubTags === 'instrument' ? 'Show-subtag' : null}`}
+                                key={tag.id}
+                                onClick={() => {
+                                    handleSubCategoryClick(tag.name);
+                                }}
+                                style={{ cursor: 'pointer' }}
+                            >
+                                {tag.name}
+                            </li>
+                        ))}
+                    </ul>
+                </TagGroup>
             </CategoryContainer>
-            {/* 2023.05.10 선택된 태그들을 나타내는 TagContainer - 홍혜란 */}
             <TagBox>
                 {selectedTags.map((tag) => (
                     <TagContainer key={tag}>
                         <div className="tagText">{tag}</div>
-                        <div className="tagIcon" onClick={() => setSelectedTags(selectedTags.filter((t) => t !== tag))}>
-                            <TiDeleteOutline />
+                        <div
+                            className="tagIcon"
+                            onClick={() => {
+                                handleTagDelete(tag);
+                            }}
+                        >
+                            <VscClose />
                         </div>
                     </TagContainer>
                 ))}
             </TagBox>
+            <Xbox
+                onClick={() => {
+                    setShowSearch(false);
+                }}
+            >
+                <MdTransitEnterexit />
+            </Xbox>
         </CateTagContainer>
     );
 };
 
 export default Categories;
 
+/* 2023.05.07 전체박스 컴포넌트 구현 - 홍헤란 */
 const CateTagContainer = styled.div`
     display: flex;
     flex-direction: row;
     position: relative;
-    @media (max-width: 1000px) {
-        display: none;
+    width: 100%;
+    height: 100vh;
+    /* overflow-x: hidden; */
+    background: rgba(0, 0, 0, 0.4);
+    @media screen and (max-width: 700px) {
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
     }
 `;
-
 /* 2023.05.07 카테고리 컴포넌트 구현 - 홍혜란 */
 const CategoryContainer = styled.div`
+    position: absolute;
+    right: 0px;
     display: flex;
     flex-direction: column;
-    margin-left: 180px;
-`;
-
-/* 2023.05.07 큰 카테고리를 버튼으로 컴포넌틑 구현 - 홍혜란 */
-const CategoryButton = styled.button`
-    font-size: 16px;
-    font-weight: bold;
-    color: hsl(0, 0%, 100%);
-    background-color: transparent;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-`;
-
-/* 2023.05.07 "isOpen"이라는 이름의 boolean 타입의 prop을 가진 <ul> 요소를 스타일링 - 홍혜란 */
-const SubCategoryList = styled.ul<{ isOpen: boolean }>`
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    transition: height 0.3s ease-in-out;
-    height: ${({ isOpen }) => (isOpen ? 'auto' : '0')}; // isOpen 상태면 auto, 아니면 0
-    overflow: hidden;
-    height: 0px;
-
-    &.ani {
-        animation: name 1s forwards;
+    width: 200px;
+    @media screen and (max-width: 700px) {
+        position: relative;
+        width: 80%;
+        left: 50%;
+        transform: translateX(-50%);
     }
-    @keyframes name {
+`;
+const TagGroup = styled.div`
+    width: 100%;
+
+    ul {
+        font-size: 0.8rem;
+    }
+    ul > li {
+        margin: 0px 30px;
+        color: #999999;
+        font-family: 'Noto Sans KR', sans-serif;
+    }
+    .Category-title {
+        display: flex;
+        align-items: center;
+        font-family: 'Rajdhani', sans-serif;
+        letter-spacing: 3px;
+        margin: 10px 0px;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #ccc;
+
+        > * {
+            margin-right: 10px;
+        }
+    }
+    .Sub-tags {
+        overflow: hidden;
+        height: 0px;
+        margin: 0px;
+    }
+    .Sub-tags:hover {
+        color: hsl(0, 75%, 61%);
+    }
+
+    .Show-subtag {
+        opacity: 0;
+        animation: showfeel 1s forwards;
+    }
+
+    @keyframes showfeel {
+        0% {
+            margin: 0px 30px;
+        }
+        50% {
+            opacity: 0;
+        }
         100% {
-            height: 200px;
+            opacity: 1;
+            height: auto;
+            margin: 20px 30px;
         }
     }
 `;
-
-/* 2023.05.07 서브카테고리 컴포넌트 구현 - 홍혜란 */
-const SubCategoryItem = styled.li`
-    font-size: 12px;
-    color: hsl(0, 0%, 100%);
-    padding: 10px;
-    cursor: pointer;
-`;
-
+/* 2023.05.10 태그 박스 컴포넌트 구현 - 홍혜란 */
 const TagBox = styled.div`
     position: absolute;
     right: -35px;
+    top: 100px;
+    @media screen and (max-width: 700px) {
+        right: 35px;
+    }
 `;
-
 /* 2023.05.10 태그 컴포넌트 구현 - 홍혜란 */
 const TagContainer = styled.div`
     border: 1px solid white;
@@ -168,7 +280,22 @@ const TagContainer = styled.div`
     justify-content: space-between;
     padding: 10px;
     margin: 10px;
-    background: rgba(0, 0, 0, 0, 0.5);
+    border: none;
+    background: hsl(0, 75%, 61%);
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideIn 0.2s ease-in-out forwards;
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
 
     .tagText {
         font-size: 12px;
@@ -178,9 +305,30 @@ const TagContainer = styled.div`
     }
 
     .tagIcon {
-        font-size: 20px;
+        font-size: 15px;
         display: flex;
         align-items: center;
         color: white;
+    }
+`;
+const Xbox = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 50px;
+    height: 50px;
+    font-size: 2rem;
+    color: #666;
+    text-align: center;
+    border: 2px solid #666;
+    :hover {
+        color: #ccc;
+        border-color: #ccc;
+    }
+    @media screen and (min-width: 700px) {
+        display: none;
     }
 `;

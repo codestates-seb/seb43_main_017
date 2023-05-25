@@ -1,3 +1,15 @@
+cloud:
+  aws:
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY}
+      secretKey: ${AWS_SECRET_KEY}
+    s3:
+      bucket: cordjg-image-bucket
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: 'false'
+
 spring:
   h2:
     console:
@@ -56,13 +68,6 @@ spring:
             userNameAttribute: id
 
 
-file:
-  upload-dir: C:\Users\Hp\Desktop\image저장소 #재관
-#file:
-#  upload-dir: C:\Users\dlsgh\Desktop\image저장소  #인환
-#file:
-#  upload-dir: C:/Users/UserK/Desktop/image #지산
-
 
 logging:
   level:
@@ -79,5 +84,5 @@ mail:
     admin: admin@gmail.com
 jwt:
   secret-key: ${JWT_SECRET_KEY}
-  access-token-expiration-minutes: 30
+  access-token-expiration-minutes: 120
   refresh-token-expiration-minutes: 240

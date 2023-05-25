@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { userType } from 'src/types/LoginInput';
 
 function Signup({ setShowSignUp }: { setShowSignUp: React.Dispatch<React.SetStateAction<boolean>> }) {
-    const BaseUrl = 'ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/signup';
+    const BaseUrl = `${process.env.REACT_APP_API_URL}/members/signup`;
     const [closeDisplay, setCloseDisplay] = useState<boolean>(false); // display closing 모션효과 상태
     /** 에러메시지  */
     const [nameMessage, setnameMessage] = useState('');
@@ -79,16 +79,25 @@ function Signup({ setShowSignUp }: { setShowSignUp: React.Dispatch<React.SetStat
     const SignUpHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (isPassword && isEmail && isName && isCheck) {
-            axios.post<null>(`${BaseUrl}`, {
-                name: userInfo.name,
-                email: userInfo.email,
-                password: userInfo.password,
-            });
-            alert(`Uncover에 오신걸 환영합니다`);
-            setCloseDisplay(!closeDisplay);
-            setTimeout(() => {
-                setShowSignUp(false);
-            }, 1000);
+            axios
+                .post<null>(`${BaseUrl}`, {
+                    name: userInfo.name,
+                    email: userInfo.email,
+                    password: userInfo.password,
+                })
+                .then(() => {
+                    alert(`Uncover에 오신걸 환영합니다`);
+                    setCloseDisplay(!closeDisplay);
+                    setTimeout(() => {
+                        setShowSignUp(false);
+                    }, 1000);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    if (error.response.status === 409) {
+                        alert(error.response.data.message);
+                    }
+                });
         }
     };
 

@@ -1,144 +1,184 @@
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { HiOutlineHeart, HiHeart } from 'react-icons/hi';
-
-interface PlcardProps {
-    index: number;
-    treck: number;
-    coverimg: string;
-    plname: string;
-    plcontent: string;
-    like: string;
-    user: string;
-    tag: { tagname: string }[];
-}
+import { PlcardProps } from 'src/types/Slider';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 function Taplist() {
     const [pldata, setPldata] = useState<PlcardProps[]>([]); //플리데이터 저장 스테이트
-
-    /**2023-05-07 플리 슬라이드 더미데이터 : 김주비 */
-    const dummydata: PlcardProps[] = [
-        {
-            index: 1,
-            treck: 8,
-            coverimg: '/assets/background-playlist6.jpg',
-            plname: '여름밤의 낭만 BGM',
-            plcontent: '다가오는 여름, 여행계획은 세웠나요? 노래로 해변가 여행을 떠나보는건 어떨까요.',
-            like: '2087',
-            user: 'Uncover',
-            tag: [{ tagname: '청량한' }, { tagname: '신나는' }, { tagname: '어쿠스틱' }],
-        },
-        {
-            index: 0,
-            treck: 20,
-            coverimg: '/assets/background-playlist3.jpg',
-            plname: 'PLAY LIST: 감성뿜뿜 시티팝',
-            plcontent:
-                '내 플레이 리스트를 봐 대박임. 지금까지 이런 플레이 리스트는 없었다. 플레이 리스트의 명가uncover 를 사용하세요.',
-            like: '2087',
-            user: 'Uncover',
-            tag: [{ tagname: '감성' }, { tagname: '시티팝' }],
-        },
-        {
-            index: 1,
-            treck: 8,
-            coverimg: '/assets/background-playlist.jpg',
-            plname: 'PLAY LIST: 숲속느낌 BGM',
-            plcontent:
-                '집중이 잘 안되는날. 오늘은 가사가 없는 조용한 노래를 듣고싶다구요? 이게바로 당신을 위한 플리네요.',
-            like: '2087',
-            user: 'Uncover',
-            tag: [{ tagname: '잔잔한' }, { tagname: '백색소음' }, { tagname: '차분한' }],
-        },
-        {
-            index: 2,
-            treck: 7,
-            coverimg: '/assets/background-playlist1.jpg',
-            plname: '❤ 사랑에 빠졌나봐 ❤',
-            plcontent:
-                '사랑에 빠진 기분을 느껴보고 싶으신가요? 오늘하루만큼은 달달하게. 당신을 위해 준비한 초콜렛같은 플리!',
-            like: '2087',
-            user: 'Uncover',
-            tag: [{ tagname: '달달함' }, { tagname: '로맨스' }, { tagname: '어쿠스틱' }, { tagname: '발라드' }],
-        },
-        {
-            index: 3,
-            treck: 5,
-            coverimg: '/assets/background-playlist2.jpg',
-            plname: 'PLAY LIST: 환상의 나라 BGM',
-            plcontent: '환상의 나라로 떠나보자!  ',
-            like: '2087',
-            user: 'Uncover',
-            tag: [{ tagname: '몽환적인' }, { tagname: '신비한' }],
-        },
-        {
-            index: 4,
-            treck: 12,
-            coverimg: '/assets/background-playlist5.jpg',
-            plname: 'PLAY LIST: 오늘은 신나게! BGM',
-            plcontent:
-                '내 플레이 리스트를 봐 대박임. 지금까지 이런 플레이 리스트는 없었다. 플레이 리스트의 명가uncover 를 사용하세요.',
-            like: '2087',
-            user: 'Uncover',
-            tag: [{ tagname: '클럽뮤직' }, { tagname: 'EDM' }, { tagname: '신나는' }],
-        },
-    ];
+    const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
+    const [totalPages, setTotalPages] = useState<number>(0); // 전체 페이지 수
+    const [searchText, setSearchText] = useState<string>(''); //서치 텍스트
+    const buttonArray = [];
 
     useEffect(() => {
-        setPldata(dummydata);
-    }, []);
+        axios
+            .get(
+                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists?page=${currentPage}&size=5`,
+            )
+            .then(function (response) {
+                // 성공적으로 요청을 보낸 경우
+                // console.log(response.data.pageInfo.totalPages);
+                setPldata(response.data.data);
+                setTotalPages(response.data.pageInfo.totalPages);
+            })
+            .catch(function (error) {
+                // 요청 중에 오류가 발생한 경우
+                console.error(error);
+            });
+    }, [currentPage]);
+
+    const handelPlSearch = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            axios
+                .get(
+                    `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/search-by-title?title=${searchText}&page=${currentPage}&size=5`,
+                )
+                .then(function (response) {
+                    // 성공적으로 요청을 보낸 경우
+                    setPldata(response.data.content);
+                    console.log(response.data);
+                    setTotalPages(response.data.pageInfo.totalPages);
+                })
+                .catch(function (error) {
+                    // 요청 중에 오류가 발생한 경우
+                    console.error(error);
+                });
+        }
+    };
+
+    /** 2023.05.17 전체 페이지 수 만큼 버튼 생성 - 김주비*/
+    for (let i = 1; i <= totalPages; i++) {
+        buttonArray.push(
+            <button
+                key={i}
+                className={i === currentPage ? 'page-focused' : ''}
+                onClick={() => {
+                    setCurrentPage(i);
+                }}
+            >
+                {i}
+            </button>,
+        );
+    }
+    const handleNextPage = () => {
+        setCurrentPage(currentPage + 1);
+    };
+    const handlePrevPage = () => {
+        setCurrentPage(currentPage - 1);
+    };
 
     return (
         <TapGroup>
-            <Plsearch placeholder="제목을 검색해주세요" />
+            <Plsearch
+                placeholder="제목을 검색해주세요"
+                value={searchText}
+                onChange={(e) => {
+                    setSearchText(e.target.value);
+                }}
+                onKeyDown={handelPlSearch}
+            />
             <ul>
-                {pldata.map((el) => (
-                    <TapList key={el.index}>
+                {pldata.map((data) => (
+                    <TapList key={data.playListId}>
                         <div>
-                            <img src={el.coverimg} />
+                            <img src={data.coverImg} alt="playlist cover image" />
                         </div>
                         <div className="pl-title">
-                            <p>{el.plname.slice(0, 20)}…</p>
-                            <p>{el.user}</p>
+                            <p>
+                                <Link to={`/playlsit/${data.playListId}`}>{data.title.slice(0, 20)}</Link>
+                            </p>
+                            <p className="pl-createMember">{data.createMember}</p>
                         </div>
                         <ul className="pl-tag">
-                            {el.tag.slice(0, 2).map((tag, i) => (
-                                <li key={`tag-${i}`}>{tag.tagname}</li>
+                            {data.tags.slice(0, 2).map((tag, i) => (
+                                <li key={`tag-${i}`}>{tag}</li>
                             ))}
                         </ul>
                         <div className="pl-like">
-                            <Like />
-                            <span>{el.like}</span>
+                            <Like plId={data.playListId} />
                         </div>
                     </TapList>
                 ))}
             </ul>
+            <Pagination>
+                <button disabled={currentPage === 1} onClick={handlePrevPage}>
+                    Prev
+                </button>
+                {buttonArray}
+                <button disabled={currentPage === totalPages} onClick={handleNextPage}>
+                    Next
+                </button>
+            </Pagination>
         </TapGroup>
     );
 }
 
-function Like() {
+function Like({ plId }: { plId: number }) {
     const [like, setLike] = useState<boolean>(false);
-    return (
-        <>
-            {like ? (
-                <HiHeart
-                    onClick={() => {
-                        setLike(!like);
-                    }}
-                />
-            ) : (
-                <HiOutlineHeart
-                    onClick={() => {
-                        setLike(!like);
-                    }}
-                />
-            )}
-        </>
-    );
+    const token = localStorage.getItem('access_token');
+    const memberId = localStorage.getItem('memberId');
+
+    useEffect(() => {
+        if (token) {
+            axios
+                .get(
+                    `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/members/${memberId}/like`,
+                    {
+                        headers: {
+                            Authorization: token,
+                        },
+                    },
+                )
+                .then(function (res) {
+                    const data = res.data;
+                    const likedMusicIds = data.map((item: { playListId: number }) => item.playListId);
+                    setLike(likedMusicIds.includes(plId));
+                });
+        }
+    }, []);
+
+    const haldleLiketoggle = () => {
+        if (token) {
+            axios
+                .post(
+                    `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/${plId}/like`,
+                    {},
+                    {
+                        headers: {
+                            Authorization: token,
+                        },
+                    },
+                )
+                .then(function (res) {
+                    setLike(res.data.playListId === plId);
+                })
+                .catch(function (err) {
+                    console.log(err);
+                });
+        } else {
+            alert('로그인을 진행해주세요');
+        }
+    };
+
+    return <LikeGroup onClick={haldleLiketoggle}>{like ? <HiHeart /> : <HiOutlineHeart />}</LikeGroup>;
 }
 
 export default Taplist;
+
+const LikeGroup = styled.div`
+    padding: 10px;
+    > * {
+        animation: bounceHeart 0.5s forwards;
+    }
+    @keyframes bounceHeart {
+        50% {
+            transform: scale(1.4);
+            color: #ffa3a3;
+        }
+    }
+`;
 
 const TapGroup = styled.div`
     width: 100%;
@@ -153,6 +193,11 @@ const TapGroup = styled.div`
         align-content: center;
         flex-wrap: wrap;
     }
+    @media (max-width: 700px) {
+        ul {
+            width: 90%;
+        }
+    }
 `;
 /**2023-05-06 펼쳐지는 서치바 애니메이션 : 김주비*/
 const Plsearch = styled.input`
@@ -162,7 +207,7 @@ const Plsearch = styled.input`
     animation: showinput 1s forwards;
     opacity: 0;
     margin-top: -30px;
-
+    font-family: 'Noto Sans KR', sans-serif;
     ::placeholder {
         color: #969696;
         font-family: 'Rajdhani', sans-serif;
@@ -190,20 +235,21 @@ const TapList = styled.li`
     width: 70%;
     background-color: rgba(0, 0, 0, 0.5);
     border: 1px solid #494949;
-    border-radius: 50px;
+    border-radius: 10px;
     opacity: 0;
     animation: opacity 1s forwards;
     margin-top: 10px;
     transition: 0.3s ease-in-out;
-
+    padding: 10px;
+    font-family: 'Noto Sans KR', sans-serif;
     :hover {
         transform: scale(1.05);
         background-color: rgba(20, 20, 20, 0.5);
     }
 
     > div img {
-        margin: 10px;
-        border-radius: 50px;
+        border-radius: 5px;
+        margin-right: 20px;
         transition: 0.2s ease-in-out;
         width: 40px;
         height: 40px;
@@ -220,6 +266,13 @@ const TapList = styled.li`
     .pl-title p:nth-child(2) {
         color: #666;
         margin: 0px 10px;
+    }
+    .pl-title a {
+        color: #ccc;
+        text-decoration: none;
+    }
+    .pl-createMember {
+        transform: scale(0.6);
     }
 
     .pl-tag {
@@ -240,7 +293,7 @@ const TapList = styled.li`
         display: flex;
         justify-content: center;
         align-items: center;
-        min-width: 100px;
+
         color: rgba(199, 68, 68, 1);
     }
     @keyframes opacity {
@@ -269,5 +322,37 @@ const TapList = styled.li`
 
     @media (max-width: 700px) {
         width: 100%;
+    }
+`;
+
+const Pagination = styled.div`
+    button {
+        color: #ccc;
+        background: none;
+        border: 1px solid #5a5a5a;
+        border-radius: 3px;
+        margin: 40px 3px;
+        transition: 0.2s ease-in-out;
+        cursor: pointer;
+    }
+    button:hover {
+        color: #ccc;
+        border-color: #ccc;
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    button:disabled {
+        border: 1px solid #5a5a5a;
+        color: #5a5a5a;
+    }
+    button:disabled:hover {
+        background: none;
+        cursor: default;
+    }
+
+    .page-focused {
+        color: #ccc;
+        border-color: #ccc;
+        background: rgba(255, 255, 255, 0.2);
     }
 `;

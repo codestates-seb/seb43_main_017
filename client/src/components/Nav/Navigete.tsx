@@ -4,13 +4,17 @@ import { MdOutlineQueueMusic, MdOutlineVideoSettings } from 'react-icons/md';
 import { BiHomeAlt } from 'react-icons/bi';
 import { HiOutlineMusicNote } from 'react-icons/hi';
 import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { selectIndexState, localIndexState } from 'src/recoil/Atoms';
 
-function Navigate() {
+function Navigate({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetStateAction<boolean>> }) {
+    const token = window.localStorage.getItem('access_token');
+    const userimg = window.localStorage.getItem('userimg');
     /**2023-05-05 선택된 아이콘 인덱스 스테이트 : 김주비*/
-    const [selectIndex, setSelectIndex] = useState<number>(Number(sessionStorage.getItem('index')));
+    const [selectIndex, setSelectIndex] = useRecoilState<number>(selectIndexState);
+    const [localIndex, setLocalIndex] = useRecoilState<string | null>(localIndexState);
     /**2023-05-05 프로필 아이콘 클릭시 이벤트실행 스테이트 : 김주비*/
     const [click, setClick] = useState<boolean>(false);
-    const [localIndex, setLocalIndex] = useState<string | null>(sessionStorage.getItem('index'));
 
     /**2023-05-08 선택된 아이콘 인덱스 로컬스토리지에 삽입 : 김주비*/
     // let localIndex = '1';
@@ -41,7 +45,7 @@ function Navigate() {
         {
             index: 3,
             name: <MdOutlineVideoSettings />,
-            link: '/mixing',
+            link: '/fittingroom',
         },
     ];
 
@@ -49,7 +53,14 @@ function Navigate() {
         <NavigateBox>
             <div className="icon-group">
                 <LogoIcon>
-                    <img src="/assets/logo_icon_012.png" alt="uncover logo image" />
+                    <Link
+                        to="/"
+                        onClick={() => {
+                            setSelectIndex(0);
+                        }}
+                    >
+                        <img src="/assets/logo_icon_012.png" alt="uncover logo image" />
+                    </Link>
                 </LogoIcon>
                 <Dotsstyle>
                     {[...Array(5)].map((_, index) => (
@@ -57,26 +68,73 @@ function Navigate() {
                     ))}
                 </Dotsstyle>
                 <MenuIcon>
-                    {menuIconlist.map((el, index) => (
-                        <Link to={el.link} key={el.index}>
-                            <li
-                                onClick={() => {
-                                    setSelectIndex(el.index);
-                                }}
-                                className={localIndex === String(index) ? 'click-icon' : 'null'}
-                            >
-                                {el.name}
-                            </li>
-                        </Link>
-                    ))}
+                    {token
+                        ? menuIconlist.map((el, index) => (
+                              <Link
+                                  to={el.link}
+                                  key={el.index}
+                                  onClick={() => {
+                                      setSelectIndex(el.index);
+                                  }}
+                              >
+                                  <li className={localIndex === String(index) ? 'click-icon' : 'null'}>{el.name}</li>
+                              </Link>
+                          ))
+                        : menuIconlist.map((el, index) =>
+                              el.index !== 3 ? (
+                                  <Link
+                                      to={el.link}
+                                      key={el.index}
+                                      onClick={() => {
+                                          setSelectIndex(el.index);
+                                      }}
+                                  >
+                                      <li className={localIndex === String(index) ? 'click-icon' : 'null'}>
+                                          {el.name}
+                                      </li>
+                                  </Link>
+                              ) : (
+                                  <li
+                                      key={el.index}
+                                      onClick={() => {
+                                          setShowSignIn(true);
+                                      }}
+                                      className={localIndex === String(index) ? 'click-icon' : 'null'}
+                                  >
+                                      {el.name}
+                                  </li>
+                              ),
+                          )}
                 </MenuIcon>
                 <Dotsstyle>
                     {[...Array(5)].map((_, index) => (
                         <span key={index}></span>
                     ))}
                 </Dotsstyle>
-                <ProfileIcon>
-                    <Link to="/mypage">
+                {token ? (
+                    <ProfileIcon>
+                        <Link
+                            to="/mypage"
+                            onClick={() => {
+                                setClick(!click);
+                                setSelectIndex(4);
+                            }}
+                        >
+                            <span>
+                                {userimg ? (
+                                    <img src={userimg} alt="profile icon" className={click ? 'img-active' : 'null'} />
+                                ) : (
+                                    <img
+                                        src="/assets/profile-icon.png"
+                                        alt="profile icon"
+                                        className={click ? 'img-active' : 'null'}
+                                    />
+                                )}
+                            </span>
+                        </Link>
+                    </ProfileIcon>
+                ) : (
+                    <ProfileIcon onClick={() => setShowSignIn(true)}>
                         <span
                             onClick={() => {
                                 setClick(!click);
@@ -89,8 +147,8 @@ function Navigate() {
                                 className={click ? 'img-active' : 'null'}
                             />
                         </span>
-                    </Link>
-                </ProfileIcon>
+                    </ProfileIcon>
+                )}
             </div>
         </NavigateBox>
     );
@@ -159,6 +217,7 @@ const MenuIcon = styled.ul`
     a {
         color: #9b9b9b;
         transition: 0.3s ease-in-out;
+        border-radius: 40px;
     }
     a:hover {
         color: #fff;
@@ -201,7 +260,9 @@ const ProfileIcon = styled.div`
     }
     img {
         width: 100%;
+        height: 100%;
         transition: 0.5s ease-in-out;
+        object-fit: cover;
     }
     img:hover {
         width: 130%;

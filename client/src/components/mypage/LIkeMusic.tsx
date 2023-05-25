@@ -1,73 +1,114 @@
 import styled from 'styled-components';
-import { AiFillHeart } from 'react-icons/ai';
+import { HiHeart } from 'react-icons/hi';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
-/* 2023.05.10 Like Music 타입 선언 - 홍혜란 */
-type MusicData = {
-    id: number;
-    name: string;
-    artist: string;
-    album: string;
-    imgSrc: string;
-};
-
-/* 2023.05.10 Like Music 더미데이터(임시) - 홍혜란 */
-const VoteLike: MusicData[] = [
-    {
-        id: 1,
-        name: 'Ditto',
-        artist: 'Newjeans',
-        album: 'OMG',
-        imgSrc: './assets/ditto.png',
-    },
-    {
-        id: 2,
-        name: 'Ditto',
-        artist: 'Newjeans',
-        album: 'OMG',
-        imgSrc: './assets/ditto.png',
-    },
-    {
-        id: 3,
-        name: 'Ditto',
-        artist: 'Newjeans',
-        album: 'OMG',
-        imgSrc: './assets/ditto.png',
-    },
-    {
-        id: 4,
-        name: 'Ditto',
-        artist: 'Newjeans',
-        album: 'OMG',
-        imgSrc: './assets/ditto.png',
-    },
-    {
-        id: 5,
-        name: 'Ditto',
-        artist: 'Newjeans',
-        album: 'OMG',
-        imgSrc: './assets/ditto.png',
-    },
-];
+interface LikeMusicList {
+    albumCoverImg: string;
+    albumName: string;
+    artistName: string;
+    createdAt: string;
+    memberId: number;
+    modifiedAt: string;
+    musicId: number;
+    musicLikeCount: number;
+    musicName: string;
+    musicTagName: string;
+    musicTime: number;
+    musicUri: string;
+}
 
 const LikeMusic = () => {
-    const musicData = VoteLike;
+    const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
+    const [totalPages, setTotalPages] = useState<number>(0); // 전체 페이지
+
+    const [likedMusic, setLikedMusic] = useState<LikeMusicList[]>([]);
+    const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
+    const [update, setUpdate] = useState<boolean>(false);
+
+    console.log(`totalPages ${totalPages} currentPage ${currentPage}`);
+
+    useEffect(() => {
+        const fetchLikedMusic = () => {
+            axios
+                .get(`${process.env.REACT_APP_API_URL}/musics/liked-musics?&page=${currentPage}&size=5`, {
+                    headers: {
+                        Authorization: token,
+                    },
+                })
+                .then((response) => {
+                    setLikedMusic(response.data.data);
+                    setTotalPages(response.data.pageInfo.totalPages);
+                })
+                .catch((error) => {
+                    console.error('Error fetching liked music:', error);
+                });
+        };
+
+        fetchLikedMusic();
+    }, [setLikedMusic, currentPage, update]);
+
+    const handleNextPage = () => {
+        setCurrentPage(currentPage + 1);
+    };
+    const handlePrevPage = () => {
+        setCurrentPage(currentPage - 1);
+    };
+
+    const handleLike = (musicId: number) => {
+        axios
+            .post(
+                `${process.env.REACT_APP_API_URL}/music-like/toggle`,
+                {
+                    musicId: musicId,
+                },
+                {
+                    headers: {
+                        Authorization: token,
+                    },
+                },
+            )
+            .then((res) => {
+                console.log(res.data);
+                setUpdate(!update);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
 
     return (
         <LikeContainer>
             <LikeTitle>
                 <div className="vote-icon">
-                    <AiFillHeart />
+                    <HiHeart />
                     <p>LIKE MUSIC</p>
                 </div>
+                <Pagination>
+                    <button disabled={currentPage === 1} onClick={handlePrevPage}>
+                        Prev
+                    </button>
+                    <button>{currentPage}</button>
+                    <button disabled={currentPage === totalPages} onClick={handleNextPage}>
+                        Next
+                    </button>
+                </Pagination>
             </LikeTitle>
-            {musicData.map((data) => (
-                <LikeList>
-                    <img src={data.imgSrc} alt="musicimg" />
-                    <li>{data.name}</li>
-                    <li>{data.artist}</li>
-                    <li>{data.album}</li>
-                    <div className="music-icon">
-                        <AiFillHeart />
+            {likedMusic.map((likedata) => (
+                <LikeList key={likedata.musicId}>
+                    <Link to={`/musiclist/${likedata.musicId}`}>
+                        <img src={likedata.albumCoverImg} alt={likedata.musicName} />
+                        <span>{likedata.musicName}</span>
+                        <span>{likedata.artistName}</span>
+                    </Link>
+                    <div
+                        className="music-icon"
+                        onClick={() => {
+                            handleLike(likedata.musicId);
+                        }}
+                    >
+                        <HiHeart />
                     </div>
                 </LikeList>
             ))}
@@ -79,23 +120,25 @@ export default LikeMusic;
 
 /* 2023.05.10 Like Music 전체 박스 컴포넌트 - 홍혜란 */
 const LikeContainer = styled.div`
+    width: 400px;
+    height: 280px;
     align-items: center;
-    margin: 30px;
 `;
-
 /* 2023.05.10 Like Music 타이틀 컴포넌트 - 홍혜란 */
 const LikeTitle = styled.div`
     display: flex;
     align-items: center;
     flex-direction: row;
-    margin-bottom: 20px;
+    justify-content: space-between;
+    margin-bottom: 10px;
 
     .vote-icon {
         display: flex;
         align-items: center;
         font-size: 16px;
-        color: red;
-        padding-top: 5px;
+        color: rgb(255, 80, 80);
+        font-weight: 600;
+        font-family: 'Noto Sans KR', sans-serif;
     }
 
     p {
@@ -110,8 +153,24 @@ const LikeList = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid white;
-    margin-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 8px;
+
+    a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
+        > * {
+            margin-left: 20px;
+        }
+        > *:nth-child(1) {
+            margin: 0px;
+        }
+    }
+    :hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
 
     img {
         width: 30px;
@@ -119,16 +178,58 @@ const LikeList = styled.div`
         border-radius: 10%;
     }
 
-    li {
+    span {
         font-size: 12px;
-        color: white;
+        color: #ccc;
+    }
+
+    span:nth-child(3) {
+        color: rgba(255, 255, 255, 0.4);
     }
 
     .music-icon {
         font-size: 16px;
-        color: red;
+        color: rgb(255, 80, 80);
         display: flex;
         align-items: center;
         justify-content: center;
+        > * {
+            transition: 0.2s ease-in-out;
+        }
+        > *:hover {
+            transform: scale(1.2);
+            color: rgb(255, 125, 125);
+        }
+    }
+`;
+const Pagination = styled.div`
+    button {
+        color: #ccc;
+        background: none;
+        border: 1px solid #5a5a5a;
+        border-radius: 3px;
+        margin: 0px 3px;
+        transition: 0.2s ease-in-out;
+        cursor: pointer;
+    }
+    button:hover {
+        color: #ccc;
+        border-color: #ccc;
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    button:disabled {
+        border: 1px solid #5a5a5a;
+        color: #5a5a5a;
+    }
+    button:disabled:hover {
+        background: none;
+        cursor: default;
+    }
+
+    .page-focused {
+        color: #ccc;
+        border-color: #ccc;
+        background: rgba(255, 255, 255, 0.2);
     }
 `;

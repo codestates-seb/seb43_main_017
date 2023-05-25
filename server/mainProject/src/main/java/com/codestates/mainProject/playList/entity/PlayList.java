@@ -3,7 +3,10 @@ package com.codestates.mainProject.playList.entity;
 import com.codestates.mainProject.audit.Auditable;
 import com.codestates.mainProject.member.entity.Member;
 import com.codestates.mainProject.music.entity.Music;
+import com.codestates.mainProject.playListComment.entity.PlayListComment;
 import com.codestates.mainProject.playListLike.entity.PlayListLike;
+import com.codestates.mainProject.playListTag.entity.PlayListTag;
+import com.codestates.mainProject.playlListMusic.entity.PlayListMusic;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,12 +15,11 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@NoArgsConstructor
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class PlayList extends Auditable {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long playListId;
@@ -26,27 +28,74 @@ public class PlayList extends Auditable {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL}, orphanRemoval = true)
-    private List<Music> musics = new ArrayList<>();
+    @Column(nullable = false)
+    private String createMember;
+
+    @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false)
+    private String body;
+
+    private String coverImg;
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    private List<String> tags = new ArrayList<>();
+
+    @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
+    private List<PlayListTag> playListTags = new ArrayList<>();
 
     @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
     private List<PlayListLike> playListLikes = new ArrayList<>();
 
-    private String title;
+    @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
+    private List<PlayListComment> playListComments = new ArrayList<>();
 
-    private String body;
+    @Column(nullable = false)
+    private int likeCount = this.playListLikes.size();
 
-    public String getMemberName(){
-        return this.member.getName();
+    @OneToMany(mappedBy = "playList", cascade = {CascadeType.ALL})
+    private List<PlayListMusic> playlistMusics = new ArrayList<>();
+
+    public List<Music> getMusics() {
+        List<Music> musics = new ArrayList<>();
+        for (PlayListMusic playListMusic : playlistMusics) {
+            musics.add(playListMusic.getMusic());
+        }
+        return musics;
+    }
+    public void addPlayListMusic(PlayListMusic playlistMusic) {
+        this.playlistMusics.add(playlistMusic);
+        playlistMusic.setPlayList(this);
+    }
+    public void removePlayListMusic(PlayListMusic playlistMusic) {
+        this.playlistMusics.remove(playlistMusic);
+        if(playlistMusic.getPlayList() != this) {
+            playlistMusic.setPlayList(this);
+        }
     }
 
-    public void addMusic(Music music){
-        this.musics.add(music);
-        music.setPlayList(this);
+    public void addPlayListLike(PlayListLike playListLike) {
+        this.playListLikes.add(playListLike);
+        playListLike.setPlayList(this);
+        this.likeCount = this.playListLikes.size();
+    }
+    public void removePlayListLike(PlayListLike playListLike) {
+        this.playListLikes.remove(playListLike);
+        if(playListLike.getPlayList() != this) {
+            playListLike.setPlayList(this);
+        }
+        this.likeCount = this.playListLikes.size();
     }
 
-    //TODO: PlayListLike 작업 완료 후 수정
-//    public void addPlayListLikes(PlayListLike playListLike){
-//        this.playListLikes.add(playListLike);
-//    }
+    public void addPlayListTag(PlayListTag playListTag){
+        this.playListTags.add(playListTag);
+        this.tags.add(playListTag.getTag().getName());
+        playListTag.setPlayList(this);
+    }
+    public void removePlayListTag(PlayListTag playListTag) {
+        this.playListTags.remove(playListTag);
+        this.tags.remove(playListTag.getTag().getName());
+        if (playListTag.getPlayList() != this) playListTag.setPlayList(this);
+    }
 }

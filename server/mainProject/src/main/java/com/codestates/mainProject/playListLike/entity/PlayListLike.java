@@ -2,6 +2,7 @@ package com.codestates.mainProject.playListLike.entity;
 
 import com.codestates.mainProject.member.entity.Member;
 import com.codestates.mainProject.playList.entity.PlayList;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,20 +10,17 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@NoArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
 public class PlayListLike {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long PlayListLikeId;
+    private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "MEMBER_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    @ManyToOne
-    @JoinColumn(name = "PLAYLIST_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
     private PlayList playList;
 }

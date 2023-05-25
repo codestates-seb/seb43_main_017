@@ -1,5 +1,13 @@
 ## Team. Undefined
-![uncover](./img/uncover_logo_02%20(1).png)
+
+
+<div align="center">
+ <img src="https://github.com/codestates-seb/seb43_main_017/assets/119921683/ecbd10f7-adeb-43c0-b928-bdaf212c4bc1">
+ <br>
+당신을 위한 최고의 음악 플랫폼
+</div>
+
+##[UNCOVER](http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com)
 
 ## Team List
 |![홍혜란](./img/rab.png)|![김주비](./img/4.png)|![박수범](./img/%EC%88%98%EB%B2%94%EC%9D%B4.png)|![김인환](./img/%EB%94%94%EB%AC%B4.jpg)|![이재관](./img/%EA%B2%80%EB%83%A5%EC%9D%B4.png)|![강지산](./img/%EB%8B%B4%EC%A7%80.png)|
@@ -9,26 +17,77 @@
 
 <br>
 
-### FE Stacks
-<p>
-<img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white">
-<img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white">
-<img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
-<img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" />
-<img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> 
-</p>
+<details>
+<summary>개인 기술 스택</summary>
+<div markdown="1">
+
+**홍혜란**
+ - Musiclist page (Trending, musiclist)
+ - Musiclist like (CRUD)
+ - Mypage 회원정보
+ - Mypage like list (RD)
+ - Mypage Myplaylist (CRUD)
+ - Mypage Myplaylist Music (RD)
  
-### BE Stacks
-<p>
-<img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white">
-<img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
-<img src="https://img.shields.io/badge/Spring Security-6DB33F?style=for-the-badge&logo=Spring Security&logoColor=white">
-<img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=json web tokens&logoColor=white">
-<img src="https://img.shields.io/badge/gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white">
-<img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white">
-<img src="https://img.shields.io/badge/linux-FCC624?style=for-the-badge&logo=linux&logoColor=black">
-<img src="https://img.shields.io/badge/Amazon EC2-FF9900?style=for-the-badge&logo=Amazon EC2&logoColor=white">
-</p>
+ **김주비**
+ - 전반적 반응형 css 및 Animation 동작구현
+ - Main page (fullpage-scroll)
+ - Playlist page (slider/tap-menu)
+ - Navigate component
+ - MusicDetail page
+ - Comment (CRUD)
+ - Sound component (+playlist-viewer)
+ - Mypage 회원탈퇴
+ - Download + Pagination 구현
+ 
+ **박수범**
+ - env 파일 관리
+ - 로컬 Signin/Signup
+ - 유저정보 관리
+ - Oauth 네이버
+ - Oauth 카카오
+ - Oauth 구글
+ - Mixing Page (Play list)
+ - Mixing Page (Drag & Drop)
+ - Mixing Page (Controlbar)
+ - Mixing Page 반응형 css Animation 동작구현
+ - Playlist add music
+ 
+ **김인환**
+ - Playlist CRUD
+ - Playlist 좋아요 기능
+ - Playlist 댓글 기능
+ - Playlist 태그 기능
+ - 태그 CRUD
+ 
+ **이재관**
+ - Member CRUD
+ - Security
+ - JWT
+ - local 로그인,로그아웃 구현
+ - OAuth2 구글,네이버,카카오 구현
+ - AWS deployment
+ - s3 버킷 이미지 연동(프로필 이미지)
+ - Tag CRUD
+ - 개인 Member 맞춤 음악 추천 기능
+ 
+ **강지산**
+ - music CRUD 구현
+ - musicLike 구현
+ - musicComment 구현
+ - 키워드 검색 구현
+ - 태그 검색 기능 구현
+ - AWS deployment
+
+</div>
+</details>
+
+<br>
+
+## Stacks
+
+![sadsadasdsad](https://github.com/codestates-seb/seb43_main_017/assets/119921683/c3a84d84-cbfa-4015-aa3d-d8fb38705a7d)
+
 
 <br>
 
@@ -52,7 +111,8 @@
 <summary>ERD</summary>
 <div markdown="1">
 
-<img src="./img/%EC%9B%B9%20%EC%BA%A1%EC%B2%98_6-5-2023_14939_.jpeg" alt="">
+<img src="./img/erd.png" alt="erdImg">
 
 </div>
 </details>
+     </details>

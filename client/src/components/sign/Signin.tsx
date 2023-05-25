@@ -11,7 +11,7 @@ import KakaoBtn from './KakaoBtn';
 import NaverBtn from './NaverBtn';
 
 function Signin({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetStateAction<boolean>> }) {
-    const BaseUrl = 'ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/login';
+    const BaseUrl = `${process.env.REACT_APP_API_URL}/members/login`;
     const setTokenState = useSetRecoilState(accessToken);
     const [closeDisplay, setCloseDisplay] = useState<boolean>(false); // display closing 모션효과 상태
     const [errorMessage, setErrorMessage] = useState<string>('');
@@ -40,7 +40,18 @@ function Signin({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetStat
                 .then((res) => {
                     if (res.status === 200 && res.headers.authorization !== undefined) {
                         window.localStorage.setItem('access_token', res.headers.authorization);
-                        setTokenState(localStorage.getItem('access_token'));
+                        window.localStorage.setItem('refresh_token', res.headers.refresh);
+                        axios
+                            .get(`${process.env.REACT_APP_API_URL}/members/info`, {
+                                headers: {
+                                    Authorization: `Bearer ${res.headers.authorization}`,
+                                },
+                            })
+                            .then((res) => {
+                                window.localStorage.setItem('memberId', res.data.data.memberId);
+                                window.localStorage.setItem('usernickname', res.data.data.name);
+                                window.localStorage.setItem('useremail', loginInfo.email);
+                            });
                         setCloseDisplay(!closeDisplay);
                         setTimeout(() => {
                             setShowSignIn(false);
