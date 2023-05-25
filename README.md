@@ -42,6 +42,7 @@
  - Mixing Page (Play list)
  - Mixing Page (Drag & Drop)
  - Mixing Page (Controlbar)
+ - Mixing Page 반응형 css Animation 동작구현
  - Playlist add music
  
  **김인환**
