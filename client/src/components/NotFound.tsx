@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import '../css/App.css';
 
 function NotFound() {
@@ -11,7 +12,9 @@ function NotFound() {
                     Sorry. the page you're looking for doesn't exist. <br /> If you think something is broken. report a
                     problem.
                 </span>
-                <HomeButton> HOME </HomeButton>
+                <Link to="/">
+                    <HomeButton> HOME </HomeButton>
+                </Link>
             </div>
         </NotfoundSection>
     );
