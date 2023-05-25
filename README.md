@@ -1,7 +1,7 @@
 ## Team. Undefined
 
 
-<div style="text-align: center;width:100%">
+<div align="center">
  <img src="https://github.com/codestates-seb/seb43_main_017/assets/119921683/ecbd10f7-adeb-43c0-b928-bdaf212c4bc1">
 당신을 위한 최고의 음악 플랫폼
 </div>
