@@ -3,10 +3,10 @@
 ![uncover](./img/uncover_logo_02%20(1).png)
 
 ## Team List
-|<img src="https://github.com/codestates-seb/seb43_main_017/assets/120001350/314378b4-3f74-4b26-b05c-9e3172b44ea9"  width="100" height="100"/>|<img src="./img/4.png"  width="100" height="100"/>|<img src="./img/%EC%88%98%EB%B2%94%EC%9D%B4.png"  width="100" height="100"/>|<img src="./img/%EB%94%94%EB%AC%B4.jpg" width="100" height="100"/>|<img src="./img/%EA%B2%80%EB%83%A5%EC%9D%B4.png"  width="100" height="100"/>|<img src="./img/%EB%8B%B4%EC%A7%80.png"  width="100" height="100"/>|
+|![홍혜란](./img/rab.png)|![김주비](./img/4.png)|![박수범](./img/%EC%88%98%EB%B2%94%EC%9D%B4.png)|![김인환](./img/%EB%94%94%EB%AC%B4.jpg)|![이재관](./img/%EA%B2%80%EB%83%A5%EC%9D%B4.png)|![강지산](./img/%EB%8B%B4%EC%A7%80.png)|
 |:---:|:---:|:---:|:---:|:---:|:---:|
 |[홍혜란](https://github.com/forhrever)|[김주비](https://github.com/mscojl24)|[박수범](https://github.com/parksubeom)|[김인환](https://github.com/Preasim)|[이재관](https://github.com/CordJG)|[강지산](https://github.com/hunm719)|
-|FE 부팀장|FE|FE|BE 팀장|BE|BE|
+|FE 팀장|FE|FE|BE 팀장|BE|BE|
 
 <br>
 
