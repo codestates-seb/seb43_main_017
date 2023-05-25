@@ -2,13 +2,14 @@ import styled from 'styled-components';
 import LikeMusic from './LIkeMusic';
 import Myplaylist from './Myplaylist';
 import ModifyPlaylist from './ModifyPlaylist';
-import { modifyDataState, playListModalState } from 'src/recoil/Atoms';
+import { modifyDataState, playListModalState, myplaylistState } from 'src/recoil/Atoms';
 import { useRecoilState } from 'recoil';
 import AddMyplaylist from './AddMyplaylist';
 import { ImCross } from 'react-icons/im';
 import Loding from 'src/pages/Loding';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 function Mypage() {
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
@@ -17,8 +18,9 @@ function Mypage() {
     const useremail: string | undefined = window.localStorage.getItem('useremail') || undefined;
     const memberId = window.localStorage.getItem('memberId');
     const [openPlayList, setOpenPlayList] = useRecoilState<boolean>(playListModalState);
-    const [modifyPlaylistState] = useRecoilState(modifyDataState);
+    const [modifyPlaylistState, setModifyPlaylistState] = useRecoilState(modifyDataState);
     const Navigate = useNavigate();
+    const [myplaylistDataState] = useRecoilState(myplaylistState);
 
     const handelWithdrawal = () => {
         const result = confirm('회원탈퇴를 진행할경우 가지고 있던 음원 데이터는 모두 소실합니다. 동의하십니까?');
@@ -41,6 +43,10 @@ function Mypage() {
             alert('회원탈퇴가 취소되었습니다.');
         }
     };
+
+    useEffect(() => {
+        setModifyPlaylistState(false);
+    }, []);
 
     return (
         <div>
@@ -84,7 +90,9 @@ function Mypage() {
                             <LikeMusic /> {/* like music 파일 */}
                             <Myplaylist /> {/* my playlist 파일 */}
                         </section>
-                        <section>{modifyPlaylistState && <ModifyPlaylist />}</section>
+                        <section>
+                            {modifyPlaylistState ? <ModifyPlaylist /> : !myplaylistDataState ? null : null}
+                        </section>
                     </MusicInfor>
                 </MypageListContainer>
             </MypageContainer>
