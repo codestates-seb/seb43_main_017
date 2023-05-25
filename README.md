@@ -54,19 +54,19 @@
  
  **이재관**
  -Member CRUD
--Security
--JWT
--local 로그인,로그아웃 구현
--OAuth2 구글,네이버,카카오 구현
--AWS deployment
--s3 버킷 이미지 연동(프로필 이미지)
--Tag CRUD
--개인 Member 맞춤 음악 추천 기능
+ -Security
+ -JWT
+ -local 로그인,로그아웃 구현
+ -OAuth2 구글,네이버,카카오 구현
+ -AWS deployment
+ -s3 버킷 이미지 연동(프로필 이미지)
+ -Tag CRUD
+ -개인 Member 맞춤 음악 추천 기능
  
  **강지산**
  -music CRUD 및 좋아요 댓글 구현
--키워드 검색 및 태그 검색 기능 구현
--AWS deployment
+ -키워드 검색 및 태그 검색 기능 구현
+ -AWS deployment
 
 </div>
 </details>
