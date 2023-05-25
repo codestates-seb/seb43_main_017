@@ -64,8 +64,11 @@
  - 개인 Member 맞춤 음악 추천 기능
  
  **강지산**
- - music CRUD 및 좋아요 댓글 구현
- - 키워드 검색 및 태그 검색 기능 구현
+ - music CRUD 구현
+ - musicLike 구현
+ - musicComment 구현
+ - 키워드 검색 구현
+ - 태그 검색 기능 구현
  - AWS deployment
 
 </div>
