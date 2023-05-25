@@ -7,7 +7,21 @@
 |:---:|:---:|:---:|:---:|:---:|:---:|
 |[홍혜란](https://github.com/forhrever)|[김주비](https://github.com/mscojl24)|[박수범](https://github.com/parksubeom)|[김인환](https://github.com/Preasim)|[이재관](https://github.com/CordJG)|[강지산](https://github.com/hunm719)|
 |FE 팀장|FE|FE|BE 팀장|BE|BE|
-| | | -로컬 Signin/Signup <br> -유저정보 관리 <br> -Oauth 네이버  <br> -Oauth 카카오  <br> -Oauth 구글 <br> -믹싱페이지(Fitting Room) <br> - 플레이리스트 음악 추가 | | | -music CRUD 및 좋아요 댓글 구현 <br> -검색 기능 구현 <br> -배포 준비 |
+| |- 전반적 반응형 css 및 Animation 동작구현 <br>
+- Main page (fullpage-scroll) <br>
+- Playlist page (slider) <br>
+- Playlist page (tap-menu) <br>
+- Playlist (Like) <br>
+- Navigate component <br>
+- MusicDetail page <br>
+- MusicDetail comment (CRUD) <br>
+- MusicDetail (playlist-viewer) <br>
+- Sound component (useRef) <br>
+- Mypage 회원탈퇴 <br>
+- Musiclist (tag-sreach) <br>
+- Playlist (title-sreach) <br>
+- All Pagination 구현 <br>
+- Music Download <br> | -로컬 Signin/Signup <br> -유저정보 관리 <br> -Oauth 네이버  <br> -Oauth 카카오  <br> -Oauth 구글 <br> -믹싱페이지(Fitting Room) <br> - 플레이리스트 음악 추가 | | | -music CRUD 및 좋아요 댓글 구현 <br> -검색 기능 구현 <br> -배포 준비 |
 
 <br>
 
