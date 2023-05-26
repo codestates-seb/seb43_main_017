@@ -51,7 +51,7 @@
  - Mixing Page (Drag & Drop)
  - Mixing Page (Controlbar)
  - Mixing Page 반응형 css Animation 동작구현
- - Playlist add music
+ - Mypage Myplaylist Music (RD)
  
  **김인환**
  - Playlist CRUD
