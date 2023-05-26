@@ -98,11 +98,11 @@
 |메인페이지|로그인/회원가입|
 |:---:|:---:|
 |![image](https://github.com/codestates-seb/seb43_main_017/assets/119921683/4412e1e5-b38e-4539-a309-bffebdfd689e)|![image](https://github.com/codestates-seb/seb43_main_017/assets/119921683/2e0364f1-c02a-47a0-a9bc-6c19915189ac)|
-|뮤직리스트|플레이리스트|
+|<b>뮤직리스트</b>|<b>플레이리스트</b>|
 |![image](https://github.com/codestates-seb/seb43_main_017/assets/119921683/d86dc52d-35d1-4cf6-8200-50e47925f1ea)|![image](https://github.com/codestates-seb/seb43_main_017/assets/119921683/106acbbd-2601-4214-af59-b9478f3797e5)|
-|음원정보|음원리스트|
+|<b>음원정보</b>|<b>음원리스트</b>|
 |![image](https://github.com/codestates-seb/seb43_main_017/assets/119921683/989c7b47-fd20-4961-a79b-946de47c01c0)|![image](https://github.com/codestates-seb/seb43_main_017/assets/119921683/de4738c2-bebd-43a5-bf93-86308df1762c)|
-|믹싱페이지|마이페이지|
+|<b>믹싱페이지</b>|<b>마이페이지</b>|
 |![image](https://github.com/codestates-seb/seb43_main_017/assets/119921683/e6eb0c95-9f2c-49f9-a546-82129733cd7c)|![image](https://github.com/codestates-seb/seb43_main_017/assets/119921683/f9e8c596-f04b-4441-b70c-457bd73f5350)|
 
 
