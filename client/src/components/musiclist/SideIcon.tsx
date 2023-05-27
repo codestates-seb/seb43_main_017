@@ -75,10 +75,18 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
             >
                 <FiFolderPlus />
             </AddPlayList>
-
-            <a href={`/assets/music/${musicUri}`} download>
-                <MdFileDownload className="view-700" />
-            </a>
+            {token ? (
+                <a href={`/assets/music/${musicUri}`} download>
+                    <MdFileDownload className="view-700" />
+                </a>
+            ) : (
+                <MdFileDownload
+                    className="view-700"
+                    onClick={() => {
+                        alert('로그인된 회원만 음원 다운로드가 가능합니다.');
+                    }}
+                />
+            )}
             {like ? (
                 <HiHeart onClick={handleLike} className="color-red like-action view-700" />
             ) : (

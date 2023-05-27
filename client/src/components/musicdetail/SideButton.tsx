@@ -108,7 +108,12 @@ function Sidebutton() {
                             <span>DOWNLOAD</span>
                         </a>
                     ) : (
-                        <span className="box-center">
+                        <span
+                            className="box-center"
+                            onClick={() => {
+                                alert('로그인된 회원만 음원 다운로드가 가능합니다.');
+                            }}
+                        >
                             <RiDownload2Fill />
                             <span>DOWNLOAD</span>
                         </span>
@@ -158,6 +163,5 @@ const Button = styled.div`
         display: flex;
         justify-content: center;
         align-items: center;
-        border: 1px solid red;
     }
 `;
