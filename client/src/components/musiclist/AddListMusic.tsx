@@ -13,7 +13,6 @@ const AddListMusic = () => {
     const buttonArray = [];
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
     const [myplaylistData, setMyplaylistData] = useRecoilState(myplaylistState);
-    console.log(newMusicId);
 
     /* 2023.05.22 마이플레이리스트 조회 */
     useEffect(() => {

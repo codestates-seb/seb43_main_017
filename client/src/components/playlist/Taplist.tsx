@@ -17,7 +17,6 @@ function Taplist() {
             .get(`${process.env.REACT_APP_API_URL}/playlists?page=${currentPage}&size=5`)
             .then(function (response) {
                 // 성공적으로 요청을 보낸 경우
-                // console.log(response.data.pageInfo.totalPages);
                 setPldata(response.data.data);
                 setTotalPages(response.data.pageInfo.totalPages);
             })
@@ -36,7 +35,6 @@ function Taplist() {
                 .then(function (response) {
                     // 성공적으로 요청을 보낸 경우
                     setPldata(response.data.content);
-                    console.log(response.data);
                     setTotalPages(response.data.pageInfo.totalPages);
                 })
                 .catch(function (error) {

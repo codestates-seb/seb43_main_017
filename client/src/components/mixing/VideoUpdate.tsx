@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState, Ref } from 'react';
+import { useCallback, useState, Ref } from 'react';
 import { useDropzone } from 'react-dropzone';
 import styled from 'styled-components';
 import VideoPlayer from './VideoPlayer';
@@ -11,14 +11,12 @@ interface LikedListProps {
 const VideoUploader = ({ videoRef }: LikedListProps) => {
     const [uploadedVideo, setUploadedVideo] = useState<File | null>(null);
     const [videoState, setvideouploadState] = useRecoilState(videouploadState);
-    const fileInputRef = useRef<HTMLInputElement>(null);
 
     /** 2022/05/22 - 드래그앤 드랍을 통해 드랍존에 비디오 데이터가 들어왔을때 비디오플레이어가 나타나게 해주고 파일데이터를 저장하는 로직 -박수범 */
     const onDrop = useCallback((acceptedFiles: File[]) => {
         acceptedFiles.forEach((file: File) => {
             const reader = new FileReader();
             reader.onload = () => {
-                console.log(file);
                 setUploadedVideo(file);
                 setvideouploadState(true);
             };
@@ -31,9 +29,7 @@ const VideoUploader = ({ videoRef }: LikedListProps) => {
      * getInputProps: 드래그 앤 드랍 존을 구성하는 input창 안에 들어갈 input속성들이 들어가있다.
      * @사용법 : 마찬가지로 {...getInputProps} 이렇게 스프레드 문법으로 풀어서 사용하면 된다.
      */
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
-    console.log(getRootProps());
-    console.log(getInputProps());
+    const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
     return (
         <div>

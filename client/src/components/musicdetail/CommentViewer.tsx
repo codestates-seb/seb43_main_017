@@ -16,7 +16,6 @@ function CommentViewer() {
     const token = localStorage.getItem('access_token');
     const memberId = localStorage.getItem('memberId');
 
-    // console.log(comment);
     const url: string = onPlaylist === 'true' ? `/playlist-comments/` : `/music-comments/musics/`;
 
     /**2023.05.22 코멘트조회 - 김주비 */

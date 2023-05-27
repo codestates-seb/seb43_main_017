@@ -19,9 +19,6 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
     const setMusicIdState = useSetRecoilState(getMusicIdState);
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
 
-    const handleAddPlaylist = () => {
-        console.log('유저리스트 조회');
-    };
     const handleLike = () => {
         if (!token) {
             alert('로그인을 진행해주세요');
@@ -73,7 +70,6 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
                 onClick={() => {
                     setPlayListState(true);
                     setMusicIdState(musicId);
-                    handleAddPlaylist;
                 }}
                 className="view-700"
             >

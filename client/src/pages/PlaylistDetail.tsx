@@ -58,7 +58,7 @@ function PlaylistDetail() {
             .get(`${process.env.REACT_APP_API_URL}/playlists/${plId.plId}`)
             .then(function (response) {
                 // 성공적으로 요청을 보낸 경우
-                // console.log(response.data.pageInfo.totalPages);
+
                 setPlDetailData(response.data.data);
             })
             .catch(function (error) {

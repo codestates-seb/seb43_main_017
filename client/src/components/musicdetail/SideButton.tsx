@@ -35,7 +35,6 @@ function Sidebutton() {
                     )
                     .then(() => {
                         setupDate(!update);
-                        console.log('좋아요를 누름');
                     });
             }
         } else {
@@ -68,7 +67,6 @@ function Sidebutton() {
                     const data = response.data;
                     const likedMusicIds = data.map((item: { playListId: number }) => item.playListId); //조회된 멤버의 좋아요 뮤직아이디
                     setLike(likedMusicIds.includes(Number(musicId))); // 현재 조회된 음악의 아이디와 지금 아이디가 겹치면 트루.
-                    console.log(likedMusicIds);
                 });
             }
         } else {

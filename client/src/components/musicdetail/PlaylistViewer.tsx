@@ -24,7 +24,6 @@ const PlaylistViewer = () => {
         axios
             .get(`${process.env.REACT_APP_API_URL}/musics/playlists/${plDataId}`)
             .then((res) => {
-                console.log(res.data);
                 setPldata(res.data);
             })
             .catch((error) => {

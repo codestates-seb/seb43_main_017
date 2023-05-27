@@ -48,7 +48,6 @@ const AudioPlayer = () => {
                 }
 
                 setSongs(data);
-                // console.log(data);
             })
             .catch((error) => {
                 // 요청 중에 오류가 발생한 경우

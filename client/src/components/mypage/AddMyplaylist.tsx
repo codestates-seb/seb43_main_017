@@ -31,9 +31,7 @@ const AddListMusic = () => {
                         },
                     },
                 )
-                .then((response) => {
-                    console.log(response);
-                    // setCoverImg(null);
+                .then(() => {
                     setCoverImg('');
                     setTitle('');
                     setBody('');
@@ -41,8 +39,7 @@ const AddListMusic = () => {
                     alert('플레이리스트가 생성되었습니다!');
                     setModalOpen(false);
                 })
-                .catch((error) => {
-                    console.error(error);
+                .catch(() => {
                     alert('플레이리스트 생성에 실패했습니다.');
                 });
         }
