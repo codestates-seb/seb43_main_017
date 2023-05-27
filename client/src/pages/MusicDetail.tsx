@@ -56,10 +56,10 @@ function MusicDetail() {
         setPlaylistComment(false);
         setMusicId(msId.msId);
         axios
-            .get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics/${msId.msId}`)
+            .get(`${process.env.REACT_APP_API_URL}/musics/${msId.msId}`)
             .then(function (response) {
                 // 성공적으로 요청을 보낸 경우
-                // console.log(response.data.pageInfo.totalPages);
+
                 setMsDetailData(response.data.data);
                 setFormattedTime(Number(response.data.data.musicTime));
                 setDownload(response.data.data.musicUri);

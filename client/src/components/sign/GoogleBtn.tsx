@@ -2,8 +2,7 @@ import { FcGoogle } from 'react-icons/fc';
 import { OauthBtn } from './Signin';
 const GoogleBtn = () => {
     const googleSocialLogin = () => {
-        window.location.href =
-            'http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/oauth2/authorization/google';
+        window.location.href = `${process.env.REACT_APP_API_URL}/oauth2/authorization/google`;
     };
 
     return (

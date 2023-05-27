@@ -32,7 +32,7 @@ const AudioPlayer = () => {
 
     useEffect(() => {
         axios
-            .get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/musics${plOn}/${msId}`)
+            .get(`${process.env.REACT_APP_API_URL}/musics${plOn}/${msId}`)
             .then((response) => {
                 let data;
                 if (onPlaylist === 'true') {
@@ -48,7 +48,6 @@ const AudioPlayer = () => {
                 }
 
                 setSongs(data);
-                // console.log(data);
             })
             .catch((error) => {
                 // 요청 중에 오류가 발생한 경우
@@ -60,6 +59,24 @@ const AudioPlayer = () => {
             audioRef.current.currentTime = currentTime;
         }
     }, []);
+
+    /** 203.05.22 볼륨 상태변경 - 김주비 */
+    const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newVolume = parseFloat(e.target.value);
+        if (audioRef.current) {
+            audioRef.current.volume = newVolume;
+        }
+        setVolume(newVolume);
+    };
+
+    /** 203.05.22 음원 재생시간 변경 - 김주비 */
+    const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newTime = Number(e.target.value);
+        if (audioRef.current) {
+            audioRef.current.currentTime = newTime;
+        }
+        setCurrentTime(newTime);
+    };
 
     const currentSong = songs[currentSongIndex]; // 현재 재생되는 음원 데이터
 
@@ -85,14 +102,6 @@ const AudioPlayer = () => {
             setCurrentTime(audioRef.current.currentTime);
         }
     };
-    /** 203.05.22 볼륨 상태변경 - 김주비 */
-    const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newVolume = parseFloat(e.target.value);
-        if (audioRef.current) {
-            audioRef.current.volume = newVolume;
-        }
-        setVolume(newVolume);
-    };
     /** 203.05.22 이전곡 재생 인덱스 상태변경 - 김주비 */
     const playPreviousSong = () => {
         if (currentSongIndex === 0) {
@@ -114,14 +123,6 @@ const AudioPlayer = () => {
         }
         setOnPlay(false);
         setCurrentTime(0); // 다음 곡으로 이동할 때 재생 시간 초기화
-    };
-    /** 203.05.22 음원 재생시간 변경 - 김주비 */
-    const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newTime = Number(e.target.value);
-        if (audioRef.current) {
-            audioRef.current.currentTime = newTime;
-        }
-        setCurrentTime(newTime);
     };
     /** 203.05.22 음원 재생시간 00:00 형태로 변경 - 김주비 */
     const formatSecondsToTime = (formattedTime: number) => {

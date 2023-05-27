@@ -55,10 +55,10 @@ function PlaylistDetail() {
         setPlaylistComment(true);
         setMusicId(plId.plId);
         axios
-            .get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/${plId.plId}`)
+            .get(`${process.env.REACT_APP_API_URL}/playlists/${plId.plId}`)
             .then(function (response) {
                 // 성공적으로 요청을 보낸 경우
-                // console.log(response.data.pageInfo.totalPages);
+
                 setPlDetailData(response.data.data);
             })
             .catch(function (error) {

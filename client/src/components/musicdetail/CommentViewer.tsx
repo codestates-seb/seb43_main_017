@@ -16,16 +16,13 @@ function CommentViewer() {
     const token = localStorage.getItem('access_token');
     const memberId = localStorage.getItem('memberId');
 
-    // console.log(comment);
     const url: string = onPlaylist === 'true' ? `/playlist-comments/` : `/music-comments/musics/`;
 
     /**2023.05.22 코멘트조회 - 김주비 */
     useEffect(() => {
-        axios
-            .get(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080${url}${msId}`)
-            .then((response) => {
-                setComment(response.data);
-            });
+        axios.get(`${process.env.REACT_APP_API_URL}${url}${msId}`).then((response) => {
+            setComment(response.data);
+        });
     }, [commentSubmit]);
     /**2023.05.22 코멘트작성 - 김주비 */
     const handelCommentWriting = (event: React.FormEvent<HTMLFormElement>) => {
@@ -36,7 +33,7 @@ function CommentViewer() {
             } else {
                 axios
                     .post(
-                        `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080${url}${msId}`,
+                        `${process.env.REACT_APP_API_URL}${url}${msId}`,
                         {
                             content: commentText,
                         },
@@ -58,9 +55,9 @@ function CommentViewer() {
     /**2023.05.22 코멘트삭제 - 김주비 */
     const handleCommentDelete = (index: number) => {
         const delurl: string = onPlaylist === 'true' ? `/playlist-comments/` : `/music-comments/`;
-        console.log(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080${delurl}${index}`);
+
         axios
-            .delete(`http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080${delurl}${index}`, {
+            .delete(`${process.env.REACT_APP_API_URL}${delurl}${index}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
