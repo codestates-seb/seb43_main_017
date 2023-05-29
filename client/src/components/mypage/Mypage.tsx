@@ -34,6 +34,15 @@ function Mypage() {
                 })
                 .then(() => {
                     alert('회원탈퇴가 완료되었습니다.');
+                    localStorage.removeItem('access_token');
+                    localStorage.removeItem('refresh_token');
+                    localStorage.removeItem('com.naver.nid.access_token');
+                    localStorage.removeItem('com.naver.nid.oauth.state_token');
+                    localStorage.removeItem('memberId');
+                    localStorage.removeItem('userimg');
+                    localStorage.removeItem('username');
+                    localStorage.removeItem('useremail');
+                    localStorage.removeItem('usernickname');
                     Navigate('/');
                 })
                 .catch((error) => {
