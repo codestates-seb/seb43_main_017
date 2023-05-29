@@ -77,7 +77,7 @@ export const Loading = () => {
                     },
                 })
                 .then((res) => {
-                    const googleemail = res.data.data.email;
+                    const googleemail = res.data.data.email.slice(0, -1);
                     const googleickname = res.data.data.name;
                     const googleimg = res.data.data.image;
                     const googlememberid = res.data.data.memberId;
