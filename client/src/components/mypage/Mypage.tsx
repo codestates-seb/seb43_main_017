@@ -8,7 +8,6 @@ import AddMyplaylist from './AddMyplaylist';
 import { ImCross } from 'react-icons/im';
 import Loding from 'src/pages/Loding';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
 function Mypage() {
@@ -19,7 +18,6 @@ function Mypage() {
     const memberId = window.localStorage.getItem('memberId');
     const [openPlayList, setOpenPlayList] = useRecoilState<boolean>(playListModalState);
     const [modifyPlaylistState, setModifyPlaylistState] = useRecoilState(modifyDataState);
-    const Navigate = useNavigate();
     const [myplaylistDataState] = useRecoilState(myplaylistState);
 
     const handelWithdrawal = () => {
@@ -43,7 +41,7 @@ function Mypage() {
                     localStorage.removeItem('username');
                     localStorage.removeItem('useremail');
                     localStorage.removeItem('usernickname');
-                    Navigate('/');
+                    window.location.href = '/';
                 })
                 .catch((error) => {
                     console.error(error);
