@@ -14,12 +14,9 @@ function Taplist() {
 
     useEffect(() => {
         axios
-            .get(
-                `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists?page=${currentPage}&size=5`,
-            )
+            .get(`${process.env.REACT_APP_API_URL}/playlists?page=${currentPage}&size=5`)
             .then(function (response) {
                 // 성공적으로 요청을 보낸 경우
-                // console.log(response.data.pageInfo.totalPages);
                 setPldata(response.data.data);
                 setTotalPages(response.data.pageInfo.totalPages);
             })
@@ -33,12 +30,11 @@ function Taplist() {
         if (event.key === 'Enter') {
             axios
                 .get(
-                    `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/search-by-title?title=${searchText}&page=${currentPage}&size=5`,
+                    `${process.env.REACT_APP_API_URL}/playlists/search-by-title?title=${searchText}&page=${currentPage}&size=5`,
                 )
                 .then(function (response) {
                     // 성공적으로 요청을 보낸 경우
                     setPldata(response.data.content);
-                    console.log(response.data);
                     setTotalPages(response.data.pageInfo.totalPages);
                 })
                 .catch(function (error) {
@@ -123,14 +119,11 @@ function Like({ plId }: { plId: number }) {
     useEffect(() => {
         if (token) {
             axios
-                .get(
-                    `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/members/${memberId}/like`,
-                    {
-                        headers: {
-                            Authorization: token,
-                        },
+                .get(`${process.env.REACT_APP_API_URL}/playlists/members/${memberId}/like`, {
+                    headers: {
+                        Authorization: token,
                     },
-                )
+                })
                 .then(function (res) {
                     const data = res.data;
                     const likedMusicIds = data.map((item: { playListId: number }) => item.playListId);
@@ -143,7 +136,7 @@ function Like({ plId }: { plId: number }) {
         if (token) {
             axios
                 .post(
-                    `http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/${plId}/like`,
+                    `${process.env.REACT_APP_API_URL}/playlists/${plId}/like`,
                     {},
                     {
                         headers: {
