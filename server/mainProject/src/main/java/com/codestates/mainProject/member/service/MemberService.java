@@ -200,6 +200,8 @@ public class MemberService {
 
 
     public String delegateRefreshToken(Member member) {
+
+
         String subject = member.getEmail();
         Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes());
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());

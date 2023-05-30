@@ -104,6 +104,8 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
     }
 
     private String delegateRefreshToken(Member member) {
+
+
         String subject = member.getEmail();
 
         Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes());

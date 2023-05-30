@@ -3,7 +3,10 @@ package com.codestates.mainProject.member.entity;
 import com.codestates.mainProject.audit.Auditable;
 import com.codestates.mainProject.memberMusic.entity.MemberMusic;
 import com.codestates.mainProject.music.entity.Music;
+import com.codestates.mainProject.musicComment.entity.MusicComment;
+import com.codestates.mainProject.musicLike.entity.MusicLike;
 import com.codestates.mainProject.playList.entity.PlayList;
+import com.codestates.mainProject.playListComment.entity.PlayListComment;
 import com.codestates.mainProject.playListLike.entity.PlayListLike;
 import lombok.*;
 import javax.persistence.*;
@@ -48,6 +51,15 @@ public class Member extends Auditable {
 
     @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
     private List<PlayListLike> likedPlayLists = new ArrayList<>();
+
+//    @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
+//    private List<MusicLike> musicLikes = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
+//    private List<MusicComment> musicComments = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
+//    private List<PlayListComment> playListComments = new ArrayList<>();   //현재 MySQL 내 멤버들이 꼬여있어서 일단 주석처리
 
 
     public List<Music> getMusics() {
