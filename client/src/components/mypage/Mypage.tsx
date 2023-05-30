@@ -315,6 +315,10 @@ const MusicInfor = styled.div`
     @media screen and (max-width: 1200px) {
         flex-direction: column;
     }
+
+    section {
+        height: 600px;
+    }
 `;
 /**2023/05/23 - 플레이리스트 음원 추가 컨테이너 - 박수범 */
 const PlaylistContainer = styled.div`
