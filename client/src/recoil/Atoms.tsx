@@ -149,3 +149,8 @@ export const UpdataModify = atom({
     key: 'UpdataModify',
     default: false,
 });
+
+export const uploadedImageState = atom<File | null>({
+    key: 'uploadedImageState',
+    default: null,
+});

@@ -9,7 +9,9 @@ import { ImCross } from 'react-icons/im';
 import Loding from 'src/pages/Loding';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { uploadedImageState } from 'src/recoil/Atoms';
+import { VscChromeClose } from 'react-icons/vsc';
 
 function Mypage() {
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
@@ -48,6 +50,52 @@ function Mypage() {
         setModifyPlaylistState(false);
     }, []);
 
+    const [uploadedImage, setUploadedImage] = useRecoilState(uploadedImageState);
+    const [selectedImage, setSelectedImage] = useState<File | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files.length > 0) {
+            const file = event.target.files[0];
+            setSelectedImage(file);
+        }
+    };
+
+    const handleSubmit = () => {
+        if (selectedImage) {
+            const formData = new FormData();
+            formData.append('imageFile', selectedImage);
+
+            // 업로드 요청 보내기
+            axios
+                .post('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/image', formData, {
+                    headers: {
+                        Authorization: token,
+                    },
+                })
+                .then((response) => {
+                    if (response.status === 200) {
+                        const uploadedImageUrl = response.data.image; // 이미지 URL을 응답에서 추출
+                        localStorage.setItem('userimg', uploadedImageUrl);
+                        setUploadedImage(selectedImage);
+                    } else {
+                        throw new Error('Upload failed');
+                    }
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        }
+    };
+
+    const handleModalOpen = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleModalClose = () => {
+        setIsModalOpen(false);
+    };
+
     return (
         <div>
             <BackgroundCover></BackgroundCover>
@@ -71,6 +119,18 @@ function Mypage() {
                                         <img src={userimg} alt={usernickname} />
                                     ) : (
                                         <img src="./assets/profile-icon.png" alt="userImg" />
+                                    )}
+                                    <button onClick={handleModalOpen}>Profile</button>
+                                    {isModalOpen && (
+                                        <div className="modal">
+                                            <input type="file" accept="image/*" onChange={handleImageUpload} />
+                                            <div className="buttonModal">
+                                                <button onClick={handleSubmit}>Upload</button>
+                                                <button onClick={handleModalClose}>
+                                                    <VscChromeClose />
+                                                </button>
+                                            </div>
+                                        </div>
                                     )}
                                 </div>
 
@@ -153,11 +213,65 @@ const UserProfile = styled.div`
         display: flex;
     }
     .user-profile {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
         img {
             width: 130px;
             height: 130px;
             border-radius: 50%;
             border: 3px solid linear-gradient(to right, #ff00bf, blue) 1;
+        }
+
+        Button {
+            align-items: center;
+            width: 50px;
+            height: 20px;
+            font-size: 10px;
+            border: none;
+            border-radius: 5px;
+            color: #ffffff;
+            background-color: #000000;
+            margin: 5px;
+        }
+
+        .modal {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #000000;
+            border-radius: 5px;
+            input {
+                color: white;
+                width: 150px;
+                border: none;
+                font-size: 8px;
+                margin: 5px;
+            }
+            .buttonModal {
+                display: flex;
+                flex-direction: row;
+                Button {
+                    align-items: center;
+                    width: 50px;
+                    height: 20px;
+                    font-size: 8px;
+                    border: none;
+                    border-radius: 5px;
+                    color: #ffffff;
+                    background-color: none;
+                    border: 1px solid white;
+                    margin: 3px;
+
+                    :nth-child(2) {
+                        display: flex;
+                        align-items: center;
+                        width: 20px;
+                        border-radius: 10px;
+                    }
+                }
+            }
         }
     }
 `;
