@@ -292,6 +292,9 @@ const VideoBtnbar = styled.div`
     -webkit-backdrop-filter: blur(4px);
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.18);
+    > .exitbtn {
+        color: #f40404;
+    }
     @media (max-width: 1350px) {
         width: 500px;
         height: 50px;
