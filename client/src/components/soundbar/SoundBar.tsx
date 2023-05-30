@@ -266,6 +266,7 @@ const SoundMovingBar = styled.div<SoundBarMovingProps>`
         width: 100%;
     }
     input[type='range'] {
+        cursor: pointer;
         overflow: hidden;
         height: 5px;
         width: 100%;
@@ -298,6 +299,7 @@ const SoundVolume = styled.div`
     padding: 10px;
     color: rgb(255, 255, 255, 0.4);
     transition: 0.2s ease-in-out;
+    cursor: pointer;
 
     :hover {
         color: rgb(255, 255, 255, 0.7);
@@ -326,6 +328,7 @@ const SoundPlay = styled.div`
         font-size: 6rem;
         transition: 0.3s ease-in-out;
         color: #ccc;
+        cursor: pointer;
     }
     button:hover {
         color: #ff6060;
@@ -347,6 +350,7 @@ const PlaylistBox = styled.div`
     padding: 10px;
     color: rgb(255, 255, 255, 0.4);
     transition: 0.2s ease-in-out;
+    cursor: pointer;
 
     :hover {
         color: rgb(255, 255, 255, 0.7);

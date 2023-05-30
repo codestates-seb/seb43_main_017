@@ -22,7 +22,7 @@ const Categories = ({ showSearchResult }: CategoryProps) => {
     const [feel, setFeel] = useState<tag[]>([]);
     const [genre, setGenre] = useState<tag[]>([]);
     const [instrument, setInstrument] = useState<tag[]>([]);
-    const [showSubTags, setShowSubTags] = useState<string>('');
+    const [showSubTags, setShowSubTags] = useState<string>('genre');
     const [tag, setTags] = useRecoilState(tagSreachState);
 
     const tagsString = tagSelectedTags.join('&');

@@ -77,7 +77,7 @@ export const Loading = () => {
                     },
                 })
                 .then((res) => {
-                    const googleemail = res.data.data.email;
+                    const googleemail = res.data.data.email.slice(0, -1);
                     const googleickname = res.data.data.name;
                     const googleimg = res.data.data.image;
                     const googlememberid = res.data.data.memberId;
@@ -101,8 +101,6 @@ export const Loading = () => {
                     },
                 )
                 .then((res) => {
-                    window.localStorage.setItem('access_token', res.data.access_token);
-                    window.localStorage.setItem('refresh_token', res.data.refresh_token);
                     // 카카오 엑세스토큰을 이용하여 유저정보를 요청
                     axios
                         .get(`https://kapi.kakao.com/v2/user/me`, {
@@ -115,6 +113,12 @@ export const Loading = () => {
                             const kakaoemail = res.data.kakao_account.email;
                             const kakaonickname = res.data.properties.nickname;
                             const kakaoimg = res.data.properties.profile_image;
+                            // 만약 카카오 정보제공동의를 하지 않은 경우에는. 알림창이뜨며 메인창으로 리다이렉트된다.
+                            if (!kakaoemail) {
+                                localStorage.removeItem('useremail');
+                                alert('이메일 제공에 동의를 하시지 않으면 로그인이 불가능합니다.');
+                                window.location.href = '/';
+                            }
                             // 유저정보 로컬스토리지에 저장.
                             window.localStorage.setItem('useremail', kakaoemail);
                             window.localStorage.setItem('usernickname', kakaonickname);
@@ -135,11 +139,6 @@ export const Loading = () => {
                                             window.location.href = '/';
                                         }
                                     });
-                                // 만약 카카오 정보제공동의를 하지 않은 경우에는. 알림창이뜨며 메인창으로 리다이렉트된다.
-                            } else if (!kakaoemail) {
-                                localStorage.removeItem('useremail');
-                                alert('이메일 제공에 동의를 하시지 않으면 로그인이 불가능합니다.');
-                                window.location.href = '/';
                             }
                         });
                 });

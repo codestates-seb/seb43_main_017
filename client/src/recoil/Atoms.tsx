@@ -149,3 +149,14 @@ export const UpdataModify = atom({
     key: 'UpdataModify',
     default: false,
 });
+
+export const uploadedImageState = atom<File | null>({
+    key: 'uploadedImageState',
+    default: null,
+});
+
+/**2023/05/30 - 피팅룸에서 백그라운드 음원이 선택됐는지 여부 - 박수범 */
+export const CurrentMusicState = atom({
+    key: 'CurrentMusic',
+    default: false,
+});
