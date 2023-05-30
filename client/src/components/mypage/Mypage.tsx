@@ -8,7 +8,6 @@ import AddMyplaylist from './AddMyplaylist';
 import { ImCross } from 'react-icons/im';
 import Loding from 'src/pages/Loding';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { uploadedImageState } from 'src/recoil/Atoms';
 import { VscChromeClose } from 'react-icons/vsc';
@@ -21,7 +20,6 @@ function Mypage() {
     const memberId = window.localStorage.getItem('memberId');
     const [openPlayList, setOpenPlayList] = useRecoilState<boolean>(playListModalState);
     const [modifyPlaylistState, setModifyPlaylistState] = useRecoilState(modifyDataState);
-    const Navigate = useNavigate();
     const [myplaylistDataState] = useRecoilState(myplaylistState);
 
     const handelWithdrawal = () => {
@@ -36,7 +34,16 @@ function Mypage() {
                 })
                 .then(() => {
                     alert('회원탈퇴가 완료되었습니다.');
-                    Navigate('/');
+                    localStorage.removeItem('access_token');
+                    localStorage.removeItem('refresh_token');
+                    localStorage.removeItem('com.naver.nid.access_token');
+                    localStorage.removeItem('com.naver.nid.oauth.state_token');
+                    localStorage.removeItem('memberId');
+                    localStorage.removeItem('userimg');
+                    localStorage.removeItem('username');
+                    localStorage.removeItem('useremail');
+                    localStorage.removeItem('usernickname');
+                    window.location.href = '/';
                 })
                 .catch((error) => {
                     console.error(error);

@@ -22,7 +22,7 @@ function Mixing() {
             videoRef.current.play();
         }
     };
-    /**2022/05/22 - 현재 재생중인 비디오와 오디로를 정지하는 함수 - 박수범 */
+    /**2022/05/22 - 현재 재생중인 비디오와 오디오를 정지하는 함수 - 박수범 */
     const handleVideoPause = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
         if (audioRef.current && videoRef.current) {
