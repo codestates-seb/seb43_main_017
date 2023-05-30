@@ -57,7 +57,7 @@ function Mypage() {
         setModifyPlaylistState(false);
     }, []);
 
-    const [uploadedImage, setUploadedImage] = useRecoilState(uploadedImageState);
+    const [, setUploadedImage] = useRecoilState(uploadedImageState);
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -241,6 +241,7 @@ const UserProfile = styled.div`
             color: #ffffff;
             background-color: #000000;
             margin: 5px;
+            cursor: pointer;
         }
 
         .modal {
@@ -392,6 +393,7 @@ const Withdrawal = styled.button`
     border-radius: 5px;
     margin-top: 20px;
     transition: 0.1s ease-in-out;
+    cursor: pointer;
     :hover {
         background-color: #ff7979;
     }
