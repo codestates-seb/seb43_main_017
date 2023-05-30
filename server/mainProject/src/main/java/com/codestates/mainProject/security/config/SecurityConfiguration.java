@@ -71,12 +71,14 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.DELETE, "/members/**").hasAnyRole("USER", "ADMIN")
 
                         // # music 관련
+                        .antMatchers(HttpMethod.GET, "/musics/liked-musics").hasAnyRole("USER", "ADMIN")
                         .antMatchers(HttpMethod.GET, "/musics/**").permitAll()
                         .antMatchers(HttpMethod.POST, "/musics/**").hasRole("ADMIN")
                         .antMatchers(HttpMethod.PATCH, "/musics/**").hasRole("ADMIN")
                         .antMatchers(HttpMethod.DELETE, "/musics/**").hasRole("ADMIN")
 
                         // #playlist 관련
+                        .antMatchers(HttpMethod.GET, "/playlists/member-playlist").hasAnyRole("USER", "ADMIN")
                         .antMatchers(HttpMethod.GET, "/playlists/**").permitAll()
                         .antMatchers(HttpMethod.POST, "/playlists/**").hasAnyRole("USER", "ADMIN")
                         .antMatchers(HttpMethod.PATCH, "/playlists/**").hasAnyRole("USER", "ADMIN")
