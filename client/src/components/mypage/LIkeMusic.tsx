@@ -27,8 +27,6 @@ const LikeMusic = () => {
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
     const [update, setUpdate] = useState<boolean>(false);
 
-    console.log(`totalPages ${totalPages} currentPage ${currentPage}`);
-
     useEffect(() => {
         const fetchLikedMusic = () => {
             axios
@@ -69,8 +67,7 @@ const LikeMusic = () => {
                     },
                 },
             )
-            .then((res) => {
-                console.log(res.data);
+            .then(() => {
                 setUpdate(!update);
             })
             .catch((err) => {

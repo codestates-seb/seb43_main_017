@@ -33,7 +33,7 @@ function Silder({ setBgSrc }: { setBgSrc: React.Dispatch<React.SetStateAction<st
         }
 
         axios
-            .get('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/playlists/admin?page=1&size=10')
+            .get(`${process.env.REACT_APP_API_URL}/playlists/admin?page=1&size=10`)
             .then(function (response) {
                 // 성공적으로 요청을 보낸 경우
                 setPldata(response.data.data);
