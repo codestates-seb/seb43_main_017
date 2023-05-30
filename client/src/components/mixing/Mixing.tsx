@@ -1,16 +1,17 @@
 import styled from 'styled-components';
 import { useRef, useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
-import { videouploadState, showSearch } from 'src/recoil/Atoms';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { videouploadState, showSearch, CurrentMusicState } from 'src/recoil/Atoms';
 import VideoUploader from './VideoUpdate';
 import LikedList from './LikedList';
-import { FaPlay, FaPause, FaVolumeUp, FaVolumeDown, FaVideoSlash } from 'react-icons/fa';
+import { FaPlay, FaPause, FaVolumeUp, FaVolumeDown, FaWindowClose } from 'react-icons/fa';
 import { BiSearch } from 'react-icons/bi';
 
 function Mixing() {
     const [audioSelect, setAudioSelect] = useState<boolean>(false);
     const [openSearch, setOpenSearch] = useRecoilState<boolean>(showSearch);
     const [videoState, setvideouploadState] = useRecoilState(videouploadState);
+    const setCurrentMusicState = useSetRecoilState(CurrentMusicState);
     let audioVolume = 0.5;
     const videoRef = useRef<HTMLVideoElement>(null);
     const audioRef = useRef<HTMLAudioElement>(null);
@@ -55,6 +56,7 @@ function Mixing() {
     const changeVideo = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
         setvideouploadState(false);
+        setCurrentMusicState(false);
     };
     /**2022/05/22 - 다른 페이지 다녀오면 믹싱바 초기화해주기 위한 로직 - 박수범 */
     useEffect(() => {
@@ -102,8 +104,8 @@ function Mixing() {
                             <VideoBtn onClick={handleAudioVolumeDawn}>
                                 <FaVolumeDown />
                             </VideoBtn>
-                            <VideoBtn onClick={changeVideo}>
-                                <FaVideoSlash />
+                            <VideoBtn className="exitbtn" onClick={changeVideo}>
+                                <FaWindowClose />
                             </VideoBtn>
                         </VideoBtnbar>
                     )}
@@ -290,6 +292,9 @@ const VideoBtnbar = styled.div`
     -webkit-backdrop-filter: blur(4px);
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.18);
+    > .exitbtn {
+        color: #f40404;
+    }
     @media (max-width: 1350px) {
         width: 500px;
         height: 50px;
@@ -310,7 +315,6 @@ const VideoBtn = styled.button`
     cursor: pointer;
     &:hover {
         color: #cce4fa;
-        stroke: red;
     }
     &:focus {
         color: #6db4f3;
@@ -321,7 +325,6 @@ const VideoBtn = styled.button`
         cursor: pointer;
         &:hover {
             color: #cce4fa;
-            stroke: red;
         }
         &:focus {
             color: #6db4f3;
@@ -333,7 +336,6 @@ const VideoBtn = styled.button`
         font-size: 15px;
         &:hover {
             color: #cce4fa;
-            stroke: red;
         }
         &:focus {
             color: #6db4f3;
