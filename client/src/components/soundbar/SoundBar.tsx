@@ -154,7 +154,7 @@ const AudioPlayer = () => {
         <AudioPlayerGroup>
             <audio
                 ref={audioRef}
-                src={`http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com/assets/music/${currentSong.src}`}
+                src={`https://uncoversound.com/assets/music/${currentSong.src}`}
                 onTimeUpdate={handleTimeUpdate}
                 onEnded={handleSongEnd}
                 autoPlay
