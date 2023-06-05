@@ -1,13 +1,15 @@
 import styled from 'styled-components';
 import { useRef, useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { videouploadState, showSearch } from 'src/recoil/Atoms';
+import { videouploadState, showSearch, GuideModalState } from 'src/recoil/Atoms';
 import VideoUploader from './VideoUpdate';
 import LikedList from './LikedList';
 import { FaPlay, FaPause, FaVolumeUp, FaVolumeDown, FaWindowClose } from 'react-icons/fa';
 import { BiSearch } from 'react-icons/bi';
+import GuideModal from './GuideModal';
 
 function Mixing() {
+    const [guideModal, setGuideModal] = useRecoilState(GuideModalState);
     const [audioSelect, setAudioSelect] = useState<boolean>(false);
     const [openSearch, setOpenSearch] = useRecoilState<boolean>(showSearch);
     const [videoState, setvideouploadState] = useRecoilState(videouploadState);
@@ -60,6 +62,7 @@ function Mixing() {
     /**2022/05/22 - 다른 페이지 다녀오면 믹싱바 초기화해주기 위한 로직 - 박수범 */
     useEffect(() => {
         setvideouploadState(false);
+        setGuideModal(true);
     }, []);
 
     return (
@@ -82,6 +85,7 @@ function Mixing() {
                     </SearchOpen>
                 )}
                 <div className="flex-center">
+                    {guideModal && <GuideModal />}
                     <MixingPage>
                         <span className="mixing-title">FITTING &nbsp; ROOM</span>
                     </MixingPage>

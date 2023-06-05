@@ -170,3 +170,8 @@ export const ShowSignupState = atom({
     key: 'SignupState',
     default: false,
 });
+
+export const GuideModalState = atom({
+    key: 'GuideModal',
+    default: false,
+});
