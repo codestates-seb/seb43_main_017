@@ -4,10 +4,11 @@ import { MdOutlineQueueMusic, MdOutlineVideoSettings } from 'react-icons/md';
 import { BiHomeAlt } from 'react-icons/bi';
 import { HiOutlineMusicNote } from 'react-icons/hi';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
-import { selectIndexState, localIndexState } from 'src/recoil/Atoms';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { selectIndexState, localIndexState, ShowSigninState } from 'src/recoil/Atoms';
 
-function Navigate({ setShowSignIn }: { setShowSignIn: React.Dispatch<React.SetStateAction<boolean>> }) {
+function Navigate() {
+    const setShowSignIn = useSetRecoilState(ShowSigninState);
     const token = window.localStorage.getItem('access_token');
     const userimg = window.localStorage.getItem('userimg');
     /**2023-05-05 선택된 아이콘 인덱스 스테이트 : 김주비*/

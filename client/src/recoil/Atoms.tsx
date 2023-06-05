@@ -160,3 +160,13 @@ export const CurrentMusicState = atom({
     key: 'CurrentMusic',
     default: false,
 });
+
+export const ShowSigninState = atom({
+    key: 'SigninState',
+    default: false,
+});
+
+export const ShowSignupState = atom({
+    key: 'SignupState',
+    default: false,
+});
