@@ -76,7 +76,7 @@ function Mypage() {
 
             // 업로드 요청 보내기
             axios
-                .post('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/image', formData, {
+                .post(`${process.env.REACT_APP_API_URL}/members/image`, formData, {
                     headers: {
                         Authorization: token,
                     },

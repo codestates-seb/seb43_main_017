@@ -6,7 +6,7 @@ import styled from 'styled-components';
 function Uncover() {
     const [, setSelectIndex] = useRecoilState<number>(selectIndexState);
     const navigate = useNavigate();
-
+    const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
     const HandleNavigate = (url: string, index: number) => {
         navigate(url);
         setSelectIndex(index);
@@ -35,7 +35,9 @@ function Uncover() {
                         <button
                             className="sub-button"
                             onClick={() => {
-                                HandleNavigate('/musiclist', 1);
+                                {
+                                    token ? null : HandleNavigate('/musiclist', 1);
+                                }
                             }}
                         >
                             more

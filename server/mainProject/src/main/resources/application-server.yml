@@ -34,7 +34,7 @@ spring:
               - profile
 
 config:
-  domain: http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com
+  domain: https://uncoversound.com
 
 file:
   upload-dir: ubuntu@ip-172-31-40-115:/home/ubuntu/image
