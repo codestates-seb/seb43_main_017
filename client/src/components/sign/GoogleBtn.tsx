@@ -3,7 +3,7 @@ import { OauthBtn } from './Signin';
 const GoogleBtn = () => {
     const googleSocialLogin = () => {
         window.location.href =
-            'http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/oauth2/authorization/google';
+            'http://ec2-54-180-178-227.ap-northeast-2.compute.amazonaws.com:8080/oauth2/authorization/google';
     };
 
     return (

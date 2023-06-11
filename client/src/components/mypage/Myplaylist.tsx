@@ -65,6 +65,7 @@ const Myplaylist = () => {
         } else {
             alert('삭제가 취소되었습니다.');
         }
+        setModifyState(false);
     };
 
     const handleNextPage = () => {

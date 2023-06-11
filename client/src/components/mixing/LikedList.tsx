@@ -3,8 +3,8 @@ import { HiHeart } from 'react-icons/hi';
 import { AiOutlinePlus } from 'react-icons/ai';
 import axios from 'axios';
 import { useEffect, useState, RefObject } from 'react';
-import { useSetRecoilState } from 'recoil';
-import { showSearch } from 'src/recoil/Atoms';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { showSearch, CurrentMusicState } from 'src/recoil/Atoms';
 import { MdTransitEnterexit, MdArrowLeft, MdArrowRight } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 
@@ -31,7 +31,7 @@ const LikedList = ({ audioRef, setAudioSelect }: LikedListProps) => {
     const setShowSearch = useSetRecoilState<boolean>(showSearch); //모버일버전 좋아요 음악리스트 닫기
     const [emptyList, setEmptyList] = useState<boolean>(false); //좋아요한 음악이 있는지 없는지 여부
     const [MusicTitle, setMusicTitle] = useState<string>(''); //현재 삽입된 오디오 제목
-    const [currentMusic, setCurrentMusic] = useState<boolean>(false); // 선택된 음악인지 판단하는 값
+    const [currentMusic, setCurrentMusic] = useRecoilState(CurrentMusicState); // 선택된 음악인지 판단하는 값
     const [audioControl, setAudioControl] = useState<boolean>(false); //오디오 선택창 표시여부
     const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
     const [totalPages, setTotalPages] = useState<number>(0); // 전체 페이지
@@ -141,10 +141,7 @@ const LikedList = ({ audioRef, setAudioSelect }: LikedListProps) => {
                 </CurrentMusic>
             )}
             {audioControl && (
-                <audio
-                    ref={audioRef}
-                    src={`http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com/assets/music/${selectedSong}`}
-                ></audio>
+                <audio ref={audioRef} src={`https://uncoversound.com/assets/music/${selectedSong}`}></audio>
             )}
             {emptyList ? (
                 <Pagination>

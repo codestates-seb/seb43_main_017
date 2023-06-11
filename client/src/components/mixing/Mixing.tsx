@@ -1,13 +1,15 @@
 import styled from 'styled-components';
 import { useRef, useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { videouploadState, showSearch } from 'src/recoil/Atoms';
+import { videouploadState, showSearch, GuideModalState } from 'src/recoil/Atoms';
 import VideoUploader from './VideoUpdate';
 import LikedList from './LikedList';
-import { FaPlay, FaPause, FaVolumeUp, FaVolumeDown, FaVideoSlash } from 'react-icons/fa';
+import { FaPlay, FaPause, FaVolumeUp, FaVolumeDown, FaWindowClose } from 'react-icons/fa';
 import { BiSearch } from 'react-icons/bi';
+import GuideModal from './GuideModal';
 
 function Mixing() {
+    const [guideModal, setGuideModal] = useRecoilState(GuideModalState);
     const [audioSelect, setAudioSelect] = useState<boolean>(false);
     const [openSearch, setOpenSearch] = useRecoilState<boolean>(showSearch);
     const [videoState, setvideouploadState] = useRecoilState(videouploadState);
@@ -22,7 +24,7 @@ function Mixing() {
             videoRef.current.play();
         }
     };
-    /**2022/05/22 - 현재 재생중인 비디오와 오디로를 정지하는 함수 - 박수범 */
+    /**2022/05/22 - 현재 재생중인 비디오와 오디오를 정지하는 함수 - 박수범 */
     const handleVideoPause = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
         if (audioRef.current && videoRef.current) {
@@ -55,10 +57,12 @@ function Mixing() {
     const changeVideo = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
         setvideouploadState(false);
+        setAudioSelect(false);
     };
     /**2022/05/22 - 다른 페이지 다녀오면 믹싱바 초기화해주기 위한 로직 - 박수범 */
     useEffect(() => {
         setvideouploadState(false);
+        setGuideModal(true);
     }, []);
 
     return (
@@ -81,6 +85,7 @@ function Mixing() {
                     </SearchOpen>
                 )}
                 <div className="flex-center">
+                    {guideModal && <GuideModal />}
                     <MixingPage>
                         <span className="mixing-title">FITTING &nbsp; ROOM</span>
                     </MixingPage>
@@ -102,8 +107,8 @@ function Mixing() {
                             <VideoBtn onClick={handleAudioVolumeDawn}>
                                 <FaVolumeDown />
                             </VideoBtn>
-                            <VideoBtn onClick={changeVideo}>
-                                <FaVideoSlash />
+                            <VideoBtn className="exitbtn" onClick={changeVideo}>
+                                <FaWindowClose />
                             </VideoBtn>
                         </VideoBtnbar>
                     )}
@@ -290,6 +295,9 @@ const VideoBtnbar = styled.div`
     -webkit-backdrop-filter: blur(4px);
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.18);
+    > .exitbtn {
+        color: #f40404;
+    }
     @media (max-width: 1350px) {
         width: 500px;
         height: 50px;
@@ -310,7 +318,6 @@ const VideoBtn = styled.button`
     cursor: pointer;
     &:hover {
         color: #cce4fa;
-        stroke: red;
     }
     &:focus {
         color: #6db4f3;
@@ -321,7 +328,6 @@ const VideoBtn = styled.button`
         cursor: pointer;
         &:hover {
             color: #cce4fa;
-            stroke: red;
         }
         &:focus {
             color: #6db4f3;
@@ -333,7 +339,6 @@ const VideoBtn = styled.button`
         font-size: 15px;
         &:hover {
             color: #cce4fa;
-            stroke: red;
         }
         &:focus {
             color: #6db4f3;
