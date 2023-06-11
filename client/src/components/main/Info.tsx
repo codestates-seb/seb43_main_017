@@ -1,10 +1,11 @@
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
-import { selectIndexState } from 'src/recoil/Atoms';
+import { useSetRecoilState } from 'recoil';
+import { selectIndexState, ShowSigninState } from 'src/recoil/Atoms';
 import styled from 'styled-components';
 
 function Uncover() {
-    const [, setSelectIndex] = useRecoilState<number>(selectIndexState);
+    const setShowSigninState = useSetRecoilState(ShowSigninState);
+    const setSelectIndex = useSetRecoilState(selectIndexState);
     const navigate = useNavigate();
     const token: string | undefined = window.localStorage.getItem('access_token') || undefined;
     const HandleNavigate = (url: string, index: number) => {
@@ -36,7 +37,7 @@ function Uncover() {
                             className="sub-button"
                             onClick={() => {
                                 {
-                                    token ? null : HandleNavigate('/musiclist', 1);
+                                    HandleNavigate('/musiclist', 1);
                                 }
                             }}
                         >
@@ -74,7 +75,9 @@ function Uncover() {
                         <button
                             className="sub-button"
                             onClick={() => {
-                                HandleNavigate('/fittingroom', 3);
+                                {
+                                    !token ? setShowSigninState(true) : HandleNavigate('/fittingroom', 3);
+                                }
                             }}
                         >
                             more

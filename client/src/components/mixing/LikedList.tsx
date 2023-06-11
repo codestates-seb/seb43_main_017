@@ -141,10 +141,7 @@ const LikedList = ({ audioRef, setAudioSelect }: LikedListProps) => {
                 </CurrentMusic>
             )}
             {audioControl && (
-                <audio
-                    ref={audioRef}
-                    src={`http://mainproject-uncover.s3-website.ap-northeast-2.amazonaws.com/assets/music/${selectedSong}`}
-                ></audio>
+                <audio ref={audioRef} src={`https://uncoversound.com/assets/music/${selectedSong}`}></audio>
             )}
             {emptyList ? (
                 <Pagination>
