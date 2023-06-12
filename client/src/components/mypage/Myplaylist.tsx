@@ -262,6 +262,7 @@ const PlaylistList = styled.div`
         display: flex;
         align-items: center;
         justify-content: center;
+        cursor: pointer;
     }
 `;
 /* 2023.05.16 마이플레이리스트 메뉴 모달 컴포넌트 - 홍혜란 */
@@ -296,6 +297,7 @@ const Button = styled.button`
     color: #ccc;
     border: none;
     font-size: 10px;
+    cursor: pointer;
     :hover {
         color: #4869ff;
     }

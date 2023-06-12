@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-interface LikeMusicList {
+export interface LikeMusicList {
     albumCoverImg: string;
     albumName: string;
     artistName: string;
@@ -37,6 +37,7 @@ const LikeMusic = () => {
                 })
                 .then((response) => {
                     setLikedMusic(response.data.data);
+                    console.log(response.data.data);
                     setTotalPages(response.data.pageInfo.totalPages);
                 })
                 .catch((error) => {
@@ -190,6 +191,7 @@ const LikeList = styled.div`
         display: flex;
         align-items: center;
         justify-content: center;
+        cursor: pointer;
         > * {
             transition: 0.2s ease-in-out;
         }

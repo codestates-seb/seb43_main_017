@@ -56,9 +56,15 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
                     const data = response.data.data;
                     const likedMusicIds = data.map((item: { musicId: number }) => item.musicId); //조회된 멤버의 좋아요 뮤직아이디
                     setLike(likedMusicIds.includes(musicId)); // 현재 조회된 음악의 아이디와 지금 아이디가 겹치면 트루.
+                    console.log(response.data.data);
+                })
+                .catch((err) => {
+                    console.log(err);
                 });
         }
     }, []);
+
+    console.log('log');
 
     return (
         <MusicIconGroup>
@@ -66,15 +72,26 @@ const Sideicon: React.FC<SideiconProps> = ({ musicId, musicUri }) => {
                 <FiPlayCircle className="color-blue" />
             </Link>
 
-            <AddPlayList
-                onClick={() => {
-                    setPlayListState(true);
-                    setMusicIdState(musicId);
-                }}
-                className="view-700"
-            >
-                <FiFolderPlus />
-            </AddPlayList>
+            {token ? (
+                <AddPlayList
+                    onClick={() => {
+                        setPlayListState(true);
+                        setMusicIdState(musicId);
+                    }}
+                    className="view-700"
+                >
+                    <FiFolderPlus />
+                </AddPlayList>
+            ) : (
+                <AddPlayList
+                    className="view-700"
+                    onClick={() => {
+                        alert('로그인된 회원만 음원 다운로드가 가능합니다.');
+                    }}
+                >
+                    <FiFolderPlus />
+                </AddPlayList>
+            )}
             {token ? (
                 <a href={`/assets/music/${musicUri}`} download>
                     <MdFileDownload className="view-700" />
@@ -114,6 +131,7 @@ const MusicIconGroup = styled.li`
 
     .color-red {
         color: rgba(199, 68, 68, 1);
+        cursor: pointer;
     }
     .like-action {
         animation: likeaction 0.5s forwards;
