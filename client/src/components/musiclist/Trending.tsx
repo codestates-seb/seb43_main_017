@@ -31,6 +31,7 @@ const Trending = () => {
                 })
                 .then((response) => {
                     setTranding(response.data.data);
+                    console.log(response);
                     setIsLoding(false);
                 })
                 .catch((error) => {
