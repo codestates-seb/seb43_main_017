@@ -11,13 +11,13 @@ import { RiProfileFill } from 'react-icons/ri';
 import { MdFaceRetouchingNatural, MdLogout } from 'react-icons/md';
 import SoundBar from 'src/components/soundbar/SoundBar';
 import { useRecoilState } from 'recoil';
-import { soundbarOpenState } from 'src/recoil/Atoms';
+import { soundbarOpenState, ShowSigninState, ShowSignupState } from 'src/recoil/Atoms';
 
 function App() {
     /**2023-05-05 로그인 모달오픈 여부 스테이트 : 김주비*/
-    const [showSignIn, setShowSignIn] = useState<boolean>(false);
+    const [showSignIn, setShowSignIn] = useRecoilState(ShowSigninState);
     /**2023-05-05 회원가입 모달오픈 여부 스테이트 : 김주비*/
-    const [showSignUp, setShowSignUp] = useState<boolean>(false);
+    const [showSignUp, setShowSignUp] = useRecoilState(ShowSignupState);
     const [soundbar] = useRecoilState<boolean>(soundbarOpenState);
     const token = localStorage.getItem('access_token'); // 로컬스토리지에 담긴 토큰 정보를 가져옵니다.
 
@@ -120,7 +120,7 @@ function App() {
                 {/* Login botton End*/}
                 {/* Nav Start*/}
                 <NavSection>
-                    <Navigate setShowSignIn={setShowSignIn} />
+                    <Navigate />
                 </NavSection>
                 {/* Nav End*/}
                 {/* view Start*/}
