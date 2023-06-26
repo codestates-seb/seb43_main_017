@@ -402,18 +402,19 @@ const TagValue = styled.div`
     flex-direction: row;
     justify-content: right;
     align-items: center;
-    min-width: 140px;
+    min-width: 160px;
     /* border: 1px solid red; */
 
     li {
         font-family: 'Noto Sans KR', sans-serif;
         align-items: center;
-        border: 2px solid #ccc;
-        border-radius: 20px;
-        width: 70px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        border-radius: 5px;
+        width: 80px;
         font-size: 0.65rem;
-        color: #ccc;
+        color: #d4d4d4;
         margin: 3px;
+        font-weight: 300;
         text-transform: uppercase;
     }
 `;

@@ -159,5 +159,6 @@ const Submit = styled.div`
         background-color: #ff4444;
         color: #e9e9e9;
         font-family: 'Noto Sans KR', sans-serif;
+        cursor: pointer;
     }
 `;

@@ -57,7 +57,8 @@ function Mypage() {
         setModifyPlaylistState(false);
     }, []);
 
-    const [, setUploadedImage] = useRecoilState(uploadedImageState);
+    const [uploadedImage, setUploadedImage] = useRecoilState(uploadedImageState);
+    console.log(uploadedImage);
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -81,19 +82,37 @@ function Mypage() {
                     },
                 })
                 .then((response) => {
-                    if (response.status === 200) {
-                        const uploadedImageUrl = response.data.image; // 이미지 URL을 응답에서 추출
-                        localStorage.setItem('userimg', uploadedImageUrl);
-                        setUploadedImage(selectedImage);
-                    } else {
-                        throw new Error('Upload failed');
-                    }
+                    console.log(response.data.image);
+                    // setUploadedImage(response.data.image);
+                    const uploadedImageDataUrl = response.data.image;
+                    localStorage.setItem('userimg', uploadedImageDataUrl);
+                    setIsModalOpen(false);
                 })
                 .catch((error) => {
                     console.error(error);
                 });
         }
     };
+
+    useEffect(() => {
+        axios
+            .get('http://ec2-52-78-105-114.ap-northeast-2.compute.amazonaws.com:8080/members/info', {
+                headers: {
+                    Authorization: token,
+                },
+            })
+            .then((response) => {
+                if (response.status === 200) {
+                    const uploadedImageUrl = response.data.data.image; // 이미지 url 불러오기
+                    localStorage.setItem('userimg', uploadedImageUrl); // 로컬스토리지에 userimg , url 저장하기
+                } else {
+                    throw new Error('Failed to get image info');
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, [uploadedImage]);
 
     const handleModalOpen = () => {
         setIsModalOpen(true);

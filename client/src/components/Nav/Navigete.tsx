@@ -32,21 +32,25 @@ function Navigate() {
             index: 0,
             name: <BiHomeAlt />,
             link: '/',
+            menu: 'HOME',
         },
         {
             index: 1,
             name: <HiOutlineMusicNote />,
             link: '/musiclist',
+            menu: 'MUSIC',
         },
         {
             index: 2,
             name: <MdOutlineQueueMusic />,
             link: '/playlist',
+            menu: 'PALYLIST',
         },
         {
             index: 3,
             name: <MdOutlineVideoSettings />,
             link: '/fittingroom',
+            menu: 'FITTING',
         },
     ];
 
@@ -78,7 +82,10 @@ function Navigate() {
                                       setSelectIndex(el.index);
                                   }}
                               >
-                                  <li className={localIndex === String(index) ? 'click-icon' : 'null'}>{el.name}</li>
+                                  <li className={localIndex === String(index) ? 'click-icon' : 'null'}>
+                                      {el.name}
+                                      <div className="menu-text-name">{el.menu}</div>
+                                  </li>
                               </Link>
                           ))
                         : menuIconlist.map((el, index) =>
@@ -92,6 +99,7 @@ function Navigate() {
                                   >
                                       <li className={localIndex === String(index) ? 'click-icon' : 'null'}>
                                           {el.name}
+                                          <div className="menu-text-name">{el.menu}</div>
                                       </li>
                                   </Link>
                               ) : (
@@ -103,6 +111,7 @@ function Navigate() {
                                       className={localIndex === String(index) ? 'click-icon' : 'null'}
                                   >
                                       {el.name}
+                                      <div className="menu-text-name">{el.menu}</div>
                                   </li>
                               ),
                           )}
@@ -195,6 +204,7 @@ const MenuIcon = styled.ul`
     border-radius: 200px;
     background-color: #222222;
     li {
+        position: relative;
         border-radius: 50px;
         margin: 5px;
         padding: 10px;
@@ -206,6 +216,9 @@ const MenuIcon = styled.ul`
         background-color: #333;
         color: #fff;
         transform: scale(1.2);
+    }
+    li:hover .menu-text-name {
+        display: flex;
     }
     li:active {
         background-color: #fff;
@@ -222,6 +235,36 @@ const MenuIcon = styled.ul`
     }
     a:hover {
         color: #fff;
+    }
+
+    .menu-text-name {
+        display: none;
+        position: absolute;
+        justify-content: center;
+        align-items: center;
+        width: 50px;
+        height: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 50px;
+        background: #222222;
+        border-radius: 0.4em;
+        color: #8b8b8b;
+        font-size: 8px;
+    }
+
+    .menu-text-name:after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 0;
+        height: 0;
+        border: 4px solid transparent;
+        border-right-color: #222222;
+        border-left: 0;
+        margin-top: -4px;
+        margin-left: -4px;
     }
     @media (max-width: 700px) {
         flex-direction: row;

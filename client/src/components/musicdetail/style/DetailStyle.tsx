@@ -59,7 +59,7 @@ export const AlbumRecode = styled.div<url>`
     background-position: center;
     opacity: 0.7;
     border-radius: 20px;
-    animation: showalbumimg 2s forwards 0s;
+    animation: showalbumimg 1s forwards 0s;
     margin-bottom: 40px;
     overflow: hidden;
     @keyframes showalbumimg {
@@ -119,7 +119,7 @@ export const MusicTags = styled.ul`
         font-size: 13px;
         transform: translateY(50px);
         color: rgba(199, 68, 68, 1);
-        animation: ascendText2 2s forwards 1s;
+        animation: ascendText2 1s forwards 0s;
     }
 `;
 /**2023-05-09 음원 타이틀 : 김주비 */
@@ -136,7 +136,7 @@ export const MusicTitle = styled.div`
     span {
         font-family: 'Noto Sans KR', sans-serif;
         transform: translateY(100px);
-        animation: ascendText 2s forwards 0.5s;
+        animation: ascendText 2s forwards 0s;
     }
     @media (max-width: 1200px) {
         font-size: 4rem;
@@ -157,7 +157,7 @@ export const MusicInfo = styled.ul`
     li {
         margin-right: 20px;
         transform: translateY(40px);
-        animation: ascendText 1s forwards 1s;
+        animation: ascendText 2s forwards 0.3s;
     }
     li:nth-child(2n-1) {
         font-weight: 600;

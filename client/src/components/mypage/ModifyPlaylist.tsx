@@ -378,6 +378,7 @@ const PlyList = styled.div`
         .mini-size {
             width: 40px;
             padding: 10px;
+            cursor: pointer;
         }
         .index-number {
             font-weight: 700;
@@ -418,4 +419,5 @@ const Exitbtn = styled.button`
     background-color: #6b6b6b;
     border-radius: 10px;
     border: none;
+    cursor: pointer;
 `;
