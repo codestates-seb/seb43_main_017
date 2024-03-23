@@ -236,7 +236,7 @@ const AudioPlayerGroup = styled.section`
     width: 600px;
     margin-top: 50px;
     opacity: 0;
-    animation: showsoundbar 2s forwards 2s;
+    animation: showsoundbar 2s forwards 1s;
 
     @keyframes showsoundbar {
         100% {
