@@ -4,7 +4,7 @@ cloud:
       accessKey: ${AWS_ACCESS_KEY}
       secretKey: ${AWS_SECRET_KEY}
     s3:
-      bucket: cordjg-image-bucket
+      bucket: uncover-bucket
     region:
       static: ap-northeast-2
     stack:
